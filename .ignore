@@ -1,0 +1,6 @@
+# scc ignore file
+
+Makefile
+data
+build
+bin

@@ -8,4 +8,13 @@ namespace dcore::platform
 		void Initialize();
 		void Deinitialize();
 	};
+
+	class Context
+	{
+	public:
+		void Initialize();
+		void OpenWindow();
+		void CloseWindow();
+		void DeInitialize();
+	};
 }
