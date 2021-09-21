@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/include",
+                "/usr/local/Cellar/gcc/10.2.0/include/c++/10.2.0",
+                "/usr/local/Cellar/gcc/10.2.0/include/c++/10.2.0/x86_64-apple-darwin17"
+            ],
+            "defines": [
+                "FWDRAW_IMPL",
+                "TINYOBJLOADER_IMPLEMENTATION"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/local/opt/llvm/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "macos-clang-x64"
+        }
+    ],
+    "version": 4
+}
