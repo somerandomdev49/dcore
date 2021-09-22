@@ -26,12 +26,14 @@ namespace dcore::resource
 	class RawResource
 	{
 	public:
+		RawResource();
+
 		void *Get() const;
 		ResourceType GetType() const;
 	private:
 		friend class ResourceLoader;
 		friend class ResourceManager;
-		RawResource(ResourceType *type, void *data);
+		RawResource(ResourceType type, void *data);
 		ResourceType Type_ = RT_ERROR;
 		void *Data_ = nullptr;
 	};
@@ -41,10 +43,12 @@ namespace dcore::resource
 	class Resource
 	{
 	public:
+		Resource() : Data_(nullptr) {};
+
 		T *Get() const { return Data_; };
 	private:
 		friend class ResourceManager;
-		Resource(T *data = nullptr) : Data_(data) {}
+		Resource(T *data) : Data_(data) {}
 		T *Data_;
 	};
 
@@ -52,12 +56,15 @@ namespace dcore::resource
 	class ResourceManager
 	{
 	public:
+		void Initialize();
 		RawResource GetRaw(const std::string_view &id, ResourceType type);
+		void DeInitialize();
 	private:
 		friend class ResourceLoader;
 		using ResourceMap = std::unordered_map<std::string_view, RawResource>;
 
 		void AddResource(const std::string_view &id, const RawResource &res);
+		void RemoveResource(ResourceType type, const std::string_view &id);
 
 		std::array<ResourceMap, RT_RESOURCE_COUNT> Resources_;
 	};

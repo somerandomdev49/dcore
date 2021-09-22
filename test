@@ -1,0 +1,280 @@
+Creating directories
+Beginning release build
+Linking: bin/release/dcore
+g++-10 build/release/Platform/Entry.o build/release/Platform/Window.o build/release/Resource/ConfigReader.o build/release/Resource/ResourceLoader.o build/release/Resource/ResourceManager.o build/release/Resource/Resources.o build/release/components/NpcController.o build/release/launch/Launch.o build/release/managers/QuestManager.o  -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -std=c++17  -o bin/release/dcore
+ld: warning: text-based stub file /System/Library/Frameworks//OpenGL.framework/OpenGL.tbd and library file /System/Library/Frameworks//OpenGL.framework/OpenGL are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//Cocoa.framework/Cocoa.tbd and library file /System/Library/Frameworks//Cocoa.framework/Cocoa are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//IOKit.framework/IOKit.tbd and library file /System/Library/Frameworks//IOKit.framework/IOKit are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.tbd and library file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.tbd and library file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//AppKit.framework/Versions/C/AppKit.tbd and library file /System/Library/Frameworks//AppKit.framework/Versions/C/AppKit are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation.tbd and library file /System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//ApplicationServices.framework/Versions/A/ApplicationServices.tbd and library file /System/Library/Frameworks//ApplicationServices.framework/Versions/A/ApplicationServices are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//Foundation.framework/Versions/C/Foundation.tbd and library file /System/Library/Frameworks//Foundation.framework/Versions/C/Foundation are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//CoreGraphics.framework/Versions/A/CoreGraphics.tbd and library file /System/Library/Frameworks//CoreGraphics.framework/Versions/A/CoreGraphics are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//CoreText.framework/Versions/A/CoreText.tbd and library file /System/Library/Frameworks//CoreText.framework/Versions/A/CoreText are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//ImageIO.framework/Versions/A/ImageIO.tbd and library file /System/Library/Frameworks//ImageIO.framework/Versions/A/ImageIO are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS.tbd and library file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//CoreServices.framework/Versions/A/CoreServices.tbd and library file /System/Library/Frameworks//CoreServices.framework/Versions/A/CoreServices are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices.tbd and library file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis.tbd and library file /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks//CFNetwork.framework/Versions/A/CFNetwork.tbd and library file /System/Library/Frameworks//CFNetwork.framework/Versions/A/CFNetwork are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata.tbd and library file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices.tbd and library file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices.tbd and library file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices are out of sync. Falling back to library file for linking.
+ld: warning: text-based stub file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SharedFileList.framework/Versions/A/SharedFileList.tbd and library file /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SharedFileList.framework/Versions/A/SharedFileList are out of sync. Falling back to library file for linking.
+Undefined symbols for architecture x86_64:
+  "__ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmPKcm", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__start_matching_listEb in ResourceLoader.o
+  "__ZNKSt3__120__vector_base_commonILb1EE20__throw_length_errorEv", referenced from:
+      __ZNSt3__16vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEE21__push_back_slow_pathIS6_EEvOT_ in ConfigReader.o
+      __ZNSt3__16vectorINS_9sub_matchIPKcEENS_9allocatorIS4_EEE6assignEmRKS4_ in ResourceLoader.o
+      __ZNSt3__16vectorINS_9sub_matchIPKcEENS_9allocatorIS4_EEE8allocateEm in ResourceLoader.o
+      __ZNSt3__16vectorINS_7__stateIcEENS_9allocatorIS2_EEE21__push_back_slow_pathIS2_EEvOT_ in ResourceLoader.o
+      __ZNSt3__16vectorINS_9sub_matchIPKcEENS_9allocatorIS4_EEE8__appendEmRKS4_ in ResourceLoader.o
+      __ZNSt3__16vectorINS_4pairImPKcEENS_9allocatorIS4_EEE8__appendEm in ResourceLoader.o
+      __ZNSt3__16vectorINS_4pairImPKcEENS_9allocatorIS4_EEE8allocateEm in ResourceLoader.o
+      ...
+  "__ZNKSt3__121__basic_string_commonILb1EE20__throw_length_errorEv", referenced from:
+      __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initIPcEENS_9enable_ifIXsr21__is_forward_iteratorIT_EE5valueEvE4typeES9_S9_ in ResourceLoader.o
+      __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initINS_11__wrap_iterIPKcEEEENS_9enable_ifIXsr21__is_forward_iteratorIT_EE5valueEvE4typeESC_SC_ in ResourceLoader.o
+      __ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initINS_11__wrap_iterIPcEEEENS_9enable_ifIXsr21__is_forward_iteratorIT_EE5valueEvE4typeESB_SB_ in ResourceLoader.o
+  "__ZNKSt3__123__match_any_but_newlineIcE6__execERNS_7__stateIcEE", referenced from:
+      __ZTVNSt3__123__match_any_but_newlineIcEE in ResourceLoader.o
+  "__ZNKSt3__16locale4nameEv", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__start_matching_listEb in ResourceLoader.o
+  "__ZNKSt3__16locale9has_facetERNS0_2idE", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+  "__ZNKSt3__16locale9use_facetERNS0_2idE", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE5imbueERKNS_6localeE in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__112regex_traitsIcE6__initEv in ResourceLoader.o
+      ...
+  "__ZNKSt3__18ios_base6getlocEv", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceManager.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceManager.o
+      ...
+  "__ZNSt3__111regex_errorC1ENS_15regex_constants10error_typeE", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE7__parseINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__parse_basic_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE24__parse_extended_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE17__parse_assertionINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE12__parse_atomINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE23__parse_ERE_dupl_symbolINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_16__owns_one_stateIcEEjj in ResourceLoader.o
+      __ZNKSt3__111basic_regexIcNS_12regex_traitsIcEEE21__match_at_start_ecmaINS_9allocatorINS_9sub_matchIPKcEEEEEEbS8_S8_RNS_13match_resultsIS8_T_EENS_15regex_constants15match_flag_typeEb in ResourceLoader.o
+      ...
+  "__ZNSt3__111regex_errorD1Ev", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE7__parseINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__parse_basic_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE24__parse_extended_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE17__parse_assertionINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE12__parse_atomINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE23__parse_ERE_dupl_symbolINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_16__owns_one_stateIcEEjj in ResourceLoader.o
+      __ZNKSt3__111basic_regexIcNS_12regex_traitsIcEEE21__match_at_start_ecmaINS_9allocatorINS_9sub_matchIPKcEEEEEEbS8_S8_RNS_13match_resultsIS8_T_EENS_15regex_constants15match_flag_typeEb in ResourceLoader.o
+      ...
+  "__ZNSt3__112__next_primeEm", referenced from:
+      __ZNSt3__112__hash_tableINS_17__hash_value_typeINS_17basic_string_viewIcNS_11char_traitsIcEEEEPFvRKS5_S7_PN5dcore8resource15ResourceManagerEEEENS_22__unordered_map_hasherIS5_SE_NS_4hashIS5_EELb1EEENS_21__unordered_map_equalIS5_SE_NS_8equal_toIS5_EELb1EEENS_9allocatorISE_EEE6rehashEm in ResourceLoader.o
+      __ZNSt3__112__hash_tableINS_17__hash_value_typeINS_17basic_string_viewIcNS_11char_traitsIcEEEEN5dcore8resource11RawResourceEEENS_22__unordered_map_hasherIS5_S9_NS_4hashIS5_EELb1EEENS_21__unordered_map_equalIS5_S9_NS_8equal_toIS5_EELb1EEENS_9allocatorIS9_EEE6rehashEm in ResourceManager.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm", referenced from:
+      __ZN5dcore8resource14ResourceLoader10MeshLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader13TextureLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader12ShaderLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource9ResourcesC2ERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE in Resources.o
+      __ZN5dcore8resource9Resources8FullPathERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE in Resources.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcmm", referenced from:
+      __ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EERKS9_S6_ in Resources.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEmc", referenced from:
+      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ in Entry.o
+      __ZNKSt3__120__bracket_expressionIcNS_12regex_traitsIcEEE6__execERNS_7__stateIcEE in ResourceLoader.o
+      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ in ResourceLoader.o
+      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ in ResourceManager.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc", referenced from:
+      __ZN5dcore8resource14ResourceLoader12ShaderLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKcm", referenced from:
+      __ZN5dcore8resource9Resources8FullPathERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE in Resources.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6assignEPKcm", referenced from:
+      __ZN5dcore8resource9Resources11SetRootPathERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEE in Resources.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7reserveEm", referenced from:
+      __ZN5dcore8resource14ResourceLoader13FindMappings_ERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ResourceLoader.o
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameIPcEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SA_c in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE24__parse_collating_symbolINS_11__wrap_iterIPKcEEEET_S9_S9_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE in ResourceLoader.o
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameINS_11__wrap_iterIPKcEEEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SD_c in ResourceLoader.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9push_backEc", referenced from:
+      __ZNSt3__17getlineIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS_13basic_istreamIT_T0_EES9_RNS_12basic_stringIS6_S7_T1_EES6_ in ConfigReader.o
+      __ZN5dcore8resource14ResourceLoader13FindMappings_ERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ResourceLoader.o
+      __ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EERKS9_S6_ in Resources.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_", referenced from:
+      __ZN5dcore8resource14ResourceLoader4LoadERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEEPNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader13FindMappings_ERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ResourceLoader.o
+      __ZNSt3__14pairIKNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEES6_EC2ERKS8_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE25__parse_equivalence_classINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_20__bracket_expressionIcS2_EE in ResourceLoader.o
+      __ZNSt3__16vectorINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEENS4_IS6_EEE21__push_back_slow_pathIRKS6_EEvOT_ in ResourceLoader.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1ERKS5_mmRKS4_", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev", referenced from:
+      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__114__split_bufferINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS4_IS6_EEED2Ev in ConfigReader.o
+      __ZN5dcore8resource14ResourceLoader10MeshLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader13TextureLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader12ShaderLoaderERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader4LoadERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEEPNS0_15ResourceManagerE in ResourceLoader.o
+      ...
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_", referenced from:
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameIPcEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SA_c in ResourceLoader.o
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameINS_11__wrap_iterIPKcEEEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SD_c in ResourceLoader.o
+  "__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSEc", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE24__parse_character_escapeINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE23__parse_expression_termINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_20__bracket_expressionIcS2_EE in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE20__parse_class_escapeINS_11__wrap_iterIPKcEEEET_S9_S9_RNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEPNS_20__bracket_expressionIcS2_EE in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE18__parse_awk_escapeINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEE in ResourceLoader.o
+  "__ZNSt3__113basic_istreamIcNS_11char_traitsIcEEE6sentryC1ERS3_b", referenced from:
+      __ZNSt3__17getlineIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS_13basic_istreamIT_T0_EES9_RNS_12basic_stringIS6_S7_T1_EES6_ in ConfigReader.o
+  "__ZNSt3__113basic_istreamIcNS_11char_traitsIcEEED0Ev", referenced from:
+      __ZTCNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE0_NS_13basic_istreamIcS2_EE in ConfigReader.o
+  "__ZNSt3__113basic_istreamIcNS_11char_traitsIcEEED1Ev", referenced from:
+      __ZTCNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE0_NS_13basic_istreamIcS2_EE in ConfigReader.o
+  "__ZNSt3__113basic_istreamIcNS_11char_traitsIcEEED2Ev", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEEED2Ev in ConfigReader.o
+  "__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE3putEc", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceManager.o
+  "__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE5flushEv", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceManager.o
+  "__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryC1ERS3_", referenced from:
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceManager.o
+  "__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryD1Ev", referenced from:
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceManager.o
+  "__ZNSt3__115__get_classnameEPKcb", referenced from:
+      __ZNKSt3__112regex_traitsIcE18__lookup_classnameINS_11__wrap_iterIPKcEEEEjT_S7_bc in ResourceLoader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5uflowEv", referenced from:
+      __ZTVNSt3__113basic_filebufIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE6xsgetnEPcl", referenced from:
+      __ZTVNSt3__113basic_filebufIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE6xsputnEPKcl", referenced from:
+      __ZTVNSt3__113basic_filebufIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE9showmanycEv", referenced from:
+      __ZTVNSt3__113basic_filebufIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEEC2Ev", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+  "__ZNSt3__115basic_streambufIcNS_11char_traitsIcEEED2Ev", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEED2Ev in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+  "__ZNSt3__119__shared_weak_count14__release_weakEv", referenced from:
+      __ZNSt3__110shared_ptrINS_13__empty_stateIcEEED2Ev in ResourceLoader.o
+  "__ZNSt3__119__shared_weak_countD2Ev", referenced from:
+      __ZNSt3__120__shared_ptr_pointerIPNS_13__empty_stateIcEENS_14default_deleteIS2_EENS_9allocatorIS2_EEED2Ev in ResourceLoader.o
+  "__ZNSt3__120__get_collation_nameEPKc", referenced from:
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameIPcEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SA_c in ResourceLoader.o
+      __ZNKSt3__112regex_traitsIcE20__lookup_collatenameINS_11__wrap_iterIPKcEEEENS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEET_SD_c in ResourceLoader.o
+  "__ZNSt3__14cerrE", referenced from:
+      __ZN5dcore8resource15ResourceManager14RemoveResourceENS0_12ResourceTypeERKNSt3__117basic_string_viewIcNS3_11char_traitsIcEEEE in ResourceManager.o
+  "__ZNSt3__14coutE", referenced from:
+      _main in Entry.o
+      __ZN5dcore8resource14ResourceLoader4LoadERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEEPNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource14ResourceLoader11ActualLoad_ERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEES8_S8_PNS0_15ResourceManagerE in ResourceLoader.o
+      __ZN5dcore8resource15ResourceManager12DeInitializeEv in ResourceManager.o
+      __ZN5dcore8resource15ResourceManager14RemoveResourceENS0_12ResourceTypeERKNSt3__117basic_string_viewIcNS3_11char_traitsIcEEEE in ResourceManager.o
+  "__ZNSt3__15ctypeIcE2idE", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__112regex_traitsIcE6__initEv in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceManager.o
+      ...
+  "__ZNSt3__16localeC1ERKS0_", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+      __ZNSt3__112regex_traitsIcEC2ERKS1_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__start_matching_listEb in ResourceLoader.o
+  "__ZNSt3__16localeC1Ev", referenced from:
+      __ZNSt3__112regex_traitsIcEC2Ev in ResourceLoader.o
+  "__ZNSt3__16localeD1Ev", referenced from:
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in Entry.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ in ResourceLoader.o
+      __ZNSt3__112regex_traitsIcED2Ev in ResourceLoader.o
+      __ZNSt3__112regex_traitsIcEC2Ev in ResourceLoader.o
+      ...
+  "__ZNSt3__17codecvtIcc11__mbstate_tE2idE", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE5imbueERKNS_6localeE in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEEC2Ev in ConfigReader.o
+  "__ZNSt3__17collateIcE2idE", referenced from:
+      __ZNSt3__112regex_traitsIcE6__initEv in ResourceLoader.o
+  "__ZNSt3__18ios_base33__set_badbit_and_consider_rethrowEv", referenced from:
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZNSt3__17getlineIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS_13basic_istreamIT_T0_EES9_RNS_12basic_stringIS6_S7_T1_EES6_ in ConfigReader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceManager.o
+  "__ZNSt3__18ios_base4initEPv", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+  "__ZNSt3__18ios_base5clearEj", referenced from:
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in Entry.o
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__17getlineIcNS_11char_traitsIcEENS_9allocatorIcEEEERNS_13basic_istreamIT_T0_EES9_RNS_12basic_stringIS6_S7_T1_EES6_ in ConfigReader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceLoader.o
+      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m in ResourceManager.o
+  "__ZNSt3__19basic_iosIcNS_11char_traitsIcEEED2Ev", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+      __ZNSt3__114basic_ifstreamIcNS_11char_traitsIcEEED1Ev in ConfigReader.o
+  "__ZNSt8bad_castC1Ev", referenced from:
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE7seekoffExNS_8ios_base7seekdirEj in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE4syncEv in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE9underflowEv in ConfigReader.o
+      __ZNSt3__113basic_filebufIcNS_11char_traitsIcEEE8overflowEi in ConfigReader.o
+  "__ZTINSt3__111regex_errorE", referenced from:
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE7__parseINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE21__parse_basic_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE24__parse_extended_reg_expINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE17__parse_assertionINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE12__parse_atomINS_11__wrap_iterIPKcEEEET_S9_S9_ in ResourceLoader.o
+      __ZNSt3__111basic_regexIcNS_12regex_traitsIcEEE23__parse_ERE_dupl_symbolINS_11__wrap_iterIPKcEEEET_S9_S9_PNS_16__owns_one_stateIcEEjj in ResourceLoader.o
+      __ZNKSt3__111basic_regexIcNS_12regex_traitsIcEEE21__match_at_start_ecmaINS_9allocatorINS_9sub_matchIPKcEEEEEEbS8_S8_RNS_13match_resultsIS8_T_EENS_15regex_constants15match_flag_typeEb in ResourceLoader.o
+      ...
+  "__ZTINSt3__113basic_istreamIcNS_11char_traitsIcEEEE", referenced from:
+      __ZTCNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE0_NS_13basic_istreamIcS2_EE in ConfigReader.o
+      __ZTINSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZTINSt3__115basic_streambufIcNS_11char_traitsIcEEEE", referenced from:
+      __ZTINSt3__113basic_filebufIcNS_11char_traitsIcEEEE in ConfigReader.o
+  "__ZTINSt3__119__shared_weak_countE", referenced from:
+      __ZTINSt3__120__shared_ptr_pointerIPNS_13__empty_stateIcEENS_14default_deleteIS2_EENS_9allocatorIS2_EEEE in ResourceLoader.o
+  "__ZTVNSt3__114__shared_countE", referenced from:
+      __ZNSt3__110shared_ptrINS_13__empty_stateIcEEEC2IS2_EEPT_NS_9enable_ifIXsr14is_convertibleIS6_PS2_EE5valueENS3_5__natEE4typeE in ResourceLoader.o
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "__ZTVNSt3__119__shared_weak_countE", referenced from:
+      __ZNSt3__110shared_ptrINS_13__empty_stateIcEEEC2IS2_EEPT_NS_9enable_ifIXsr14is_convertibleIS6_PS2_EE5valueENS3_5__natEE4typeE in ResourceLoader.o
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "__ZTVNSt3__18ios_baseE", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "__ZTVNSt3__19basic_iosIcNS_11char_traitsIcEEEE", referenced from:
+      __ZN5dcore8resource12ConfigReader12ReadManifestERKNSt3__117basic_string_viewIcNS2_11char_traitsIcEEEERNS2_6vectorINS2_12basic_stringIcS5_NS2_9allocatorIcEEEENSB_ISD_EEEE in ConfigReader.o
+  NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "__ZTv0_n24_NSt3__113basic_istreamIcNS_11char_traitsIcEEED0Ev", referenced from:
+      __ZTCNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE0_NS_13basic_istreamIcS2_EE in ConfigReader.o
+  "__ZTv0_n24_NSt3__113basic_istreamIcNS_11char_traitsIcEEED1Ev", referenced from:
+      __ZTCNSt3__114basic_ifstreamIcNS_11char_traitsIcEEEE0_NS_13basic_istreamIcS2_EE in ConfigReader.o
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+make[1]: *** [bin/release/dcore] Error 1
+make: *** [release] Error 2

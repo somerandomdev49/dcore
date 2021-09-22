@@ -14,7 +14,7 @@ project "lib"
     kind "static library"
     defines (DEFINES)
     includes { "include" }
-    sources { "src/**.cpp" }
+    sources { "src/**.cpp", "src/gl3w.c" }
     -- options { "-arch x86_64" }
     compiler "g++-10"
     standard "c++17"

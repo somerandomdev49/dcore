@@ -2,7 +2,7 @@
 # The name of the executable to be created
 BIN_NAME := dcore
 # Compiler used
-CXX ?= g++-10
+CXX = g++-10
 # Extension of source files used in the project
 SRC_EXT = cpp
 # Path to the source directory, relative to the makefile
@@ -18,7 +18,7 @@ DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
 INCLUDES = -Iinclude -I3rd-party/fwdraw/include
 # General linker settings
-LINK_FLAGS = -L3rd-party/fwdraw/lib -lfwdraw
+LINK_FLAGS = -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -std=c++17
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings
