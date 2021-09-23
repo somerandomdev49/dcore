@@ -11,13 +11,13 @@ namespace dcore::resource
         /** Returns the root path */
         const std::string &GetRootPath() const;
     protected:
-        Resources(const std::string_view &root);
+        Resources(const std::string &root);
 
         /** Sets the root path. */
-        void SetRootPath(const std::string_view &newRoot);
+        void SetRootPath(const std::string &newRoot);
 
         /** Returns the full path of a resource */
-        std::string FullPath(const std::string_view &relative);
+        std::string FullPath(const std::string &relative);
 
     private:
         std::string RootPath_;

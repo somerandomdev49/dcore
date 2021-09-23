@@ -1,36 +1,36 @@
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Core/Assert.hpp>
 #include <dcore/Resource/ConfigReader.hpp>
-#include <iostream>
+#include <dcore/Core/Log.hpp>
 #include <fwdraw.hpp>
 #include <regex>
 
 using namespace dcore::resource;
 
-void ResourceLoader::MeshLoader(const std::string_view &id, const std::string_view &location, ResourceManager *res)
+void ResourceLoader::MeshLoader(const std::string &id, const std::string &location, ResourceManager *res)
 {
     res->AddResource(id, RawResource(RT_STATIC_MESH, (void*)(new fwdraw::Mesh(std::string(location).c_str()))));
 }
 
-void ResourceLoader::TextureLoader(const std::string_view &id, const std::string_view &location, ResourceManager *res)
+void ResourceLoader::TextureLoader(const std::string &id, const std::string &location, ResourceManager *res)
 {
     res->AddResource(id, RawResource(RT_TEXTURE_2D, (void*)(new fwdraw::Texture(std::string(location).c_str()))));
 }
 
-void ResourceLoader::AudioLoader(const std::string_view &id, const std::string_view &location, ResourceManager *res)
+void ResourceLoader::AudioLoader(const std::string &id, const std::string &location, ResourceManager *res)
 {
     (void)location;
     // TODO
     res->AddResource(id, RawResource(RT_ERROR, nullptr));
 }
-void ResourceLoader::ShaderLoader(const std::string_view &id, const std::string_view &location, ResourceManager *res)
+void ResourceLoader::ShaderLoader(const std::string &id, const std::string &location, ResourceManager *res)
 {
     auto vs = std::string(location) + ".vert";
     auto fs = std::string(location) + ".frag";
     res->AddResource(id, RawResource(RT_SHADER, (void*)(new fwdraw::Shader(vs.c_str(), fs.c_str()))));
 }
 
-std::unordered_map<std::string_view, ResourceLoader::LoaderFunc> ResourceLoader::LoaderMap_ =
+std::unordered_map<std::string, ResourceLoader::LoaderFunc> ResourceLoader::LoaderMap_ =
 {
     {"Mesh", &ResourceLoader::MeshLoader},
     {"Texture", &ResourceLoader::TextureLoader},
@@ -38,19 +38,19 @@ std::unordered_map<std::string_view, ResourceLoader::LoaderFunc> ResourceLoader:
     {"Shader", &ResourceLoader::ShaderLoader},
 };
 
-ResourceLoader::ResourceLoader(const std::string_view &root)
+ResourceLoader::ResourceLoader(const std::string &root)
     : Resources(root) {}
 
-void ResourceLoader::LoadManifest(const std::string_view &location, ResourceManager *res)
+void ResourceLoader::LoadManifest(const std::string &location, ResourceManager *res)
 {
     ConfigReader::DataManifest files;
     ConfigReader::DefaultReader()->ReadManifest(location, files);
     for(const auto &p : files) Load(p, res);
 }
 
-void ResourceLoader::FindMappings_(const std::string_view &pattern, std::vector<std::string> &matched)
+void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::string> &matched)
 {
-    static std::string_view escapes = "[\\^$.|?+(){}";
+    static std::string escapes = "[\\^$.|?+(){}";
 
     // TODO: Optimize this!
     // Escape special characters
@@ -72,16 +72,17 @@ void ResourceLoader::FindMappings_(const std::string_view &pattern, std::vector<
     }
 }
 
-void ResourceLoader::Load(const std::string_view &location, ResourceManager *res)
+void ResourceLoader::Load(const std::string &location, ResourceManager *res)
 {
     // We expect location to be in the form of Type$Path.
     auto splitLoc = location.find('$');
+    // TODO: Convert to if
     DCORE_ASSERT(splitLoc != location.npos, "No '$' in resource path");
 
     auto type = location.substr(0, splitLoc);
     auto path = location.substr(splitLoc + 1);
 
-    std::cout << "Loading resource of type " << type << " at " << path << std::endl;
+    DCORE_LOG_INFO("[ResourceLoader] Loading resource of type {} at {}", type, path);
     std::vector<std::string> maps;
     FindMappings_(path, maps);
     for(const auto p : maps)
@@ -89,10 +90,19 @@ void ResourceLoader::Load(const std::string_view &location, ResourceManager *res
 }
 
 void ResourceLoader::ActualLoad_(
-    const std::string_view &type, const std::string_view &id, const std::string_view &location, ResourceManager *res)
+    const std::string &type, const std::string &id, const std::string &location, ResourceManager *res)
 {
     auto actual = FullPath(location);
-    std::cout << "Loading resource " << id << " at " << actual << " [" << type << "]" << std::endl;
+    DCORE_LOG_INFO("[ResourceLoader] Loading resource {} at {} [{}]", id, actual, type);
     DCORE_ASSERT(LoaderMap_.find(type) != LoaderMap_.end(), "Bad Resource Type");
     LoaderMap_[type](id, actual, res);
+}
+
+void ResourceLoader::LoadMappings(const std::string &location)
+{
+    auto actual = FullPath(location);
+    DCORE_LOG_INFO("[ResourceLoader] Loading mappings file at {}");
+    ConfigReader::DataINI d;
+    ConfigReader::DefaultReader()->ReadINI(actual, d);
+    ResMappings_ = d["_Default"];
 }

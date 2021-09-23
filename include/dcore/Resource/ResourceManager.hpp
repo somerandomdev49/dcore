@@ -3,6 +3,7 @@
 #include <string_view>
 #include <cinttypes>
 #include <array>
+#include <fwdraw.hpp>
 
 namespace dcore::resource
 {
@@ -21,6 +22,24 @@ namespace dcore::resource
 		// ResourceManager needs the values to be
 		// in a sequence.
 	};
+	
+	namespace detail
+	{
+		template<typename T>
+		constexpr ResourceType EnumResourceType();
+
+		template<>
+		constexpr ResourceType EnumResourceType<fwdraw::Mesh>()
+		{ return RT_STATIC_MESH; }
+		
+		template<>
+		constexpr ResourceType EnumResourceType<fwdraw::Shader>()
+		{ return RT_SHADER; }
+
+		template<>
+		constexpr ResourceType EnumResourceType<fwdraw::Texture>()
+		{ return RT_TEXTURE_2D; }
+	}
 
 	/** A wrapper around void* */
 	class RawResource
@@ -57,15 +76,26 @@ namespace dcore::resource
 	{
 	public:
 		void Initialize();
-		RawResource GetRaw(const std::string_view &id, ResourceType type);
+
+		/** Returns a raw resource for a type with a specified id. */
+		const RawResource &GetRaw(const std::string &id, ResourceType type);
+
+		/** Returns a resource of a specified type and id. */
+		template<typename T>
+		Resource<T> Get(const std::string &id);
+
 		void DeInitialize();
 	private:
 		friend class ResourceLoader;
-		using ResourceMap = std::unordered_map<std::string_view, RawResource>;
+		using ResourceMap = std::unordered_map<std::string, RawResource>;
 
-		void AddResource(const std::string_view &id, const RawResource &res);
-		void RemoveResource(ResourceType type, const std::string_view &id);
+		void AddResource(const std::string &id, const RawResource &res);
+		void RemoveResource(ResourceType type, const std::string &id);
 
 		std::array<ResourceMap, RT_RESOURCE_COUNT> Resources_;
 	};
+
+	template<typename T>
+	Resource<T> ResourceManager::Get(const std::string &id)
+	{ return Resource<T>(GetRaw(id, detail::EnumResourceType<T>()).Data_); }
 }

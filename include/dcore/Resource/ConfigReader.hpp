@@ -12,16 +12,16 @@ namespace dcore::resource
 	class ConfigReader : Resources
 	{
 	public:
-		using DataINI = std::unordered_map<std::string, std::string>;
+		using DataINI = std::unordered_map<std::string, std::unordered_map<std::string, std::string>>;
 		using DataManifest = std::vector<std::string>;
 
-        ConfigReader(const std::string_view &root);
+        ConfigReader(const std::string &root);
 
 		/** Reads an INI file */
-		bool ReadINI(const std::string_view &location, DataINI &data);
+		bool ReadINI(const std::string &location, DataINI &data);
 
 		/** Reads a manifest file */
-		bool ReadManifest(const std::string_view &location, DataManifest &data);
+		bool ReadManifest(const std::string &location, DataManifest &data);
 
 		static ConfigReader *DefaultReader();
 		static void SetDefaultReader(ConfigReader *newDefault);

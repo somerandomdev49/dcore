@@ -8,7 +8,7 @@ SRC_EXT = cpp
 # Path to the source directory, relative to the makefile
 SRC_PATH = src
 # Space-separated pkg-config libraries used by this project
-LIBS = 
+LIBS =
 # General compiler flags
 COMPILE_FLAGS = -std=c++17 -Wall -Wextra
 # Additional release-specific flags
@@ -18,7 +18,7 @@ DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
 INCLUDES = -Iinclude -I3rd-party/fwdraw/include
 # General linker settings
-LINK_FLAGS = -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -std=c++17
+LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -lquill 
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings

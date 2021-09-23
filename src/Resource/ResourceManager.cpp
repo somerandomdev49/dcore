@@ -21,7 +21,7 @@ void ResourceManager::DeInitialize()
             RemoveResource(p.second.GetType(), p.first);
 }
 
-void ResourceManager::RemoveResource(ResourceType type, const std::string_view &id)
+void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
 {
     DCORE_ASSERT(type < RT_RESOURCE_COUNT, "ResourceManager::RemoveResource: Incorrect Resource Type!");
     if(Resources_[type].find(id) == Resources_[type].end())
@@ -57,13 +57,13 @@ void ResourceManager::RemoveResource(ResourceType type, const std::string_view &
     r.Data_ = nullptr;
 }
 
-void ResourceManager::AddResource(const std::string_view &id, const RawResource &res)
+void ResourceManager::AddResource(const std::string &id, const RawResource &res)
 {
     DCORE_ASSERT(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource: Incorrect Resource Type!");
     Resources_[res.GetType()][id] = res;
 }
 
-RawResource ResourceManager::GetRaw(const std::string_view &id, ResourceType type)
+const RawResource &ResourceManager::GetRaw(const std::string &id, ResourceType type)
 {
     DCORE_ASSERT(type < RT_RESOURCE_COUNT, "ResourceManager::GetRaw: Incorrect Resource Type!");
     return Resources_[type][id];

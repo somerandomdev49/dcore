@@ -5,17 +5,18 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/3rd-party/fwdraw/include"
+                "${workspaceFolder}/3rd-party/fwdraw/include"//,
+                // "${workspaceFolder}/3rd-party/spdlog/include",
             ],
             "defines": [],
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
             ],
-            "compilerPath": "/usr/local/opt/llvm/bin/clang",
+            "compilerPath": "/usr/local/bin/g++-10",
             "cStandard": "c17",
-            "cppStandard": "c++14",
-            "intelliSenseMode": "macos-clang-x64"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-gcc-x64"
         }
     ],
     "version": 4
