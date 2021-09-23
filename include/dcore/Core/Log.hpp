@@ -1,8 +1,9 @@
 #pragma once
-#include <quill/Quill.h>
+#define LOGURU_WITH_STREAMS 1
+#include <loguru.hpp>
 
-#define DCORE_LOG_INFO(...) LOG_INFO(quill::get_logger(), __VA_ARGS__)
-#define DCORE_LOG_DEBUG(...) LOG_DEBUG(quill::get_logger(), __VA_ARGS__)
-#define DCORE_LOG_ERROR(...) LOG_ERROR(quill::get_logger(), __VA_ARGS__)
-#define DCORE_LOG_CRITICAL(...) LOG_CRITICAL(quill::get_logger(), __VA_ARGS__)
-#define DCORE_LOG_WARNING(...) LOG_WARNING(quill::get_logger(), __VA_ARGS__)
+#define DCORE_LOG_INFO LOG_S(INFO)
+#define DCORE_LOG_DEBUG LOG_S(DEBUG)
+#define DCORE_LOG_ERROR LOG_S(ERROR)
+#define DCORE_LOG_CRITICAL LOG_S(CRITICAL)
+#define DCORE_LOG_WARNING LOG_S(WARNING)

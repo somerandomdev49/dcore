@@ -53,7 +53,7 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
             // [tag]
             if(line[end] != ']')
             {
-                DCORE_LOG_INFO("Expected ']' in {}:{} (column {})", s, lineno, end);
+                LOG_F(ERROR, "Expected ']' in %s:%d (column %ld)", s.c_str(), lineno, end);
                 return false;
             }
             name = line.substr(start + 1, end);
@@ -64,7 +64,7 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
             auto equalsLoc = line.find("=");
             if(equalsLoc == line.npos)
             {
-                DCORE_LOG_ERROR("No '=' in {}:{}", s, lineno);
+                LOG_F(ERROR, "No '=' in %s:%d", s.c_str(), lineno);
                 return false;
             }
             auto key = line.substr(start, equalsLoc);

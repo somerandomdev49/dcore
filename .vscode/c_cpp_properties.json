@@ -5,8 +5,10 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/3rd-party/fwdraw/include"//,
+                "${workspaceFolder}/3rd-party/fwdraw/include" //,
                 // "${workspaceFolder}/3rd-party/spdlog/include",
+                ,
+                "${workspaceFolder}/3rd-party/loguru"
             ],
             "defines": [],
             "macFrameworkPath": [

@@ -16,9 +16,9 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -Iinclude -I3rd-party/fwdraw/include
+INCLUDES = -Iinclude -I3rd-party/fwdraw/include -I3rd-party/loguru
 # General linker settings
-LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -lquill 
+LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings

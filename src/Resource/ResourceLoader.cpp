@@ -82,7 +82,7 @@ void ResourceLoader::Load(const std::string &location, ResourceManager *res)
     auto type = location.substr(0, splitLoc);
     auto path = location.substr(splitLoc + 1);
 
-    DCORE_LOG_INFO("[ResourceLoader] Loading resource of type {} at {}", type, path);
+    DCORE_LOG_INFO << "[ResourceLoader] Loading resource of type " << type << " at " << path;
     std::vector<std::string> maps;
     FindMappings_(path, maps);
     for(const auto p : maps)
@@ -93,7 +93,7 @@ void ResourceLoader::ActualLoad_(
     const std::string &type, const std::string &id, const std::string &location, ResourceManager *res)
 {
     auto actual = FullPath(location);
-    DCORE_LOG_INFO("[ResourceLoader] Loading resource {} at {} [{}]", id, actual, type);
+    DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << id << " at " << actual << " [" << type << ']';
     DCORE_ASSERT(LoaderMap_.find(type) != LoaderMap_.end(), "Bad Resource Type");
     LoaderMap_[type](id, actual, res);
 }
@@ -101,7 +101,7 @@ void ResourceLoader::ActualLoad_(
 void ResourceLoader::LoadMappings(const std::string &location)
 {
     auto actual = FullPath(location);
-    DCORE_LOG_INFO("[ResourceLoader] Loading mappings file at {}");
+    DLOG_S(INFO) << "[ResourceLoader] Loading mappings file at " << actual;
     ConfigReader::DataINI d;
     ConfigReader::DefaultReader()->ReadINI(actual, d);
     ResMappings_ = d["_Default"];
