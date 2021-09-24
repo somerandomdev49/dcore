@@ -48,7 +48,7 @@ void ResourceLoader::LoadManifest(const std::string &location, ResourceManager *
     for(const auto &p : files) Load(p, res);
 }
 
-void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::string> &matched)
+void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
 {
     static std::string escapes = "[\\^$.|?+(){}";
 
@@ -68,7 +68,7 @@ void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::
     for(auto p : ResMappings_)
     {
         if(std::regex_match(p.first, rgx))
-            matched.push_back(p.second);
+            matched.push_back(p);
     }
 }
 
@@ -83,10 +83,10 @@ void ResourceLoader::Load(const std::string &location, ResourceManager *res)
     auto path = location.substr(splitLoc + 1);
 
     DCORE_LOG_INFO << "[ResourceLoader] Loading resource of type " << type << " at " << path;
-    std::vector<std::string> maps;
+    std::vector<std::pair<std::string, std::string>> maps;
     FindMappings_(path, maps);
     for(const auto p : maps)
-        ActualLoad_(type, path, p, res);
+        ActualLoad_(type, p.first, p.second, res);
 }
 
 void ResourceLoader::ActualLoad_(
@@ -100,9 +100,14 @@ void ResourceLoader::ActualLoad_(
 
 void ResourceLoader::LoadMappings(const std::string &location)
 {
-    auto actual = FullPath(location);
-    DLOG_S(INFO) << "[ResourceLoader] Loading mappings file at " << actual;
+    // auto actual = FullPath(location);
+    DCORE_LOG_INFO << "[ResourceLoader] Loading mappings file at " << location;
     ConfigReader::DataINI d;
-    ConfigReader::DefaultReader()->ReadINI(actual, d);
+    int m = ConfigReader::DefaultReader()->ReadINI(location, d);
+    DCORE_ASSERT(m, "Could not load ini file");
     ResMappings_ = d["_Default"];
+    for(const auto &m : ResMappings_)
+    {
+        DCORE_LOG_INFO << "> " << m.first << " - " << m.second;
+    }
 }

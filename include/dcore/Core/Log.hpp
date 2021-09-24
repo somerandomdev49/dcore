@@ -1,4 +1,5 @@
 #pragma once
+#define LOGURU_THREADNAME_WIDTH 5
 #define LOGURU_WITH_STREAMS 1
 #include <loguru.hpp>
 

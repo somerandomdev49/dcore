@@ -25,6 +25,10 @@ namespace dcore::resource
 	
 	namespace detail
 	{
+		/**
+		 * Converts a type to a ResourceType enum value.
+		 * Example: `EnumResourceType\<fwdraw::Mesh>() -> RT_STATIC_MESH`
+		**/
 		template<typename T>
 		constexpr ResourceType EnumResourceType();
 
@@ -39,6 +43,25 @@ namespace dcore::resource
 		template<>
 		constexpr ResourceType EnumResourceType<fwdraw::Texture>()
 		{ return RT_TEXTURE_2D; }
+
+#define O(X) case X: return #X
+		constexpr const char *StringResourceTypeEnum(ResourceType t)
+		{
+			switch(t)
+			{
+				O(RT_ERROR);
+				O(RT_MISSING);
+				O(RT_STATIC_MESH);
+				O(RT_SKELETAL_MESH);
+				O(RT_TEXTURE_2D);
+				O(RT_TEXTURE_3D);
+				O(RT_TEXTURE_CUBEMAP);
+				O(RT_SHADER);
+				O(RT_RESOURCE_COUNT);
+				default: return "<BAD_RESOURCE_TYPE>";
+			}
+		}
+#undef O
 	}
 
 	/** A wrapper around void* */

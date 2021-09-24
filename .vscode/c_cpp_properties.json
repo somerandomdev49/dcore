@@ -10,7 +10,7 @@
                 ,
                 "${workspaceFolder}/3rd-party/loguru"
             ],
-            "defines": [],
+            "defines": [ "LOGURU_WITH_STREAMS" ],
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
@@ -18,7 +18,7 @@
             "compilerPath": "/usr/local/bin/g++-10",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-gcc-x64"
+            "intelliSenseMode": "macos-gcc-x64",
         }
     ],
     "version": 4

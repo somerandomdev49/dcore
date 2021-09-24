@@ -35,7 +35,7 @@ namespace dcore::resource
          **/
         void LoadMappings(const std::string &location);
     private:
-        void FindMappings_(const std::string &pattern, std::vector<std::string> &matching);
+        void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
         void ActualLoad_(
             const std::string &type,
             const std::string &id,

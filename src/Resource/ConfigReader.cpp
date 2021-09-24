@@ -35,7 +35,11 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
 {
     std::string s = FullPath(location);
     std::ifstream ifs(s);
-    if(!ifs) return false;
+    if(!ifs)
+    {
+        DCORE_LOG_ERROR << "Could not load file at '" << s << '\'';
+        return false;
+    }
     std::string name = "_Default";
     int lineno = 0;
     for(std::string line; std::getline(ifs, line);)
@@ -72,7 +76,7 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
 
             auto keyEnd = key.find_last_not_of(" \t\r\n\v");
             auto valueStart = value.find_first_not_of(" \t\r\n\v");
-            data[name][line.substr(start, end + keyEnd + 1)] = line.substr(start + valueStart, end + 1);
+            data[name][key.substr(0, keyEnd + 1)] = value.substr(valueStart);
         }
     }
 

@@ -11,6 +11,9 @@ namespace dcore
         // (void)argc; (void)argv;
         loguru::init(argc, argv);
         loguru::g_stderr_verbosity = 1;
+        loguru::g_preamble_date = false;
+        loguru::g_preamble_time = false;
+        loguru::g_preamble_thread = false;
 
         // Create the default config reader.
         resource::ConfigReader cfg("data");

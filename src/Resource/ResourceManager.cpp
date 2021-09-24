@@ -15,19 +15,25 @@ ResourceType RawResource::GetType() const { return Type_; }
 void ResourceManager::Initialize() {}
 void ResourceManager::DeInitialize()
 {
-    std::cout << "[ResourceManager] De-Initializing..." << std::endl;
+    DCORE_LOG_INFO << "[ResourceManager] De-Initializing...";
+
+    int i = 0;
     for(const auto &m : Resources_)
+    {
+        DCORE_LOG_INFO << "[ResourceManager] Removing [" << detail::StringResourceTypeEnum(ResourceType(i)) << ']';
         for(const auto &p : m)
             RemoveResource(p.second.GetType(), p.first);
+        i += 1;
+    }
 }
 
 void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
 {
     DCORE_ASSERT(type < RT_RESOURCE_COUNT, "ResourceManager::RemoveResource: Incorrect Resource Type!");
     if(Resources_[type].find(id) == Resources_[type].end())
-    { std::cerr << "Tried removing non-existent resource! '" << id << "'" << std::endl; return; }
+    { DCORE_LOG_ERROR << "Tried removing non-existent resource! '" << id << "'"; return; }
 
-    std::cout << "[ResourceManager] Removing Resource: '" << id << "'" << std::endl;
+    DCORE_LOG_INFO << "[ResourceManager] Removing Resource: '" << id << "'";
 
     RawResource &r = Resources_[type][id];
 
@@ -60,6 +66,7 @@ void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
 void ResourceManager::AddResource(const std::string &id, const RawResource &res)
 {
     DCORE_ASSERT(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource: Incorrect Resource Type!");
+    DCORE_LOG_INFO << "Adding resource of type [" << detail::StringResourceTypeEnum(res.GetType()) << "] '" << id << '\'';
     Resources_[res.GetType()][id] = res;
 }
 
