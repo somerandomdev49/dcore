@@ -146,8 +146,8 @@ namespace internal
     bool shouldLog = true;
     void logGl(const char *stmt)
     {
-        if(shouldLog)
-            std::printf("\033[1;30m[opengl] %s\033[0;0m\n", stmt);
+        // if(shouldLog)
+            std::fprintf(stderr, "\033[1;30m[opengl] %s\033[0;0m\n", stmt);
     }
 }
 
@@ -157,8 +157,8 @@ namespace internal
 
 #ifdef _DEBUG
 #  ifdef DEBUG_GL_LOG
-#    define CGL(stmt) do{stmt;internal::logGl(#stmt);internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
-#    define SVGL(name,stmt) do{name=(stmt);internal::logGl(#stmt);internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
+#    define CGL(stmt) do{internal::logGl(#stmt);stmt;internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
+#    define SVGL(name,stmt) do{internal::logGl(#name " = " #stmt);name=(stmt);internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
 #  else
 #    define CGL(stmt) do{stmt;internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
 #    define SVGL(name,stmt) do{name=(stmt);internal::checkGlErrors(#stmt, __FILE__, __LINE__);}while(0)
@@ -276,8 +276,8 @@ namespace fwdraw
 
     void Mesh::init(const std::vector<Vertex> &vertices, const std::vector<Index> &indices)
     {
-        std::cout << "Initializing mesh with " << vertices.size() << " vertices and " <<
-            indices.size() << " indices..." << std::endl;
+        // std::cout << "Initializing mesh with " << vertices.size() << " vertices and " <<
+        //     indices.size() << " indices..." << std::endl;
 
         icount = indices.size();
 
@@ -415,7 +415,7 @@ namespace fwdraw
         // std::puts("what");
         glm::ivec2 size;
         int ccount;
-        std::cout << "Loading image at '" << filename << "'..." << std::endl;
+        // std::cout << "Loading image at '" << filename << "'..." << std::endl;
         unsigned char *data = stbi_load(filename, &size.x, &size.y, &ccount, 0);
         if(data) init(data, size, ccount);
         else
@@ -434,6 +434,7 @@ namespace fwdraw
             << size.x << "x" << size.y << std::endl;
         auto fmt = channel_count == 3 ? GL_RGB : GL_RGBA;
 
+        std::printf("%x\n", *(uint32_t*)data);
         std::printf("this = 0x%x\n", this);
 
         CGL(glGenTextures(1, &id_));
@@ -446,6 +447,8 @@ namespace fwdraw
 
         CGL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, fmt, GL_UNSIGNED_BYTE, data));
         CGL(glGenerateMipmap(GL_TEXTURE_2D));
+
+        std::printf("Done Creating Texture\n");
     }
 
     GL::UInt Texture::get_id() const { return id_; }
