@@ -2,4 +2,4 @@ bin
 build
 3rd-party/spdlog
 .release_time
-dcore
+./dcore
