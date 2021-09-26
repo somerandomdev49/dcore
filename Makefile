@@ -18,7 +18,14 @@ DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
 INCLUDES = -Iinclude -I3rd-party/fwdraw/include -I3rd-party/loguru
 # General linker settings
-LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit
+LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw
+
+ifeq ($(shell uname),Darwin)
+	LINK_FLAGS += -lglfw3
+else
+	LINK_FLAGS += -lglfw -ldl -lpthread
+endif
+
 # Additional release-specific linker settings
 RLINK_FLAGS = 
 # Additional debug-specific linker settings
@@ -27,6 +34,10 @@ DLINK_FLAGS =
 DESTDIR = /
 # Install path (bin/ is appended automatically)
 INSTALL_PREFIX = usr/local
+
+ifeq ($(shell uname),Darwin)
+	LINK_FLAGS += -framework OpenGL -framework Cocoa -framework IOKit
+endif
 #### END PROJECT SETTINGS ####
 
 # Optionally you may move the section above to a separate config.mk file, and
