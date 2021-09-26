@@ -94,6 +94,8 @@ namespace dcore::resource
 		T *Data_;
 	};
 
+
+	// TODO: Add Lazy loading of resources...?
 	/** Manages all of the resources of the game. */
 	class ResourceManager
 	{
@@ -120,5 +122,5 @@ namespace dcore::resource
 
 	template<typename T>
 	Resource<T> ResourceManager::Get(const std::string &id)
-	{ return Resource<T>(GetRaw(id, detail::EnumResourceType<T>()).Data_); }
+	{ return Resource<T>(reinterpret_cast<T*>(GetRaw(id, detail::EnumResourceType<T>()).Data_)); }
 }

@@ -4,6 +4,7 @@
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Platform/Platform.hpp>
+#include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 
 namespace dcore
@@ -16,8 +17,15 @@ namespace dcore
         loguru::g_preamble_time = false;
         loguru::g_preamble_thread = false;
         loguru::init(argc, argv);
-        platform::PlatformSpecific ps;
+        platform::PlatformSpecific ps; (void)ps;
         platform::Context ctx;
+
+        world::World world;
+        graphics::Renderer rend;
+
+        ctx.Rend_ = &rend;
+        ctx.World_ = &world;
+
         ctx.Initialize();
 
         // Create the default config reader.
@@ -29,7 +37,15 @@ namespace dcore
         rl.LoadMappings("ResourceMap.ini");
         rl.LoadManifest("Manifest.cfg", &rm);
 
+        world::Entity e = world.CreateEntity();
+        e.AddComponent<world::ModelRenderableComponent>(world::ModelRenderableComponent{
+            rm.Get<fwdraw::Shader>("Dcore.Shader.ObjectShader"),
+            rm.Get<fwdraw::Mesh>("Dcore.Mesh.Cube"),
+            rm.Get<fwdraw::Texture>("Dcore.Texture.Main.Grass")
+        });
+
         ctx.OpenWindow();
+        ctx.Start();
         ctx.CloseWindow();
 
         rm.DeInitialize();

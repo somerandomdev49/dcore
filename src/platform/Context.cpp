@@ -27,10 +27,11 @@ void Context::Start()
     while(!frame->should_end())
     {
         frame->on_begin();
-        float dt = frame->delta();
+        float dt = frame->delta(); (void)dt;
         // this->TimeManager_->SetDelta_(dt);
-        World_->
+        World_->Update();
         Rend_->OnBeginRender();
+        World_->Render(Rend_);
         Rend_->FlushQueue();
         Rend_->OnEndRender();
         frame->on_end();
