@@ -13,5 +13,5 @@ Resources::Resources(const std::string &root)
 
 std::string Resources::FullPath(const std::string &location)
 {
-    return (RootPath_ + '/') + std::string(location);
+    return RootPath_ + '/' + location;
 }

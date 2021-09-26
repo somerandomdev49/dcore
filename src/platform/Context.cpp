@@ -11,6 +11,8 @@ void Context::Initialize()
     // auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
     frame = new fwdraw::Frame(glm::ivec2(800, 600));
     frame->init();
+
+    Rend_->Initialize();
 }
 
 void Context::OpenWindow()
@@ -25,6 +27,7 @@ void Context::Start()
         frame->on_begin();
         float dt = frame->delta();
         // this->TimeManager_->SetDelta_(dt);
+        World_->
         Rend_->OnBeginRender();
         Rend_->FlushQueue();
         Rend_->OnEndRender();
@@ -34,7 +37,11 @@ void Context::Start()
 
 void Context::CloseWindow() {}
 
-void Context::DeInitialize() {}
+void Context::DeInitialize()
+{
+    Rend_->DeInitialize();
+    frame->deinit();
+}
 
 static Context *ctx;
 void Context::SetInstance(Context *newContext)

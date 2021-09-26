@@ -71,10 +71,15 @@ namespace dcore::graphics
         void Submit(RendererCommand *command);
     private:
         friend class dcore::platform::Context;
+        
         void OnBeginRender();
         void FlushQueue();
         void OnEndRender();
 
+        void Initialize();
+        void DeInitialize();
+
         std::vector<RendererCommand*> Commands_;
+        fwdraw::Renderer Renderer_;
     };
 }
