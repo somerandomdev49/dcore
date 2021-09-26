@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 namespace dcore::resource
 {
@@ -28,7 +29,7 @@ namespace dcore::resource
 		glm::vec2  StringToVec2 (const std::string &s, glm:: vec2 defaultValue = glm:: vec2(0, 0));
 		glm::ivec3 StringToIVec3(const std::string &s, glm::ivec3 defaultValue = glm::ivec3(0, 0, 0));
 		glm::vec3  StringToVec3 (const std::string &s, glm:: vec3 defaultValue = glm:: vec3(0, 0, 0));
-		glm::quat  StringToQuat (const std::string &s, glm:: quat defaultValue = glm:: quat(1, 0, 0, 0));
+		glm::quat  StringToQuat (const std::string &s, glm:: quat defaultValue = glm:: identity<glm::quat>());
 
 		static ConfigReader *DefaultReader();
 		static void SetDefaultReader(ConfigReader *newDefault);

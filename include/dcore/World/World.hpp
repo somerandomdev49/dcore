@@ -1,4 +1,6 @@
 #pragma once
+#include <dcore/Resource/ResourceManager.hpp>
+#include <fwdraw.hpp>
 #include <entt/entity/registry.hpp>
 
 namespace dcore::platform { class Context; }
@@ -11,6 +13,12 @@ namespace dcore::world
         glm::vec3 Position;
         glm::quat Rotation;
         glm::vec3 Scale;
+    }
+
+    struct ModelRenderableComponent
+    {
+        resource::Resource<fwdraw::Mesh> Mesh;
+        resource::Resource<fwdarw::Texture> Textute; 
     }
 
     class World;

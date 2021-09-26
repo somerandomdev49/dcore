@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/Graphics/SkeletalMesh.hpp>
+#include <dcore/Graphics/StaticMesh.hpp>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@ namespace dcore::graphics
 	class Character
 	{
 	public:
-		struct ArmorPiece { std::string BoneName; StaticMesh *Mesh; }
+		struct ArmorPiece { std::string BoneName; StaticMesh *Mesh; };
 
 	private:
 		SkeletalMesh *Body_;

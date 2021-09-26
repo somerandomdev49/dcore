@@ -71,7 +71,7 @@ void Renderer::FlushQueue()
         {
             Renderer_.bind_shader(c->GetRawShader());
             Renderer_.render_mesh(c->GetRawMesh());
-        }
+        } break;
         case RendererCommandType::Textured:
         {
             RendererCommandTextured *tc = reinterpret_cast<RendererCommandTextured*>(c);

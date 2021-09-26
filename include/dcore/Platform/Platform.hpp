@@ -1,6 +1,10 @@
 #pragma once
 #include <dcore/Event/InputManager.hpp>
-#include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Launch.hpp>
+// #include <dcore/Renderer/Renderer.hpp>
+
+namespace dcore::world { class World; }
+namespace dcore::graphics { class Renderer; }
 
 namespace dcore::platform
 {
@@ -15,19 +19,22 @@ namespace dcore::platform
 	class Context
 	{
 	public:
+		static Context *Instance();
+	private:
+		friend class event::InputManager;
+		friend class launch::Launch;
+        bool IsMousePressed(int button);
+        bool IsKeyPressed(int key);
+
+		static void SetInstance(Context *newContext);
+		
 		void Initialize();
 		void OpenWindow();
 		void Start();
 		void CloseWindow();
 		void DeInitialize();
 
-		static void SetInstance(Context *newContext);
-		static Context *Instance();
-	private:
-		friend class event::InputManager;
-        bool IsMousePressed(int button);
-        bool IsKeyPressed(int key);
-
 		graphics::Renderer *Rend_;
+		world::World *World_;
 	};
 }

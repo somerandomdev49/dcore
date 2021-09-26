@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/Graphics/StaticMesh.hpp>
+// #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <fwdraw.hpp>
 

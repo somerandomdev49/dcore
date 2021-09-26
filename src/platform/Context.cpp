@@ -1,4 +1,6 @@
 #include <dcore/Platform/Platform.hpp>
+#include <dcore/Renderer/Renderer.hpp>
+#include <dcore/World/World.hpp>
 #include <dcore/Resource/Properties.hpp>
 #include <fwdraw.hpp>
 

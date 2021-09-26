@@ -1,10 +1,11 @@
 #pragma once
-#include <fwdraw
+#include <fwdraw.hpp>
 
 namespace dcore::graphics
 {
 	class SkeletalMesh
 	{
-		Mesh Body_;
+		// Mesh Body_;
+		// TODO: Add skeletal meshes to fwdraw
 	};
 }
