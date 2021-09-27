@@ -56,22 +56,22 @@ void Renderer::Flush()
         {
         case RendererCommandType::Normal:
         {
-            renderer.bind_shader(c->GetShader());
-            renderer.render_mesh(c->GetMesh());
+            if(c->GetShader()) renderer.bind_shader(c->GetShader());
+            if(c->GetMesh()) renderer.render_mesh(c->GetMesh());
         }
         case RendererCommandType::Textured:
         {
             RendererCommandTextured *tc = reinterpret_cast<RendererCommandTextured*>(c);
-            renderer.bind_shader(tc->GetShader());
+            if(tc->GetShader()) renderer.bind_shader(tc->GetShader());
 
             int idx = 0;
             for(const auto &t : tc->GetTextures())
             {
-                renderer.bind_texture(idx, t);
+                if(t) renderer.bind_texture(idx, t);
                 idx += 1;
             }
 
-            renderer.render_mesh(c->GetMesh());
+            if(c->GetMesh()) renderer.render_mesh(c->GetMesh());
         }
         default: continue;
         }

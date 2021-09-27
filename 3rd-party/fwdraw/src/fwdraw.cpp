@@ -133,7 +133,7 @@ namespace internal
         data.append(buf, 0, stream.gcount());
     }
 
-    void checkGlErrors(const char* stmt, const char* fname, int line)
+    void checkGlErrorsDefaultImpl(const char* stmt, const char* fname, int line)
     {
         GLenum err = glGetError();
         if(err != GL_NO_ERROR)
@@ -142,13 +142,17 @@ namespace internal
             std::exit(1);
         }
     }
+
+    void (*checkGlErrors)(const char *stmt, const char *fname, int line) = &checkGlErrorsDefaultImpl;
     
     bool shouldLog = true;
-    void logGl(const char *stmt)
+    void logGlDefaultImpl(const char *stmt)
     {
-        // if(shouldLog)
+        if(shouldLog)
             std::fprintf(stderr, "\033[1;30m[opengl] %s\033[0;0m\n", stmt);
     }
+
+    void (*logGl)(const char *stmt)  = &logGlDefaultImpl;
 }
 
 
@@ -325,6 +329,8 @@ namespace fwdraw
     {
         const char *c_vert_source = vert_source.c_str();
         const char *c_frag_source = frag_source.c_str();
+        std::cout << "vertex shader:\n" << c_vert_source << std::endl;
+        std::cout << "fragment shader:\n" << c_frag_source << std::endl;
 
         int shader_ok;
         char errors[512];

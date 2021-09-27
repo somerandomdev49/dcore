@@ -1,4 +1,5 @@
 #pragma once
+#include <dcore/Uni.hpp>
 #include <unordered_map>
 #include <string_view>
 #include <cinttypes>
@@ -62,6 +63,8 @@ namespace dcore::resource
 			}
 		}
 #undef O
+
+		class Impl_ResourceManager { public: Impl_ResourceManager(); };
 	}
 
 	/** A wrapper around void* */
@@ -75,9 +78,10 @@ namespace dcore::resource
 	private:
 		friend class ResourceLoader;
 		friend class ResourceManager;
+		friend class detail::Impl_ResourceManager;
 		RawResource(ResourceType type, void *data);
 		ResourceType Type_ = RT_ERROR;
-		void *Data_ = nullptr;
+		void REF *Data_ = nullptr;
 	};
 
 	/** A wrapper around some kind of data. */
@@ -91,7 +95,7 @@ namespace dcore::resource
 	private:
 		friend class ResourceManager;
 		Resource(T *data) : Data_(data) {}
-		T *Data_;
+		T REF *Data_;
 	};
 
 

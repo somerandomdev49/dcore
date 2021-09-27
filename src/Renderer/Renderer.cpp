@@ -69,22 +69,22 @@ void Renderer::FlushQueue()
         {
         case RendererCommandType::Normal:
         {
-            Renderer_.bind_shader(c->GetRawShader());
-            Renderer_.render_mesh(c->GetRawMesh());
+            if(c->GetRawShader()) Renderer_.bind_shader(c->GetRawShader());
+            if(c->GetRawMesh()) Renderer_.render_mesh(c->GetRawMesh());
         } break;
         case RendererCommandType::Textured:
         {
             RendererCommandTextured *tc = reinterpret_cast<RendererCommandTextured*>(c);
-            Renderer_.bind_shader(tc->GetRawShader());
+            if(tc->GetRawShader()) Renderer_.bind_shader(tc->GetRawShader());
 
             int idx = 0;
             for(const auto &t : tc->GetRawTextures())
             {
-                Renderer_.bind_texture(idx, t);
+                if(t) Renderer_.bind_texture(idx, t);
                 idx += 1;
             }
 
-            Renderer_.render_mesh(c->GetRawMesh());
+            if(c->GetRawMesh()) Renderer_.render_mesh(c->GetRawMesh());
         }
         default: continue;
         }

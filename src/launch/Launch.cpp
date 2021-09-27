@@ -39,14 +39,16 @@ namespace dcore
 
         world::Entity e = world.CreateEntity();
         e.AddComponent<world::ModelRenderableComponent>(world::ModelRenderableComponent{
-            rm.Get<fwdraw::Shader>("Dcore.Shader.ObjectShader"),
-            rm.Get<fwdraw::Mesh>("Dcore.Mesh.Cube"),
-            rm.Get<fwdraw::Texture>("Dcore.Texture.Main.Grass")
+            rm.Get<fwdraw::Shader>("DCore.Shader.ObjectShader"),
+            rm.Get<fwdraw::Mesh>("DCore.Mesh.Cube"),
+            rm.Get<fwdraw::Texture>("DCore.Texture.Main.Grass")
         });
 
         ctx.OpenWindow();
         ctx.Start();
         ctx.CloseWindow();
+
+        DCORE_LOG_INFO << "----------------------------------------";
 
         rm.DeInitialize();
         ctx.DeInitialize();
