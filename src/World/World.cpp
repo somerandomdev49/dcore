@@ -1,4 +1,5 @@
 #include <dcore/World/World.hpp>
+#include <dcore/Graphics/Graphics.hpp>
 
 using namespace dcore::world;
 
@@ -13,14 +14,14 @@ void World::Update()
     }
 }
 
-void World::Render(graphics::Renderer *render)
+void World::Render(graphics::RendererInterface *render)
 {
     auto v = Registry_.view<ModelRenderableComponent>();
 
     for(const auto e : v)
     {
         const auto &r = Registry_.get<ModelRenderableComponent>(e);
-        render->Submit(new graphics::RendererCommandTextured(r.Shader.Get(), r.Mesh.Get(), r.Textute.Get()));
+        render->RenderStaticMesh(&r.Mesh);
     }
 }
 

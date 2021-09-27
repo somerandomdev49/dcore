@@ -1,5 +1,6 @@
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Graphics/Graphics.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Resource/Properties.hpp>
 #include <fwdraw.hpp>
@@ -7,6 +8,7 @@
 using namespace dcore::platform;
 
 static fwdraw::Frame *frame;
+static dcore::graphics::RendererInterface ri;
 
 void Context::Initialize()
 {
@@ -17,9 +19,9 @@ void Context::Initialize()
     Rend_->Initialize();
 }
 
-void Context::OpenWindow()
+void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm)
 {
-    // ..?
+    ri.Initialize(rm, Rend_);
 }
 
 void Context::Start()
@@ -31,8 +33,8 @@ void Context::Start()
         // this->TimeManager_->SetDelta_(dt);
         World_->Update();
         Rend_->OnBeginRender();
-        World_->Render(Rend_);
-        Rend_->FlushQueue();
+        World_->Render(&ri);
+        // Rend_->FlushQueue();
         Rend_->OnEndRender();
         frame->on_end();
     }
@@ -42,6 +44,7 @@ void Context::CloseWindow() {}
 
 void Context::DeInitialize()
 {
+    ri.DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
     Rend_->DeInitialize();
     frame->deinit();
 }

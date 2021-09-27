@@ -81,7 +81,7 @@ namespace dcore::resource
 		friend class detail::Impl_ResourceManager;
 		RawResource(ResourceType type, void *data);
 		ResourceType Type_ = RT_ERROR;
-		void REF *Data_ = nullptr;
+		void DCORE_REF *Data_ = nullptr;
 	};
 
 	/** A wrapper around some kind of data. */
@@ -95,7 +95,7 @@ namespace dcore::resource
 	private:
 		friend class ResourceManager;
 		Resource(T *data) : Data_(data) {}
-		T REF *Data_;
+		T DCORE_REF *Data_;
 	};
 
 

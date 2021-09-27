@@ -1,4 +1,5 @@
 #pragma once
+#include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Event/InputManager.hpp>
 #include <dcore/Launch.hpp>
 // #include <dcore/Renderer/Renderer.hpp>
@@ -29,7 +30,7 @@ namespace dcore::platform
 		static void SetInstance(Context *newContext);
 		
 		void Initialize();
-		void OpenWindow();
+		void DefaultResourceInit(resource::ResourceManager DCORE_REF *rm);
 		void Start();
 		void CloseWindow();
 		void DeInitialize();

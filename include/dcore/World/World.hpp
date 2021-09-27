@@ -1,6 +1,6 @@
 #pragma once
 #include <dcore/Resource/ResourceManager.hpp>
-#include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Graphics/Graphics.hpp>
 #include <entt/entity/registry.hpp>
 #include <fwdraw.hpp>
 #include <glm/glm.hpp>
@@ -20,9 +20,7 @@ namespace dcore::world
 
     struct ModelRenderableComponent
     {
-        resource::Resource<fwdraw::Shader> Shader;
-        resource::Resource<fwdraw::Mesh> Mesh;
-        resource::Resource<fwdraw::Texture> Textute;
+        graphics::StaticMesh Mesh;
     };
 
     struct DynamicComponent
@@ -44,7 +42,7 @@ namespace dcore::world
         template<typename T>
         T &GetComponent() const;
 
-        /** Returns the qntity's id. */
+        /** Returns the entity's id. */
         entt::entity GetId() const;
     private:
         friend class World;
@@ -65,7 +63,7 @@ namespace dcore::world
     private:
         friend class platform::Context;
         void Update();
-        void Render(graphics::Renderer *render);
+        void Render(graphics::RendererInterface *render);
         entt::registry Registry_;
     };
 }

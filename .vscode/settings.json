@@ -2,7 +2,8 @@
     "files.associations": {
         "*.tcc": "cpp",
         "limits": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "hashtable": "cpp"
     }
    
 }
