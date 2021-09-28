@@ -6,6 +6,6 @@ namespace dcore::graphics
 	class SkeletalMesh
 	{
 		// Mesh Body_;
-		// TODO: Add skeletal meshes to fwdraw
+		// TODO: Add skeletal meshes to fwdraw, can't currently implement.
 	};
 }

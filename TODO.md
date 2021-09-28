@@ -4,3 +4,4 @@
 - [ ] World loading
 - [ ] Unload resources automatically, lazy loading for resources.
 - [ ] Add pointer annotations everywhere.
+- [ ] Skeletal Meshes (fwdraw)
