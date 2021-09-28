@@ -38,13 +38,18 @@ namespace dcore
         rl.LoadManifest("Manifest.cfg", &rm);
 
         world::Entity e = world.CreateEntity();
-        e.AddComponent<world::ModelRenderableComponent>(world::ModelRenderableComponent{
-            // rm.Get<fwdraw::Shader>("DCore.Shader.ObjectShader"),
+        e.AddComponent(world::TransformComponent());
+        e.AddComponent(world::ModelRenderableComponent{
             graphics::StaticMesh(
                 rm.Get<fwdraw::Mesh>("DCore.Mesh.Cube"),
                 rm.Get<fwdraw::Texture>("DCore.Texture.Main.Grass")
             )
         });
+
+        // e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
+        e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);
+        e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();//glm::angleAxis(glm::degrees(15.0f), glm::vec3(0, 1, 0));
+        e.GetComponent<world::TransformComponent>().Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
         ctx.DefaultResourceInit(&rm);
         ctx.Start();

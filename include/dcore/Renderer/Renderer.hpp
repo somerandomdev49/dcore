@@ -75,7 +75,8 @@ namespace dcore::graphics
          * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
         */
         void Render(fwdraw::Shader *shader, fwdraw::Mesh *mesh, fwdraw::Texture *texture);
-        // void Submit(RendererCommand *command);
+        
+        fwdraw::Renderer &Get();
     private:
         friend class dcore::platform::Context;
 

@@ -5,6 +5,7 @@
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Platform/Platform.hpp>
+#include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
 namespace dcore::graphics
@@ -17,11 +18,14 @@ namespace dcore::graphics
 		// void RenderCharacter(Character *character);
 		void RenderStaticMesh(const StaticMesh DCORE_REF *staticMesh);
 		void RenderDebugLine(const glm::vec3 &from, const glm::vec3 &to, float width = 1.f);
+
+		Camera *GetCamera() const;
 	private:
 		friend class platform::Context;
 		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend);
 		void DeInitialize();
 
+		Camera DCORE_OWN *Camera_;
 		Shader DCORE_OWN *ObjectShader_;
 		Renderer DCORE_REF *Renderer_;
 	};

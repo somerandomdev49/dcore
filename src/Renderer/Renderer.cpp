@@ -57,6 +57,8 @@ void Renderer::DeInitialize()
     Renderer_.deinit();
 }
 
+fwdraw::Renderer &Renderer::Get() { return Renderer_; }
+
 void Renderer::Render(fwdraw::Shader *shader, fwdraw::Mesh *mesh, fwdraw::Texture *texture)
 {
     if(shader) Renderer_.bind_shader(shader);

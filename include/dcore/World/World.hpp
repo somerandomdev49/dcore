@@ -16,6 +16,11 @@ namespace dcore::world
         glm::vec3 Position;
         glm::quat Rotation;
         glm::vec3 Scale;
+
+        glm::mat4 Matrix;
+
+        /** Recalculates the transform matrix. */
+        void ReCalculateMatrix();
     };
 
     struct ModelRenderableComponent
@@ -54,7 +59,7 @@ namespace dcore::world
     {
     public:
         template<typename T>
-        T &GetComponent(Entity *entity);
+        T &GetComponent(const Entity *entity);
         
         template<typename T>
         void AddComponent(Entity *entity, const T &c);
@@ -77,7 +82,7 @@ void dcore::world::Entity::AddComponent(const T &c)
 { return World_->AddComponent<T>(this, c); }
 
 template<typename T>
-T &dcore::world::World::GetComponent(Entity *entity)
+T &dcore::world::World::GetComponent(const Entity *entity)
 { return Registry_.get<T>(entity->Id_); }
 
 template<typename T>

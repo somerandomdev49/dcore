@@ -3,6 +3,13 @@
 
 using namespace dcore::world;
 
+void TransformComponent::ReCalculateMatrix()
+{
+    Matrix = glm::mat4_cast(Rotation);
+    Matrix = glm::scale(Matrix, Scale);
+    Matrix = glm::translate(Matrix, Position);
+}
+
 void World::Update()
 {
     auto v = Registry_.view<DynamicComponent>();
@@ -16,11 +23,14 @@ void World::Update()
 
 void World::Render(graphics::RendererInterface *render)
 {
-    auto v = Registry_.view<ModelRenderableComponent>();
+    auto v = Registry_.view<ModelRenderableComponent, TransformComponent>();
 
-    for(const auto e : v)
+    for(auto e : v)
     {
-        const auto &r = Registry_.get<ModelRenderableComponent>(e);
+        auto &t = Registry_.get<TransformComponent>(e);
+        auto &r = Registry_.get<ModelRenderableComponent>(e);
+        t.ReCalculateMatrix();
+        r.Mesh.SetTransform(t.Matrix); // TODO: Pass this as parameter to RenderStaticMesh
         render->RenderStaticMesh(&r.Mesh);
     }
 }
