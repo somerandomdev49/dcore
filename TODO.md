@@ -1,4 +1,6 @@
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
+- [ ] InputManager
+- [ ] World loading
 - [ ] Unload resources automatically, lazy loading for resources.
 - [ ] Add pointer annotations everywhere.
