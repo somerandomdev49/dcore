@@ -28,6 +28,12 @@ namespace dcore
 
         ctx.Initialize();
 
+        event::InputManager im;
+        im.Initialize();
+        event::InputManager::SetInstance(&im);
+
+        world.Initialize();
+
         // Create the default config reader.
         resource::ConfigReader cfg("data");
         resource::ConfigReader::SetDefaultReader(&cfg);
@@ -46,6 +52,43 @@ namespace dcore
             )
         });
 
+        // e.AddComponent(MyComponent());
+        // world.RegisterUpdate([](world::World *c)
+        // {
+        //     c->Each<world::MyComponent>([](world::Entity *e, world::MyComponent *comp)
+        //     {
+        //         /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
+        //         {
+        //             auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+        //             auto pos = cam->GetPosition();
+        //             pos.x -= 0.1f;
+        //             cam->SetPosition(pos);
+        //         }
+        //         else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
+        //         {
+        //             auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+        //             auto pos = cam->GetPosition();
+        //             pos.x += 0.1f;
+        //             cam->SetPosition(pos);
+        //         }
+                
+        //         /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
+        //         {
+        //             auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+        //             auto pos = cam->GetPosition();
+        //             pos.z -= 0.1f;
+        //             cam->SetPosition(pos);
+        //         }
+        //         if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
+        //         {
+        //             auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+        //             auto pos = cam->GetPosition();
+        //             pos.z += 0.1f;
+        //             cam->SetPosition(pos);
+        //         }
+        //     });
+        // });
+
         // e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
         e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);
         e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();//glm::angleAxis(glm::degrees(15.0f), glm::vec3(0, 1, 0));
@@ -58,6 +101,8 @@ namespace dcore
         DCORE_LOG_INFO << "----------------------------------------";
 
         rm.DeInitialize();
+        im.DeInitialize();
+        world.DeInitialize();
         ctx.DeInitialize();
     }
 }

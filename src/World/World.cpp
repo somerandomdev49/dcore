@@ -10,6 +10,9 @@ void TransformComponent::ReCalculateMatrix()
     Matrix = glm::translate(Matrix, Position);
 }
 
+void World::Initialize() { /* WInfo_.World_ = this; */ }
+void World::DeInitialize() { }
+
 void World::Update()
 {
     auto v = Registry_.view<DynamicComponent>();
@@ -18,6 +21,20 @@ void World::Update()
     {
         const auto &dc = Registry_.get<DynamicComponent>(e);
         dc.Update(dc.Data, this);
+    }
+
+    for(const auto p : Updates_)
+    {
+        p(this);
+        // auto beg = &p.first;
+        // auto end = &p.first + sizeof(decltype(p.first));
+        // auto v = Registry_.runtime_view(beg, end);
+        // for(const auto e : v)
+        // {
+        //     Entity en = Entity(e, this);
+        //     Registry_.
+        //     p.second(&en, );
+        // }
     }
 }
 
@@ -40,3 +57,5 @@ Entity::Entity(entt::entity e, World *world)
     : Id_(e), World_(world) {}
 
 Entity World::CreateEntity() { return Entity(Registry_.create(), this); }
+
+void World::RegisterUpdate(void (*f)(World*)) { Updates_.push_back(f); }

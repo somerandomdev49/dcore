@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Event/InputManager.hpp>
+#include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Launch.hpp>
 // #include <dcore/Renderer/Renderer.hpp>
 
@@ -20,6 +21,7 @@ namespace dcore::platform
 	class Context
 	{
 	public:
+		dcore::graphics::RendererInterface *GetRendererInterface() const;
 		static Context *Instance();
 	private:
 		friend class event::InputManager;

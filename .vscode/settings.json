@@ -3,7 +3,17 @@
         "*.tcc": "cpp",
         "limits": "cpp",
         "ranges": "cpp",
-        "hashtable": "cpp"
+        "hashtable": "cpp",
+        "istream": "cpp",
+        "array": "cpp",
+        "utility": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "type_traits": "cpp",
+        "thread": "cpp",
+        "memory": "cpp",
+        "functional": "cpp",
+        "future": "cpp"
     }
    
 }

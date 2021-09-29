@@ -4,9 +4,11 @@
 #include <dcore/Graphics/Shader.hpp>
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Renderer/Renderer.hpp>
-#include <dcore/Platform/Platform.hpp>
+// #include <dcore/Platform/Platform.hpp>
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+
+namespace dcore::platform { class Context; }
 
 namespace dcore::graphics
 {

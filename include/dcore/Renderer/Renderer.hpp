@@ -1,7 +1,9 @@
 #pragma once
 // #include <dcore/Graphics/StaticMesh.hpp>
-#include <dcore/Platform/Platform.hpp>
+// #include <dcore/Platform/Platform.hpp>
 #include <fwdraw.hpp>
+
+namespace dcore::platform { class Context; }
 
 namespace dcore::graphics
 {

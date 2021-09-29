@@ -245,6 +245,9 @@ namespace fwdraw
 
     bool Frame::key_pressed(int key) const
     { return glfwGetKey((GLFWwindow*)hndl_, key); }
+    
+    bool Frame::mouse_pressed(int button) const
+    { return glfwGetMouseButton((GLFWwindow*)hndl_, button); }
 
     const glm::ivec2 &Frame::size() const { return size_; }
     const glm::ivec2 &Frame::size(const glm::ivec2 &new_size)

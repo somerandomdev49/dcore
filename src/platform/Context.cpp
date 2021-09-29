@@ -24,6 +24,8 @@ void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm)
     ri.Initialize(rm, Rend_);
 }
 
+dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return &ri; }
+
 void Context::Start()
 {
     while(!frame->should_end())
@@ -55,3 +57,6 @@ void Context::SetInstance(Context *newContext)
 
 Context *Context::Instance()
 { if(ctx == nullptr) ctx = new Context; return ctx; }
+
+bool Context::IsKeyPressed(int key) { return frame->key_pressed(key); }
+bool Context::IsMousePressed(int button) { return frame->mouse_pressed(button); }
