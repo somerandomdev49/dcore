@@ -34,6 +34,14 @@ namespace dcore::resource
          * \param the path to load the file from.
          **/
         void LoadMappings(const std::string &location);
+
+        using LoaderFunc = void(*)(const std::string&, const std::string&, ResourceManager*);
+        
+        /**
+         * \brief Registers a loader with a specified name
+         */
+        void RegisterLoader(const std::string &name, LoaderFunc loaderFunc);
+    
     private:
         void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
         void ActualLoad_(
@@ -42,11 +50,10 @@ namespace dcore::resource
             const std::string &location,
             ResourceManager *res);
 
-        using LoaderFunc = void(*)(const std::string&, const std::string&, ResourceManager*);
-
         std::unordered_map<std::string, std::string> ResMappings_;
         static std::unordered_map<std::string, LoaderFunc> LoaderMap_;
 
+        // Default Loaders:
         static void MeshLoader(const std::string &id, const std::string &location, ResourceManager *res);
         static void TextureLoader(const std::string &id, const std::string &location, ResourceManager *res);
         static void AudioLoader(const std::string &id, const std::string &location, ResourceManager *res);
