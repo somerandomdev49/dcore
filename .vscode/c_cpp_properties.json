@@ -5,20 +5,16 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/3rd-party/fwdraw/include" //,
+                // "${workspaceFolder}/3rd-party/include" //,
+                "${workspaceFolder}/3rd-party/include" //,
                 // "${workspaceFolder}/3rd-party/spdlog/include",
-                ,
-                "${workspaceFolder}/3rd-party/loguru"
+                // "${workspaceFolder}/3rd-party/loguru"
             ],
             "defines": [ "LOGURU_WITH_STREAMS" ],
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ],
-            "compilerPath": "/usr/local/bin/g++-10",
+            "compilerPath": "/usr/bin/g++-10",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4

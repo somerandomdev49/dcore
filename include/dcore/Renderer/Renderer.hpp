@@ -1,73 +1,14 @@
 #pragma once
-// #include <dcore/Graphics/StaticMesh.hpp>
-// #include <dcore/Platform/Platform.hpp>
-#include <fwdraw.hpp>
+#include <dcore/Renderer/RSkeletalMesh.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
+#include <dcore/Renderer/RTexture.hpp>
+#include <dcore/Renderer/RShader.hpp>
 
 namespace dcore::platform { class Context; }
 
 namespace dcore::graphics
 {
-
-    // TODO: Review render queues later. (We could do sorting with entt's sort)
-    // enum class RendererCommandType
-    // {
-    //     Normal, Textured, ArrayTextured
-    // };
-
-    // class RendererCommand
-    // {
-    // protected:
-    //     RendererCommandType type;
-    //     fwdraw::Shader *shader;
-    //     fwdraw::Mesh *mesh;
-    // public:
-    //     /**
-    //     /* Creates a renderer command with a shader and a mesh.
-    //     /* if `shader` is nullptr, the previous shader is used.
-    //     */
-    //     RendererCommand(fwdraw::Shader *shader, fwdraw::Mesh *mesh);
-
-    //     fwdraw::Shader *GetRawShader() const;
-    //     fwdraw::Mesh *GetRawMesh() const;
-    //     RendererCommandType GetType() const;
-    // };
-
-    // class RendererCommandTextured : public RendererCommand
-    // {
-    // protected:
-    //     std::vector<fwdraw::Texture*> textures;
-    // public:
-    //     /**
-    //     /* Creates a textured renderer command with a shader, a mesh and a single texture.
-    //     /* if `shader` is nullptr, the previous shader is used.
-    //     */
-    //     RendererCommandTextured(fwdraw::Shader *shader, fwdraw::Mesh *mesh, fwdraw::Texture *texture);
-
-    //     /**
-    //     /* Creates a textured renderer command with a shader, a mesh and textures.
-    //     /* if `shader` is nullptr, the previous shader is used.
-    //     */
-    //     RendererCommandTextured(fwdraw::Shader *shader, fwdraw::Mesh *mesh, const std::vector<fwdraw::Texture*> &textures);
-
-
-    //     const std::vector<fwdraw::Texture*> &GetRawTextures() const;
-    // };
-
-    // class RendererCommandArrayTextured : public RendererCommand
-    // {
-    // protected:
-    //     fwdraw::TextureArray *texture;
-    // public:
-    //     /**
-    //     /* Creates a texture array renderer command with a shader and a mesh.
-    //     /* if `shader` is nullptr, the previous shader is used.
-    //     */
-    //     RendererCommandArrayTextured(fwdraw::Shader *shader, fwdraw::Mesh *mesh, fwdraw::TextureArray *texture);
-
-    //     fwdraw::TextureArray *GetRawTextureArray() const;
-    // };
-
-    /** Direct interface with fwdraw. */
+    /** Direct interface with OpenGL/DX/Vulkan/... */
     class Renderer
     {
     public:
@@ -76,9 +17,14 @@ namespace dcore::graphics
          * @note if shader is nullptr, the previous shader is used.
          * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
         */
-        void Render(fwdraw::Shader *shader, fwdraw::Mesh *mesh, fwdraw::Texture *texture);
-        
-        fwdraw::Renderer &Get();
+        void Render(RShader *shader, RStaticMesh *mesh, RTexture *texture);
+
+        /**
+         * @brief Renders a skeletal mesh with a specified texture
+         * @note if shader is nullptr, the previous shader is used.
+         * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
+        */
+        void Render(RShader *shader, RSkeletalMesh *mesh, RTexture *texture);
     private:
         friend class dcore::platform::Context;
 
@@ -88,8 +34,5 @@ namespace dcore::graphics
 
         void Initialize();
         void DeInitialize();
-
-        // std::vector<RendererCommand*> Commands_;
-        fwdraw::Renderer Renderer_;
     };
 }
