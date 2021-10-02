@@ -7,6 +7,11 @@
 
 using namespace dcore::resource;
 
+void ResourceLoader::RegisterLoader(const std::string &name, LoaderFunc loaderFunc)
+{
+    LoaderMap_[name] = loaderFunc;
+}
+
 void ResourceLoader::MeshLoader(const std::string &id, const std::string &location, ResourceManager *res)
 {
     res->AddResource(id, RawResource(RT_STATIC_MESH, (void*)(new fwdraw::Mesh(std::string(location).c_str()))));
@@ -30,16 +35,23 @@ void ResourceLoader::ShaderLoader(const std::string &id, const std::string &loca
     res->AddResource(id, RawResource(RT_SHADER, (void*)(new fwdraw::Shader(vs.c_str(), fs.c_str()))));
 }
 
-std::unordered_map<std::string, ResourceLoader::LoaderFunc> ResourceLoader::LoaderMap_ =
-{
-    {"Mesh", &ResourceLoader::MeshLoader},
-    {"Texture", &ResourceLoader::TextureLoader},
-    {"Audio", &ResourceLoader::AudioLoader},
-    {"Shader", &ResourceLoader::ShaderLoader},
-};
+// std::unordered_map<std::string, ResourceLoader::LoaderFunc> ResourceLoader::LoaderMap_ =
+// {
+//     {"Mesh", &ResourceLoader::MeshLoader},
+//     {"Texture", &ResourceLoader::TextureLoader},
+//     {"Audio", &ResourceLoader::AudioLoader},
+//     {"Shader", &ResourceLoader::ShaderLoader},
+// };
 
 ResourceLoader::ResourceLoader(const std::string &root)
-    : Resources(root) {}
+    : Resources(root)
+{
+    // Default Loaders:
+    RegisterLoader("Mesh"   , &ResourceLoader::MeshLoader    );    
+    RegisterLoader("Texture", &ResourceLoader::TextureLoader );    
+    RegisterLoader("Audio"  , &ResourceLoader::AudioLoader   );    
+    RegisterLoader("Shader" , &ResourceLoader::ShaderLoader  );    
+}
 
 void ResourceLoader::LoadManifest(const std::string &location, ResourceManager *res)
 {
