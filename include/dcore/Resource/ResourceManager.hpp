@@ -15,6 +15,8 @@
 
 namespace dcore::resource
 {
+	struct Null {};
+
 	/** A wrapper around void* */
 	class RawResource
 	{
@@ -56,13 +58,13 @@ namespace dcore::resource
 		static ResourceManager *Instance();
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &GetRaw(const std::string &id, std::type_info type);
+		const RawResource &GetRaw(const std::string &id, std::type_index type);
 
 		/** Returns a raw resource for a type with a specified id. */
 		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type);
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &UnLoadRaw(const std::string &id, std::type_index type);
+	 	void UnLoadRaw(const std::string &id, std::type_index type);
 
 		/** Returns a resource of a specified type and id. */
 		template<typename T>
@@ -85,10 +87,10 @@ namespace dcore::resource
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
 		std::unordered_map<std::type_index, ResourceMap> Resources_;
 
-		using ResourceConstructorFunc = void (*)(...);
+		using ResourceConstructorFunc = void (*)(const std::string&);
 		std::unordered_map<std::type_index, ResourceConstructorFunc> Constructors_;
 		
-		using ResourceDeConstructorFunc = void (*)(...);
+		using ResourceDeConstructorFunc = void (*)(void*);
 		std::unordered_map<std::type_index, ResourceDeConstructorFunc> DeConstructors_;
 	};
 
