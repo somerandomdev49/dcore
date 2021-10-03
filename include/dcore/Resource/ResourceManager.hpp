@@ -94,11 +94,11 @@ namespace dcore::resource
 	public:
 		Resource() : Data_(nullptr) {};
 
-		T *Get() const { return Data_; };
+		const T *Get() const { return Data_; };
 	private:
 		friend class ResourceManager;
 		Resource(T *data) : Data_(data) {}
-		T DCORE_REF *Data_;
+		const T DCORE_REF *Data_;
 	};
 
 
@@ -110,24 +110,31 @@ namespace dcore::resource
 		void Initialize();
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &GetRaw(const std::string &id, ResourceType type);
+		const RawResource &GetRaw(const std::string &id, std::type_info type);
 
 		/** Returns a resource of a specified type and id. */
 		template<typename T>
 		Resource<T> Get(const std::string &id);
 
+		template<typename T>
+
+
 		void DeInitialize();
+	
 	private:
-		friend class ResourceLoader;
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
+		std::unordered_map<std::type_info, ResourceMap> Resources_;
 
-		void AddResource(const std::string &id, const RawResource &res);
-		void RemoveResource(ResourceType type, const std::string &id);
-
-		std::array<ResourceMap, RT_RESOURCE_COUNT> Resources_;
+		using ResourceConstructorFunc = void (*)(...);
 	};
 
 	template<typename T>
 	Resource<T> ResourceManager::Get(const std::string &id)
-	{ return Resource<T>(reinterpret_cast<T*>(GetRaw(id, detail::EnumResourceType<T>()).Data_)); }
+	{
+		return Resource<T>(
+			reinterpret_cast<T*>(
+				GetRaw(id, typeid(std::decay_t<T>)).Data_
+			)
+		);
+	}
 }

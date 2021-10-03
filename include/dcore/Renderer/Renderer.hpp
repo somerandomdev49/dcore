@@ -3,6 +3,7 @@
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
+#include <dcore/Resource/ResourceManager.hpp>
 
 namespace dcore::platform { class Context; }
 
@@ -12,6 +13,27 @@ namespace dcore::graphics
     class Renderer
     {
     public:
+        /**
+         * @brief Binds the shader
+         * @note All uniforms should be set after this call.
+         */
+        void UseShader(RShader *shader);
+
+        void SetUniform(const RUniform &u, float v);
+        void SetUniform(const RUniform &u, int v);
+        void SetUniform(const RUniform &u, const glm::vec2 &v);
+        void SetUniform(const RUniform &u, const glm::vec3 &v);
+        void SetUniform(const RUniform &u, const glm::vec4 &v);
+        void SetUniform(const RUniform &u, const glm::mat2x2 &v);
+        void SetUniform(const RUniform &u, const glm::mat2x3 &v);
+        void SetUniform(const RUniform &u, const glm::mat2x4 &v);
+        void SetUniform(const RUniform &u, const glm::mat3x2 &v);
+        void SetUniform(const RUniform &u, const glm::mat3x3 &v);
+        void SetUniform(const RUniform &u, const glm::mat3x4 &v);
+        void SetUniform(const RUniform &u, const glm::mat4x2 &v);
+        void SetUniform(const RUniform &u, const glm::mat4x3 &v);
+        void SetUniform(const RUniform &u, const glm::mat4x4 &v);
+        
         /**
          * @brief Renders a mesh with a specified texture
          * @note if shader is nullptr, the previous shader is used.
@@ -30,7 +52,6 @@ namespace dcore::graphics
         friend class RenderResourceManager;
 
         void OnBeginRender();
-        // void FlushQueue();
         void OnEndRender();
 
         void Initialize();
@@ -41,6 +62,6 @@ namespace dcore::graphics
     class RenderResourceManager
     {
     public:
-        static 
+        static void Register(resource::ResourceManager *rm);
     };
 }

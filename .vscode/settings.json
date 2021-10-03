@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.ge": "plaintext",
         "*.tcc": "cpp",
         "limits": "cpp",
         "ranges": "cpp",
@@ -13,7 +14,8 @@
         "thread": "cpp",
         "memory": "cpp",
         "functional": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "typeinfo": "cpp"
     }
    
 }

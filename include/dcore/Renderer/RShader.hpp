@@ -16,16 +16,14 @@ namespace dcore::graphics
 	{
 		friend class RUniform;
 		friend class Renderer;
-		DCORE_GRAPHICS_IMPL::Shader *operator ->() const;
-		DCORE_GRAPHICS_IMPL::Shader D;
+		DCORE_GRAPHICS_IMPL::Shader Data_;
 	};
 
 	class RUniform
 	{
 		friend class Renderer;
 		friend class RShader;
-		DCORE_GRAPHICS_IMPL::Uniform *operator ->() const;
-		DCORE_GRAPHICS_IMPL::Uniform D;
+		DCORE_GRAPHICS_IMPL::Uniform Data_;
 	};
 }
 

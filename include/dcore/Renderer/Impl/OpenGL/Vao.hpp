@@ -3,6 +3,8 @@
 #include <cinttypes>
 #include <vector>
 
+namespace dcore::graphics { class Renderer; }
+
 namespace dcore::graphics::opengl
 {
 	using Index = std::uint32_t;
@@ -14,6 +16,7 @@ namespace dcore::graphics::opengl
 	class Vao
 	{
 		UInt VBO, VAO, EBO;
+		friend class dcore::graphics::Renderer;
 	public:
 		void Create(const std::vector<Index> &indices,
 		            const std::vector<Vertex> &vertices);
