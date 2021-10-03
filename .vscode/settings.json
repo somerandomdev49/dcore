@@ -15,7 +15,8 @@
         "memory": "cpp",
         "functional": "cpp",
         "future": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "typeindex": "cpp"
     }
    
 }
