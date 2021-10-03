@@ -1,19 +1,20 @@
 #pragma once
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Renderer/RShader.hpp>
 #include <glm/glm.hpp>
-#include <fwdraw.hpp>
+// #include <fwdraw.hpp>
 
 namespace dcore::graphics
 {
     class Shader
     {
     public:
-        Shader(const resource::Resource<fwdraw::Shader> &sh);
+        Shader(const resource::Resource<RShader> &sh);
 
-        fwdraw::Shader *Get() const;
+        RShader *Get() const;
         void SetTransform(const glm::mat4 &m);
     private:
-        resource::Resource<fwdraw::Shader> Shader_;
-        fwdraw::Uniform UTransform_;
+        resource::Resource<RShader> Shader_;
+        RUniform UTransform_;
     };
 }

@@ -2,7 +2,7 @@
 
 #include <dcore/Core/Assert.hpp>
 #include <string_view>
-#include <fwdraw.hpp>
+// #include <fwdraw.hpp>
 // TODO: Switch to spdlog?
 #include <iostream>
 using namespace dcore::resource;
@@ -56,19 +56,19 @@ void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
     switch(type)
     {
     case RT_STATIC_MESH: {
-        auto a = reinterpret_cast<fwdraw::Mesh*>(r.Get());
+        auto a = reinterpret_cast<dcore::graphics::RStaticMesh*>(r.Get());
         if(!a) break;
-        a->deinit(); delete a;
+        a->DeInit(); delete a;
     } break;
     case RT_SHADER: {
-        auto a = reinterpret_cast<fwdraw::Shader*>(r.Get());
+        auto a = reinterpret_cast<dcore::graphics::RShader*>(r.Get());
         if(!a) break;
-        a->deinit(); delete a;
+        a->DeInit(); delete a;
     } break;
     case RT_TEXTURE_2D: {
-        auto a = reinterpret_cast<fwdraw::Texture*>(r.Get());
+        auto a = reinterpret_cast<dcore::graphics::RTexture*>(r.Get());
         if(!a) break;
-        a->deinit(); delete a;
+        a->DeInit(); delete a;
     } break;
     case RT_ERROR: break;
     case RT_MISSING: break;

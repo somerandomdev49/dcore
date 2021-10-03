@@ -4,7 +4,10 @@
 #include <string_view>
 #include <cinttypes>
 #include <array>
-#include <fwdraw.hpp>
+#include <dcore/Renderer/RShader.hpp>
+#include <dcore/Renderer/RSkeletalMesh.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
+#include <dcore/Renderer/RTexture.hpp>
 
 namespace dcore::resource
 {
@@ -34,15 +37,15 @@ namespace dcore::resource
 		constexpr ResourceType EnumResourceType();
 
 		template<>
-		constexpr ResourceType EnumResourceType<fwdraw::Mesh>()
+		constexpr ResourceType EnumResourceType<dcore::graphics::RStaticMesh>()
 		{ return RT_STATIC_MESH; }
 		
 		template<>
-		constexpr ResourceType EnumResourceType<fwdraw::Shader>()
+		constexpr ResourceType EnumResourceType<dcore::graphics::RShader>()
 		{ return RT_SHADER; }
 
 		template<>
-		constexpr ResourceType EnumResourceType<fwdraw::Texture>()
+		constexpr ResourceType EnumResourceType<dcore::graphics::RTexture>()
 		{ return RT_TEXTURE_2D; }
 
 #define O(X) case X: return #X
@@ -65,7 +68,7 @@ namespace dcore::resource
 #undef O
 
 		class Impl_ResourceManager { public: Impl_ResourceManager(); };
-	}
+	} // namespace detail
 
 	/** A wrapper around void* */
 	class RawResource

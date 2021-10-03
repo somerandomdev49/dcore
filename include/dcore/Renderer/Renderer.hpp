@@ -27,6 +27,7 @@ namespace dcore::graphics
         void Render(RShader *shader, RSkeletalMesh *mesh, RTexture *texture);
     private:
         friend class dcore::platform::Context;
+        friend class RenderResourceManager;
 
         void OnBeginRender();
         // void FlushQueue();
@@ -34,5 +35,12 @@ namespace dcore::graphics
 
         void Initialize();
         void DeInitialize();
+    };
+
+    /** Class responsible for initializing/deinitializing render resources */
+    class RenderResourceManager
+    {
+    public:
+        static 
     };
 }

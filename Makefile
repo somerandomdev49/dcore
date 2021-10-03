@@ -1,24 +1,14 @@
 #### PROJECT SETTINGS ####
-# The name of the executable to be created
 BIN_NAME := dcore
-# Compiler used
 CXX = g++-10
-# Extension of source files used in the project
 SRC_EXT = cpp
-# Path to the source directory, relative to the makefile
 SRC_PATH = src
-# Space-separated pkg-config libraries used by this project
-LIBS =
-# General compiler flags
+LIBS = # pkg-config files
 COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS
-# Additional release-specific flags
 RCOMPILE_FLAGS = -D NDEBUG
-# Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
-# Add additional include paths
-INCLUDES = -Iinclude -I3rd-party/fwdraw/include -I3rd-party/loguru
-# General linker settings
-LINK_FLAGS = -std=c++17 -L3rd-party/fwdraw/lib -lfwdraw
+INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include
+LINK_FLAGS = -std=c++17 # -L3rd-party/fwdraw/lib -lfwdraw
 
 ifeq ($(shell uname),Darwin)
 	LINK_FLAGS += -lglfw3
@@ -26,13 +16,9 @@ else
 	LINK_FLAGS += -lglfw -ldl -lpthread
 endif
 
-# Additional release-specific linker settings
 RLINK_FLAGS = 
-# Additional debug-specific linker settings
 DLINK_FLAGS =
-# Destination directory, like a jail or mounted system
 DESTDIR = /
-# Install path (bin/ is appended automatically)
 INSTALL_PREFIX = usr/local
 
 ifeq ($(shell uname),Darwin)

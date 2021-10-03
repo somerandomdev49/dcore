@@ -1,7 +1,9 @@
 #pragma once
+#include <dcore/Renderer/RTexture.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Graphics/Renderable.hpp>
-#include <fwdraw.hpp>
+// #include <fwdraw.hpp>
 #include <vector>
 
 namespace dcore::graphics
@@ -9,12 +11,12 @@ namespace dcore::graphics
 	class StaticMesh : public Renderable
 	{
 	public:
-		StaticMesh(const resource::Resource<fwdraw::Mesh> &mesh, const resource::Resource<fwdraw::Texture> &texture);
+		StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture);
 
-		const resource::Resource<fwdraw::Mesh> &GetMesh() const;
-		const resource::Resource<fwdraw::Texture> &GetTexture() const;
+		const resource::Resource<RStaticMesh> &GetMesh() const;
+		const resource::Resource<RTexture> &GetTexture() const;
 	private:
-		resource::Resource<fwdraw::Mesh> Mesh_;
-		resource::Resource<fwdraw::Texture> Texture_;
+		resource::Resource<RStaticMesh> Mesh_;
+		resource::Resource<RTexture> Texture_;
 	};
 }
