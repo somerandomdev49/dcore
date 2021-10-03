@@ -8,41 +8,39 @@
 using namespace dcore::resource;
 
 RawResource::RawResource() { }
-RawResource::RawResource(ResourceType type, void *data) : Type_(type), Data_(data) { }
+RawResource::RawResource(std::type_index type, void *data) : Type_(type), Data_(data) { }
 void *RawResource::Get() const { return Data_; }
-ResourceType RawResource::GetType() const { return Type_; }
+const std::type_index &RawResource::GetType() const { return Type_; }
 
 static RawResource NullResource;
 static RawResource MissingResource;
 
-auto impl_ResourceManagerInstance = detail::Impl_ResourceManager();
-detail::Impl_ResourceManager::Impl_ResourceManager()
-{
-    NullResource.Data_ = nullptr;
-    NullResource.Type_ = RT_ERROR;
+// auto impl_ResourceManagerInstance = detail::Impl_ResourceManager();
+// detail::Impl_ResourceManager::Impl_ResourceManager()
+// {
+//     NullResource.Data_ = nullptr;
+//     NullResource.Type_ = RT_ERROR;
 
-    MissingResource.Data_ = nullptr;
-    MissingResource.Type_ = RT_MISSING;
-}
+//     MissingResource.Data_ = nullptr;
+//     MissingResource.Type_ = RT_MISSING;
+// }
 
 void ResourceManager::Initialize() {}
 void ResourceManager::DeInitialize()
 {
     DCORE_LOG_INFO << "[ResourceManager] De-Initializing...";
 
-    int i = 0;
     for(const auto &m : Resources_)
     {
-        DCORE_LOG_INFO << "[ResourceManager] Removing [" << detail::StringResourceTypeEnum(ResourceType(i)) << ']';
-        for(const auto &p : m)
+        DCORE_LOG_INFO << "[ResourceManager] Removing [" << m.first.name() << ']';
+        for(const auto &p : m.second)
         {
-            RemoveResource(p.second.GetType(), p.first);
+            DeConstructors_[p.second.GetType()](p.second.GetType(), p.first);
         }
-        i += 1;
     }
 }
 
-void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
+void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 {
     DCORE_LOG_INFO << "[ResourceManager] Removing Resource [" << detail::StringResourceTypeEnum(type) << "] '" << id << '\'';
     DCORE_ASSERT_RETURN(type >= 0 && type < RT_RESOURCE_COUNT, "ResourceManager::RemoveResource: Incorrect Resource Type!");
@@ -52,28 +50,6 @@ void ResourceManager::RemoveResource(ResourceType type, const std::string &id)
     // DCORE_LOG_INFO << "[ResourceManager] Removing Resource: '" << id << "'";
 
     RawResource &r = Resources_[type][id];
-
-    switch(type)
-    {
-    case RT_STATIC_MESH: {
-        auto a = reinterpret_cast<dcore::graphics::RStaticMesh*>(r.Get());
-        if(!a) break;
-        a->DeInit(); delete a;
-    } break;
-    case RT_SHADER: {
-        auto a = reinterpret_cast<dcore::graphics::RShader*>(r.Get());
-        if(!a) break;
-        a->DeInit(); delete a;
-    } break;
-    case RT_TEXTURE_2D: {
-        auto a = reinterpret_cast<dcore::graphics::RTexture*>(r.Get());
-        if(!a) break;
-        a->DeInit(); delete a;
-    } break;
-    case RT_ERROR: break;
-    case RT_MISSING: break;
-    default: break;
-    }
 
     r.Type_ = RT_MISSING;
     r.Data_ = nullptr;

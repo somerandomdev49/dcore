@@ -17,46 +17,26 @@ namespace dcore::resource
         /**
          * \brief Loads resources from a manifest file.
          * \param location The relative path for the manifest file.
-         * \param res The ResourceManager to load the resources into.
          **/
-        void LoadManifest(const std::string &location, ResourceManager *res);
+        void LoadFromManifest(const std::string &location);
 
-        
         /**
-         * \brief Loads a resource from the specified file.
-         * \param location The relative path for the resource file.
-         * \param res The ResourceManager to load the resource into.
+         * \brief Loads a resource by name (using the mapping)
          **/
-        void Load(const std::string &location, ResourceManager *res);
+        void LoadByName(const std::string &name);
 
         /**
          * \brief Loads a mapping file from the specified path.
          * \param the path to load the file from.
          **/
         void LoadMappings(const std::string &location);
-
-        using LoaderFunc = void(*)(const std::string&, const std::string&, ResourceManager*);
-        
-        /**
-         * \brief Registers a loader with a specified name
-         */
-        void RegisterLoader(const std::string &name, LoaderFunc loaderFunc);
     
+        template<typename T>
+        void RegisterResourceType(const std::string &name);
     private:
         void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
-        void ActualLoad_(
-            const std::string &type,
-            const std::string &id,
-            const std::string &location,
-            ResourceManager *res);
 
         std::unordered_map<std::string, std::string> ResMappings_;
-        static std::unordered_map<std::string, LoaderFunc> LoaderMap_;
-
-        // Default Loaders:
-        static void MeshLoader(const std::string &id, const std::string &location, ResourceManager *res);
-        static void TextureLoader(const std::string &id, const std::string &location, ResourceManager *res);
-        static void AudioLoader(const std::string &id, const std::string &location, ResourceManager *res);
-        static void ShaderLoader(const std::string &id, const std::string &location, ResourceManager *res);
+        std::unordered_map<std::string, std::type_index> ResTypes_;
     };
 }

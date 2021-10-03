@@ -15,65 +15,6 @@
 
 namespace dcore::resource
 {
-	// enum ResourceType : char
-	// {
-	// 	RT_ERROR = -2,
-	// 	RT_MISSING = -1,
-	// 	RT_STATIC_MESH = 0,
-	// 	RT_SKELETAL_MESH,
-	// 	RT_TEXTURE_2D,
-	// 	RT_TEXTURE_3D,
-	// 	RT_TEXTURE_CUBEMAP,
-	// 	RT_SHADER,
-	// 	RT_RESOURCE_COUNT // keep this last.
-	// 	// also, keep the enum values auto-generated,
-	// 	// ResourceManager needs the values to be
-	// 	// in a sequence.
-	// };
-	
-	// namespace detail
-	// {
-	// 	/**
-	// 	 * Converts a type to a ResourceType enum value.
-	// 	 * Example: `EnumResourceType\<fwdraw::Mesh>() -> RT_STATIC_MESH`
-	// 	**/
-	// 	template<typename T>
-	// 	constexpr ResourceType EnumResourceType();
-
-	// 	template<>
-	// 	constexpr ResourceType EnumResourceType<dcore::graphics::RStaticMesh>()
-	// 	{ return RT_STATIC_MESH; }
-		
-	// 	template<>
-	// 	constexpr ResourceType EnumResourceType<dcore::graphics::RShader>()
-	// 	{ return RT_SHADER; }
-
-	// 	template<>
-	// 	constexpr ResourceType EnumResourceType<dcore::graphics::RTexture>()
-	// 	{ return RT_TEXTURE_2D; }
-
-// #define O(X) case X: return #X
-// 		constexpr const char *StringResourceTypeEnum(ResourceType t)
-// 		{
-// 			switch(t)
-// 			{
-// 				O(RT_ERROR);
-// 				O(RT_MISSING);
-// 				O(RT_STATIC_MESH);
-// 				O(RT_SKELETAL_MESH);
-// 				O(RT_TEXTURE_2D);
-// 				O(RT_TEXTURE_3D);
-// 				O(RT_TEXTURE_CUBEMAP);
-// 				O(RT_SHADER);
-// 				O(RT_RESOURCE_COUNT);
-// 				default: return "<BAD_RESOURCE_TYPE>";
-// 			}
-// 		}
-// #undef O
-
-// 		class Impl_ResourceManager { public: Impl_ResourceManager(); };
-// 	} // namespace detail
-
 	/** A wrapper around void* */
 	class RawResource
 	{
@@ -81,13 +22,13 @@ namespace dcore::resource
 		RawResource();
 
 		void *Get() const;
-		const std::type_info &GetType() const;
+		const std::type_index &GetType() const;
 	private:
 		friend class ResourceLoader;
 		friend class ResourceManager;
 		// friend class detail::Impl_ResourceManager;
-		RawResource(std::type_info type, void *data);
-		std::type_info Type_ = RT_ERROR;
+		RawResource(std::type_index type, void *data);
+		std::type_index Type_ = RT_ERROR;
 		void DCORE_REF *Data_ = nullptr;
 	};
 
@@ -112,10 +53,16 @@ namespace dcore::resource
 	{
 	public:
 		ResourceManager(const std::string &root);
-		ResourceManager *Instance() const;
+		static ResourceManager *Instance();
 
 		/** Returns a raw resource for a type with a specified id. */
 		const RawResource &GetRaw(const std::string &id, std::type_info type);
+
+		/** Returns a raw resource for a type with a specified id. */
+		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type);
+
+		/** Returns a raw resource for a type with a specified id. */
+		const RawResource &UnLoadRaw(const std::string &id, std::type_index type);
 
 		/** Returns a resource of a specified type and id. */
 		template<typename T>
@@ -123,17 +70,17 @@ namespace dcore::resource
 
 		/** Load a resource with its loader */
 		template<typename T>
-		Resource<T> Load(const std::string &location);
+		Resource<T> Load(const std::string &id, const std::string &location);
 
 		/** Unload a resource with its unloader */
 		template<typename T>
-		Resource<T> UnLoad(const std::string &location);
+		Resource<T> UnLoad(const std::string &id);
 
 	private:
 		friend class dcore::launch::Launch;
 		void Initialize();
 		void DeInitialize();
-		void SetInstance(ResourceManager *newInstance);
+		static void SetInstance(ResourceManager *newInstance);
 
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
 		std::unordered_map<std::type_index, ResourceMap> Resources_;
@@ -154,18 +101,18 @@ namespace dcore::resource
 	}
 
 	template<typename T>
-	Resource<T> Load(const std::string &location)
+	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
 	{
 		return Resource<T>(reinterpret_cast<T*>(
-			LoadRaw(location, std::type_index(typeid(std::decay_t<T>))).Data_
+			LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>))).Data_
 		));
 	}
 
 	template<typename T>
-	Resource<T> UnLoad(const std::string &location)
+	Resource<T> ResourceManager::UnLoad(const std::string &id)
 	{
 		return Resource<T>(reinterpret_cast<T*>(
-			UnLoadRaw(location, std::type_index(typeid(std::decay_t<T>))).Data_
+			UnLoadRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_
 		));
 	}
 }

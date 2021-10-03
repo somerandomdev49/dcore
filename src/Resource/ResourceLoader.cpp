@@ -1,63 +1,24 @@
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Core/Assert.hpp>
 #include <dcore/Resource/ConfigReader.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
+#include <dcore/Renderer/RSkeletalMesh.hpp>
+#include <dcore/Renderer/RTexture.hpp>
+#include <dcore/Renderer/RShader.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Core/Log.hpp>
-#include <fwdraw.hpp>
 #include <regex>
 
 using namespace dcore::resource;
 
-void ResourceLoader::RegisterLoader(const std::string &name, LoaderFunc loaderFunc)
-{
-    LoaderMap_[name] = loaderFunc;
-}
-
-void ResourceLoader::MeshLoader(const std::string &id, const std::string &location, ResourceManager *res)
-{
-    res->AddResource(id, RawResource(RT_STATIC_MESH, (void*)(new fwdraw::Mesh(std::string(location).c_str()))));
-}
-
-void ResourceLoader::TextureLoader(const std::string &id, const std::string &location, ResourceManager *res)
-{
-    res->AddResource(id, RawResource(RT_TEXTURE_2D, (void*)(new fwdraw::Texture(std::string(location).c_str()))));
-}
-
-void ResourceLoader::AudioLoader(const std::string &id, const std::string &location, ResourceManager *res)
-{
-    (void)location;
-    // TODO
-    res->AddResource(id, RawResource(RT_ERROR, nullptr));
-}
-void ResourceLoader::ShaderLoader(const std::string &id, const std::string &location, ResourceManager *res)
-{
-    auto vs = std::string(location) + ".vert";
-    auto fs = std::string(location) + ".frag";
-    res->AddResource(id, RawResource(RT_SHADER, (void*)(new fwdraw::Shader(vs.c_str(), fs.c_str()))));
-}
-
-// std::unordered_map<std::string, ResourceLoader::LoaderFunc> ResourceLoader::LoaderMap_ =
-// {
-//     {"Mesh", &ResourceLoader::MeshLoader},
-//     {"Texture", &ResourceLoader::TextureLoader},
-//     {"Audio", &ResourceLoader::AudioLoader},
-//     {"Shader", &ResourceLoader::ShaderLoader},
-// };
-
 ResourceLoader::ResourceLoader(const std::string &root)
-    : Resources(root)
-{
-    // Default Loaders:
-    RegisterLoader("Mesh"   , &ResourceLoader::MeshLoader    );    
-    RegisterLoader("Texture", &ResourceLoader::TextureLoader );    
-    RegisterLoader("Audio"  , &ResourceLoader::AudioLoader   );    
-    RegisterLoader("Shader" , &ResourceLoader::ShaderLoader  );    
-}
+    : Resources(root) { }
 
-void ResourceLoader::LoadManifest(const std::string &location, ResourceManager *res)
+void ResourceLoader::LoadFromManifest(const std::string &location)
 {
     ConfigReader::DataManifest files;
     ConfigReader::DefaultReader()->ReadManifest(location, files);
-    for(const auto &p : files) Load(p, res);
+    for(const auto &p : files) LoadByName(p);
 }
 
 void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
@@ -84,30 +45,29 @@ void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::
     }
 }
 
-void ResourceLoader::Load(const std::string &location, ResourceManager *res)
+void ResourceLoader::LoadByName(const std::string &name)
 {
     // We expect location to be in the form of Type$Path.
-    auto splitLoc = location.find('$');
+    auto splitLoc = name.find('$');
     // TODO: Convert to if
-    DCORE_ASSERT(splitLoc != location.npos, "No '$' in resource path");
+    DCORE_ASSERT(splitLoc != name.npos, "No '$' in resource path");
 
-    auto type = location.substr(0, splitLoc);
-    auto path = location.substr(splitLoc + 1);
+    auto type = name.substr(0, splitLoc);
+    auto path = name.substr(splitLoc + 1);
 
     DCORE_LOG_INFO << "[ResourceLoader] Loading resource of type " << type << " at " << path;
     std::vector<std::pair<std::string, std::string>> maps;
     FindMappings_(path, maps);
     for(const auto p : maps)
-        ActualLoad_(type, p.first, p.second, res);
-}
+    {
+        auto actual = FullPath(p.second);
+        DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << p.first << " at " << actual << " [" << type << ']';
 
-void ResourceLoader::ActualLoad_(
-    const std::string &type, const std::string &id, const std::string &location, ResourceManager *res)
-{
-    auto actual = FullPath(location);
-    DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << id << " at " << actual << " [" << type << ']';
-    DCORE_ASSERT(LoaderMap_.find(type) != LoaderMap_.end(), "Bad Resource Type");
-    LoaderMap_[type](id, actual, res);
+        auto found = ResTypes_.find(type);
+        DCORE_ASSERT(found == ResTypes_.end(), "Bad Resource Type");
+        // LoaderMap_[type](id, actual, res);
+        ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second);
+    }
 }
 
 void ResourceLoader::LoadMappings(const std::string &location)
