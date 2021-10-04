@@ -35,7 +35,7 @@ void ResourceManager::DeInitialize()
         DCORE_LOG_INFO << "[ResourceManager] Removing [" << m.first.name() << ']';
         for(const auto &p : m.second)
         {
-            DeConstructors_[p.second.GetType()](p.second.GetType(), p.first);
+            DeConstructors_[p.second.GetType()](p.second.Data_);
         }
     }
 }
@@ -56,27 +56,31 @@ void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
     r.Data_ = nullptr;
 }
 
-const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx)
+const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
 {
     // DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource: Incorrect Resource Type!");
     DCORE_LOG_INFO << "Adding resource of type [" << idx.name() << "] '" << id << '\'';
     
-    Resources_[idx][id] = RawResource(idx, Constructors_[idx](location));
+    void *bytes = new char[allocSize];
+    Constructors_[idx](location, bytes);
+    auto &res = (Resources_[idx][id] = RawResource(idx, bytes));
+    return res;
 }
 
-const RawResource &ResourceManager::GetRaw(const std::string &id, ResourceType type)
+const RawResource &ResourceManager::GetRaw(const std::string &id, std::type_index type)
 {
-    if(type < 0 || type >= RT_RESOURCE_COUNT)
-    {
-        // TODO: Add parametrized assert&return macro
-        internal_Assert("[ResourceManager::GetRaw] Incorrect Resource Type!", "type < 0 || type >= RT_RESOURCE_COUNT", __FILE__, __LINE__);
-        return NullResource;
-    }
+    static auto missingResource = RawResource(std::type_index(typeid(Null)), nullptr);
+    // if(type < 0 || type >= RT_RESOURCE_COUNT)
+    // {
+    //     // TODO: Add parametrized assert&return macro
+    //     internal_Assert("[ResourceManager::GetRaw] Incorrect Resource Type!", "type < 0 || type >= RT_RESOURCE_COUNT", __FILE__, __LINE__);
+    //     return NullResource;
+    // }
 
     if(Resources_[type].find(id) == Resources_[type].end())
     {
         DCORE_LOG_ERROR << "[ResourceManager::GetRaw] Resource '" << id << "\' doesn't exist.";
-        return MissingResource;
+        return missingResource;
     }
     
     return Resources_[type][id];

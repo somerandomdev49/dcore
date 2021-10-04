@@ -30,7 +30,7 @@ namespace dcore::resource
 		friend class ResourceManager;
 		// friend class detail::Impl_ResourceManager;
 		RawResource(std::type_index type, void *data);
-		std::type_index Type_ = RT_ERROR;
+		std::type_index Type_ = std::type_index(typeid(Null));
 		void DCORE_REF *Data_ = nullptr;
 	};
 
@@ -61,7 +61,7 @@ namespace dcore::resource
 		const RawResource &GetRaw(const std::string &id, std::type_index type);
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type);
+		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type, size_t allocSize);
 
 		/** Returns a raw resource for a type with a specified id. */
 	 	void UnLoadRaw(const std::string &id, std::type_index type);
@@ -76,7 +76,7 @@ namespace dcore::resource
 
 		/** Unload a resource with its unloader */
 		template<typename T>
-		Resource<T> UnLoad(const std::string &id);
+		void UnLoad(const std::string &id);
 
 	private:
 		friend class dcore::launch::Launch;
@@ -87,7 +87,7 @@ namespace dcore::resource
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
 		std::unordered_map<std::type_index, ResourceMap> Resources_;
 
-		using ResourceConstructorFunc = void (*)(const std::string&);
+		using ResourceConstructorFunc = void (*)(const std::string&, void*);
 		std::unordered_map<std::type_index, ResourceConstructorFunc> Constructors_;
 		
 		using ResourceDeConstructorFunc = void (*)(void*);
@@ -106,15 +106,13 @@ namespace dcore::resource
 	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
 	{
 		return Resource<T>(reinterpret_cast<T*>(
-			LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>))).Data_
+			LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_
 		));
 	}
 
 	template<typename T>
-	Resource<T> ResourceManager::UnLoad(const std::string &id)
+	void ResourceManager::UnLoad(const std::string &id)
 	{
-		return Resource<T>(reinterpret_cast<T*>(
-			UnLoadRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_
-		));
+		UnLoadRaw(id, std::type_index(typeid(std::decay_t<T>)));
 	}
 }
