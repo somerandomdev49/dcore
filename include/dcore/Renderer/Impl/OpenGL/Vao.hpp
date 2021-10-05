@@ -5,7 +5,7 @@
 
 namespace dcore::graphics { class Renderer; }
 
-namespace dcore::graphics::opengl
+namespace dcore::graphics::impl::opengl
 {
 	using Index = std::uint32_t;
 	struct Vertex

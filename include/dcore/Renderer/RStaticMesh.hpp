@@ -7,7 +7,7 @@ namespace dcore::graphics
 {
     class Renderer;
 
-	namespace opengl
+	namespace impl::opengl
 	{
 		struct StaticMesh
 		{
@@ -20,7 +20,7 @@ namespace dcore::graphics
 	class RStaticMesh
 	{
 		friend class Renderer;
-		DCORE_GRAPHICS_IMPL::StaticMesh Data_;
+		impl::DCORE_GRAPHICS_IMPL::StaticMesh Data_;
 	};
 }
 

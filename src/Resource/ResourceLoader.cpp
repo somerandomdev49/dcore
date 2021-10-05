@@ -66,7 +66,7 @@ void ResourceLoader::LoadByName(const std::string &name)
         auto found = ResTypes_.find(type);
         DCORE_ASSERT(found == ResTypes_.end(), "Bad Resource Type");
         // LoaderMap_[type](id, actual, res);
-        ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second, );
+        ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second.idx, found->second.allocSize);
     }
 }
 

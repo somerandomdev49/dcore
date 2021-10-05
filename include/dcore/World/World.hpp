@@ -3,7 +3,6 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <entt/entity/registry.hpp>
 #include <dcore/Launch.hpp>
-#include <fwdraw.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -24,7 +23,7 @@ namespace dcore::world
         void ReCalculateMatrix();
     };
 
-    struct ModelRenderableComponent
+    struct StaticMeshComponent
     {
         graphics::StaticMesh Mesh;
     };

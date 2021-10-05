@@ -6,7 +6,7 @@ namespace dcore::graphics
 {
     class Renderer;
 
-	namespace opengl
+	namespace impl::opengl
 	{
 		struct Shader { UInt Id; };
 		struct Uniform { UInt Location; };
@@ -16,14 +16,14 @@ namespace dcore::graphics
 	{
 		friend class RUniform;
 		friend class Renderer;
-		DCORE_GRAPHICS_IMPL::Shader Data_;
+		impl::DCORE_GRAPHICS_IMPL::Shader Data_;
 	};
 
 	class RUniform
 	{
 		friend class Renderer;
 		friend class RShader;
-		DCORE_GRAPHICS_IMPL::Uniform Data_;
+		impl::DCORE_GRAPHICS_IMPL::Uniform Data_;
 	};
 }
 

@@ -3,7 +3,7 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Resource/Properties.hpp>
-#include <fwdraw.hpp>
+#include <dcore/Platform/Window.hpp>
 
 using namespace dcore::platform;
 
@@ -13,7 +13,7 @@ static dcore::graphics::RendererInterface ri;
 void Context::Initialize()
 {
     // auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
-    frame = new fwdraw::Frame(glm::ivec2(800, 600));
+    frame = new platform::Frame(glm::ivec2(800, 600));
     frame->init();
 
     Rend_->Initialize();

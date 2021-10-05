@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Event/InputManager.hpp>
+#include <dcore/Platform/Window.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Launch.hpp>
 // #include <dcore/Renderer/Renderer.hpp>
@@ -17,7 +18,7 @@ namespace dcore::platform
 		void Deinitialize();
 	};
 
-	/** Graphics/Window context. Only a single instance should ever exist. */
+	/** Graphics/Window context. */
 	class Context
 	{
 	public:
@@ -39,5 +40,6 @@ namespace dcore::platform
 
 		graphics::Renderer *Rend_;
 		world::World *World_;
+		Frame *Frame_;
 	};
 }

@@ -34,9 +34,15 @@ namespace dcore::resource
         template<typename T>
         void RegisterResourceType(const std::string &name);
     private:
+        struct TypeInfo { std::type_index idx; size_t allocSize; };
+
         void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
 
         std::unordered_map<std::string, std::string> ResMappings_;
-        std::unordered_map<std::string, std::type_index> ResTypes_;
+        std::unordered_map<std::string, TypeInfo> ResTypes_;
     };
+
+    template<typename T>
+    void ResourceLoader::RegisterResourceType(const std::string &name)
+    { ResTypes_[name] = { std::type_index(typeid(std::decay_t<T>)), sizeof(T) }; }
 }

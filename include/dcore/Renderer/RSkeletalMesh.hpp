@@ -10,7 +10,7 @@ namespace dcore::graphics
 {
     class Renderer;
 
-	namespace opengl
+	namespace impl::opengl
 	{
 		struct SkeletalMesh
 		{
@@ -36,7 +36,7 @@ namespace dcore::graphics
 		int JointCount_;
 		
 		friend class Renderer;
-		DCORE_GRAPHICS_IMPL::SkeletalMesh Data_;
+		impl::DCORE_GRAPHICS_IMPL::SkeletalMesh Data_;
 	};
 }
 

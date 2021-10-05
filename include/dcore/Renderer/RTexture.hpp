@@ -6,7 +6,7 @@ namespace dcore::graphics
 {
     class Renderer;
 
-	namespace opengl
+	namespace impl::opengl
 	{
 		struct Texture
 		{
@@ -17,7 +17,7 @@ namespace dcore::graphics
 	class RTexture
 	{
 		friend class Renderer;
-		DCORE_GRAPHICS_IMPL::Texture Data_;
+		impl::DCORE_GRAPHICS_IMPL::Texture Data_;
 	};
 }
 
