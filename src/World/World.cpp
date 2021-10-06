@@ -40,12 +40,12 @@ void World::Update()
 
 void World::Render(graphics::RendererInterface *render)
 {
-    auto v = Registry_.view<ModelRenderableComponent, TransformComponent>();
+    auto v = Registry_.view<StaticMeshComponent, TransformComponent>();
 
     for(auto e : v)
     {
         auto &t = Registry_.get<TransformComponent>(e);
-        auto &r = Registry_.get<ModelRenderableComponent>(e);
+        auto &r = Registry_.get<StaticMeshComponent>(e);
         t.ReCalculateMatrix();
         r.Mesh.SetTransform(t.Matrix); // TODO: Pass this as parameter to RenderStaticMesh
         render->RenderStaticMesh(&r.Mesh);

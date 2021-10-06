@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/glm.hpp>
 
 namespace dcore::platform
 {
@@ -7,7 +8,7 @@ namespace dcore::platform
 	{
 	public:
 		virtual ~Frame();
-		virtual void Initialize();
+		virtual void Initialize(const glm::ivec2 &size);
 		virtual bool ShouldEnd();
 		virtual void OnBeginFrame();
 		virtual void OnEndFrame();

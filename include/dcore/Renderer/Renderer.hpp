@@ -19,6 +19,7 @@ namespace dcore::graphics
          */
         void UseShader(RShader *shader);
 
+        RUniform GetUniform(RShader *shader, const char *name);
         void SetUniform(const RUniform &u, float v);
         void SetUniform(const RUniform &u, int v);
         void SetUniform(const RUniform &u, const glm::vec2 &v);
@@ -47,9 +48,13 @@ namespace dcore::graphics
          * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
         */
         void Render(RShader *shader, RSkeletalMesh *mesh, RTexture *texture);
+
+        static Renderer *Instance();
     private:
         friend class dcore::platform::Context;
         friend class RenderResourceManager;
+
+        static void SetInstance(Renderer *newInstance);
 
         void OnBeginRender();
         void OnEndRender();

@@ -5,28 +5,30 @@
 #include <dcore/Graphics/Shader.hpp>
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Graphics/Camera.hpp>
+#include <dcore/Renderer/Renderer.hpp>
 
 using namespace dcore::graphics;
 
-Shader::Shader(const resource::Resource<fwdraw::Shader> &sh)
-    : Shader_(sh), UTransform_(sh.Get(), "u_Transform")
+CommonShader::CommonShader(const resource::Resource<RShader> &sh)
+    : Shader_(sh)
 {
     DCORE_ASSERT_RETURN(sh.Get() != nullptr, "Bad Shader!");
+    UTransform_ = Renderer::Instance()->GetUniform(sh.Get(), "u_Transform");
 }
 
-fwdraw::Shader *Shader::Get() const { return Shader_.Get(); }
-void Shader::SetTransform(const glm::mat4 &m) { UTransform_.set(m); }
+RShader *CommonShader::Get() const { return Shader_.Get(); }
+void CommonShader::SetTransform(const glm::mat4 &m) { UTransform_; }
+
 
 const glm::mat4 &Renderable::GetTransform() const { return Transform_; }
 void Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
 
 
-
-StaticMesh::StaticMesh(const resource::Resource<fwdraw::Mesh> &mesh, const resource::Resource<fwdraw::Texture> &texture)
+StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture)
     : Mesh_(mesh), Texture_(texture) { }
 
-const dcore::resource::Resource<fwdraw::Mesh> &StaticMesh::GetMesh() const { return Mesh_; }
-const dcore::resource::Resource<fwdraw::Texture> &StaticMesh::GetTexture() const { return Texture_; }
+const dcore::resource::Resource<RStaticMesh> &StaticMesh::GetMesh() const { return Mesh_; }
+const dcore::resource::Resource<RTexture> &StaticMesh::GetTexture() const { return Texture_; }
 
 Camera::Camera(float fov, float aspect, float near, float far)
 {
@@ -80,8 +82,8 @@ void Camera::RecalcProjMatrix()
 void RendererInterface::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend)
 {
     // TODO: Should not be hard-written!
-    auto s = rm->Get<fwdraw::Shader>("DCore.Shader.ObjectShader");
-    ObjectShader_ = new Shader(s);
+    auto s = rm->Get<RShader>("DCore.Shader.ObjectShader");
+    ObjectShader_ = new CommonShader(s);
     Camera_ = new Camera();
     
     Renderer_ = rend;
@@ -100,7 +102,7 @@ Camera *RendererInterface::GetCamera() const { return Camera_; }
 void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
 {
     // TODO: Do not set the shader each time we render something, it's expensive!
-    Renderer_->Get().bind_shader(ObjectShader_->Get()); // TODO: stay away from calling fwdraw in higher order classes.
+    Renderer_->UseShader(ObjectShader_->Get()); // TODO: stay away from calling fwdraw in higher order classes.
     ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
     Renderer_->Render(ObjectShader_->Get(), sm->GetMesh().Get(), sm->GetTexture().Get());
 }

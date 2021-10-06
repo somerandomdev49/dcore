@@ -6,10 +6,10 @@
 
 namespace dcore::graphics
 {
-    class Shader
+    class CommonShader
     {
     public:
-        Shader(const resource::Resource<RShader> &sh);
+        CommonShader(const resource::Resource<RShader> &sh);
 
         RShader *Get() const;
         void SetTransform(const glm::mat4 &m);

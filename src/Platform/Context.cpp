@@ -5,40 +5,42 @@
 #include <dcore/Resource/Properties.hpp>
 #include <dcore/Platform/Window.hpp>
 
-using namespace dcore::platform;
+// TODO: Make ethe implementation dynamic.
+#include <dcore/Platform/Impl/GLFW/GLFW.hpp>
+#include <dcore/Platform/Impl/GLFW/Window.hpp>
 
-static fwdraw::Frame *frame;
-static dcore::graphics::RendererInterface ri;
+using namespace dcore::platform;
 
 void Context::Initialize()
 {
     // auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
-    frame = new platform::Frame(glm::ivec2(800, 600));
-    frame->init();
-
+    platform::impl::glfw::Initialize();
+    Frame_ = new platform::impl::glfw::Frame();
+    Frame_->Initialize(glm::ivec2(800, 600));
     Rend_->Initialize();
+    RI_ = new graphics::RendererInterface();
 }
 
 void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm)
 {
-    ri.Initialize(rm, Rend_);
+    RI_->Initialize(rm, Rend_);
 }
 
-dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return &ri; }
+dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return RI_; }
 
 void Context::Start()
 {
-    while(!frame->should_end())
+    while(!Frame_->ShouldEnd())
     {
-        frame->on_begin();
-        float dt = frame->delta(); (void)dt;
+        Frame_->OnBeginFrame();
+        // float dt = Frame_->delta(); (void)dt;
         // this->TimeManager_->SetDelta_(dt);
         World_->Update();
         Rend_->OnBeginRender();
-        World_->Render(&ri);
+        World_->Render(RI_);
         // Rend_->FlushQueue();
         Rend_->OnEndRender();
-        frame->on_end();
+        Frame_->OnEndFrame();
     }
 }
 
@@ -46,9 +48,11 @@ void Context::CloseWindow() {}
 
 void Context::DeInitialize()
 {
-    ri.DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
+    RI_->DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
+    delete RI_;
     Rend_->DeInitialize();
-    frame->deinit();
+    Frame_->DeInitialize();
+    delete Frame_;
 }
 
 static Context *ctx;
@@ -58,5 +62,5 @@ void Context::SetInstance(Context *newContext)
 Context *Context::Instance()
 { if(ctx == nullptr) ctx = new Context; return ctx; }
 
-bool Context::IsKeyPressed(int key) { return frame->key_pressed(key); }
-bool Context::IsMousePressed(int button) { return frame->mouse_pressed(button); }
+bool Context::IsKeyPressed(int key) { return Frame_->CheckKeyPressed(key); }
+bool Context::IsMousePressed(int button) { return Frame_->CheckMouseButtonPressed(button); }

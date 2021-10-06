@@ -41,5 +41,6 @@ namespace dcore::platform
 		graphics::Renderer *Rend_;
 		world::World *World_;
 		Frame *Frame_;
+		dcore::graphics::RendererInterface *RI_;
 	};
 }

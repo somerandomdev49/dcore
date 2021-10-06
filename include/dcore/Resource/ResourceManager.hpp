@@ -41,11 +41,11 @@ namespace dcore::resource
 	public:
 		Resource() : Data_(nullptr) {};
 
-		const T *Get() const { return Data_; };
+		T *Get() const { return Data_; };
 	private:
 		friend class ResourceManager;
 		Resource(T *data) : Data_(data) {}
-		const T DCORE_REF *Data_;
+		T DCORE_REF *Data_;
 	};
 
 

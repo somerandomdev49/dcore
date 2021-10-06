@@ -4,7 +4,7 @@
 
 namespace dcore::platform::impl::glfw
 {
-	class Frame : dcore::platform::Frame
+	class Frame : public dcore::platform::Frame
 	{
 	public:
 		void Initialize(const glm::ivec2 &size) override;

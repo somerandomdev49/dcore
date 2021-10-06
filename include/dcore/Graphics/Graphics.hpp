@@ -28,7 +28,7 @@ namespace dcore::graphics
 		void DeInitialize();
 
 		Camera DCORE_OWN *Camera_;
-		Shader DCORE_OWN *ObjectShader_;
+		CommonShader DCORE_OWN *ObjectShader_;
 		Renderer DCORE_REF *Renderer_;
 	};
 }
