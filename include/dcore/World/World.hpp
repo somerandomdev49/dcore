@@ -25,7 +25,7 @@ namespace dcore::world
 
     struct StaticMeshComponent
     {
-        graphics::StaticMesh *Mesh;
+        graphics::StaticMesh Mesh;
     };
 
     class World;

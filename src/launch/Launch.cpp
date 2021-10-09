@@ -38,17 +38,17 @@ namespace dcore
         resource::ConfigReader cfg("data");
         resource::ConfigReader::SetDefaultReader(&cfg);
         resource::ResourceLoader rl("data");
-        resource::ResourceManager rm;
+        resource::ResourceManager rm("data");
         rm.Initialize();
         rl.LoadMappings("ResourceMap.ini");
-        rl.LoadManifest("Manifest.cfg", &rm);
+        rl.LoadFromManifest("Manifest.cfg");
 
         world::Entity e = world.CreateEntity();
         e.AddComponent(world::TransformComponent());
-        e.AddComponent(world::ModelRenderableComponent{
+        e.AddComponent(world::StaticMeshComponent{
             graphics::StaticMesh(
-                rm.Get<fwdraw::Mesh>("DCore.Mesh.Cube"),
-                rm.Get<fwdraw::Texture>("DCore.Texture.Main.Grass")
+                rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
+                rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass")
             )
         });
 
