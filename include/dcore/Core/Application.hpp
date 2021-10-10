@@ -9,7 +9,7 @@ namespace dcore
 	class Application
 	{
 	public:
-		static class
+		static class InfoT
 		{
 		public:
 			void SetError(const Error &err); 
