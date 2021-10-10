@@ -25,5 +25,16 @@ void glfw::Initialize()
 
 void glfw::DeInitilize()
 {
-	
+	if(!DidTerminate)
+	{
+		glfwTerminate();
+		DidTerminate = true;
+	}
+}
+
+const char *glfw::GetError()
+{
+	const char *err;
+	glfwGetError(&err);
+	return err;
 }

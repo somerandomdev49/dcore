@@ -7,4 +7,5 @@ namespace dcore::platform::impl::glfw
 
 	void Initialize();
 	void DeInitilize();
+	const char *GetError();
 }
