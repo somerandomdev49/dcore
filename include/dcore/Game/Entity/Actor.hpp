@@ -11,3 +11,13 @@ public:
     
     static void Update(ActorComponent *self);
 }
+
+class dg::entity::Effect
+{
+public:
+    const float GetTimeSinceBegin() const;
+    const float GetEndTime() const;
+    const std::string &GetName() const;
+    
+    void Apply(ActorComponent *target, float timeSinceLastApply);
+};
