@@ -13,6 +13,7 @@ void TransformComponent::ReCalculateMatrix()
 void World::Initialize() { /* WInfo_.World_ = this; */ }
 void World::DeInitialize() { }
 
+
 void World::Update()
 {
     auto v = Registry_.view<DynamicComponent>();
@@ -23,20 +24,9 @@ void World::Update()
         dc.Update(dc.Data, this);
     }
 
-    for(const auto p : Updates_)
-    {
-        p(this);
-        // auto beg = &p.first;
-        // auto end = &p.first + sizeof(decltype(p.first));
-        // auto v = Registry_.runtime_view(beg, end);
-        // for(const auto e : v)
-        // {
-        //     Entity en = Entity(e, this);
-        //     Registry_.
-        //     p.second(&en, );
-        // }
-    }
+    for(const auto p : Updates_) p(this);
 }
+
 
 void World::Render(graphics::RendererInterface *render)
 {
