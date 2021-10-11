@@ -4,17 +4,16 @@
 #include <glm/glm.hpp>
 // #include <fwdraw.hpp>
 
-namespace dcore::graphics
-{
-    class CommonShader
-    {
-    public:
-        CommonShader(const resource::Resource<RShader> &sh);
+namespace dcore::graphics {
+	class CommonShader {
+	public:
+		CommonShader(const resource::Resource<RShader> &sh);
 
-        RShader *Get() const;
-        void SetTransform(const glm::mat4 &m);
-    private:
-        resource::Resource<RShader> Shader_;
-        RUniform UTransform_;
-    };
-}
+		RShader *Get() const;
+		void SetTransform(const glm::mat4 &m);
+
+	private:
+		resource::Resource<RShader> Shader_;
+		RUniform UTransform_;
+	};
+} // namespace dcore::graphics

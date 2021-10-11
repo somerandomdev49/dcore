@@ -6,11 +6,12 @@
 
 using namespace dcore::platform::impl;
 
-glfw::Frame::Frame() {}
-glfw::Frame::~Frame() {}
+glfw::Frame::Frame() {
+}
+glfw::Frame::~Frame() {
+}
 
-void glfw::Frame::Initialize(const glm::ivec2 &size)
-{
+void glfw::Frame::Initialize(const glm::ivec2 &size) {
 	Size_ = size; // TODO: Title
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -18,8 +19,7 @@ void glfw::Frame::Initialize(const glm::ivec2 &size)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", NULL, NULL);
-	if(!Window_)
-	{
+	if(!Window_) {
 		DCORE_LOG_ERROR << "Failed to create window! Reason: " << glfw::GetError();
 		Application::Info.SetError(true, "Failed to create window.", glfw::GetError());
 		return;
@@ -28,10 +28,23 @@ void glfw::Frame::Initialize(const glm::ivec2 &size)
 	glfwMakeContextCurrent(Window_);
 }
 
-void glfw::Frame::DeInitialize() { glfwDestroyWindow(Window_); Window_ = nullptr; }
+void glfw::Frame::DeInitialize() {
+	glfwDestroyWindow(Window_);
+	Window_ = nullptr;
+}
 
-bool glfw::Frame::ShouldEnd() { return glfwWindowShouldClose(Window_); }
-void glfw::Frame::OnBeginFrame() { }
-void glfw::Frame::OnEndFrame() { glfwSwapBuffers(Window_); glfwPollEvents(); }
-bool glfw::Frame::CheckKeyPressed(event::KeyCode key) { return glfwGetKey(Window_, (int)key) == GLFW_PRESS; }
-bool glfw::Frame::CheckMouseButtonPressed(int button) { return glfwGetMouseButton(Window_, button) == GLFW_PRESS; }
+bool glfw::Frame::ShouldEnd() {
+	return glfwWindowShouldClose(Window_);
+}
+void glfw::Frame::OnBeginFrame() {
+}
+void glfw::Frame::OnEndFrame() {
+	glfwSwapBuffers(Window_);
+	glfwPollEvents();
+}
+bool glfw::Frame::CheckKeyPressed(event::KeyCode key) {
+	return glfwGetKey(Window_, (int)key) == GLFW_PRESS;
+}
+bool glfw::Frame::CheckMouseButtonPressed(int button) {
+	return glfwGetMouseButton(Window_, button) == GLFW_PRESS;
+}

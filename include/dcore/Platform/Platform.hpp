@@ -6,32 +6,34 @@
 #include <dcore/Launch.hpp>
 // #include <dcore/Renderer/Renderer.hpp>
 
-namespace dcore::world { class World; }
-namespace dcore::graphics { class Renderer; }
+namespace dcore::world {
+	class World;
+}
+namespace dcore::graphics {
+	class Renderer;
+}
 
-namespace dcore::platform
-{
-	class PlatformSpecific
-	{
+namespace dcore::platform {
+	class PlatformSpecific {
 	public:
 		void Initialize();
 		void Deinitialize();
 	};
 
 	/** Graphics/Window context. */
-	class Context
-	{
+	class Context {
 	public:
 		dcore::graphics::RendererInterface *GetRendererInterface() const;
 		static Context *Instance();
+
 	private:
 		friend class event::InputManager;
 		friend class launch::Launch;
-        bool IsKeyPressed(event::KeyCode key);
-        bool IsMousePressed(int button);
+		bool IsKeyPressed(event::KeyCode key);
+		bool IsMousePressed(int button);
 
 		static void SetInstance(Context *newContext);
-		
+
 		void Initialize();
 		void DefaultResourceInit(resource::ResourceManager DCORE_REF *rm);
 		void Start();
@@ -43,4 +45,4 @@ namespace dcore::platform
 		Frame *Frame_;
 		dcore::graphics::RendererInterface *RI_;
 	};
-}
+} // namespace dcore::platform

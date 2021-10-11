@@ -8,13 +8,13 @@
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
-namespace dcore::platform { class Context; }
+namespace dcore::platform {
+	class Context;
+}
 
-namespace dcore::graphics
-{
+namespace dcore::graphics {
 	/** Provides helper functions for rendering with dcore::graphics::Renderer */
-	class RendererInterface
-	{
+	class RendererInterface {
 	public:
 		Renderer *GetRenderer() const;
 		// void RenderCharacter(Character *character);
@@ -22,6 +22,7 @@ namespace dcore::graphics
 		void RenderDebugLine(const glm::vec3 &from, const glm::vec3 &to, float width = 1.f);
 
 		Camera *GetCamera() const;
+
 	private:
 		friend class platform::Context;
 		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend);
@@ -31,4 +32,4 @@ namespace dcore::graphics
 		CommonShader DCORE_OWN *ObjectShader_;
 		Renderer DCORE_REF *Renderer_;
 	};
-}
+} // namespace dcore::graphics

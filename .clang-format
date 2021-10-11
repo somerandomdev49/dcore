@@ -1,4 +1,5 @@
 ﻿---
+AccessModifierOffset: '-4'
 AlignAfterOpenBracket: Align
 AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'true'
@@ -32,9 +33,11 @@ DerivePointerAlignment: 'false'
 FixNamespaceComments: 'true'
 IncludeBlocks: Preserve
 IndentWidth: '4'
+IndentWrappedFunctionNames: 'true'
 Language: Cpp
-NamespaceIndentation: Inner
-SortIncludes: 'true'
+NamespaceIndentation: All
+PointerAlignment: Right
+SortIncludes: 'false'
 SpaceAfterCStyleCast: 'false'
 SpaceAfterLogicalNot: 'false'
 SpaceAfterTemplateKeyword: 'false'

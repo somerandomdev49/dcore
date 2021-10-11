@@ -6,43 +6,47 @@
 #include <vector>
 #include <string>
 
-namespace dcore::resource
-{
-    /** Class responsible for loading resources */
-    class ResourceLoader : public Resources
-    {
-    public:
-        ResourceLoader(const std::string &root);
+namespace dcore::resource {
+	/** Class responsible for loading resources */
+	class ResourceLoader : public Resources {
+	public:
+		ResourceLoader(const std::string &root);
 
-        /**
-         * \brief Loads resources from a manifest file.
-         * \param location The relative path for the manifest file.
-         **/
-        void LoadFromManifest(const std::string &location);
+		/**
+		 * \brief Loads resources from a manifest file.
+		 * \param location The relative path for the manifest file.
+		 **/
+		void LoadFromManifest(const std::string &location);
 
-        /**
-         * \brief Loads a resource by name (using the mapping)
-         **/
-        void LoadByName(const std::string &name);
+		/**
+		 * \brief Loads a resource by name (using the mapping)
+		 **/
+		void LoadByName(const std::string &name);
 
-        /**
-         * \brief Loads a mapping file from the specified path.
-         * \param the path to load the file from.
-         **/
-        void LoadMappings(const std::string &location);
-    
-        template<typename T>
-        void RegisterResourceType(const std::string &name);
-    private:
-        struct TypeInfo { std::type_index idx; size_t allocSize; };
+		/**
+		 * \brief Loads a mapping file from the specified path.
+		 * \param the path to load the file from.
+		 **/
+		void LoadMappings(const std::string &location);
 
-        void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
+		template<typename T>
+		void RegisterResourceType(const std::string &name);
 
-        std::unordered_map<std::string, std::string> ResMappings_;
-        std::unordered_map<std::string, TypeInfo> ResTypes_;
-    };
+	private:
+		struct TypeInfo {
+			std::type_index idx;
+			size_t allocSize;
+		};
 
-    template<typename T>
-    void ResourceLoader::RegisterResourceType(const std::string &name)
-    { ResTypes_[name] = { std::type_index(typeid(std::decay_t<T>)), sizeof(T) }; }
-}
+		void FindMappings_(const std::string &pattern,
+		                   std::vector<std::pair<std::string, std::string>> &matching);
+
+		std::unordered_map<std::string, std::string> ResMappings_;
+		std::unordered_map<std::string, TypeInfo> ResTypes_;
+	};
+
+	template<typename T>
+	void ResourceLoader::RegisterResourceType(const std::string &name) {
+		ResTypes_[name] = {std::type_index(typeid(std::decay_t<T>)), sizeof(T)};
+	}
+} // namespace dcore::resource

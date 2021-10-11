@@ -13,18 +13,17 @@
 #include <dcore/Resource/Resources.hpp>
 #include <dcore/Launch.hpp>
 
-namespace dcore::resource
-{
+namespace dcore::resource {
 	struct Null {};
 
 	/** A wrapper around void* */
-	class RawResource
-	{
+	class RawResource {
 	public:
 		RawResource();
 
 		void *Get() const;
 		const std::type_index &GetType() const;
+
 	private:
 		friend class ResourceLoader;
 		friend class ResourceManager;
@@ -36,23 +35,21 @@ namespace dcore::resource
 
 	/** A wrapper around some kind of data. */
 	template<typename T>
-	class Resource
-	{
+	class Resource {
 	public:
 		Resource() : Data_(nullptr) {};
 
 		T *Get() const { return Data_; };
+
 	private:
 		friend class ResourceManager;
 		Resource(T *data) : Data_(data) {}
 		T DCORE_REF *Data_;
 	};
 
-
 	// TODO: Add Lazy loading?
 	/** Manages all of the resources of the game. */
-	class ResourceManager : public Resources
-	{
+	class ResourceManager : public Resources {
 	public:
 		ResourceManager(const std::string &root);
 		static ResourceManager *Instance();
@@ -61,10 +58,11 @@ namespace dcore::resource
 		const RawResource &GetRaw(const std::string &id, std::type_index type);
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type, size_t allocSize);
+		const RawResource &LoadRaw(const std::string &id, const std::string &location,
+		                           std::type_index type, size_t allocSize);
 
 		/** Returns a raw resource for a type with a specified id. */
-	 	void UnLoadRaw(const std::string &id, std::type_index type);
+		void UnLoadRaw(const std::string &id, std::type_index type);
 
 		/** Returns a resource of a specified type and id. */
 		template<typename T>
@@ -78,9 +76,8 @@ namespace dcore::resource
 		template<typename T>
 		void UnLoad(const std::string &id);
 
-
-		using ResourceConstructorFunc = void (*)(const std::string&, void*);
-		using ResourceDeConstructorFunc = void (*)(void*);
+		using ResourceConstructorFunc   = void (*)(const std::string &, void *);
+		using ResourceDeConstructorFunc = void (*)(void *);
 		void RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func);
 		void RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func);
 
@@ -104,33 +101,29 @@ namespace dcore::resource
 	};
 
 	template<typename T>
-	Resource<T> ResourceManager::Get(const std::string &id)
-	{
-		return Resource<T>(reinterpret_cast<T*>(
-			GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_
-		));
+	Resource<T> ResourceManager::Get(const std::string &id) {
+		return Resource<T>(
+		    reinterpret_cast<T *>(GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_));
 	}
 
 	template<typename T>
-	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
-	{
-		return Resource<T>(reinterpret_cast<T*>(
-			LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_
-		));
+	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location) {
+		return Resource<T>(reinterpret_cast<T *>(
+		    LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
 	}
 
 	template<typename T>
-	void ResourceManager::UnLoad(const std::string &id)
-	{
+	void ResourceManager::UnLoad(const std::string &id) {
 		UnLoadRaw(id, std::type_index(typeid(std::decay_t<T>)));
 	}
 
-	
 	template<typename T>
-	void ResourceManager::RegisterConstructor(ResourceConstructorFunc func)
-	{ RegisterConstructor(std::type_index(typeid(T)), func); }
+	void ResourceManager::RegisterConstructor(ResourceConstructorFunc func) {
+		RegisterConstructor(std::type_index(typeid(T)), func);
+	}
 
 	template<typename T>
-	void ResourceManager::RegisterDeConstructor(ResourceDeConstructorFunc func)
-	{ RegisterDeConstructor(std::type_index(typeid(T)), func); }
-}
+	void ResourceManager::RegisterDeConstructor(ResourceDeConstructorFunc func) {
+		RegisterDeConstructor(std::type_index(typeid(T)), func);
+	}
+} // namespace dcore::resource

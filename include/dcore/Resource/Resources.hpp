@@ -2,24 +2,23 @@
 #include <string>
 #include <string_view>
 
-namespace dcore::resource
-{
-    /** Parent class for Resource users/providers */
-    class Resources
-    {
-    public:
-        /** Returns the root path */
-        const std::string &GetRootPath() const;
-    protected:
-        Resources(const std::string &root);
+namespace dcore::resource {
+	/** Parent class for Resource users/providers */
+	class Resources {
+	public:
+		/** Returns the root path */
+		const std::string &GetRootPath() const;
 
-        /** Sets the root path. */
-        void SetRootPath(const std::string &newRoot);
+	protected:
+		Resources(const std::string &root);
 
-        /** Returns the full path of a resource */
-        std::string FullPath(const std::string &relative);
+		/** Sets the root path. */
+		void SetRootPath(const std::string &newRoot);
 
-    private:
-        std::string RootPath_;
-    };
-}
+		/** Returns the full path of a resource */
+		std::string FullPath(const std::string &relative);
+
+	private:
+		std::string RootPath_;
+	};
+} // namespace dcore::resource

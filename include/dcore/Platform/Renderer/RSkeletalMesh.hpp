@@ -6,23 +6,18 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-namespace dcore::graphics
-{
-    class Renderer;
+namespace dcore::graphics {
+	class Renderer;
 
-	namespace impl::opengl
-	{
-		struct SkeletalMesh
-		{
+	namespace impl::opengl {
+		struct SkeletalMesh {
 			Vao Vao_;
-			
-			void Load(const std::vector<Index> &indices,
-			          const std::vector<Vertex> &vertices);
-		};
-	};
 
-	class RJoint
-	{
+			void Load(const std::vector<Index> &indices, const std::vector<Vertex> &vertices);
+		};
+	}; // namespace impl::opengl
+
+	class RJoint {
 	private:
 		int Index;
 		glm::mat4 Matrix;
@@ -30,13 +25,11 @@ namespace dcore::graphics
 		// RJoint *Parent;
 	};
 
-	class RSkeletalMesh
-	{
+	class RSkeletalMesh {
 		std::vector<RJoint> Joints_;
 		int JointCount_;
-		
+
 		friend class Renderer;
 		impl::DCORE_GRAPHICS_IMPL::SkeletalMesh Data_;
 	};
-}
-
+} // namespace dcore::graphics

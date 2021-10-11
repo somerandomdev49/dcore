@@ -1,8 +1,7 @@
 #pragma once
 #include <GL/gl3w.h>
 
-namespace dcore::graphics::impl::opengl
-{
+namespace dcore::graphics::impl::opengl {
 	using UInt = GLuint;
-	using Int = GLint;
-}
+	using Int  = GLint;
+} // namespace dcore::graphics::impl::opengl

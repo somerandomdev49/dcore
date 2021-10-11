@@ -2,10 +2,8 @@
 #include <dcore/Platform/Window.hpp>
 #include <GLFW/glfw3.h>
 
-namespace dcore::platform::impl::glfw
-{
-	class Frame : public dcore::platform::Frame
-	{
+namespace dcore::platform::impl::glfw {
+	class Frame : public dcore::platform::Frame {
 	public:
 		Frame();
 		~Frame();
@@ -18,7 +16,8 @@ namespace dcore::platform::impl::glfw
 
 		bool CheckKeyPressed(event::KeyCode key) override;
 		bool CheckMouseButtonPressed(int button) override;
+
 	private:
 		GLFWwindow *Window_;
 	};
-}
+} // namespace dcore::platform::impl::glfw

@@ -79,8 +79,8 @@
 //                 if(gui->Selectable(quest->GetTitle().c_str(), false))
 //                 selectedQuest = quest;
 //             }
-            
-//             if(selectedQuest != nullptr) 
+
+//             if(selectedQuest != nullptr)
 //             {
 //                 qinfo.quests.Clear();
 //                 qinfo.quests.Add(selectedQuest);
@@ -106,9 +106,8 @@
 //         if(gui->Button("Accept")) { player->AddQuest(q); }
 //         if(gui->Button("Decline")) { qinfo.quests.Clear(); }
 //         gui->EndBottomBar();
-//         gui->EndWindow();  
+//         gui->EndWindow();
 //     }
 
 //     void DrawReqsPanel(Player *player, GuiManager *gui, Quest *q);
 // };
-
