@@ -13,7 +13,7 @@
   - Limited to 20th December - 10th January: New Year decorations on builings
   - New classes for sure. (Maybe something like Mechanic or idk)
 
-- Third update (Spring/Magic/?? Update
+- Third update (Spring/Magic/?? Update)
   - Timeline: ??
   - Zones: More rocky stuff/mountains + water stuff
   - Races: Trolls?
