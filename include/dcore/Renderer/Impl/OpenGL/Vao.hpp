@@ -9,17 +9,27 @@ namespace dcore::graphics::impl::opengl
 {
 	class Vao
 	{
+		struct Attribute
+		{
+			enum { Float, Int } type;
+			int count;
+			int offset;
+		};
+
 		UInt VBO, VAO, EBO;
+
+		int LastOffset_ = 0;
+		std::vector<Attribute> Attributes_;
+
 		friend class dcore::graphics::Renderer;
 	public:
-		void Create(const std::vector<uint32_t> &indices,
-		            const std::vector<uint8_t> &verticexData);
+		void Load(const std::vector<uint32_t> &indices, const std::vector<uint8_t> &verticexData);
 
 		void Bind();
-		// void CreateIndexBuffer   (UInt id, void *data);
-		// void CreateVertexBuffer  (UInt id, void *data);
-		void CreateFloatAttribute(UInt id, void *data, int count);
-		void CreateIntAttribute  (UInt id, void *data, int count);
+		void CreateFloatAttribute(int count);
+		void CreateIntAttribute  (int count);
+		void Create();
+
 		void UnBind();
 	};
 }

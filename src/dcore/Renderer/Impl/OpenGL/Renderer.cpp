@@ -124,8 +124,9 @@ void Renderer::RTexture_DeConstructor(void *placement)
 void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 {
 	RStaticMesh *mesh = new(placement) RStaticMesh();
+    util::MeshData d = util::LoaderUtil::LoadMesh(path);
     
-    mesh->Data_.Vao_.Create();
+    mesh->Data_.Vao_.Create(d.indices, d.verticexData);
 }
 
 void Renderer::RStaticMesh_DeConstructor(void *placement)
