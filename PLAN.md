@@ -1,7 +1,7 @@
 # General Plan
 
 - Initial pre-pre-alpha release
-  - Timeline: Until 1st of November
+  - Timeline: Until 25th of November
   - Zones: Forest/Whatever
   - Races: Dwarf, Elf, Human + Animals/Other
   - Classes: Hunter, Warrior, Mage, Shaman, [+1 other?]
