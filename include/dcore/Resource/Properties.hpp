@@ -3,8 +3,10 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 
-namespace dcore::resource {
-	class Properties : Resources {
+namespace dcore::resource
+{
+	class Properties : Resources
+	{
 	public:
 		Properties(const std::string &root);
 

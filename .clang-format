@@ -25,7 +25,7 @@ BinPackParameters: 'true'
 BreakAfterJavaFieldAnnotations: 'true'
 BreakBeforeBraces: Attach
 BreakStringLiterals: 'true'
-ColumnLimit: '100'
+ColumnLimit: '120'
 CompactNamespaces: 'true'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 Cpp11BracedListStyle: 'true'
@@ -53,8 +53,10 @@ SpacesInCStyleCastParentheses: 'false'
 SpacesInContainerLiterals: 'true'
 SpacesInParentheses: 'false'
 SpacesInSquareBrackets: 'false'
-Standard: Cpp11
+Standard: c++17
 TabWidth: '4'
 UseTab: ForIndentation
+BreakBeforeTernaryOperators: 'true'
+BreakBeforeBraces: Allman
 
 ...

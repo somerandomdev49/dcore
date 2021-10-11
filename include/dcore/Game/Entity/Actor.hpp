@@ -1,21 +1,22 @@
-class dg::entity::ActorComponent {
-public:
-	float GetMaxHealth() const;
-	float GetHealth() const;
+#include <vector>
+#include <dcore/Game/Entity/Effect.hpp>
 
-	const std::vector<Effect> &GetEffects() const;
-	void AddEffect(const Effect &newEffect);
+namespace dg::entity
+{
+	class ActorComponent
+	{
+	public:
+		float GetMaxHealth() const;
+		float GetHealth() const;
 
-	CharacterModel *GetCharacterModel() const;
+		const std::vector<Effect> &GetEffects() const;
+		void AddEffect(const Effect &newEffect);
 
-	static void Update(ActorComponent *self);
-}
+		// CharacterModel *GetCharacterModel() const;
 
-class dg::entity::Effect {
-public:
-	const float GetTimeSinceBegin() const;
-	const float GetEndTime() const;
-	const std::string &GetName() const;
+		static void Update(ActorComponent *self);
 
-	void Apply(ActorComponent *target, float timeSinceLastApply);
-};
+	private:
+		float MaxHealth_, Health_;
+	};
+} // namespace dg::entity

@@ -1,8 +1,10 @@
 #include <dcore/Game/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 
-namespace dg::terrain {
-	class Chunk {
+namespace dg::terrain
+{
+	class Chunk
+	{
 	public:
 		static void Register();
 
@@ -14,8 +16,7 @@ namespace dg::terrain {
 		void DeInitialize();
 
 	private:
-		void Load(const std::string &id, const std::string &location,
-		          dcore::resource::ResourceManager *res);
+		void Load(const std::string &id, const std::string &location, dcore::resource::ResourceManager *res);
 
 		HeightmapRegion Region_;
 		dcore::resource::Resource<dcore::graphics::RStaticMesh> BlendMap_;

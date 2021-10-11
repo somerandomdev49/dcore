@@ -2,9 +2,11 @@
 #include <glm/glm.hpp>
 #include <dcore/Event/InputManager.hpp>
 
-namespace dcore::platform {
+namespace dcore::platform
+{
 	/** Virtual class representing a window. Multiple implementations can exist. */
-	class Frame {
+	class Frame
+	{
 	public:
 		virtual ~Frame();
 		virtual void Initialize(const glm::ivec2 &size) = 0;

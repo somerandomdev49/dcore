@@ -2,12 +2,15 @@
 
 using namespace dcore::platform;
 
-Frame::~Frame() {
+Frame::~Frame()
+{
 }
 
-const glm::ivec2 &Frame::GetSize() const {
+const glm::ivec2 &Frame::GetSize() const
+{
 	return Size_;
 }
-void Frame::SetSize(const glm::ivec2 &v) {
+void Frame::SetSize(const glm::ivec2 &v)
+{
 	Size_ = v;
 }

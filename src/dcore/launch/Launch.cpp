@@ -7,12 +7,14 @@
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 
-#define LOG_STMT(STMT)                            \
+#define STMT                            \
 	DCORE_LOG_INFO << __LINE__ << " | " << #STMT; \
 	STMT;
 
-namespace dcore {
-	void launch::Launch::Run(int argc, char *argv[]) {
+namespace dcore
+{
+	void launch::Launch::Run(int argc, char *argv[])
+	{
 		// (void)argc; (void)argv;
 		loguru::g_stderr_verbosity = 1;
 		loguru::g_preamble_date    = false;
@@ -21,36 +23,38 @@ namespace dcore {
 		loguru::init(argc, argv);
 		platform::PlatformSpecific ps;
 		(void)ps;
-		LOG_STMT(platform::Context ctx);
+		platform::Context ctx;
 
-		LOG_STMT(world::World world;)
-		LOG_STMT(graphics::Renderer rend;)
+		world::World world;
+		graphics::Renderer rend;
 
-		LOG_STMT(ctx.Rend_ = &rend;)
-		LOG_STMT(ctx.World_ = &world;)
+		ctx.Rend_ = &rend;
+		ctx.World_ = &world;
 
-		LOG_STMT(ctx.Initialize();)
+		ctx.Initialize();
 
-		LOG_STMT(event::InputManager im;)
-		LOG_STMT(im.Initialize();)
-		LOG_STMT(event::InputManager::SetInstance(&im);)
+		event::InputManager im;
+		im.Initialize();
+		event::InputManager::SetInstance(&im);
 
-		LOG_STMT(world.Initialize();)
+		world.Initialize();
 
 		// Create the default config reader.
-		LOG_STMT(resource::ConfigReader cfg("data");)
-		LOG_STMT(resource::ConfigReader::SetDefaultReader(&cfg);)
-		LOG_STMT(resource::ResourceLoader rl("data");)
-		LOG_STMT(resource::ResourceManager rm("data");)
-		LOG_STMT(rm.Initialize();)
-		LOG_STMT(rl.LoadMappings("ResourceMap.ini");)
-		LOG_STMT(rl.LoadFromManifest("Manifest.cfg");)
+		resource::ConfigReader cfg("data");
+		resource::ConfigReader::SetDefaultReader(&cfg);
+		resource::ResourceLoader rl("data");
+		resource::ResourceManager rm("data");
+		resource::ResourceManager::SetInstance(&rm);
+		rm.Initialize();
+		rl.LoadMappings("ResourceMap.ini");
+		graphics::RenderResourceManager::Register(&rl);
+		rl.LoadFromManifest("Manifest.cfg");
 
-		LOG_STMT(world::Entity e = world.CreateEntity();)
-		LOG_STMT(e.AddComponent(world::TransformComponent());)
-		LOG_STMT(e.AddComponent(world::StaticMeshComponent {
-		    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
-		                         rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});)
+		world::Entity e = world.CreateEntity();
+		e.AddComponent(world::TransformComponent());
+		e.AddComponent(
+		    world::StaticMeshComponent {graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
+		                                                     rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
 		// e.AddComponent(MyComponent());
 		// world.RegisterUpdate([](world::World *c)
@@ -86,13 +90,13 @@ namespace dcore {
 		// });
 
 		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
-		LOG_STMT(e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);)
-		LOG_STMT(e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();)
-		LOG_STMT(e.GetComponent<world::TransformComponent>().Scale = glm::vec3(1.0f, 1.0f, 1.0f);)
+		e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);
+		e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();
+		e.GetComponent<world::TransformComponent>().Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-		LOG_STMT(ctx.DefaultResourceInit(&rm);)
-		LOG_STMT(ctx.Start();)
-		LOG_STMT(ctx.CloseWindow();)
+		ctx.DefaultResourceInit(&rm);
+		ctx.Start();
+		ctx.CloseWindow();
 
 		DCORE_LOG_INFO << "----------------------------------------";
 

@@ -1,6 +1,6 @@
 #version 410 core
 
-in vec3 s_TexCoord;
+in vec2 s_TexCoord;
 
 out vec4 o_Color;
 uniform sampler2D u_Tex_Mapper;
@@ -12,9 +12,9 @@ uniform sampler2D u_Tex_2;
 uniform float u_Tiling = 10.f;
 
 void main() {
-    vec2 texCoord = vec2(s_TexCoord) * u_Tiling;
+    vec2 texCoord = s_TexCoord * u_Tiling;
 
-    vec4 mapperColor = texture(u_Tex_Mapper, vec2(s_TexCoord));
+    vec4 mapperColor = texture(u_Tex_Mapper, s_TexCoord);
     vec4 colorMain = texture(u_Tex_Main, texCoord) * (1 - mapperColor.r - mapperColor.g - mapperColor.b);
     vec4 color0 = texture(u_Tex_0, texCoord) * mapperColor.r;
     vec4 color1 = texture(u_Tex_1, texCoord) * mapperColor.g;

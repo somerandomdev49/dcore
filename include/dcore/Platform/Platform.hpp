@@ -6,22 +6,27 @@
 #include <dcore/Launch.hpp>
 // #include <dcore/Renderer/Renderer.hpp>
 
-namespace dcore::world {
+namespace dcore::world
+{
 	class World;
 }
-namespace dcore::graphics {
+namespace dcore::graphics
+{
 	class Renderer;
 }
 
-namespace dcore::platform {
-	class PlatformSpecific {
+namespace dcore::platform
+{
+	class PlatformSpecific
+	{
 	public:
 		void Initialize();
 		void Deinitialize();
 	};
 
 	/** Graphics/Window context. */
-	class Context {
+	class Context
+	{
 	public:
 		dcore::graphics::RendererInterface *GetRendererInterface() const;
 		static Context *Instance();

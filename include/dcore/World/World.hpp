@@ -6,12 +6,15 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-namespace dcore::platform {
+namespace dcore::platform
+{
 	class Context;
 }
 
-namespace dcore::world {
-	struct TransformComponent {
+namespace dcore::world
+{
+	struct TransformComponent
+	{
 		entt::entity Parent;
 		glm::vec3 Position;
 		glm::quat Rotation;
@@ -23,17 +26,20 @@ namespace dcore::world {
 		void ReCalculateMatrix();
 	};
 
-	struct StaticMeshComponent {
+	struct StaticMeshComponent
+	{
 		graphics::StaticMesh Mesh;
 	};
 
 	class World;
-	struct DynamicComponent {
+	struct DynamicComponent
+	{
 		void *Data;
 		void (*Update)(void *, World *);
 	};
 
-	class Entity {
+	class Entity
+	{
 	public:
 		Entity(entt::entity id, World *world);
 
@@ -52,7 +58,8 @@ namespace dcore::world {
 		World *World_;
 	};
 
-	class World {
+	class World
+	{
 	public:
 		// class WorldUpdateInfo
 		// {
@@ -91,33 +98,39 @@ namespace dcore::world {
 } // namespace dcore::world
 
 template<typename T>
-T &dcore::world::Entity::GetComponent() const {
+T &dcore::world::Entity::GetComponent() const
+{
 	return World_->GetComponent<T>(this);
 }
 
 template<typename T>
-void dcore::world::Entity::AddComponent(const T &c) {
+void dcore::world::Entity::AddComponent(const T &c)
+{
 	return World_->AddComponent<T>(this, c);
 }
 
 template<typename T>
-T &dcore::world::World::GetComponent(const Entity *entity) {
+T &dcore::world::World::GetComponent(const Entity *entity)
+{
 	return Registry_.get<T>(entity->Id_);
 }
 
 template<typename T>
-void dcore::world::World::AddComponent(Entity *entity, const T &c) {
+void dcore::world::World::AddComponent(Entity *entity, const T &c)
+{
 	Registry_.emplace<T>(entity->Id_, c);
 }
 
 template<typename ComponentType>
-void dcore::world::World::Each(void (*func)(Entity *entity, ComponentType *component)) {
+void dcore::world::World::Each(void (*func)(Entity *entity, ComponentType *component))
+{
 	auto view = Registry_.view<std::decay_t<ComponentType>>();
 	// view.each([&](const entt::entity &entityid, auto &c){
 	//     Entity entity(entityid, World_);
 	//     func(&entity, &c);
 	// });
-	for(auto e : view) {
+	for(auto e : view)
+	{
 		auto &c = view.template get<ComponentType>(e); // std::decay_t<ComponentType>
 		Entity en(e, this);
 		func(&en, &c);

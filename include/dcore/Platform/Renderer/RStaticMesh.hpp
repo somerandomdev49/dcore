@@ -3,16 +3,20 @@
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
 #include <dcore/Renderer/Config.hpp>
 
-namespace dcore::graphics {
+namespace dcore::graphics
+{
 	class Renderer;
 
-	namespace impl::opengl {
-		struct StaticMesh {
+	namespace impl::opengl
+	{
+		struct StaticMesh
+		{
 			Vao Vao_;
 		};
 	}; // namespace impl::opengl
 
-	class RStaticMesh {
+	class RStaticMesh
+	{
 		friend class Renderer;
 		impl::DCORE_GRAPHICS_IMPL::StaticMesh Data_;
 	};

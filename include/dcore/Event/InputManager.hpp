@@ -4,9 +4,11 @@
 // namespace dcore::platform { class Context; }
 
 // TODO: Add actions
-namespace dcore::event {
+namespace dcore::event
+{
 	/** Key code (from GLFW) */
-	enum KeyCode {
+	enum KeyCode
+	{
 		K_Unknown      = -1,
 		K_Space        = 32,
 		K_Apostrophe   = 39, /* ' */
@@ -128,7 +130,8 @@ namespace dcore::event {
 		K_Menu         = 348,
 	};
 
-	class InputManager {
+	class InputManager
+	{
 	public:
 		void Initialize();
 		void DeInitialize();

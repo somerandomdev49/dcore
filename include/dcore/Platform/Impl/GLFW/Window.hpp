@@ -2,8 +2,10 @@
 #include <dcore/Platform/Window.hpp>
 #include <GLFW/glfw3.h>
 
-namespace dcore::platform::impl::glfw {
-	class Frame : public dcore::platform::Frame {
+namespace dcore::platform::impl::glfw
+{
+	class Frame : public dcore::platform::Frame
+	{
 	public:
 		Frame();
 		~Frame();

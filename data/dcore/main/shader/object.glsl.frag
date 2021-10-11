@@ -1,6 +1,6 @@
 #version 410 core
 
-in vec3 s_TexCoord;
+in vec2 s_TexCoord;
 
 out vec4 o_Color;
 uniform sampler2D u_Tex;

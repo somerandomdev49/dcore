@@ -1,7 +1,9 @@
 #pragma once
 
-namespace dcore::launch {
-	class Launch {
+namespace dcore::launch
+{
+	class Launch
+	{
 	public:
 		void Run(int argc, char *argv[]);
 	};

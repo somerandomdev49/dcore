@@ -2,8 +2,10 @@
 #include <dcore/Game/Terrain/Chunk.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
-namespace dg::terrain {
-	class Terrain {
+namespace dg::terrain
+{
+	class Terrain
+	{
 	public:
 		/** Recalculates which chunks need to be active based on a position and a radius */
 		void RemapChunks(const glm::vec3 &position, float radius = 100.f);

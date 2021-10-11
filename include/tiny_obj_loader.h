@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// MODIFIED:
-//  by somerandomdev49, added support for 3-component texture coordinates.
 //
 // version 2.0.0 : Add new object oriented API. 1.x API is still provided.
 //                 * Support line primitive.
@@ -533,7 +531,6 @@ struct ObjReaderConfig {
 class ObjReader {
  public:
   ObjReader() : valid_(false) {}
-  ~ObjReader() {}
 
   ///
   /// Load .obj and .mtl from a file.
@@ -2529,11 +2526,10 @@ bool LoadObj(attrib_t *attrib, std::vector<shape_t> *shapes,
     // texcoord
     if (token[0] == 'v' && token[1] == 't' && IS_SPACE((token[2]))) {
       token += 3;
-      real_t x, y, z;
-      parseReal3(&x, &y, &z, &token);
+      real_t x, y;
+      parseReal2(&x, &y, &token);
       vt.push_back(x);
       vt.push_back(y);
-      vt.push_back(z);
       continue;
     }
 

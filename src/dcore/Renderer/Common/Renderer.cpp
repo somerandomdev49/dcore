@@ -3,11 +3,13 @@ using namespace dcore::graphics;
 
 static Renderer *rendererInst = nullptr;
 
-Renderer *Renderer::Instance() {
+Renderer *Renderer::Instance()
+{
 	if(!rendererInst) rendererInst = new Renderer;
 	return rendererInst;
 }
 
-void Renderer::SetInstance(Renderer *newInstance) {
+void Renderer::SetInstance(Renderer *newInstance)
+{
 	rendererInst = newInstance;
 }

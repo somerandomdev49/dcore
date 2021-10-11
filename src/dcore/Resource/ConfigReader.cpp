@@ -8,18 +8,22 @@ using namespace dcore::resource;
 ConfigReader *ConfigReader::DefaultInstance_ = nullptr;
 
 // TODO: Deallocate this somehow.
-ConfigReader *CreateDefaultReader() {
+ConfigReader *CreateDefaultReader()
+{
 	return new ConfigReader("");
 }
 
-ConfigReader::ConfigReader(const std::string &root) : Resources(root) {
+ConfigReader::ConfigReader(const std::string &root) : Resources(root)
+{
 }
 
 /** Reads a manifest file */
-bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data) {
+bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data)
+{
 	std::ifstream ifs(FullPath(location));
 	if(!ifs) return false;
-	for(std::string line; std::getline(ifs, line);) {
+	for(std::string line; std::getline(ifs, line);)
+	{
 		// trim the string
 		auto start = line.find_first_not_of(" \n\t\r\v");
 		auto end   = line.find_last_not_of(" \n\t\r\v");
@@ -31,16 +35,19 @@ bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data)
 	return true;
 }
 
-bool ConfigReader::ReadINI(const std::string &location, DataINI &data) {
+bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
+{
 	std::string s = FullPath(location);
 	std::ifstream ifs(s);
-	if(!ifs) {
+	if(!ifs)
+	{
 		DCORE_LOG_ERROR << "Could not load file at '" << s << '\'';
 		return false;
 	}
 	std::string name = "_Default";
 	int lineno       = 0;
-	for(std::string line; std::getline(ifs, line);) {
+	for(std::string line; std::getline(ifs, line);)
+	{
 		lineno += 1;
 
 		// trim the string
@@ -52,15 +59,19 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data) {
 		if(line[start] == '[') // Tag
 		{
 			// [tag]
-			if(line[end] != ']') {
+			if(line[end] != ']')
+			{
 				LOG_F(ERROR, "Expected ']' in %s:%d (column %ld)", s.c_str(), lineno, end);
 				return false;
 			}
 			name = line.substr(start + 1, end);
-		} else {
+		}
+		else
+		{
 			// key = value
 			auto equalsLoc = line.find("=");
-			if(equalsLoc == line.npos) {
+			if(equalsLoc == line.npos)
+			{
 				LOG_F(ERROR, "No '=' in %s:%d", s.c_str(), lineno);
 				return false;
 			}
@@ -76,11 +87,13 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data) {
 	return true;
 }
 
-ConfigReader *ConfigReader::DefaultReader() {
+ConfigReader *ConfigReader::DefaultReader()
+{
 	if(DefaultInstance_ == nullptr) SetDefaultReader(CreateDefaultReader());
 	return DefaultInstance_;
 }
 
-void ConfigReader::SetDefaultReader(ConfigReader *newDefault) {
+void ConfigReader::SetDefaultReader(ConfigReader *newDefault)
+{
 	DefaultInstance_ = newDefault;
 }

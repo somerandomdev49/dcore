@@ -8,13 +8,16 @@
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
-namespace dcore::platform {
+namespace dcore::platform
+{
 	class Context;
 }
 
-namespace dcore::graphics {
+namespace dcore::graphics
+{
 	/** Provides helper functions for rendering with dcore::graphics::Renderer */
-	class RendererInterface {
+	class RendererInterface
+	{
 	public:
 		Renderer *GetRenderer() const;
 		// void RenderCharacter(Character *character);

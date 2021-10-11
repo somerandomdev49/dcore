@@ -12,7 +12,8 @@
 
 using namespace dcore::platform;
 
-void Context::Initialize() {
+void Context::Initialize()
+{
 	// auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
 	platform::impl::glfw::Initialize();
 	Frame_ = new platform::impl::glfw::Frame();
@@ -22,16 +23,20 @@ void Context::Initialize() {
 	RI_ = new graphics::RendererInterface();
 }
 
-void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm) {
+void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm)
+{
 	RI_->Initialize(rm, Rend_);
 }
 
-dcore::graphics::RendererInterface *Context::GetRendererInterface() const {
+dcore::graphics::RendererInterface *Context::GetRendererInterface() const
+{
 	return RI_;
 }
 
-void Context::Start() {
-	while(!Frame_->ShouldEnd()) {
+void Context::Start()
+{
+	while(!Frame_->ShouldEnd())
+	{
 		Frame_->OnBeginFrame();
 		// float dt = Frame_->delta(); (void)dt;
 		// this->TimeManager_->SetDelta_(dt);
@@ -44,10 +49,12 @@ void Context::Start() {
 	}
 }
 
-void Context::CloseWindow() {
+void Context::CloseWindow()
+{
 }
 
-void Context::DeInitialize() {
+void Context::DeInitialize()
+{
 	RI_->DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
 	delete RI_;
 	Rend_->DeInitialize();
@@ -56,18 +63,22 @@ void Context::DeInitialize() {
 }
 
 static Context *ctx;
-void Context::SetInstance(Context *newContext) {
+void Context::SetInstance(Context *newContext)
+{
 	ctx = newContext;
 }
 
-Context *Context::Instance() {
+Context *Context::Instance()
+{
 	if(ctx == nullptr) ctx = new Context;
 	return ctx;
 }
 
-bool Context::IsKeyPressed(event::KeyCode key) {
+bool Context::IsKeyPressed(event::KeyCode key)
+{
 	return Frame_->CheckKeyPressed(key);
 }
-bool Context::IsMousePressed(int button) {
+bool Context::IsMousePressed(int button)
+{
 	return Frame_->CheckMouseButtonPressed(button);
 }

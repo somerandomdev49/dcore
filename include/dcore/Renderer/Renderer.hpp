@@ -6,13 +6,16 @@
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 
-namespace dcore::platform {
+namespace dcore::platform
+{
 	class Context;
 }
 
-namespace dcore::graphics {
+namespace dcore::graphics
+{
 	/** Direct interface with OpenGL/DX/Vulkan/... */
-	class Renderer {
+	class Renderer
+	{
 	public:
 		/**
 		 * @brief Binds the shader
@@ -75,7 +78,8 @@ namespace dcore::graphics {
 	};
 
 	/** Class responsible for initializing/deinitializing render resources */
-	class RenderResourceManager {
+	class RenderResourceManager
+	{
 	public:
 		static void Register(resource::ResourceLoader *rl);
 	};

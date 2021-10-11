@@ -3,12 +3,15 @@
 #include <cinttypes>
 #include <vector>
 
-namespace dcore::graphics {
+namespace dcore::graphics
+{
 	class Renderer;
 }
 
-namespace dcore::graphics::impl::opengl {
-	class Vao {
+namespace dcore::graphics::impl::opengl
+{
+	class Vao
+	{
 		UInt VBO, VAO, EBO;
 		friend class dcore::graphics::Renderer;
 

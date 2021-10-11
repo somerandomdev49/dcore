@@ -2,8 +2,10 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-namespace dcore::graphics {
-	class Camera {
+namespace dcore::graphics
+{
+	class Camera
+	{
 	public:
 		/**
 		 * @param fov Vertical field of view of the camera

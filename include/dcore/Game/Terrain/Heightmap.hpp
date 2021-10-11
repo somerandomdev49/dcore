@@ -2,19 +2,21 @@
 #include <glm/glm.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
-namespace dg::terrain {
-	class Heightmap {
+namespace dg::terrain
+{
+	class Heightmap
+	{
 		static void Register();
 
 	private:
-		void Load(const std::string &id, const std::string &location,
-		          dcore::resource::ResourceManager *res);
+		void Load(const std::string &id, const std::string &location, dcore::resource::ResourceManager *res);
 
 		glm::vec2 Size_;
 		float *Data_;
 	};
 
-	class HeightmapRegion {
+	class HeightmapRegion
+	{
 		const glm::vec2 &GetMin() const;
 		const glm::vec2 &GetMax() const;
 		Heightmap *GetSource();

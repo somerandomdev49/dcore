@@ -1,6 +1,7 @@
 #pragma once
 
-class GuiManager {
+class GuiManager
+{
 public:
 	void BeginWindow(const char *title = nullptr);
 	void BeginListChooser();

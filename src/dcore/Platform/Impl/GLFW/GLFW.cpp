@@ -7,9 +7,12 @@ using namespace dcore::platform::impl;
 bool glfw::DidInitialize = false;
 bool glfw::DidTerminate  = false;
 
-void glfw::Initialize() {
-	if(!glfw::DidInitialize) {
-		if(!glfwInit()) {
+void glfw::Initialize()
+{
+	if(!glfw::DidInitialize)
+	{
+		if(!glfwInit())
+		{
 			const char *err;
 			glfwGetError(&err);
 			DCORE_LOG_ERROR << "Failed to initialize GLFW! Reason: " << err;
@@ -20,14 +23,17 @@ void glfw::Initialize() {
 	}
 }
 
-void glfw::DeInitilize() {
-	if(!DidTerminate) {
+void glfw::DeInitilize()
+{
+	if(!DidTerminate)
+	{
 		glfwTerminate();
 		DidTerminate = true;
 	}
 }
 
-const char *glfw::GetError() {
+const char *glfw::GetError()
+{
 	const char *err;
 	glfwGetError(&err);
 	return err;

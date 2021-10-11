@@ -2,9 +2,11 @@
 #include <string>
 #include <string_view>
 
-namespace dcore::resource {
+namespace dcore::resource
+{
 	/** Parent class for Resource users/providers */
-	class Resources {
+	class Resources
+	{
 	public:
 		/** Returns the root path */
 		const std::string &GetRootPath() const;

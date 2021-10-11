@@ -4,8 +4,10 @@
 #include <glm/glm.hpp>
 // #include <fwdraw.hpp>
 
-namespace dcore::graphics {
-	class CommonShader {
+namespace dcore::graphics
+{
+	class CommonShader
+	{
 	public:
 		CommonShader(const resource::Resource<RShader> &sh);
 
