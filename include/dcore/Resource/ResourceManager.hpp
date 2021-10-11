@@ -51,7 +51,7 @@ namespace dcore::resource
 
 	// TODO: Add Lazy loading?
 	/** Manages all of the resources of the game. */
-	class ResourceManager : Resources
+	class ResourceManager : public Resources
 	{
 	public:
 		ResourceManager(const std::string &root);
@@ -78,6 +78,18 @@ namespace dcore::resource
 		template<typename T>
 		void UnLoad(const std::string &id);
 
+
+		using ResourceConstructorFunc = void (*)(const std::string&, void*);
+		using ResourceDeConstructorFunc = void (*)(void*);
+		void RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func);
+		void RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func);
+
+		template<typename T>
+		void RegisterConstructor(ResourceConstructorFunc func);
+
+		template<typename T>
+		void RegisterDeConstructor(ResourceDeConstructorFunc func);
+
 	private:
 		friend class dcore::launch::Launch;
 		void Initialize();
@@ -85,12 +97,9 @@ namespace dcore::resource
 		static void SetInstance(ResourceManager *newInstance);
 
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
-		std::unordered_map<std::type_index, ResourceMap> Resources_;
 
-		using ResourceConstructorFunc = void (*)(const std::string&, void*);
+		std::unordered_map<std::type_index, ResourceMap> Resources_;
 		std::unordered_map<std::type_index, ResourceConstructorFunc> Constructors_;
-		
-		using ResourceDeConstructorFunc = void (*)(void*);
 		std::unordered_map<std::type_index, ResourceDeConstructorFunc> DeConstructors_;
 	};
 
@@ -115,4 +124,13 @@ namespace dcore::resource
 	{
 		UnLoadRaw(id, std::type_index(typeid(std::decay_t<T>)));
 	}
+
+	
+	template<typename T>
+	void ResourceManager::RegisterConstructor(ResourceConstructorFunc func)
+	{ RegisterConstructor(std::type_index(typeid(T)), func); }
+
+	template<typename T>
+	void ResourceManager::RegisterDeConstructor(ResourceDeConstructorFunc func)
+	{ RegisterDeConstructor(std::type_index(typeid(T)), func); }
 }

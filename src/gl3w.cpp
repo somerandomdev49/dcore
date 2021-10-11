@@ -153,9 +153,10 @@ int gl3wInit(void)
 	if (res)
 		return res;
 
-	atexit(close_libgl);
 	return gl3wInit2(get_proc);
 }
+
+void gl3wClose() { close_libgl(); }
 
 int gl3wInit2(GL3WGetProcAddressProc proc)
 {

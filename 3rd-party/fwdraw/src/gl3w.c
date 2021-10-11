@@ -24,6 +24,8 @@
  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * *MODIFIED* TO ADD 
  */
 
 #include <GL/gl3w.h>
@@ -150,9 +152,10 @@ int gl3wInit(void)
 	if (res)
 		return res;
 
-	atexit(close_libgl);
 	return gl3wInit2(get_proc);
 }
+
+void gl3wClose() { close_libgl(); }
 
 int gl3wInit2(GL3WGetProcAddressProc proc)
 {

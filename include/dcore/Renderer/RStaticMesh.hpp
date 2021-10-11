@@ -12,8 +12,6 @@ namespace dcore::graphics
 		struct StaticMesh
 		{
 			Vao Vao_;
-			void Load(const std::vector<Index> &indices,
-			          const std::vector<Vertex> &vertices);
 		};
 	};
 

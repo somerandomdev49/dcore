@@ -8,6 +8,7 @@
 // TODO: Make ethe implementation dynamic.
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
+#include <dcore/Platform/Impl/GL3W/GL3W.hpp>
 
 using namespace dcore::platform;
 
@@ -17,6 +18,7 @@ void Context::Initialize()
     platform::impl::glfw::Initialize();
     Frame_ = new platform::impl::glfw::Frame();
     Frame_->Initialize(glm::ivec2(800, 600));
+    platform::impl::gl3w::Initialize();
     Rend_->Initialize();
     RI_ = new graphics::RendererInterface();
 }
@@ -62,5 +64,5 @@ void Context::SetInstance(Context *newContext)
 Context *Context::Instance()
 { if(ctx == nullptr) ctx = new Context; return ctx; }
 
-bool Context::IsKeyPressed(int key) { return Frame_->CheckKeyPressed(key); }
+bool Context::IsKeyPressed(event::KeyCode key) { return Frame_->CheckKeyPressed(key); }
 bool Context::IsMousePressed(int button) { return Frame_->CheckMouseButtonPressed(button); }

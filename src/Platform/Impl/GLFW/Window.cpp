@@ -6,6 +6,9 @@
 
 using namespace dcore::platform::impl;
 
+glfw::Frame::Frame() {}
+glfw::Frame::~Frame() {}
+
 void glfw::Frame::Initialize(const glm::ivec2 &size)
 {
 	Size_ = size; // TODO: Title
@@ -24,3 +27,11 @@ void glfw::Frame::Initialize(const glm::ivec2 &size)
 
 	glfwMakeContextCurrent(Window_);
 }
+
+void glfw::Frame::DeInitialize() { glfwDestroyWindow(Window_); Window_ = nullptr; }
+
+bool glfw::Frame::ShouldEnd() { return glfwWindowShouldClose(Window_); }
+void glfw::Frame::OnBeginFrame() { }
+void glfw::Frame::OnEndFrame() { glfwSwapBuffers(Window_); glfwPollEvents(); }
+bool glfw::Frame::CheckKeyPressed(event::KeyCode key) { return glfwGetKey(Window_, (int)key) == GLFW_PRESS; }
+bool glfw::Frame::CheckMouseButtonPressed(int button) { return glfwGetMouseButton(Window_, button) == GLFW_PRESS; }

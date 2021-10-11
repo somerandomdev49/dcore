@@ -4,6 +4,7 @@
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Resource/ResourceLoader.hpp>
 
 namespace dcore::platform { class Context; }
 
@@ -61,12 +62,22 @@ namespace dcore::graphics
 
         void Initialize();
         void DeInitialize();
+        
+        static void RTexture_Constructor  (const std::string &path, void *placement);
+        static void RTexture_DeConstructor(void *placement);
+
+        static void RStaticMesh_Constructor  (const std::string &path, void *placement);
+        static void RStaticMesh_DeConstructor(void *placement);
+
+        static void RShader_Constructor  (const std::string &path, void *placement);
+        static void RShader_DeConstructor(void *placement);
+        
     };
 
     /** Class responsible for initializing/deinitializing render resources */
     class RenderResourceManager
     {
     public:
-        static void Register(resource::ResourceManager *rm);
+        static void Register(resource::ResourceLoader *rl);
     };
 }

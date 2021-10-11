@@ -135,8 +135,8 @@ namespace dcore::event
     public:
         void Initialize();
         void DeInitialize();
+        bool IsKeyPressed(event::KeyCode key);
         bool IsMousePressed(int button);
-        bool IsKeyPressed(int key);
 
         static InputManager *Instance();
     private:

@@ -25,6 +25,20 @@ static RawResource MissingResource;
 //     MissingResource.Type_ = RT_MISSING;
 // }
 
+ResourceManager *resMngrInstance = nullptr;
+ResourceManager *ResourceManager::Instance()
+{
+    if(!resMngrInstance)
+        resMngrInstance = new ResourceManager("data");
+    return resMngrInstance;
+}
+
+void ResourceManager::SetInstance(ResourceManager *newInstance)
+{ resMngrInstance = newInstance; }
+
+ResourceManager::ResourceManager(const std::string &root)
+    : Resources(root) {}
+
 void ResourceManager::Initialize() {}
 void ResourceManager::DeInitialize()
 {
@@ -59,6 +73,7 @@ void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
 {
     // DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource: Incorrect Resource Type!");
+    puts("ResourceManager::LoadRaw");
     DCORE_LOG_INFO << "Adding resource of type [" << idx.name() << "] '" << id << '\'';
     
     void *bytes = new char[allocSize];
@@ -85,3 +100,9 @@ const RawResource &ResourceManager::GetRaw(const std::string &id, std::type_inde
     
     return Resources_[type][id];
 }
+
+
+void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func)
+{ Constructors_[type] = func; }
+void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func)
+{ DeConstructors_[type] = func; }

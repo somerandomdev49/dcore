@@ -55,7 +55,7 @@ void ResourceLoader::LoadByName(const std::string &name)
     auto type = name.substr(0, splitLoc);
     auto path = name.substr(splitLoc + 1);
 
-    DCORE_LOG_INFO << "[ResourceLoader] Loading resource of type " << type << " at " << path;
+    DCORE_LOG_INFO << "[ResourceLoader] Loading resource(s) of type " << type << " at " << path;
     std::vector<std::pair<std::string, std::string>> maps;
     FindMappings_(path, maps);
     for(const auto p : maps)
@@ -64,8 +64,10 @@ void ResourceLoader::LoadByName(const std::string &name)
         DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << p.first << " at " << actual << " [" << type << ']';
 
         auto found = ResTypes_.find(type);
-        DCORE_ASSERT(found == ResTypes_.end(), "Bad Resource Type");
+        DCORE_ASSERT(found != ResTypes_.end(), "Bad Resource Type");
         // LoaderMap_[type](id, actual, res);
+        ResourceManager::Instance()->GetRootPath();
+        printf("ResourceManager::Instance() = 0x%zx\n", ResourceManager::Instance());
         ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second.idx, found->second.allocSize);
     }
 }

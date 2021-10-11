@@ -6,7 +6,7 @@ SRC_PATH = src
 LIBS = # pkg-config files
 COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS
 RCOMPILE_FLAGS = -D NDEBUG
-DCOMPILE_FLAGS = -D DEBUG
+DCOMPILE_FLAGS = -D DEBUG -rdynamic -g
 INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include
 LINK_FLAGS = -std=c++17 # -L3rd-party/fwdraw/lib -lfwdraw
 
@@ -17,7 +17,7 @@ else
 endif
 
 RLINK_FLAGS = 
-DLINK_FLAGS =
+DLINK_FLAGS = -rdynamic -g
 DESTDIR = /
 INSTALL_PREFIX = usr/local
 
@@ -201,6 +201,7 @@ all: $(BIN_PATH)/$(BIN_NAME)
 
 # Link the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
+	@echo $(OBJECTS)
 	@echo "Linking: $@"
 	@$(START_TIME)
 	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@

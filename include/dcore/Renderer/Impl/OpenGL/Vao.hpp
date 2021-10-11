@@ -7,19 +7,13 @@ namespace dcore::graphics { class Renderer; }
 
 namespace dcore::graphics::impl::opengl
 {
-	using Index = std::uint32_t;
-	struct Vertex
-	{
-		
-	};
-
 	class Vao
 	{
 		UInt VBO, VAO, EBO;
 		friend class dcore::graphics::Renderer;
 	public:
-		void Create(const std::vector<Index> &indices,
-		            const std::vector<Vertex> &vertices);
+		void Create(const std::vector<uint32_t> &indices,
+		            const std::vector<uint8_t> &verticexData);
 
 		void Bind();
 		// void CreateIndexBuffer   (UInt id, void *data);

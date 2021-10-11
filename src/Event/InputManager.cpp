@@ -4,7 +4,7 @@
 using namespace dcore::event;
 
 void InputManager::Initialize() {}
-bool InputManager::IsKeyPressed(int key) { return platform::Context::Instance()->IsKeyPressed(key); }
+bool InputManager::IsKeyPressed(event::KeyCode key) { return platform::Context::Instance()->IsKeyPressed(key); }
 bool InputManager::IsMousePressed(int button) { return platform::Context::Instance()->IsMousePressed(button); }
 void InputManager::DeInitialize() {}
 

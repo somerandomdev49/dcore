@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <dcore/Event/InputManager.hpp>
 
 namespace dcore::platform
 {
@@ -8,14 +9,14 @@ namespace dcore::platform
 	{
 	public:
 		virtual ~Frame();
-		virtual void Initialize(const glm::ivec2 &size);
-		virtual bool ShouldEnd();
-		virtual void OnBeginFrame();
-		virtual void OnEndFrame();
-		virtual void DeInitialize();
+		virtual void Initialize(const glm::ivec2 &size) = 0;
+		virtual bool ShouldEnd() = 0;
+		virtual void OnBeginFrame() = 0;
+		virtual void OnEndFrame() = 0;
+		virtual void DeInitialize() = 0;
 
-		virtual bool CheckKeyPressed(int key); 
-		virtual bool CheckMouseButtonPressed(int button);
+		virtual bool CheckKeyPressed(event::KeyCode key) = 0; 
+		virtual bool CheckMouseButtonPressed(int button) = 0;
 
 		const glm::ivec2 &GetSize() const;
 		void SetSize(const glm::ivec2 &newSize);

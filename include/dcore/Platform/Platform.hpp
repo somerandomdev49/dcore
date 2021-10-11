@@ -27,8 +27,8 @@ namespace dcore::platform
 	private:
 		friend class event::InputManager;
 		friend class launch::Launch;
+        bool IsKeyPressed(event::KeyCode key);
         bool IsMousePressed(int button);
-        bool IsKeyPressed(int key);
 
 		static void SetInstance(Context *newContext);
 		
