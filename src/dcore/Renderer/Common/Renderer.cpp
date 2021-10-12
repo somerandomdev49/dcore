@@ -9,7 +9,4 @@ Renderer *Renderer::Instance()
 	return rendererInst;
 }
 
-void Renderer::SetInstance(Renderer *newInstance)
-{
-	rendererInst = newInstance;
-}
+void Renderer::SetInstance(Renderer *newInstance) { rendererInst = newInstance; }

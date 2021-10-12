@@ -14,14 +14,9 @@ void Renderer::OnBeginRender()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::OnEndRender()
-{
-}
+void Renderer::OnEndRender() {}
 
-void Renderer::Initialize()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
+void Renderer::Initialize() { glEnable(GL_DEPTH_TEST); }
 
 void Renderer::DeInitialize()
 {
@@ -44,75 +39,20 @@ void Renderer::Render(RShader *shader, RStaticMesh *mesh, RTexture *texture)
 	glDrawElements(GL_TRIANGLES, mesh->Data_.Vao_.IndexCount_, GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::SetUniform(const RUniform &u, float v)
-{
-	glUniform1f(u.Data_.Location, v);
-}
-
-void Renderer::SetUniform(const RUniform &u, int v)
-{
-	glUniform1i(u.Data_.Location, v);
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v)
-{
-	glUniform2f(u.Data_.Location, v.x, v.y);
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v)
-{
-	glUniform3f(u.Data_.Location, v.x, v.y, v.z);
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v)
-{
-	glUniform4f(u.Data_.Location, v.x, v.y, v.z, v.w);
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v)
-{
-	glUniformMatrix2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v)
-{
-	glUniformMatrix2x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v)
-{
-	glUniformMatrix2x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v)
-{
-	glUniformMatrix3x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v)
-{
-	glUniformMatrix3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v)
-{
-	glUniformMatrix3x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v)
-{
-	glUniformMatrix4x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v)
-{
-	glUniformMatrix4x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
-
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
-{
-	glUniformMatrix4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v));
-}
+void Renderer::SetUniform(const RUniform &u, float v) { glUniform1f(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, int v) { glUniform1i(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { glUniform2f(u.Data_.Location, v.x, v.y); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v) { glUniform3f(u.Data_.Location, v.x, v.y, v.z); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v) { glUniform4f(u.Data_.Location, v.x, v.y, v.z, v.w); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v) { glUniformMatrix2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v) { glUniformMatrix2x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v) { glUniformMatrix2x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v) { glUniformMatrix3x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v) { glUniformMatrix3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v) { glUniformMatrix3x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v) { glUniformMatrix4x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v) { glUniformMatrix4x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v) { glUniformMatrix4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
 
 RUniform Renderer::GetUniform(RShader *shader, const char *name)
 {
@@ -121,15 +61,12 @@ RUniform Renderer::GetUniform(RShader *shader, const char *name)
 	return u;
 }
 
-void Renderer::UseShader(RShader *shader)
-{
-	glUseProgram(shader->Data_.Program_.Id_);
-}
+void Renderer::UseShader(RShader *shader) { glUseProgram(shader->Data_.Program_.Id_); }
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 {
-	static impl::opengl::TextureFormat formats[4] = {impl::opengl::TextureFormatR, impl::opengl::TextureFormatRg,
-	                                                 impl::opengl::TextureFormatRgb, impl::opengl::TextureFormatRgba};
+	static impl::opengl::TextureFormat formats[4] = {impl::opengl::TextureFormatR, impl::opengl::TextureFormatRg, impl::opengl::TextureFormatRgb,
+	                                                 impl::opengl::TextureFormatRgba};
 
 	// This constructs a RTexture at the specified address (see "placement new")
 	RTexture *tex = new(placement) RTexture();
@@ -143,6 +80,8 @@ void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 		return;
 	}
 	auto fmt = formats[d.channels - 1];
+
+	DCORE_LOG_INFO << "Generating image (" << d.channels << 'x' << d.size.x << 'x' << d.size.y << ')';
 
 	tex->Data_.Texture_.Generate(impl::opengl::Texture2D);
 

@@ -23,15 +23,9 @@ void Context::Initialize()
 	RI_ = new graphics::RendererInterface();
 }
 
-void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm)
-{
-	RI_->Initialize(rm, Rend_);
-}
+void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm) { RI_->Initialize(rm, Rend_); }
 
-dcore::graphics::RendererInterface *Context::GetRendererInterface() const
-{
-	return RI_;
-}
+dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return RI_; }
 
 void Context::Start()
 {
@@ -49,9 +43,7 @@ void Context::Start()
 	}
 }
 
-void Context::CloseWindow()
-{
-}
+void Context::CloseWindow() {}
 
 void Context::DeInitialize()
 {
@@ -63,10 +55,7 @@ void Context::DeInitialize()
 }
 
 static Context *ctx;
-void Context::SetInstance(Context *newContext)
-{
-	ctx = newContext;
-}
+void Context::SetInstance(Context *newContext) { ctx = newContext; }
 
 Context *Context::Instance()
 {
@@ -74,11 +63,5 @@ Context *Context::Instance()
 	return ctx;
 }
 
-bool Context::IsKeyPressed(event::KeyCode key)
-{
-	return Frame_->CheckKeyPressed(key);
-}
-bool Context::IsMousePressed(int button)
-{
-	return Frame_->CheckMouseButtonPressed(button);
-}
+bool Context::IsKeyPressed(event::KeyCode key) { return Frame_->CheckKeyPressed(key); }
+bool Context::IsMousePressed(int button) { return Frame_->CheckMouseButtonPressed(button); }

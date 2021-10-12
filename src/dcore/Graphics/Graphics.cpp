@@ -13,39 +13,20 @@ CommonShader::CommonShader(const resource::Resource<RShader> &sh) : Shader_(sh)
 {
 	DCORE_ASSERT_RETURN(sh.Get() != nullptr, "Bad Shader!");
 	UTransform_ = Renderer::Instance()->GetUniform(sh.Get(), "u_Transform");
+	UTex_       = Renderer::Instance()->GetUniform(sh.Get(), "u_Tex");
+	Renderer::Instance()->SetUniform(UTex_, 0);
 }
 
-RShader *CommonShader::Get() const
-{
-	return Shader_.Get();
-}
-void CommonShader::SetTransform(const glm::mat4 &m)
-{
-	UTransform_;
-}
+RShader *CommonShader::Get() const { return Shader_.Get(); }
+void CommonShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
 
-const glm::mat4 &Renderable::GetTransform() const
-{
-	return Transform_;
-}
-void Renderable::SetTransform(const glm::mat4 &m)
-{
-	Transform_ = m;
-}
+const glm::mat4 &Renderable::GetTransform() const { return Transform_; }
+void Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
 
-StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture)
-    : Mesh_(mesh), Texture_(texture)
-{
-}
+StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture) : Mesh_(mesh), Texture_(texture) {}
 
-const dcore::resource::Resource<RStaticMesh> &StaticMesh::GetMesh() const
-{
-	return Mesh_;
-}
-const dcore::resource::Resource<RTexture> &StaticMesh::GetTexture() const
-{
-	return Texture_;
-}
+const dcore::resource::Resource<RStaticMesh> &StaticMesh::GetMesh() const { return Mesh_; }
+const dcore::resource::Resource<RTexture> &StaticMesh::GetTexture() const { return Texture_; }
 
 Camera::Camera(float fov, float aspect, float near, float far)
 {
@@ -66,64 +47,50 @@ const glm::mat4 &Camera::GetViewMatrix()
 	if(DirtyView_) RecalcViewMatrix();
 	return ViewMatrix_;
 }
+
 const glm::mat4 &Camera::GetProjMatrix()
 {
 	if(DirtyProj_) RecalcProjMatrix();
 	return ProjMatrix_;
 }
 
-float Camera::GetFov() const
-{
-	return Fov_;
-}
-float Camera::GetAspectRatio() const
-{
-	return Aspect_;
-}
-float Camera::GetNearZ() const
-{
-	return NearZ_;
-}
-float Camera::GetFarZ() const
-{
-	return FarZ_;
-}
+float Camera::GetFov() const { return Fov_; }
+float Camera::GetAspectRatio() const { return Aspect_; }
+float Camera::GetNearZ() const { return NearZ_; }
+float Camera::GetFarZ() const { return FarZ_; }
 
 void Camera::SetFov(float newFov)
 {
 	Fov_       = newFov;
 	DirtyProj_ = true;
 }
+
 void Camera::SetAspectRatio(float newAspectRatio)
 {
 	Aspect_    = newAspectRatio;
 	DirtyProj_ = true;
 }
+
 void Camera::SetNearZ(float newNearZ)
 {
 	NearZ_     = newNearZ;
 	DirtyProj_ = true;
 }
+
 void Camera::SetFarZ(float newFarZ)
 {
 	FarZ_      = newFarZ;
 	DirtyProj_ = true;
 }
 
-const glm::vec3 &Camera::GetPosition() const
-{
-	return Position_;
-}
+const glm::vec3 &Camera::GetPosition() const { return Position_; }
 void Camera::SetPosition(const glm::vec3 &newPosition)
 {
 	Position_  = newPosition;
 	DirtyView_ = true;
 }
 
-const glm::quat &Camera::GetRotation() const
-{
-	return Rotation_;
-}
+const glm::quat &Camera::GetRotation() const { return Rotation_; }
 void Camera::SetRotation(const glm::quat &newRotation)
 {
 	Rotation_  = newRotation;
@@ -161,15 +128,9 @@ void RendererInterface::DeInitialize()
 	delete Camera_;
 }
 
-Renderer *RendererInterface::GetRenderer() const
-{
-	return Renderer_;
-}
+Renderer *RendererInterface::GetRenderer() const { return Renderer_; }
 
-Camera *RendererInterface::GetCamera() const
-{
-	return Camera_;
-}
+Camera *RendererInterface::GetCamera() const { return Camera_; }
 // TODO: SetCamera, make the camera DCORE_REF.
 
 void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
@@ -177,8 +138,5 @@ void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
 	// TODO: Do not set the shader each time we render something, it's expensive!
 	Renderer_->UseShader(ObjectShader_->Get());
 	ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
-
-	// printf("render: Renderer_ = 0x%zx, ObjectShader->Get() = 0x%zx, mesh = 0x%zx, texture = 0x%zx\n",
-	// Renderer_, ObjectShader_->Get(), sm->GetMesh().Get(), sm->GetTexture().Get());
-	Renderer_->Render(ObjectShader_->Get(), sm->GetMesh().Get(), sm->GetTexture().Get());
+	Renderer_->Render(nullptr /* shader already in use. */, sm->GetMesh().Get(), sm->GetTexture().Get());
 }

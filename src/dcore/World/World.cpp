@@ -13,9 +13,7 @@ void TransformComponent::ReCalculateMatrix()
 void World::Initialize()
 { /* WInfo_.World_ = this; */
 }
-void World::DeInitialize()
-{
-}
+void World::DeInitialize() {}
 
 void World::Update()
 {
@@ -44,20 +42,9 @@ void World::Render(graphics::RendererInterface *render)
 	}
 }
 
-entt::entity Entity::GetId() const
-{
-	return Id_;
-}
-Entity::Entity(entt::entity e, World *world) : Id_(e), World_(world)
-{
-}
+entt::entity Entity::GetId() const { return Id_; }
+Entity::Entity(entt::entity e, World *world) : Id_(e), World_(world) {}
 
-Entity World::CreateEntity()
-{
-	return Entity(Registry_.create(), this);
-}
+Entity World::CreateEntity() { return Entity(Registry_.create(), this); }
 
-void World::RegisterUpdate(void (*f)(World *))
-{
-	Updates_.push_back(f);
-}
+void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }

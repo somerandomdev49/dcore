@@ -6,20 +6,10 @@
 
 using namespace dcore::resource;
 
-RawResource::RawResource()
-{
-}
-RawResource::RawResource(std::type_index type, void *data) : Type_(type), Data_(data)
-{
-}
-void *RawResource::Get() const
-{
-	return Data_;
-}
-const std::type_index &RawResource::GetType() const
-{
-	return Type_;
-}
+RawResource::RawResource() {}
+RawResource::RawResource(std::type_index type, void *data) : Type_(type), Data_(data) {}
+void *RawResource::Get() const { return Data_; }
+const std::type_index &RawResource::GetType() const { return Type_; }
 
 static RawResource NullResource;
 static RawResource MissingResource;
@@ -41,18 +31,11 @@ ResourceManager *ResourceManager::Instance()
 	return resMngrInstance;
 }
 
-void ResourceManager::SetInstance(ResourceManager *newInstance)
-{
-	resMngrInstance = newInstance;
-}
+void ResourceManager::SetInstance(ResourceManager *newInstance) { resMngrInstance = newInstance; }
 
-ResourceManager::ResourceManager(const std::string &root) : Resources(root)
-{
-}
+ResourceManager::ResourceManager(const std::string &root) : Resources(root) {}
 
-void ResourceManager::Initialize()
-{
-}
+void ResourceManager::Initialize() {}
 void ResourceManager::DeInitialize()
 {
 	DCORE_LOG_INFO << "[ResourceManager] De-Initializing...";
@@ -87,8 +70,7 @@ void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 	r.Data_ = nullptr;
 }
 
-const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx,
-                                            size_t allocSize)
+const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
 {
 	// DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource:
 	// Incorrect Resource Type!");
@@ -119,11 +101,5 @@ const RawResource &ResourceManager::GetRaw(const std::string &id, std::type_inde
 	return Resources_[type][id];
 }
 
-void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func)
-{
-	Constructors_[type] = func;
-}
-void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func)
-{
-	DeConstructors_[type] = func;
-}
+void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func) { Constructors_[type] = func; }
+void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func) { DeConstructors_[type] = func; }

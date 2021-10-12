@@ -24,7 +24,8 @@ void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<u
 
 void opengl::Vao::CreateFloatAttribute(int count)
 {
-	// printf("CreateFloatAttribute(count = %d): LastIndex_ = %zu, LastOffset_ = %zu, Stride_ = %zu\n", count, LastIndex_,
+	// printf("CreateFloatAttribute(count = %d): LastIndex_ = %zu, LastOffset_ = %zu, Stride_ = %zu\n", count,
+	// LastIndex_,
 	//        LastOffset_, Stride_);
 	glVertexAttribPointer(LastIndex_, count, GL_FLOAT, GL_FALSE, Stride_, (void *)LastOffset_);
 	glEnableVertexAttribArray(LastIndex_);

@@ -12,7 +12,7 @@ AllowAllConstructorInitializersOnNextLine: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'false'
 AllowShortBlocksOnASingleLine: 'false'
 AllowShortCaseLabelsOnASingleLine: 'true'
-AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: Always
 AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: 'true'
@@ -25,9 +25,9 @@ BinPackParameters: 'true'
 BreakAfterJavaFieldAnnotations: 'true'
 BreakBeforeBraces: Attach
 BreakStringLiterals: 'true'
-ColumnLimit: '120'
+ColumnLimit: '150'
 CompactNamespaces: 'true'
-ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
 Cpp11BracedListStyle: 'true'
 DerivePointerAlignment: 'false'
 FixNamespaceComments: 'true'
@@ -58,5 +58,8 @@ TabWidth: '4'
 UseTab: ForIndentation
 BreakBeforeTernaryOperators: 'true'
 BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeColon
+# AllowAllConstructorInitializersOnNextLine: 'true'
 
 ...
+

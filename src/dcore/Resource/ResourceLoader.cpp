@@ -11,9 +11,7 @@
 
 using namespace dcore::resource;
 
-ResourceLoader::ResourceLoader(const std::string &root) : Resources(root)
-{
-}
+ResourceLoader::ResourceLoader(const std::string &root) : Resources(root) {}
 
 void ResourceLoader::LoadFromManifest(const std::string &location)
 {
@@ -22,8 +20,7 @@ void ResourceLoader::LoadFromManifest(const std::string &location)
 	for(const auto &p : files) LoadByName(p);
 }
 
-void ResourceLoader::FindMappings_(const std::string &pattern,
-                                   std::vector<std::pair<std::string, std::string>> &matched)
+void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
 {
 	static std::string escapes = "[\\^$.|?+(){}";
 

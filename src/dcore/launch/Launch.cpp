@@ -52,8 +52,8 @@ namespace dcore
 
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
-		e.AddComponent(world::StaticMeshComponent {graphics::StaticMesh(
-		    rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
+		e.AddComponent(world::StaticMeshComponent {
+		    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
 		// e.AddComponent(MyComponent());
 		// world.RegisterUpdate([](world::World *c)

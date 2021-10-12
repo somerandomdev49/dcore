@@ -20,7 +20,7 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 	d.verticexData.clear();
 	d.indices.clear();
 	d.stride = 0;
-	
+
 	for(char c : format)
 	{
 		switch(c)
@@ -49,7 +49,6 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 
 	auto &attrib    = reader.GetAttrib();
 	auto &shapes    = reader.GetShapes();
-	auto &materials = reader.GetMaterials();
 
 	const auto pushFloat = [&](float f) {
 		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);

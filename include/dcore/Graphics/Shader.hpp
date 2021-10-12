@@ -17,5 +17,6 @@ namespace dcore::graphics
 	private:
 		resource::Resource<RShader> Shader_;
 		RUniform UTransform_;
+		RUniform UTex_;
 	};
 } // namespace dcore::graphics

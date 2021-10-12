@@ -8,14 +8,9 @@ using namespace dcore::resource;
 ConfigReader *ConfigReader::DefaultInstance_ = nullptr;
 
 // TODO: Deallocate this somehow.
-ConfigReader *CreateDefaultReader()
-{
-	return new ConfigReader("");
-}
+ConfigReader *CreateDefaultReader() { return new ConfigReader(""); }
 
-ConfigReader::ConfigReader(const std::string &root) : Resources(root)
-{
-}
+ConfigReader::ConfigReader(const std::string &root) : Resources(root) {}
 
 /** Reads a manifest file */
 bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data)
@@ -93,7 +88,4 @@ ConfigReader *ConfigReader::DefaultReader()
 	return DefaultInstance_;
 }
 
-void ConfigReader::SetDefaultReader(ConfigReader *newDefault)
-{
-	DefaultInstance_ = newDefault;
-}
+void ConfigReader::SetDefaultReader(ConfigReader *newDefault) { DefaultInstance_ = newDefault; }

@@ -13,10 +13,10 @@ namespace dcore::graphics::impl::opengl
 {
 	enum TextureType
 	{
-		Texture1D,
-		Texture2D,
-		Texture3D,
-		TextureCubemap,
+		Texture1D      = GL_TEXTURE_1D,
+		Texture2D      = GL_TEXTURE_2D,
+		Texture3D      = GL_TEXTURE_3D,
+		TextureCubemap = GL_TEXTURE_CUBE_MAP,
 	};
 
 	enum TextureParam

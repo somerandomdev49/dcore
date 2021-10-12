@@ -66,7 +66,4 @@ void opengl::ShaderProgram::Link()
 	for(int i = 0; i < 2; ++i) glDeleteShader(ShaderIds_[i]);
 }
 
-void opengl::ShaderProgram::Delete()
-{
-	glDeleteProgram(Id_);
-}
+void opengl::ShaderProgram::Delete() { glDeleteProgram(Id_); }

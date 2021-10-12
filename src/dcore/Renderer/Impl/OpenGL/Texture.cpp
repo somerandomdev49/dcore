@@ -9,23 +9,13 @@ void opengl::TextureBuffer::Generate(TextureType type)
 	glBindTexture(Type_, Id_);
 }
 
-void opengl::TextureBuffer::SetParam(TextureParam param, TextureParamValue value)
+void opengl::TextureBuffer::SetParam(TextureParam param, TextureParamValue value) { glTexParameteri(Type_, param, value); }
+
+void opengl::TextureBuffer::LoadData(TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat, void *data)
 {
-	glTexParameteri(Type_, param, value);
+	glTexImage2D(Type_, 0, internalFormat, size.x, size.y, 0, dataFormat, TypeUnsignedByte, data);
 }
 
-void opengl::TextureBuffer::LoadData(TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat,
-                                     void *data)
-{
-	glTexImage2D(Type_, 0, internalFormat, size.x, size.y, 0, dataFormat, GL_UNSIGNED_BYTE, data);
-}
+void opengl::TextureBuffer::GenMipmaps() { glGenerateMipmap(Type_); }
 
-void opengl::TextureBuffer::GenMipmaps()
-{
-	glGenerateMipmap(Type_);
-}
-
-void opengl::TextureBuffer::Delete()
-{
-	glDeleteTextures(1, &Id_);
-}
+void opengl::TextureBuffer::Delete() { glDeleteTextures(1, &Id_); }
