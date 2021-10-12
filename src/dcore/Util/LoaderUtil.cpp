@@ -47,8 +47,8 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 		DCORE_LOG_WARNING << "[tinyobjloader] warning: " << reader.Warning();
 	}
 
-	auto &attrib    = reader.GetAttrib();
-	auto &shapes    = reader.GetShapes();
+	auto &attrib = reader.GetAttrib();
+	auto &shapes = reader.GetShapes();
 
 	const auto pushFloat = [&](float f) {
 		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
