@@ -165,6 +165,7 @@ Renderer *RendererInterface::GetRenderer() const
 {
 	return Renderer_;
 }
+
 Camera *RendererInterface::GetCamera() const
 {
 	return Camera_;
@@ -174,7 +175,10 @@ Camera *RendererInterface::GetCamera() const
 void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
 {
 	// TODO: Do not set the shader each time we render something, it's expensive!
-	Renderer_->UseShader(ObjectShader_->Get()); // TODO: stay away from calling fwdraw in higher order classes.
+	Renderer_->UseShader(ObjectShader_->Get());
 	ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
+
+	// printf("render: Renderer_ = 0x%zx, ObjectShader->Get() = 0x%zx, mesh = 0x%zx, texture = 0x%zx\n",
+	// Renderer_, ObjectShader_->Get(), sm->GetMesh().Get(), sm->GetTexture().Get());
 	Renderer_->Render(ObjectShader_->Get(), sm->GetMesh().Get(), sm->GetTexture().Get());
 }

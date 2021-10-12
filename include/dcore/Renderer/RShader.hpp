@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Renderer/Impl/OpenGL.hpp>
 #include <dcore/Renderer/Config.hpp>
+#include <dcore/Renderer/Impl/OpenGL/ShaderProgram.hpp>
 
 namespace dcore::graphics
 {
@@ -10,8 +11,9 @@ namespace dcore::graphics
 	{
 		struct Shader
 		{
-			UInt Id;
+			ShaderProgram Program_;
 		};
+
 		struct Uniform
 		{
 			UInt Location;

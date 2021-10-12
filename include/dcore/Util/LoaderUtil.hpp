@@ -30,6 +30,6 @@ namespace dcore::util
 		static bool LoadMesh(MeshData &d, const std::string &path, const std::string &format = "pnt");
 
 		/** Loads a file into a string. */
-		static std::string LoadFile(const std::string &path);
+		static bool LoadFile(std::string &out, const std::string &path);
 	};
 } // namespace dcore::util

@@ -59,7 +59,7 @@ void ResourceManager::DeInitialize()
 
 	for(const auto &m : Resources_)
 	{
-		DCORE_LOG_INFO << "[ResourceManager] Removing [" << m.first.name() << ']';
+		DCORE_LOG_INFO << "[ResourceManager] Removing [" << util::Debug::Demangle(m.first.name()) << ']';
 		for(const auto &p : m.second)
 		{
 			DeConstructors_[p.second.GetType()](p.second.Data_);

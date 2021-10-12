@@ -27,5 +27,5 @@ void opengl::TextureBuffer::GenMipmaps()
 
 void opengl::TextureBuffer::Delete()
 {
-    glDeleteTextures(1, &Id_);
+	glDeleteTextures(1, &Id_);
 }

@@ -10,6 +10,8 @@ using namespace dcore::graphics;
 
 void Renderer::OnBeginRender()
 {
+	glClearColor(.0f, .0f, .0f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::OnEndRender()
@@ -28,16 +30,17 @@ void Renderer::DeInitialize()
 
 void Renderer::Render(RShader *shader, RStaticMesh *mesh, RTexture *texture)
 {
-	if(shader) glUseProgram(shader->Data_.Id);
+	if(shader) UseShader(shader);
 	if(texture)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTextureUnit(GL_TEXTURE_2D, texture->Data_.Texture_.Id_);
+		glBindTexture(GL_TEXTURE_2D, texture->Data_.Texture_.Id_);
 	}
 
 	glBindVertexArray(mesh->Data_.Vao_.VAO_);
 	// TODO: Use GL_TRIANGLE_STRIP instead of triangles.
 	// TODO: Will make the loading process more complicated, but will decrease memory usage.
+	// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
 	glDrawElements(GL_TRIANGLES, mesh->Data_.Vao_.IndexCount_, GL_UNSIGNED_INT, 0);
 }
 
@@ -114,13 +117,13 @@ void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
 RUniform Renderer::GetUniform(RShader *shader, const char *name)
 {
 	RUniform u;
-	u.Data_.Location = glGetUniformLocation(shader->Data_.Id, name);
+	u.Data_.Location = glGetUniformLocation(shader->Data_.Program_.Id_, name);
 	return u;
 }
 
 void Renderer::UseShader(RShader *shader)
 {
-	glUseProgram(shader->Data_.Id);
+	glUseProgram(shader->Data_.Program_.Id_);
 }
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)
@@ -181,11 +184,27 @@ void Renderer::RStaticMesh_DeConstructor(void *placement)
 void Renderer::RShader_Constructor(const std::string &path, void *placement)
 {
 	RShader *shader = new(placement) RShader();
+
+	std::string vertexSource, fragmentSource;
+	bool success = true;
+	success &= util::LoaderUtil::LoadFile(vertexSource, path + ".vert");
+	success &= util::LoaderUtil::LoadFile(fragmentSource, path + ".frag");
+	if(!success)
+	{
+		DCORE_LOG_ERROR << "Failed to load shader source! " << path;
+		return;
+	}
+
+	shader->Data_.Program_.Create();
+	shader->Data_.Program_.AttachShader(impl::opengl::VertexShader, vertexSource);
+	shader->Data_.Program_.AttachShader(impl::opengl::FragmentShader, fragmentSource);
+	shader->Data_.Program_.Link();
 }
 
 void Renderer::RShader_DeConstructor(void *placement)
 {
 	RShader *shader = reinterpret_cast<RShader *>(placement);
+	shader->Data_.Program_.Delete();
 }
 
 void RenderResourceManager::Register(resource::ResourceLoader *rl)

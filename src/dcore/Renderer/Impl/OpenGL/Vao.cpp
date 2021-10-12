@@ -1,4 +1,5 @@
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
+#include <cstdio>
 
 using namespace dcore::graphics::impl;
 
@@ -23,9 +24,12 @@ void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<u
 
 void opengl::Vao::CreateFloatAttribute(int count)
 {
-	LastOffset_ += sizeof(float) * count;
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Stride_, (void *)LastOffset_);
+	// printf("CreateFloatAttribute(count = %d): LastIndex_ = %zu, LastOffset_ = %zu, Stride_ = %zu\n", count, LastIndex_,
+	//        LastOffset_, Stride_);
+	glVertexAttribPointer(LastIndex_, count, GL_FLOAT, GL_FALSE, Stride_, (void *)LastOffset_);
 	glEnableVertexAttribArray(LastIndex_);
+	LastOffset_ += sizeof(float) * count;
+	LastIndex_ += 1;
 }
 
 void opengl::Vao::Delete()

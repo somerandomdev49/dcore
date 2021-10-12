@@ -19,7 +19,8 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 {
 	d.verticexData.clear();
 	d.indices.clear();
-
+	d.stride = 0;
+	
 	for(char c : format)
 	{
 		switch(c)
@@ -112,5 +113,20 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 			index_offset += 3;
 		}
 	}
+	return true;
+}
+
+// https://stackoverflow.com/a/116220/9110517
+bool LoaderUtil::LoadFile(std::string &out, const std::string &path)
+{
+	constexpr auto read_size = std::size_t {4096};
+	std::ifstream stream(path);
+	if(!stream) return false;
+	stream.exceptions(std::ios_base::badbit);
+
+	auto buf = std::string(read_size, '\0');
+	while(stream.read(&buf[0], read_size)) out.append(buf, 0, stream.gcount());
+	out.append(buf, 0, stream.gcount());
+
 	return true;
 }

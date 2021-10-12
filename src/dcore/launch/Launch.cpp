@@ -7,7 +7,7 @@
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 
-#define STMT                            \
+#define STMT                                      \
 	DCORE_LOG_INFO << __LINE__ << " | " << #STMT; \
 	STMT;
 
@@ -28,7 +28,7 @@ namespace dcore
 		world::World world;
 		graphics::Renderer rend;
 
-		ctx.Rend_ = &rend;
+		ctx.Rend_  = &rend;
 		ctx.World_ = &world;
 
 		ctx.Initialize();
@@ -52,9 +52,8 @@ namespace dcore
 
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
-		e.AddComponent(
-		    world::StaticMeshComponent {graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
-		                                                     rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
+		e.AddComponent(world::StaticMeshComponent {graphics::StaticMesh(
+		    rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
 		// e.AddComponent(MyComponent());
 		// world.RegisterUpdate([](world::World *c)
@@ -92,8 +91,9 @@ namespace dcore
 		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
 		e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);
 		e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();
-		e.GetComponent<world::TransformComponent>().Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		e.GetComponent<world::TransformComponent>().Scale    = glm::vec3(1.0f, 1.0f, 1.0f);
 
+		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
 		ctx.Start();
 		ctx.CloseWindow();
