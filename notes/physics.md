@@ -1,6 +1,6 @@
 # Implementation Notes: Physics
 
-## Collision Detection:
+## Collision Detection
 
 - *Sphere* vs *Plane* and *Cylinder* vs *Plane* (Maybe even *Capsule* vs *Plane*)
   For stairs and other similar stuff we will use planes. Because a character is a capsule,
@@ -13,18 +13,21 @@
   vs plane is slower) and check for player y coordinate and the polygon's height and if it is
   inside of the polygon, we need to only check circle and polygon. [Reddit Thread][circle_triangle]
 
-
 - *Sphere* vs *Heightmap*
-  I'm not sure for now. Maybe convert to triangles? N-tree?
+  Check player y and terrain y under the player.
+  
+<!-- I'm not sure for now. Maybe convert to triangles? N-tree?
   [Article 1][terrain_1],
   [Article 2][terrain_2],
   [Article 3][terrain_3],
   [Article 4][terrain_4],
-  [Article 5][terrain_5].
+  [Article 5][terrain_5]. -->
 
 - *Capsule* vs *Convex*
   If there's no other choice, we can do this... [How this could be implemented][capsule_convex]
-  
+
+- *Convex* vs *Convex*
+  Sometimes... [libccd][libccd]
   
 [capsule_convex]: https://github.com/DanielChappuis/reactphysics3d/blob/master/src/collision/narrowphase/CapsuleVsConvexPolyhedronAlgorithm.cpp
 
@@ -38,3 +41,4 @@
 [terrain_3]: https://stackoverflow.com/questions/22432983/3d-terrain-model-collision
 [terrain_4]: https://gamedev.stackexchange.com/questions/165111/terrain-collision-with-sphere-and-obb
 [terrain_5]: https://gamedev.net/forums/topic/675055-3d-model-terrain-collision/5272986/
+[libccd]: https://github.com/danfis/libccd

@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
-namespace dg::terrain
+namespace dcore::terrain
 {
 	class Heightmap
 	{

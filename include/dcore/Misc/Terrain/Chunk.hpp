@@ -1,8 +1,9 @@
-#include <dcore/Game/Terrain/Heightmap.hpp>
+#include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 
-namespace dg::terrain
+namespace dcore::terrain
 {
+	// TODO: TerrainResourceManager class
 	class Chunk
 	{
 	public:

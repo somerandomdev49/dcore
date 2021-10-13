@@ -1,8 +1,10 @@
 #pragma once
-#include <dcore/Game/Terrain/Chunk.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Misc/Terrain/Chunk.hpp>
+#include <glm/glm.hpp>
+#include <vector>
 
-namespace dg::terrain
+namespace dcore::terrain
 {
 	class Terrain
 	{
