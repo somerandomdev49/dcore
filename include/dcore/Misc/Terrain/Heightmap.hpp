@@ -21,7 +21,7 @@ namespace dcore::terrain
 		const glm::vec2 &GetMax() const;
 		Heightmap *GetSource();
 
-		float At(const glm::vec2 &pos) const;
+		float Get(const glm::vec2 &pos) const;
 
 	private:
 		glm::vec2 Min_, Max_;

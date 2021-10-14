@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <entt/entity/registry.hpp>
 #include <dcore/Launch.hpp>
@@ -93,7 +94,7 @@ namespace dcore::world
 		void Render(graphics::RendererInterface *render);
 		std::vector<void (*)(World *)> Updates_; // TODO: is std::vector too much?
 		entt::registry Registry_;
-		// WorldUpdateInfo WInfo_;
+		terrain::Terrain Terrain_;
 	};
 } // namespace dcore::world
 

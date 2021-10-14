@@ -1,26 +1,46 @@
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
+#include <dcore/Renderer/RTexture.hpp>
 
 namespace dcore::terrain
 {
-	// TODO: TerrainResourceManager class
 	class Chunk
 	{
 	public:
-		static void Register();
+		void Initialize(HeightmapRegion &&region);
 
-		void Initialize(const HeightmapRegion &region);
+		/** Returns the region the chunk is based on. */
 		const HeightmapRegion &GetRegion() const;
+
+		/** Returns the size of the chunk. (region size * resolution) */
 		const glm::vec2 &GetSize() const;
+
+		/** Returns the actual location of the chunk. */
 		const glm::vec2 &GetGlobalPosition() const;
+
+		/** Returns the index of the chunk. */
 		const glm::ivec2 &GetLocalPosition() const;
+
+		/** Returns whether the chunk is active. (can be rendered) */
+		bool IsActive() const;
+
 		void DeInitialize();
 
 	private:
-		void Load(const std::string &id, const std::string &location, dcore::resource::ResourceManager *res);
+		friend class Terrain;
+
+		/** Activates the chunk and creates the mesh. */
+		void Activate(resource::ResourceLoader *rl);
+
+		/** Deactivates the chunk and deletes the mesh. */
+		void DeActivate();
+
+		void GenerateMesh_();
 
 		HeightmapRegion Region_;
-		dcore::resource::Resource<dcore::graphics::RStaticMesh> BlendMap_;
+		dcore::resource::Resource<dcore::graphics::RTexture> BlendMap_;
 		dcore::graphics::RStaticMesh DCORE_OWN *Mesh_;
+		glm::ivec2 LocalPosition_;
+		bool IsActive_;
 	};
 } // namespace dcore::terrain

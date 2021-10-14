@@ -18,5 +18,14 @@ namespace dcore::terrain
 	private:
 		std::vector<Chunk> Chunks_;
 		std::vector<long> ActiveChunks_;
+
+		friend class TerrainResourceManager;
+		
+	};
+
+	class TerrainResourceManager
+	{
+	public:
+		static void Register(ResourceLoader *rl);
 	};
 } // namespace dcore::terrain
