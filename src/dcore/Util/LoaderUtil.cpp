@@ -50,7 +50,8 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 	auto &attrib = reader.GetAttrib();
 	auto &shapes = reader.GetShapes();
 
-	const auto pushFloat = [&](float f) {
+	const auto pushFloat = [&](float f)
+	{
 		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
 		d.verticexData.push_back(bytes[0]);
 		d.verticexData.push_back(bytes[1]);
