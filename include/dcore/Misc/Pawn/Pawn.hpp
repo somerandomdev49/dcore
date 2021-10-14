@@ -3,8 +3,7 @@
 
 namespace dcore::pawn
 {
-    class PawnComponent
-    {
-        
-    }
-}
+	class PawnComponent
+	{
+	}
+} // namespace dcore::pawn

@@ -3,43 +3,22 @@
 #include <string>
 #include <vector>
 #include <dcore/Game/Entity/Actor.hpp>
+#include <cinttypes>
 
-namespace dg::entity {
-    const MAX_INVENTORY_SIZE = 5;
+namespace dg::entity
+{
+	const int MAX_INVENTORY_SIZE = 5;
 
-    struct Item {
-        std::string name;
-    }
+	class Character : public Actor
+	{
+	public:
+		Quest *GetAssignedQuest(int index) const;
+		const std::vector<Quest> &GetAssignedQuests() const;
 
-    struct Inventory {
-        int size;
-        Item items[MAX_INVENTORY_SIZE];
-    }
-
-    struct Quest {
-        int id;
-        std::string name;
-    }
-
-    class Character: public Actor {
-        public:
-            Inventory GetInventory() const;
-            int GetInventorySize const;
-            
-        private:
-            Inventory inventory;
-            Quest quests[];
-
-            Inventory GetInventory() {
-                return Inventory.items;
-            }
-
-            int GetInventorySize() {
-                return Inventory.size;
-            }
-
-            Quest GetQuest() {
-                return Quests[0];
-            }
-    }
-}
+	private:
+		Inventory Inventory_;
+		uint32_t ItemType;
+		uint16_t Mods;
+		std::vector<Quest *> AssignedQuests_;
+	}
+} // namespace dg::entity

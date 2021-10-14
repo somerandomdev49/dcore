@@ -19,4 +19,4 @@ namespace dcore::terrain
 		std::vector<Chunk> Chunks_;
 		std::vector<long> ActiveChunks_;
 	};
-} // namespace dg::terrain
+} // namespace dcore::terrain

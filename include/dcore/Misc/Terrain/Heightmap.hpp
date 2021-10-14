@@ -27,4 +27,4 @@ namespace dcore::terrain
 		glm::vec2 Min_, Max_;
 		dcore::resource::Resource<Heightmap> Source_;
 	};
-} // namespace dg::terrain
+} // namespace dcore::terrain

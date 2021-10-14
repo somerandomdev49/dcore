@@ -22,6 +22,7 @@ namespace dcore::physics
 	{
 	public:
 		WorldCollider(WorldSection &&section);
+
 	private:
 		WorldSection Section_;
 	};

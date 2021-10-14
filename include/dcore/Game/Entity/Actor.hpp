@@ -8,7 +8,7 @@ namespace dg::entity
 	public:
 		float GetMaxHealth() const;
 		float GetHealth() const;
-		float GetBasicDamage() const;
+		float GetBaseDamage() const;
 
 		const std::vector<Effect> &GetEffects() const;
 		void AddEffect(const Effect &newEffect);
@@ -18,18 +18,6 @@ namespace dg::entity
 		static void Update(ActorComponent *self);
 
 	private:
-		float MaxHealth_, Health_, BasicDamage_;
-
-		float GetMaxHealth() {
-			return MaxHealth_;
-		}
-
-		float GetHealth() {
-			return Health_;
-		}
-
-		float BasicDamage() {
-			return BasicDamage_;
-		}
+		float MaxHealth_, Health_, BaseDamage_;
 	};
 } // namespace dg::entity

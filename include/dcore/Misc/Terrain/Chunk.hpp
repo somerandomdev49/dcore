@@ -23,4 +23,4 @@ namespace dcore::terrain
 		dcore::resource::Resource<dcore::graphics::RStaticMesh> BlendMap_;
 		dcore::graphics::RStaticMesh DCORE_OWN *Mesh_;
 	};
-} // namespace dg::terrain
+} // namespace dcore::terrain

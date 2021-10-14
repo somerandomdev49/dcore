@@ -5,11 +5,12 @@
 
 namespace dcore::physics
 {
-    class TerrainCollider
-    {
-    public:
-        TerrainCollider(terrain::Chunk *chunk);
-    private:
-        terrain::Chunk *Chunk_;
-    };
-}
+	class TerrainCollider
+	{
+	public:
+		TerrainCollider(terrain::Chunk *chunk);
+
+	private:
+		terrain::Chunk *Chunk_;
+	};
+} // namespace dcore::physics
