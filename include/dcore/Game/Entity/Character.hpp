@@ -1,24 +1,25 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <string>
-#include <vector>
+#include <dcore/Game/Entity/Inventory.hpp>
 #include <dcore/Game/Entity/Actor.hpp>
-#include <cinttypes>
+#include <dcore/Game/Quest.hpp>
+#include <dcore/Uni.hpp>
+#include <vector>
+
+#define DCORE_INV_BASE_SLOTS       16
+#define DCORE_INV_SMALL_BAG_SLOTS  8
+#define DCORE_INV_MEDIUM_BAG_SLOTS 16
+#define DCORE_INV_BIG_BAG_SLOTS    32
 
 namespace dg::entity
 {
-	const int MAX_INVENTORY_SIZE = 5;
-
-	class Character : public Actor
+	class CharacterComponent
 	{
 	public:
 		Quest *GetAssignedQuest(int index) const;
-		const std::vector<Quest> &GetAssignedQuests() const;
+		const std::vector<Quest *> &GetAssignedQuests() const;
 
 	private:
-		Inventory Inventory_;
-		uint32_t ItemType;
-		uint16_t Mods;
+		std::vector<Inventory> Bags_;
 		std::vector<Quest *> AssignedQuests_;
-	}
+	};
 } // namespace dg::entity
