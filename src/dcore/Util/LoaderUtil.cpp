@@ -17,7 +17,7 @@ bool LoaderUtil::LoadImage(ImageData &d, const std::string &path)
 
 bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::string &format)
 {
-	d.verticexData.clear();
+	d.vertexData.clear();
 	d.indices.clear();
 	d.stride = 0;
 
@@ -52,10 +52,10 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 
 	const auto pushFloat = [&](float f) {
 		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
-		d.verticexData.push_back(bytes[0]);
-		d.verticexData.push_back(bytes[1]);
-		d.verticexData.push_back(bytes[2]);
-		d.verticexData.push_back(bytes[3]);
+		d.vertexData.push_back(bytes[0]);
+		d.vertexData.push_back(bytes[1]);
+		d.vertexData.push_back(bytes[2]);
+		d.vertexData.push_back(bytes[3]);
 	};
 
 	for(size_t s = 0; s < shapes.size(); s++)
@@ -63,7 +63,7 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 
 		size_t index_offset = 0;
 		// vertices.shrink_to_fit();
-		// d.verticexData.reserve(vertices.size() + shapes[s].mesh.num_face_vertices.size() * 3);
+		// d.vertexData.reserve(vertices.size() + shapes[s].mesh.num_face_vertices.size() * 3);
 		for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 		{
 			for(size_t v = 0; v < 3; v++)

@@ -102,24 +102,6 @@ void Renderer::RTexture_DeConstructor(void *placement)
 	tex->Data_.Texture_.Delete();
 }
 
-void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
-{
-	RStaticMesh *mesh = new(placement) RStaticMesh();
-	util::MeshData d;
-	util::LoaderUtil::LoadMesh(d, path, "pnt");
-
-	mesh->Data_.Vao_.Load(d.indices, d.verticexData, d.stride);
-	mesh->Data_.Vao_.CreateFloatAttribute(3); // Position
-	mesh->Data_.Vao_.CreateFloatAttribute(3); // Normal
-	mesh->Data_.Vao_.CreateFloatAttribute(2); // TexCoord
-}
-
-void Renderer::RStaticMesh_DeConstructor(void *placement)
-{
-	RStaticMesh *mesh = reinterpret_cast<RStaticMesh *>(placement);
-	mesh->Data_.Vao_.Delete();
-}
-
 void Renderer::RShader_Constructor(const std::string &path, void *placement)
 {
 	RShader *shader = new(placement) RShader();
@@ -159,4 +141,32 @@ void RenderResourceManager::Register(resource::ResourceLoader *rl)
 	rl->RegisterResourceType<RStaticMesh>("Mesh");
 	resource::ResourceManager::Instance()->RegisterConstructor<RStaticMesh>(&Renderer::RStaticMesh_Constructor);
 	resource::ResourceManager::Instance()->RegisterDeConstructor<RStaticMesh>(&Renderer::RStaticMesh_DeConstructor);
+}
+
+void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices)
+{
+	if(!mesh) return;
+	std::vector<uint8_t> vertexData;
+
+	// Converting from std::vector<Vertex> to std::vector<uint8_t> (`vertices` must be unusable now, somehow this works with a const vector...)
+	// I hope this doesn't allocate another vector of the same size or atleast deallocs vertices afterward.
+	vertexData.insert(vertexData.end(), std::make_move_iterator((uint8_t *)&vertices[0]),
+	                  std::make_move_iterator((uint8_t *)&vertices[vertices.size()]));
+
+	CreateStaticMesh(mesh, indices, vertexData);
+}
+
+void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData)
+{
+	if(!mesh) return;
+	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(Vertex));
+	mesh->Data_.Vao_.CreateFloatAttribute(3); // Position
+	mesh->Data_.Vao_.CreateFloatAttribute(3); // Normal
+	mesh->Data_.Vao_.CreateFloatAttribute(2); // TexCoord
+}
+
+void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
+{
+	if(!mesh) return;
+	mesh->Data_.Vao_.Delete();
 }

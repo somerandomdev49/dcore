@@ -6,25 +6,48 @@ namespace dcore::terrain
 {
 	class Heightmap
 	{
-		static void Register();
+		static void Register(resource::ResourceLoader *rl);
+		
+		/** Returns the max height of the terrain. (2^24) */
+		uint32_t GetMaxHeight() const;
+
+		/** Returns the min height of the terrain. (0) */
+		uint32_t GetMinHeight() const;
+
+		/** Returns the height at a specified point in a texture. */
+		float Get(const glm::ivec2 &pos) const;
+
+		/** Returns the size of the heightmap. */
+		const glm::ivec2 &GetSize() const;
 
 	private:
-		void Load(const std::string &id, const std::string &location, dcore::resource::ResourceManager *res);
+		void Heightmap_Constructor(const std::string &path, void *placement);
+		void Heightmap_DeConstructor(void *placement);
 
-		glm::vec2 Size_;
-		float *Data_;
+		glm::ivec2 Size_;
+		uint32_t *Data_;
 	};
 
 	class HeightmapRegion
 	{
-		const glm::vec2 &GetMin() const;
-		const glm::vec2 &GetMax() const;
+	public:
+		/** Returns the minimum xy of the rectangle region */
+		const glm::ivec2 &GetMin() const;
+
+		/** Returns the maximum xy of the rectangle region */
+		const glm::ivec2 &GetMax() const;
+
+		/** Returns the size of the region (GetMax() - GetMin()) */
+		glm::ivec2 GetSize() const;
+
+		/** Returns the source heightmap */
 		Heightmap *GetSource();
 
-		float Get(const glm::vec2 &pos) const;
+		/** Returns the pixel value at a location. */
+		float Get(const glm::ivec2 &pos) const;
 
 	private:
-		glm::vec2 Min_, Max_;
+		glm::ivec2 Min_, Max_;
 		dcore::resource::Resource<Heightmap> Source_;
 	};
 } // namespace dcore::terrain

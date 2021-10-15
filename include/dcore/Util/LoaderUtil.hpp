@@ -16,7 +16,7 @@ namespace dcore::util
 	struct MeshData
 	{
 		std::vector<uint32_t> indices;
-		std::vector<uint8_t> verticexData;
+		std::vector<uint8_t> vertexData;
 		size_t stride;
 	};
 

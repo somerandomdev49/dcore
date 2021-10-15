@@ -82,5 +82,28 @@ namespace dcore::graphics
 	{
 	public:
 		static void Register(resource::ResourceLoader *rl);
+
+		/** Default vertex type. */
+		struct Vertex
+		{
+			glm::vec3 position, normal;
+			glm::vec2 texcoord;
+		};
+
+		/**
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
+		 * If you can, use the uint8_t version of this function.
+		 * `vertices` will be unusable after this call.
+		 * You should call `vertices.erase(vertices.begin(), vertices.end())` after this!
+		 * */
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices);
+
+		/**
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
+		 * */
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData);
+
+		/** Deletes a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff) */
+		static void DeleteStaticMesh(RStaticMesh *mesh);
 	};
 } // namespace dcore::graphics

@@ -1,3 +1,5 @@
+#pragma once
+#include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
@@ -30,11 +32,12 @@ namespace dcore::terrain
 		friend class Terrain;
 
 		/** Activates the chunk and creates the mesh. */
-		void Activate(resource::ResourceLoader *rl);
+		void Activate();
 
 		/** Deactivates the chunk and deletes the mesh. */
 		void DeActivate();
 
+		/** Private function for generating the mesh of the chunk. Called by Activate() */
 		void GenerateMesh_();
 
 		HeightmapRegion Region_;

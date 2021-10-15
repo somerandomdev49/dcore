@@ -18,6 +18,7 @@ namespace dcore::graphics
 	class RStaticMesh
 	{
 		friend class Renderer;
+		friend class RenderResourceManager;
 		impl::DCORE_GRAPHICS_IMPL::StaticMesh Data_;
 	};
 } // namespace dcore::graphics
