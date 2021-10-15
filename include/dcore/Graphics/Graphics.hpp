@@ -4,9 +4,9 @@
 #include <dcore/Graphics/Shader.hpp>
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Renderer/Renderer.hpp>
-// #include <dcore/Platform/Platform.hpp>
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Misc/Terrain/Chunk.hpp>
 
 namespace dcore::platform
 {
@@ -22,6 +22,7 @@ namespace dcore::graphics
 		Renderer *GetRenderer() const;
 		// void RenderCharacter(Character *character);
 		void RenderStaticMesh(const StaticMesh DCORE_REF *staticMesh);
+		void RenderChunk(const terrain::Chunk *chunk);
 		void RenderDebugLine(const glm::vec3 &from, const glm::vec3 &to, float width = 1.f);
 
 		Camera *GetCamera() const;
@@ -33,6 +34,7 @@ namespace dcore::graphics
 
 		Camera DCORE_OWN *Camera_;
 		CommonShader DCORE_OWN *ObjectShader_;
+		CommonShader DCORE_OWN *TerrainShader_;
 		Renderer DCORE_REF *Renderer_;
 	};
 } // namespace dcore::graphics
