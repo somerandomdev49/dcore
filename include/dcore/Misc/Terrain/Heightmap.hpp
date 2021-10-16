@@ -6,8 +6,6 @@ namespace dcore::terrain
 {
 	class Heightmap
 	{
-		static void Register(resource::ResourceLoader *rl);
-		
 		/** Returns the max height of the terrain. (2^24) */
 		uint32_t GetMaxHeight() const;
 
@@ -21,8 +19,9 @@ namespace dcore::terrain
 		const glm::ivec2 &GetSize() const;
 
 	private:
-		void Heightmap_Constructor(const std::string &path, void *placement);
-		void Heightmap_DeConstructor(void *placement);
+		friend class TerrainResourceManager;
+		static void Heightmap_Constructor(const std::string &path, void *placement);
+		static void Heightmap_DeConstructor(void *placement);
 
 		glm::ivec2 Size_;
 		uint32_t *Data_;

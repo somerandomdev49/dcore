@@ -11,8 +11,12 @@ void TransformComponent::ReCalculateMatrix()
 }
 
 void World::Initialize()
-{ /* WInfo_.World_ = this; */
+{
+	// TODO: This should not be constant!
+	Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
+	Terrain_.ReactivateChunks(glm::vec3(0, 0, 0), 10000.0f);
 }
+
 void World::DeInitialize() {}
 
 void World::Update()
@@ -40,6 +44,10 @@ void World::Render(graphics::RendererInterface *render)
 		r.Mesh.SetTransform(t.Matrix); // TODO: Pass this as parameter to RenderStaticMesh
 		render->RenderStaticMesh(&r.Mesh);
 	}
+
+	auto &chunks = Terrain_.GetChunks();
+	for(auto ci : Terrain_.GetActiveChunks())
+		render->RenderChunk(&chunks[ci]);
 }
 
 entt::entity Entity::GetId() const { return Id_; }

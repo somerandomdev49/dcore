@@ -10,8 +10,8 @@ namespace dcore::graphics
 	{
 	public:
 		CommonShader(const resource::Resource<RShader> &sh);
-
 		RShader *Get() const;
+
 		void SetTransform(const glm::mat4 &m);
 
 	private:
@@ -24,6 +24,15 @@ namespace dcore::graphics
 	{
 	public:
 		TerrainShader(const resource::Resource<RShader> &sh);
-		RShader *Get() cont;
+		RShader *Get() const;
+
+		void SetTransform(const glm::mat4 &m);
+		void SetTextures(int blendmap = -1, int r = -1, int g = -1, int b = -1);
+
+	private:
+		resource::Resource<RShader> Shader_;
+		RUniform UTransform_;
+		RUniform UBlendMapTex_;
+		RUniform UTexs_[3]; // R, G, B
 	}
 } // namespace dcore::graphics

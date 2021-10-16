@@ -10,6 +10,9 @@ namespace dcore::terrain
 	class Terrain
 	{
 	public:
+		void Initialize(const resource::Resource<Heightmap> &heightmap);
+		void DeInitialize();
+
 		/** Recalculates which chunks need to be active based on a position and a radius */
 		void ReactivateChunks(const glm::vec3 &position, float radius = 100.f);
 
@@ -19,8 +22,7 @@ namespace dcore::terrain
 	private:
 		std::vector<Chunk> Chunks_;
 		std::vector<uint32_t> ActiveChunks_;
-
-		friend class TerrainResourceManager;
+		resource::Resource<Heightmap> Heightmap_;
 	};
 
 	class TerrainResourceManager

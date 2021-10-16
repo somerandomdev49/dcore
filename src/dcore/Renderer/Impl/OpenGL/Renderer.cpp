@@ -23,19 +23,17 @@ void Renderer::DeInitialize()
 	// ?
 }
 
-void Renderer::Render(RShader *shader, RStaticMesh *mesh, RTexture *texture)
+void Renderer::UseTexture(int unit, RTexture *texture)
 {
-	if(shader) UseShader(shader);
-	if(texture)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture->Data_.Texture_.Id_);
-	}
+	glActiveTexture(GL_TEXTURE0 + unit);
+	glBindTexture(texture->Data_.Texture_.Type_, texture->Data_.Texture_.Id_);
+}
 
-	glBindVertexArray(mesh->Data_.Vao_.VAO_);
-	// TODO: Use GL_TRIANGLE_STRIP instead of triangles.
-	// TODO: Will make the loading process more complicated, but will decrease memory usage.
+void Renderer::Render(RStaticMesh *mesh)
+{
+	// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more complicated, but will decrease memory usage.
 	// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
+	glBindVertexArray(mesh->Data_.Vao_.VAO_);
 	glDrawElements(GL_TRIANGLES, mesh->Data_.Vao_.IndexCount_, GL_UNSIGNED_INT, 0);
 }
 
@@ -126,34 +124,6 @@ void Renderer::RShader_DeConstructor(void *placement)
 {
 	RShader *shader = reinterpret_cast<RShader *>(placement);
 	shader->Data_.Program_.Delete();
-}
-
-void RenderResourceManager::Register(resource::ResourceLoader *rl)
-{
-	rl->RegisterResourceType<RTexture>("Texture");
-	resource::ResourceManager::Instance()->RegisterConstructor<RTexture>(&Renderer::RTexture_Constructor);
-	resource::ResourceManager::Instance()->RegisterDeConstructor<RTexture>(&Renderer::RTexture_DeConstructor);
-
-	rl->RegisterResourceType<RShader>("Shader");
-	resource::ResourceManager::Instance()->RegisterConstructor<RShader>(&Renderer::RShader_Constructor);
-	resource::ResourceManager::Instance()->RegisterDeConstructor<RShader>(&Renderer::RShader_DeConstructor);
-
-	rl->RegisterResourceType<RStaticMesh>("Mesh");
-	resource::ResourceManager::Instance()->RegisterConstructor<RStaticMesh>(&Renderer::RStaticMesh_Constructor);
-	resource::ResourceManager::Instance()->RegisterDeConstructor<RStaticMesh>(&Renderer::RStaticMesh_DeConstructor);
-}
-
-void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices)
-{
-	if(!mesh) return;
-	std::vector<uint8_t> vertexData;
-
-	// Converting from std::vector<Vertex> to std::vector<uint8_t> (`vertices` must be unusable now, somehow this works with a const vector...)
-	// I hope this doesn't allocate another vector of the same size or atleast deallocs vertices afterward.
-	vertexData.insert(vertexData.end(), std::make_move_iterator((uint8_t *)&vertices[0]),
-	                  std::make_move_iterator((uint8_t *)&vertices[vertices.size()]));
-
-	CreateStaticMesh(mesh, indices, vertexData);
 }
 
 void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData)

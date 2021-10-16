@@ -34,7 +34,7 @@ namespace dcore::graphics
 
 		Camera DCORE_OWN *Camera_;
 		CommonShader DCORE_OWN *ObjectShader_;
-		CommonShader DCORE_OWN *TerrainShader_;
+		TerrainShader DCORE_OWN *TerrainShader_;
 		Renderer DCORE_REF *Renderer_;
 	};
 } // namespace dcore::graphics

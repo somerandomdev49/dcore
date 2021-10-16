@@ -40,11 +40,15 @@ namespace dcore::graphics
 		void SetUniform(const RUniform &u, const glm::mat4x4 &v);
 
 		/**
-		 * @brief Renders a mesh with a specified texture
-		 * @note if shader is nullptr, the previous shader is used.
+		 * @brief Binds a texture unit
+		 */
+		void UseTexture(int unit, RTexture *texture);
+
+		/**
+		 * @brief Renders a mesh
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
-		void Render(RShader *shader, RStaticMesh *mesh, RTexture *texture);
+		void Render(RStaticMesh *mesh);
 
 		/**
 		 * @brief Renders a skeletal mesh with a specified texture
