@@ -19,4 +19,11 @@ namespace dcore::graphics
 		RUniform UTransform_;
 		RUniform UTex_;
 	};
+
+	class TerrainShader
+	{
+	public:
+		TerrainShader(const resource::Resource<RShader> &sh);
+		RShader *Get() cont;
+	}
 } // namespace dcore::graphics
