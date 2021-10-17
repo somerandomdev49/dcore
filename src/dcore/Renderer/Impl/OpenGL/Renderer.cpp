@@ -63,7 +63,8 @@ void Renderer::SetWireframeMode(bool newIsWireframeMode)
 {
 	IsWireframeMode_ = newIsWireframeMode;
 	if(IsWireframeMode_) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)

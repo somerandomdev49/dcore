@@ -25,7 +25,8 @@ namespace dcore::terrain
 		static void Heightmap_DeConstructor(void *placement);
 
 		glm::ivec2 Size_;
-		uint32_t *Data_;
+		uint8_t *Data_;
+		int ComponentCount_;
 	};
 
 	class HeightmapRegion

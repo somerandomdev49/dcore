@@ -73,9 +73,10 @@ void Chunk::GenerateMesh_()
 	for(int y = 0; y < regionSize.y; ++y)
 		for(int x = 0; x < regionSize.x; ++x)
 		{
-			pushVec3(glm::vec3(x * UNIT_PER_PIXEL - CHUNK_SIZE / 2, 0, y * UNIT_PER_PIXEL - CHUNK_SIZE / 2)); // position
-			pushVec3(glm::vec3(0, 1, 0));                                   // normal
-			pushVec2(glm::vec2(0, 0));                                      // texcoord
+			float h = Region_.Get(glm::ivec2(x, y));
+			pushVec3(glm::vec3(x * UNIT_PER_PIXEL - CHUNK_SIZE / 2, h, y * UNIT_PER_PIXEL - CHUNK_SIZE / 2)); // position
+			pushVec3(glm::vec3(0, 1, 0));                                                                     // normal
+			pushVec2(glm::vec2(0, 0));                                                                        // texcoord
 			++vertexCount;
 		}
 
@@ -83,11 +84,15 @@ void Chunk::GenerateMesh_()
 	// DCORE_LOG_INFO << "Index Count: " << regionSize.x * regionSize.y * 6;
 	indices.reserve(regionSize.x * (regionSize.y - 1) * 6);
 	int vert = 0;
-	for(int y = 0; y < regionSize.y-1; ++y)
+	for(int y = 0; y < regionSize.y - 1; ++y)
 	{
 		for(int x = 0; x < regionSize.x; ++x)
 		{
-			if(x == regionSize.x - 1) { ++vert; continue; }
+			if(x == regionSize.x - 1)
+			{
+				++vert;
+				continue;
+			}
 			indices.push_back(vert + 0);
 			indices.push_back(vert + 1);
 			indices.push_back(vert + regionSize.x);
