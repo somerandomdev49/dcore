@@ -46,8 +46,7 @@ void World::Render(graphics::RendererInterface *render)
 	}
 
 	auto &chunks = Terrain_.GetChunks();
-	for(auto ci : Terrain_.GetActiveChunks())
-		render->RenderChunk(&chunks[ci]);
+	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 }
 
 entt::entity Entity::GetId() const { return Id_; }

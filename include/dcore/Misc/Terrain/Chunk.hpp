@@ -9,7 +9,9 @@ namespace dcore::terrain
 	class Chunk
 	{
 	public:
-		void Initialize(HeightmapRegion &&region);
+		Chunk(HeightmapRegion &&region);
+		void Initialize();
+		void DeInitialize();
 
 		/** Returns the region the chunk is based on. */
 		const HeightmapRegion &GetRegion() const;
@@ -18,7 +20,7 @@ namespace dcore::terrain
 		const glm::vec2 &GetSize() const;
 
 		/** Returns the actual location of the chunk. */
-		const glm::vec2 &GetGlobalPosition() const;
+		glm::vec2 GetGlobalPosition() const;
 
 		/** Returns the index of the chunk. */
 		const glm::ivec2 &GetLocalPosition() const;
@@ -26,7 +28,9 @@ namespace dcore::terrain
 		/** Returns whether the chunk is active. (can be rendered) */
 		bool IsActive() const;
 
-		void DeInitialize();
+		const dcore::resource::Resource<dcore::graphics::RTexture> &GetBlendMap() const;
+		const dcore::resource::Resource<dcore::graphics::RTexture> *GetTextures() const;
+		dcore::graphics::RStaticMesh *GetMesh() const;
 
 	private:
 		friend class Terrain;
@@ -41,7 +45,10 @@ namespace dcore::terrain
 		void GenerateMesh_();
 
 		HeightmapRegion Region_;
+
 		dcore::resource::Resource<dcore::graphics::RTexture> BlendMap_;
+		dcore::resource::Resource<dcore::graphics::RTexture> Textures_[4];
+
 		dcore::graphics::RStaticMesh DCORE_OWN *Mesh_;
 		glm::ivec2 LocalPosition_;
 		bool IsActive_;

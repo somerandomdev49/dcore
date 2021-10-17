@@ -37,8 +37,6 @@ namespace dcore
 		im.Initialize();
 		event::InputManager::SetInstance(&im);
 
-		world.Initialize();
-
 		// Create the default config reader.
 		resource::ConfigReader cfg("data");
 		resource::ConfigReader::SetDefaultReader(&cfg);
@@ -46,10 +44,12 @@ namespace dcore
 		resource::ResourceManager rm("data");
 		resource::ResourceManager::SetInstance(&rm);
 		rm.Initialize();
-		rl.LoadMappings("ResourceMap.ini");
 		graphics::RenderResourceManager::Register(&rl);
+		terrain::TerrainResourceManager::Register(&rl);
+		rl.LoadMappings("ResourceMap.ini");
 		rl.LoadFromManifest("Manifest.cfg");
-
+		
+		world.Initialize();
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
 		e.AddComponent(world::StaticMeshComponent {

@@ -3,11 +3,11 @@
 in vec2 s_TexCoord;
 
 out vec4 o_Color;
-uniform sampler2D u_Tex_Mapper;
-uniform sampler2D u_Tex_Main;
-uniform sampler2D u_Tex_0;
-uniform sampler2D u_Tex_1;
-uniform sampler2D u_Tex_2;
+uniform sampler2D u_BlendMap;
+uniform sampler2D u_Tex0;
+uniform sampler2D u_TexR;
+uniform sampler2D u_TexG;
+uniform sampler2D u_TexB;
 
 uniform float u_Tiling = 10.f;
 

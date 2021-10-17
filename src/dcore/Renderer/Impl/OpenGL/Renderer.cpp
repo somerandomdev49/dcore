@@ -18,13 +18,11 @@ void Renderer::OnEndRender() {}
 
 void Renderer::Initialize() { glEnable(GL_DEPTH_TEST); }
 
-void Renderer::DeInitialize()
-{
-	// ?
-}
+void Renderer::DeInitialize() {}
 
 void Renderer::UseTexture(int unit, RTexture *texture)
 {
+	if(!texture) return;
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(texture->Data_.Texture_.Type_, texture->Data_.Texture_.Id_);
 }
@@ -98,6 +96,7 @@ void Renderer::RTexture_DeConstructor(void *placement)
 {
 	RTexture *tex = reinterpret_cast<RTexture *>(placement);
 	tex->Data_.Texture_.Delete();
+	delete tex;
 }
 
 void Renderer::RShader_Constructor(const std::string &path, void *placement)
@@ -124,6 +123,7 @@ void Renderer::RShader_DeConstructor(void *placement)
 {
 	RShader *shader = reinterpret_cast<RShader *>(placement);
 	shader->Data_.Program_.Delete();
+	delete shader;
 }
 
 void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData)

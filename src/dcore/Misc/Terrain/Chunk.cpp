@@ -4,8 +4,12 @@ using namespace dcore::terrain;
 
 #define UNIT_PER_PIXEL 1
 
-void Chunk::Initialize(HeightmapRegion &&region) { Region_ = std::move(region); }
-void Chunk::DeInitialize() { DeActivate(); }
+Chunk::Chunk(HeightmapRegion &&region) : Region_(std::move(region)) {}
+void Chunk::Initialize() {}
+void Chunk::DeInitialize()
+{
+	if(IsActive_) DeActivate();
+}
 
 bool Chunk::IsActive() const { return IsActive_; }
 
@@ -52,8 +56,8 @@ void Chunk::GenerateMesh_()
 		for(int x = 0; x < regionSize.x; ++x)
 		{
 			pushVec3(glm::vec3(x * UNIT_PER_PIXEL, 0, y * UNIT_PER_PIXEL)); // position
-			pushVec3(glm::vec3(0, 1, 0)); // normal
-			pushVec2(glm::vec2(0, 0)); // texcoord
+			pushVec3(glm::vec3(0, 1, 0));                                   // normal
+			pushVec2(glm::vec2(0, 0));                                      // texcoord
 		}
 
 	// generating indices
@@ -78,3 +82,11 @@ void Chunk::GenerateMesh_()
 	Mesh_ = new graphics::RStaticMesh();
 	graphics::RenderResourceManager::CreateStaticMesh(Mesh_, indices, vertexData);
 }
+
+const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }
+const dcore::resource::Resource<dcore::graphics::RTexture> *Chunk::GetTextures() const { return &Textures_[0]; }
+
+glm::vec2 Chunk::GetGlobalPosition() const { return LocalPosition_ * UNIT_PER_PIXEL; }
+const glm::ivec2 &Chunk::GetLocalPosition() const { return LocalPosition_; }
+
+dcore::graphics::RStaticMesh *Chunk::GetMesh() const { return Mesh_; }

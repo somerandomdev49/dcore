@@ -24,6 +24,7 @@ void Renderer::RStaticMesh_DeConstructor(void *placement)
 {
 	RStaticMesh *mesh = reinterpret_cast<RStaticMesh *>(placement);
 	RenderResourceManager::DeleteStaticMesh(mesh);
+	delete mesh;
 }
 
 void RenderResourceManager::Register(resource::ResourceLoader *rl)

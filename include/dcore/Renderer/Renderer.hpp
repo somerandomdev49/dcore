@@ -40,7 +40,7 @@ namespace dcore::graphics
 		void SetUniform(const RUniform &u, const glm::mat4x4 &v);
 
 		/**
-		 * @brief Binds a texture unit
+		 * @brief Binds a texture unit. if texture is nullptr, nothing happens.
 		 */
 		void UseTexture(int unit, RTexture *texture);
 

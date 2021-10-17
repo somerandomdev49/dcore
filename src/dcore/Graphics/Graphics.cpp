@@ -34,8 +34,8 @@ TerrainShader::TerrainShader(const resource::Resource<RShader> &sh) : Shader_(sh
 	UBlendMapTex_ = Renderer::Instance()->GetUniform(sh.Get(), "u_BlendMap");
 	Renderer::Instance()->SetUniform(UBlendMapTex_, 0); // default values
 
-	static const char *texNames[3] = { "u_TexR", "u_TexG", "u_TexB" };
-	for(int i = 0; i < 3; ++i)
+	static const char *texNames[4] = {"u_Tex0", "u_TexR", "u_TexG", "u_TexB"};
+	for(int i = 0; i < 4; ++i)
 	{
 		UTexs_[i] = Renderer::Instance()->GetUniform(sh.Get(), texNames[i]);
 		Renderer::Instance()->SetUniform(UTexs_[i], i + 1); // default values
@@ -44,12 +44,13 @@ TerrainShader::TerrainShader(const resource::Resource<RShader> &sh) : Shader_(sh
 
 RShader *TerrainShader::Get() const { return Shader_.Get(); }
 void TerrainShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
-void TerrainShader::SetTextures(int blend, int r, int g, int b)
+void TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
 {
 	if(blend != -1) Renderer::Instance()->SetUniform(UBlendMapTex_, blend);
-	if(r != -1) Renderer::Instance()->SetUniform(UTexs_[0], r);
-	if(g != -1) Renderer::Instance()->SetUniform(UTexs_[1], g);
-	if(b != -1) Renderer::Instance()->SetUniform(UTexs_[2], b);
+	if(n != -1) Renderer::Instance()->SetUniform(UTexs_[0], n);
+	if(r != -1) Renderer::Instance()->SetUniform(UTexs_[1], r);
+	if(g != -1) Renderer::Instance()->SetUniform(UTexs_[2], g);
+	if(b != -1) Renderer::Instance()->SetUniform(UTexs_[3], b);
 }
 
 /**************************** Renderable ****************************/
@@ -188,9 +189,21 @@ void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
 void RendererInterface::RenderChunk(const terrain::Chunk *chunk)
 {
 	Renderer_->UseShader(TerrainShader_->Get());
-	auto p = chunk->GetGlobalPosition();
+
+	auto p      = chunk->GetGlobalPosition();
 	glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, 0, p.y));
+
 	TerrainShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * m);
-	TerrainShader_->SetTextures(0, 1, 2, 3);
-	Renderer_->UseTexture(0, );
+
+	Renderer_->UseTexture(0, chunk->GetBlendMap().Get());
+
+	// if texs[n].Get() is nullptr, the call is skipped so we can safely use textures.
+	auto texs = chunk->GetTextures();
+	Renderer_->UseTexture(1, texs[0].Get());
+	Renderer_->UseTexture(2, texs[1].Get());
+	Renderer_->UseTexture(3, texs[2].Get());
+	Renderer_->UseTexture(4, texs[3].Get());
+	TerrainShader_->SetTextures(0, 1, 2, 3, 4);
+
+	Renderer_->Render(chunk->GetMesh());
 }

@@ -6,7 +6,8 @@ namespace dcore::terrain
 {
 	class Heightmap
 	{
-		/** Returns the max height of the terrain. (2^24) */
+	public:
+		/** Returns the max height of the terrain. (255) */
 		uint32_t GetMaxHeight() const;
 
 		/** Returns the min height of the terrain. (0) */
@@ -30,6 +31,8 @@ namespace dcore::terrain
 	class HeightmapRegion
 	{
 	public:
+		HeightmapRegion(Heightmap *source, const glm::ivec2 &min, const glm::ivec2 &max);
+
 		/** Returns the minimum xy of the rectangle region */
 		const glm::ivec2 &GetMin() const;
 
@@ -47,6 +50,6 @@ namespace dcore::terrain
 
 	private:
 		glm::ivec2 Min_, Max_;
-		dcore::resource::Resource<Heightmap> Source_;
+		Heightmap *Source_;
 	};
 } // namespace dcore::terrain

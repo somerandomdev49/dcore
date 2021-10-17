@@ -27,12 +27,12 @@ namespace dcore::graphics
 		RShader *Get() const;
 
 		void SetTransform(const glm::mat4 &m);
-		void SetTextures(int blendmap = -1, int r = -1, int g = -1, int b = -1);
+		void SetTextures(int blendmap = -1, int none = -1, int r = -1, int g = -1, int b = -1);
 
 	private:
 		resource::Resource<RShader> Shader_;
 		RUniform UTransform_;
 		RUniform UBlendMapTex_;
-		RUniform UTexs_[3]; // R, G, B
-	}
+		RUniform UTexs_[4]; // 0, R, G, B
+	};
 } // namespace dcore::graphics
