@@ -70,51 +70,60 @@ namespace dcore
 		world.RegisterUpdate([](world::World *c) {
 			c->Each<MyComponent>([](world::Entity *e, MyComponent *comp) {
 				float speed = 10.f * event::TimeManager::Instance()->GetDeltaTime();
+				float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
+				auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 				// printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
 
 				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.x -= speed;
+					pos += cam->GetRotation() * glm::vec3(-speed, 0, 0);
 					cam->SetPosition(pos);
 				}
 				else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.x += speed;
+					pos += cam->GetRotation() * glm::vec3(speed, 0, 0);
 					cam->SetPosition(pos);
 				}
 
 				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.z -= speed;
+					pos += cam->GetRotation() * glm::vec3(0, 0, -speed);
 					cam->SetPosition(pos);
 				}
 				else if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.z += speed;
+					pos += cam->GetRotation() * glm::vec3(0, 0, speed);
 					cam->SetPosition(pos);
 				}
 
 				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_LeftShift))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.y -= speed;
+					pos += cam->GetRotation() * glm::vec3(0, -speed, 0);
 					cam->SetPosition(pos);
 				}
 				else if(event::InputManager::Instance()->IsKeyPressed(event::K_Space))
 				{
-					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 					auto pos = cam->GetPosition();
-					pos.y += speed;
+					pos += cam->GetRotation() * glm::vec3(0, speed, 0);
 					cam->SetPosition(pos);
+				}
+
+				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_Q))
+				{
+					auto rot = cam->GetRotation();
+					rot = glm::angleAxis(rotSpeed, glm::vec3(0, 1, 0)) * rot;
+					cam->SetRotation(rot);
+				}
+				else if(event::InputManager::Instance()->IsKeyPressed(event::K_E))
+				{
+					auto rot = cam->GetRotation();
+					rot = glm::angleAxis(-rotSpeed, glm::vec3(0, 1, 0)) * rot;
+					cam->SetRotation(rot);
 				}
 			});
 		});
@@ -127,7 +136,7 @@ namespace dcore
 		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
 
-		ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(-0.2f, 0, 0)));
+		// ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(0, 0, 0)));
 		// ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
 
 		ctx.Start();

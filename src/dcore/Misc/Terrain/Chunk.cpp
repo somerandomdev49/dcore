@@ -4,6 +4,7 @@
 using namespace dcore::terrain;
 
 #define UNIT_PER_PIXEL 1
+#define VERT_SCALE 45.f
 
 inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
 {
@@ -73,7 +74,7 @@ void Chunk::GenerateMesh_()
 	for(int y = 0; y < regionSize.y; ++y)
 		for(int x = 0; x < regionSize.x; ++x)
 		{
-			float h = Region_.Get(glm::ivec2(x, y)) * 15.f;
+			float h = Region_.Get(glm::ivec2(x, y)) * VERT_SCALE;
 			pushVec3(glm::vec3(x * UNIT_PER_PIXEL - CHUNK_SIZE / 2, h, y * UNIT_PER_PIXEL - CHUNK_SIZE / 2)); // position
 			pushVec3(glm::vec3(0, 0, 0));                                                                     // normal
 			pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y)); // texcoord

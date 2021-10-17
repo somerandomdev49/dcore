@@ -84,6 +84,8 @@ namespace dcore::world
 		template<typename ComponentType, typename FunctionType>
 		void Each(FunctionType func);
 
+		const terrain::Terrain &GetTerrain() const;
+
 	private:
 		friend class WorldUpdateInfo;
 		friend class platform::Context;
@@ -92,7 +94,7 @@ namespace dcore::world
 		void DeInitialize();
 		void Update();
 		void Render(graphics::RendererInterface *render);
-		std::vector<void (*)(World *)> Updates_; // TODO: is std::vector too much?
+		std::vector<void (*)(World *)> Updates_;
 		entt::registry Registry_;
 		terrain::Terrain Terrain_;
 	};

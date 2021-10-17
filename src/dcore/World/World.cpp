@@ -42,7 +42,7 @@ void World::Render(graphics::RendererInterface *render)
 		auto &t = Registry_.get<TransformComponent>(e);
 		auto &r = Registry_.get<StaticMeshComponent>(e);
 		t.ReCalculateMatrix();
-		r.Mesh.SetTransform(t.Matrix); // TODO: Pass this as parameter to RenderStaticMesh
+		r.Mesh.SetTransform(t.Matrix);
 		render->RenderStaticMesh(&r.Mesh);
 	}
 
