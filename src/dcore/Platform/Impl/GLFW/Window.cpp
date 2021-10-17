@@ -15,9 +15,9 @@ void glfw::Frame::Initialize(const glm::ivec2 &size)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-// #ifdef __darwin__ // FIXME: correct name
+	// #ifdef __darwin__ // FIXME: correct name
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-// #endif
+	// #endif
 
 	Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", NULL, NULL);
 	if(!Window_)
@@ -43,5 +43,8 @@ void glfw::Frame::OnEndFrame()
 	glfwSwapBuffers(Window_);
 	glfwPollEvents();
 }
+
+float glfw::Frame::GetCurrentTime() { return (float)glfwGetTime(); }
+
 bool glfw::Frame::CheckKeyPressed(event::KeyCode key) { return glfwGetKey(Window_, (int)key) == GLFW_PRESS; }
 bool glfw::Frame::CheckMouseButtonPressed(int button) { return glfwGetMouseButton(Window_, button) == GLFW_PRESS; }

@@ -4,6 +4,7 @@
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Platform/Platform.hpp>
+#include <dcore/Event/TimeManager.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 
@@ -32,10 +33,15 @@ namespace dcore
 		ctx.World_ = &world;
 
 		ctx.Initialize();
+		platform::Context::SetInstance(&ctx);
 
 		event::InputManager im;
 		im.Initialize();
 		event::InputManager::SetInstance(&im);
+
+		event::TimeManager tm;
+		tm.Initialize();
+		event::TimeManager::SetInstance(&tm);
 
 		// Create the default config reader.
 		resource::ConfigReader cfg("data");
@@ -48,53 +54,83 @@ namespace dcore
 		terrain::TerrainResourceManager::Register(&rl);
 		rl.LoadMappings("ResourceMap.ini");
 		rl.LoadFromManifest("Manifest.cfg");
-		
+
 		world.Initialize();
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
-		e.AddComponent(world::StaticMeshComponent {
-		    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
+		// e.AddComponent(world::StaticMeshComponent {
+		//     graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
-		// e.AddComponent(MyComponent());
-		// world.RegisterUpdate([](world::World *c)
-		// {
-		//     c->Each<world::MyComponent>([](world::Entity *e, world::MyComponent *comp)
-		//     {
-		//         /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
-		//         {
-		//             auto cam =
-		//             platform::Context::Instance()->GetRendererInterface()->GetCamera(); auto pos
-		//             = cam->GetPosition(); pos.x -= 0.1f; cam->SetPosition(pos);
-		//         }
-		//         else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
-		//         {
-		//             auto cam =
-		//             platform::Context::Instance()->GetRendererInterface()->GetCamera(); auto pos
-		//             = cam->GetPosition(); pos.x += 0.1f; cam->SetPosition(pos);
-		//         }
+		struct MyComponent
+		{
+			int nonEmpty;
+		};
 
-		//         /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
-		//         {
-		//             auto cam =
-		//             platform::Context::Instance()->GetRendererInterface()->GetCamera(); auto pos
-		//             = cam->GetPosition(); pos.z -= 0.1f; cam->SetPosition(pos);
-		//         }
-		//         if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
-		//         {
-		//             auto cam =
-		//             platform::Context::Instance()->GetRendererInterface()->GetCamera(); auto pos
-		//             = cam->GetPosition(); pos.z += 0.1f; cam->SetPosition(pos);
-		//         }
-		//     });
-		// });
+		e.AddComponent(MyComponent());
+		world.RegisterUpdate([](world::World *c) {
+			c->Each<MyComponent>([](world::Entity *e, MyComponent *comp) {
+				float speed = 10.f * event::TimeManager::Instance()->GetDeltaTime();
+				// printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
+
+				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.x -= speed;
+					cam->SetPosition(pos);
+				}
+				else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.x += speed;
+					cam->SetPosition(pos);
+				}
+
+				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.z -= speed;
+					cam->SetPosition(pos);
+				}
+				else if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.z += speed;
+					cam->SetPosition(pos);
+				}
+
+				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_LeftShift))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.y -= speed;
+					cam->SetPosition(pos);
+				}
+				else if(event::InputManager::Instance()->IsKeyPressed(event::K_Space))
+				{
+					auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+					auto pos = cam->GetPosition();
+					pos.y += speed;
+					cam->SetPosition(pos);
+				}
+			});
+		});
 
 		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
 		e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);
 		e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();
 		e.GetComponent<world::TransformComponent>().Scale    = glm::vec3(1.0f, 1.0f, 1.0f);
 
+
 		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
+
+		ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(-0.2f, 0, 0)));
+		ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
+
 		ctx.Start();
 		ctx.CloseWindow();
 
@@ -102,6 +138,7 @@ namespace dcore
 
 		rm.DeInitialize();
 		im.DeInitialize();
+		tm.DeInitialize();
 		world.DeInitialize();
 		ctx.DeInitialize();
 	}

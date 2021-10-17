@@ -16,10 +16,15 @@ namespace dcore::terrain
 		/** Recalculates which chunks need to be active based on a position and a radius */
 		void ReactivateChunks(const glm::vec3 &position, float radius = 100.f);
 
+		/** Activates chunks */
+		void ActivateAllChunks();
+
 		const std::vector<Chunk> &GetChunks() const;
 		const std::vector<uint32_t> &GetActiveChunks() const;
 
 	private:
+		void ActivateChunks_();
+
 		std::vector<Chunk> Chunks_;
 		std::vector<uint32_t> ActiveChunks_;
 		resource::Resource<Heightmap> Heightmap_;

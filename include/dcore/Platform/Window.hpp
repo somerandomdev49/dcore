@@ -14,6 +14,7 @@ namespace dcore::platform
 		virtual void OnBeginFrame()                     = 0;
 		virtual void OnEndFrame()                       = 0;
 		virtual void DeInitialize()                     = 0;
+		virtual float GetCurrentTime()                  = 0;
 
 		virtual bool CheckKeyPressed(event::KeyCode key) = 0;
 		virtual bool CheckMouseButtonPressed(int button) = 0;

@@ -81,8 +81,8 @@ namespace dcore::world
 		Entity CreateEntity();
 		void RegisterUpdate(void (*f)(World *));
 
-		template<typename ComponentType>
-		void Each(void (*func)(Entity *entity, ComponentType *component));
+		template<typename ComponentType, typename FunctionType>
+		void Each(FunctionType func);
 
 	private:
 		friend class WorldUpdateInfo;
@@ -122,18 +122,12 @@ void dcore::world::World::AddComponent(Entity *entity, const T &c)
 	Registry_.emplace<T>(entity->Id_, c);
 }
 
-template<typename ComponentType>
-void dcore::world::World::Each(void (*func)(Entity *entity, ComponentType *component))
+template<typename ComponentType, typename FunctionType>
+void dcore::world::World::Each(FunctionType f)
 {
-	auto view = Registry_.view<std::decay_t<ComponentType>>();
-	// view.each([&](const entt::entity &entityid, auto &c){
-	//     Entity entity(entityid, World_);
-	//     func(&entity, &c);
-	// });
-	for(auto e : view)
-	{
-		auto &c = view.template get<ComponentType>(e); // std::decay_t<ComponentType>
-		Entity en(e, this);
-		func(&en, &c);
-	}
+	auto view = Registry_.view<ComponentType>();
+	view.each([&](auto entityid, auto &c) {
+		Entity entity(entityid, this);
+		f(&entity, &c);
+	});
 }

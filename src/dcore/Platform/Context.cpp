@@ -1,9 +1,10 @@
+#include <dcore/Resource/Properties.hpp>
+#include <dcore/Event/TimeManager.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Graphics/Graphics.hpp>
-#include <dcore/World/World.hpp>
-#include <dcore/Resource/Properties.hpp>
 #include <dcore/Platform/Window.hpp>
+#include <dcore/World/World.hpp>
 
 // TODO: Make ethe implementation dynamic.
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
@@ -29,19 +30,27 @@ dcore::graphics::RendererInterface *Context::GetRendererInterface() const { retu
 
 void Context::Start()
 {
+	float lastTime = Frame_->GetCurrentTime();
 	while(!Frame_->ShouldEnd())
 	{
+		float thisTime = Frame_->GetCurrentTime();
+		float dt       = thisTime - lastTime;
+		event::TimeManager::Instance()->SetDeltaTime(dt);
+
 		Frame_->OnBeginFrame();
-		// float dt = Frame_->delta(); (void)dt;
-		// this->TimeManager_->SetDelta_(dt);
 		World_->Update();
+
 		Rend_->OnBeginRender();
 		World_->Render(RI_);
-		// Rend_->FlushQueue();
 		Rend_->OnEndRender();
+
 		Frame_->OnEndFrame();
+
+		lastTime = thisTime;
 	}
 }
+
+Frame *Context::GetFrame() const { return Frame_; }
 
 void Context::CloseWindow() {}
 

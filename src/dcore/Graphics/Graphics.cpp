@@ -6,6 +6,7 @@
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Renderer/Renderer.hpp>
+#include <glm/ext.hpp>
 
 // TODO: Separate these into different files
 
@@ -139,9 +140,10 @@ void Camera::SetRotation(const glm::quat &newRotation)
 void Camera::RecalcViewMatrix()
 {
 	// ViewMatrix_ = glm::mat4(1.0f);
-	ViewMatrix_ = glm::mat4_cast(Rotation_);
-	ViewMatrix_ = glm::translate(ViewMatrix_, Position_);
-	ViewMatrix_ = glm::inverse(ViewMatrix_);
+	// ViewMatrix_ = glm::mat4_cast(Rotation_);
+	// ViewMatrix_ = glm::translate(ViewMatrix_, Position_);
+	// ViewMatrix_ = glm::inverse(ViewMatrix_);
+	ViewMatrix_ = glm::lookAt(Position_, Position_ + Rotation_ * glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
 	DirtyView_  = false;
 }
 
@@ -191,9 +193,10 @@ void RendererInterface::RenderChunk(const terrain::Chunk *chunk)
 	Renderer_->UseShader(TerrainShader_->Get());
 
 	auto p      = chunk->GetGlobalPosition();
+	// printf("pos: %f, %f\n", p.x, p.y);
 	glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, 0, p.y));
 
-	TerrainShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * m);
+	TerrainShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * m); //  * 
 
 	Renderer_->UseTexture(0, chunk->GetBlendMap().Get());
 

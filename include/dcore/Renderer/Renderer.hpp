@@ -57,6 +57,9 @@ namespace dcore::graphics
 		 */
 		void Render(RShader *shader, RSkeletalMesh *mesh, RTexture *texture);
 
+		void SetWireframeMode(bool newIsWireframeMode);
+		bool IsWireframeMode() const;
+
 		static Renderer *Instance();
 
 	private:
@@ -79,6 +82,8 @@ namespace dcore::graphics
 
 		static void RShader_Constructor(const std::string &path, void *placement);
 		static void RShader_DeConstructor(void *placement);
+
+		bool IsWireframeMode_ = false;
 	};
 
 	/** Class responsible for initializing/deinitializing render resources */

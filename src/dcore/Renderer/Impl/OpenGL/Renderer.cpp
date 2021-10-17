@@ -10,7 +10,7 @@ using namespace dcore::graphics;
 
 void Renderer::OnBeginRender()
 {
-	glClearColor(.0f, .0f, .0f, 1.f);
+	glClearColor(.1f, .1f, .1f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -58,6 +58,13 @@ RUniform Renderer::GetUniform(RShader *shader, const char *name)
 }
 
 void Renderer::UseShader(RShader *shader) { glUseProgram(shader->Data_.Program_.Id_); }
+
+void Renderer::SetWireframeMode(bool newIsWireframeMode)
+{
+	IsWireframeMode_ = newIsWireframeMode;
+	if(IsWireframeMode_) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 {
@@ -129,7 +136,7 @@ void Renderer::RShader_DeConstructor(void *placement)
 void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData)
 {
 	if(!mesh) return;
-	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(Vertex));
+	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
 	mesh->Data_.Vao_.CreateFloatAttribute(3); // Position
 	mesh->Data_.Vao_.CreateFloatAttribute(3); // Normal
 	mesh->Data_.Vao_.CreateFloatAttribute(2); // TexCoord

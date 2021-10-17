@@ -4,11 +4,11 @@ CXX = g++-10
 SRC_EXT = cpp
 SRC_PATH = src
 LIBS = # pkg-config files
-COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS
+COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -rdynamic -g
 RCOMPILE_FLAGS = -D NDEBUG
 DCOMPILE_FLAGS = -D DEBUG -rdynamic -g
 INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include
-LINK_FLAGS = -std=c++17 # -L3rd-party/fwdraw/lib -lfwdraw
+LINK_FLAGS = -std=c++17 -rdynamic -g# -L3rd-party/fwdraw/lib -lfwdraw
 
 ifeq ($(shell uname),Darwin)
 	LINK_FLAGS += -lglfw3

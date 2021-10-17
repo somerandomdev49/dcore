@@ -29,6 +29,7 @@ namespace dcore::platform
 	{
 	public:
 		dcore::graphics::RendererInterface *GetRendererInterface() const;
+		Frame *GetFrame() const;
 		static Context *Instance();
 
 	private:

@@ -12,6 +12,8 @@ Renderer *Renderer::Instance()
 
 void Renderer::SetInstance(Renderer *newInstance) { rendererInst = newInstance; }
 
+bool Renderer::IsWireframeMode() const { return IsWireframeMode_; }
+
 void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 {
 	RStaticMesh *mesh = new(placement) RStaticMesh();

@@ -144,6 +144,5 @@ namespace dcore::event
 		// friend class platform::Context;
 		friend class launch::Launch;
 		static void SetInstance(InputManager *newInstance);
-		InputManager *Instance_;
 	};
 } // namespace dcore::event

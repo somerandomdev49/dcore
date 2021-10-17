@@ -14,7 +14,7 @@ void World::Initialize()
 {
 	// TODO: This should not be constant!
 	Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
-	Terrain_.ReactivateChunks(glm::vec3(0, 0, 0), 10000.0f);
+	// Terrain_.ActivateAllChunks();
 }
 
 void World::DeInitialize() {}
@@ -34,6 +34,7 @@ void World::Update()
 
 void World::Render(graphics::RendererInterface *render)
 {
+	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), 32.0f);
 	auto v = Registry_.view<StaticMeshComponent, TransformComponent>();
 
 	for(auto e : v)

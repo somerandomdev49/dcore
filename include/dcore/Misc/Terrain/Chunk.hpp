@@ -3,13 +3,14 @@
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
+#define CHUNK_SIZE 16
 
 namespace dcore::terrain
 {
 	class Chunk
 	{
 	public:
-		Chunk(HeightmapRegion &&region);
+		Chunk(HeightmapRegion &&region, const glm::ivec2 &localPosition);
 		void Initialize();
 		void DeInitialize();
 
