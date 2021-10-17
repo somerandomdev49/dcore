@@ -3,7 +3,7 @@
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
-#define CHUNK_SIZE 16
+#define CHUNK_SIZE 15
 
 namespace dcore::terrain
 {
@@ -31,6 +31,10 @@ namespace dcore::terrain
 
 		const dcore::resource::Resource<dcore::graphics::RTexture> &GetBlendMap() const;
 		const dcore::resource::Resource<dcore::graphics::RTexture> *GetTextures() const;
+
+		void SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap);
+		void SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture);
+
 		dcore::graphics::RStaticMesh *GetMesh() const;
 
 	private:

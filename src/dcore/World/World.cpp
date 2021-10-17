@@ -34,7 +34,7 @@ void World::Update()
 
 void World::Render(graphics::RendererInterface *render)
 {
-	// Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), 32.0f);
+	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), 70.0f);
 	auto v = Registry_.view<StaticMeshComponent, TransformComponent>();
 
 	for(auto e : v)

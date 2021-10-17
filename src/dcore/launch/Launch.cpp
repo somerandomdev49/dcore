@@ -128,7 +128,7 @@ namespace dcore
 		ctx.DefaultResourceInit(&rm);
 
 		ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(-0.2f, 0, 0)));
-		ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
+		// ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
 
 		ctx.Start();
 		ctx.CloseWindow();

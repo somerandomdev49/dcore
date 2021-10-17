@@ -15,9 +15,9 @@ void Heightmap::Heightmap_Constructor(const std::string &path, void *placement)
 	h->Size_ = data.size;
 	h->Data_ = new uint8_t[h->Size_.x * h->Size_.y * data.channels];
 	h->ComponentCount_ = data.channels;
-	std::memcpy(h->Data_, data.data, h->Size_.x * h->Size_.y);
+	std::memcpy(h->Data_, data.data, h->Size_.x * h->Size_.y * data.channels);
 	std::free(data.data);
-	printf("Component Count: %d\n", h->ComponentCount_);
+	printf("Component Count: %d, size: %d, %d\n", h->ComponentCount_, data.size.x, data.size.y);
 }
 
 void Heightmap::Heightmap_DeConstructor(void *placement)

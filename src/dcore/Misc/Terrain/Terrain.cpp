@@ -23,6 +23,7 @@ void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 			glm::ivec2 pos(x * CHUNK_SIZE, y * CHUNK_SIZE);
 			Chunks_.push_back(Chunk(HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(CHUNK_SIZE, CHUNK_SIZE)), pos));
 			Chunks_[Chunks_.size() - 1].Initialize();
+			Chunks_[Chunks_.size() - 1].SetTexture(0, resource::ResourceManager::Instance()->Get<graphics::RTexture>("DCore.Texture.Main.Grass"));
 		}
 }
 
