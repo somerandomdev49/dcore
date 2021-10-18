@@ -1,4 +1,4 @@
-#include <dcore/Renderer/Impl/OpenGL.hpp>
+#include <dcore/Renderer/Impl/OpenGL/GL.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Util/LoaderUtil.hpp>
@@ -7,6 +7,7 @@
 #include <glm/ext.hpp>
 
 using namespace dcore::graphics;
+using namespace dcore::graphics::impl::opengl;
 
 #define FOG_COLOR 0.2f, 0.4f, 0.5f, 1.0f
 
@@ -26,48 +27,47 @@ void Renderer::DeInitialize() {}
 void Renderer::UseTexture(int unit, RTexture *texture)
 {
 	if(!texture) return;
-	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(texture->Data_.Texture_.Type_, texture->Data_.Texture_.Id_);
+	Gl::SetActiveTexture(TextureUnit0 + unit);
+	Gl::BindTexture(texture->Data_.Texture_.Type_, texture->Data_.Texture_.Id_);
 }
 
 void Renderer::Render(RStaticMesh *mesh)
 {
 	// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more complicated, but will decrease memory usage.
 	// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
-	glBindVertexArray(mesh->Data_.Vao_.VAO_);
-	glDrawElements(GL_TRIANGLES, mesh->Data_.Vao_.IndexCount_, GL_UNSIGNED_INT, 0);
+	Gl::BindVertexArray(mesh->Data_.Vao_.VAO_);
+	Gl::DrawElements(ElementTriangles, mesh->Data_.Vao_.IndexCount_, TypeUnsignedInt);
 }
 
-void Renderer::SetUniform(const RUniform &u, float v) { glUniform1f(u.Data_.Location, v); }
-void Renderer::SetUniform(const RUniform &u, int v) { glUniform1i(u.Data_.Location, v); }
-void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { glUniform2f(u.Data_.Location, v.x, v.y); }
-void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v) { glUniform3f(u.Data_.Location, v.x, v.y, v.z); }
-void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v) { glUniform4f(u.Data_.Location, v.x, v.y, v.z, v.w); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v) { glUniformMatrix2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v) { glUniformMatrix2x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v) { glUniformMatrix2x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v) { glUniformMatrix3x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v) { glUniformMatrix3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v) { glUniformMatrix3x4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v) { glUniformMatrix4x2fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v) { glUniformMatrix4x3fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
-void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v) { glUniformMatrix4fv(u.Data_.Location, 1, GL_FALSE, glm::value_ptr(v)); }
+void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
 
 RUniform Renderer::GetUniform(RShader *shader, const char *name)
 {
 	RUniform u;
-	u.Data_.Location = glGetUniformLocation(shader->Data_.Program_.Id_, name);
+	u.Data_.Location = Gl::GetUniformLocation(shader->Data_.Program_.Id_, name);
 	return u;
 }
 
-void Renderer::UseShader(RShader *shader) { glUseProgram(shader->Data_.Program_.Id_); }
+void Renderer::UseShader(RShader *shader) { Gl::UseProgram(shader->Data_.Program_.Id_); }
 
 void Renderer::SetWireframeMode(bool newIsWireframeMode)
 {
 	IsWireframeMode_ = newIsWireframeMode;
-	if(IsWireframeMode_) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if(IsWireframeMode_) Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeLine);
+	else Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeFill);
 }
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)

@@ -85,7 +85,7 @@ namespace dcore::world
 		void Each(FunctionType func);
 
 		const terrain::Terrain &GetTerrain() const;
-		
+
 		float GetRenderDistance() const;
 		void SetRenderDistance(float newRenderDistance);
 
@@ -132,8 +132,10 @@ template<typename ComponentType, typename FunctionType>
 void dcore::world::World::Each(FunctionType f)
 {
 	auto view = Registry_.view<ComponentType>();
-	view.each([&](auto entityid, auto &c) {
-		Entity entity(entityid, this);
-		f(&entity, &c);
-	});
+	view.each(
+	    [&](auto entityid, auto &c)
+	    {
+		    Entity entity(entityid, this);
+		    f(&entity, &c);
+	    });
 }

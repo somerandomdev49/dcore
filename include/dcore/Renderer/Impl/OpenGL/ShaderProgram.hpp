@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/Renderer/Impl/OpenGL.hpp>
+#include <dcore/Renderer/Impl/OpenGL/GL.hpp>
 #include <cinttypes>
 #include <string>
 
@@ -10,12 +10,6 @@ namespace dcore::graphics
 
 namespace dcore::graphics::impl::opengl
 {
-	enum ShaderType
-	{
-		VertexShader   = GL_VERTEX_SHADER,
-		FragmentShader = GL_FRAGMENT_SHADER
-	};
-
 	class ShaderProgram
 	{
 		UInt Id_;

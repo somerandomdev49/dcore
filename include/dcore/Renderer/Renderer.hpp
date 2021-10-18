@@ -84,6 +84,7 @@ namespace dcore::graphics
 		static void RShader_DeConstructor(void *placement);
 
 		bool IsWireframeMode_ = false;
+		glm::vec4 ClearColor_;
 	};
 
 	/** Class responsible for initializing/deinitializing render resources */

@@ -12,8 +12,8 @@ void Heightmap::Heightmap_Constructor(const std::string &path, void *placement)
 	util::ImageData data;
 	util::LoaderUtil::LoadImage(data, path);
 
-	h->Size_ = data.size;
-	h->Data_ = new uint8_t[h->Size_.x * h->Size_.y * data.channels];
+	h->Size_           = data.size;
+	h->Data_           = new uint8_t[h->Size_.x * h->Size_.y * data.channels];
 	h->ComponentCount_ = data.channels;
 	std::memcpy(h->Data_, data.data, h->Size_.x * h->Size_.y * data.channels);
 	std::free(data.data);

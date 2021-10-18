@@ -3,10 +3,12 @@
 
 namespace dcore::graphics::impl::opengl
 {
-	using UInt = GLuint;
-	using Int  = GLint;
+	using UInt    = GLuint;
+	using Int     = GLint;
+	using Size    = GLsizei;
+	using SizePtr = GLsizeiptr;
 
-	enum GLType
+	enum GlType
 	{
 		TypeUnsignedShort = GL_UNSIGNED_SHORT,
 		TypeUnsignedByte  = GL_UNSIGNED_BYTE,

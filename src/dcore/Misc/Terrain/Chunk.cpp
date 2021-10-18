@@ -4,7 +4,7 @@
 using namespace dcore::terrain;
 
 #define UNIT_PER_PIXEL 1
-#define VERT_SCALE 45.f
+#define VERT_SCALE     45.f
 
 inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
 {
@@ -40,7 +40,8 @@ void Chunk::GenerateMesh_()
 	std::vector<uint32_t> indices;
 	std::vector<uint8_t> vertexData;
 
-	const auto pushFloat = [&](float f) {
+	const auto pushFloat = [&](float f)
+	{
 		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
 		vertexData.push_back(bytes[0]);
 		vertexData.push_back(bytes[1]);
@@ -48,12 +49,14 @@ void Chunk::GenerateMesh_()
 		vertexData.push_back(bytes[3]);
 	};
 
-	const auto pushVec2 = [&](const glm::vec2 &v) {
+	const auto pushVec2 = [&](const glm::vec2 &v)
+	{
 		pushFloat(v.x);
 		pushFloat(v.y);
 	};
 
-	const auto pushVec3 = [&](const glm::vec3 &v) {
+	const auto pushVec3 = [&](const glm::vec3 &v)
+	{
 		pushFloat(v.x);
 		pushFloat(v.y);
 		pushFloat(v.z);
@@ -77,7 +80,7 @@ void Chunk::GenerateMesh_()
 			float h = Region_.Get(glm::ivec2(x, y)) * VERT_SCALE;
 			pushVec3(glm::vec3(x * UNIT_PER_PIXEL - CHUNK_SIZE / 2, h, y * UNIT_PER_PIXEL - CHUNK_SIZE / 2)); // position
 			pushVec3(glm::vec3(0, 0, 0));                                                                     // normal
-			pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y)); // texcoord
+			pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y));                            // texcoord
 			++vertexCount;
 		}
 
@@ -85,10 +88,15 @@ void Chunk::GenerateMesh_()
 	// DCORE_LOG_INFO << "Index Count: " << regionSize.x * regionSize.y * 6;
 	indices.reserve(regionSize.x * (regionSize.y - 1) * 6);
 	// using Vertex = graphics::RenderResourceManage;
-	struct Vertex { glm::vec3 pos; glm::vec3 norm; glm::vec2 tex; };
+	struct Vertex
+	{
+		glm::vec3 pos;
+		glm::vec3 norm;
+		glm::vec2 tex;
+	};
 	const auto setNormals = [&](int a, int b, int c)
 	{
-		Vertex *vertices = reinterpret_cast<Vertex*>(&vertexData[0]);
+		Vertex *vertices = reinterpret_cast<Vertex *>(&vertexData[0]);
 		Vertex *v1 = &vertices[a], *v2 = &vertices[b], *v3 = &vertices[c];
 		auto u = v1->pos - v2->pos, v = v1->pos - v3->pos;
 		auto n = glm::normalize(glm::cross(u, v));
@@ -124,7 +132,7 @@ void Chunk::GenerateMesh_()
 
 	for(uint32_t index : indices)
 	{
-		Vertex *vertices = reinterpret_cast<Vertex*>(&vertexData[0]);
+		Vertex *vertices     = reinterpret_cast<Vertex *>(&vertexData[0]);
 		vertices[index].norm = glm::normalize(vertices[index].norm);
 	}
 
@@ -140,18 +148,10 @@ void Chunk::GenerateMesh_()
 
 const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }
 const dcore::resource::Resource<dcore::graphics::RTexture> *Chunk::GetTextures() const { return &Textures_[0]; }
-void Chunk::SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap)
-{
-	BlendMap_ = newBlendMap;
-}
+void Chunk::SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap) { BlendMap_ = newBlendMap; }
 
-void Chunk::SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture)
-{
-	Textures_[index] = newTexture;
-}
+void Chunk::SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture) { Textures_[index] = newTexture; }
 
 glm::vec2 Chunk::GetGlobalPosition() const { return LocalPosition_ * UNIT_PER_PIXEL; }
 const glm::ivec2 &Chunk::GetLocalPosition() const { return LocalPosition_; }
 dcore::graphics::RStaticMesh *Chunk::GetMesh() const { return Mesh_; }
-
-

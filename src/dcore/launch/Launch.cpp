@@ -30,8 +30,8 @@ namespace dcore
 		world::World world;
 		graphics::Renderer rend;
 
-		ctx.Rend_  = &rend;
-		ctx.World_ = &world;
+		ctx.Rend_     = &rend;
+		ctx.World_    = &world;
 		worldInstance = &world;
 
 		ctx.Initialize();
@@ -61,7 +61,8 @@ namespace dcore
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
 		// e.AddComponent(world::StaticMeshComponent {
-		//     graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"), rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
+		//     graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
+		//     rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
 		struct MyComponent
 		{
@@ -69,88 +70,82 @@ namespace dcore
 		};
 
 		e.AddComponent(MyComponent());
-		world.RegisterUpdate([](world::World *c) {
-			c->Each<MyComponent>([](world::Entity *e, MyComponent *comp) {
-				float speed = 10.f * event::TimeManager::Instance()->GetDeltaTime();
-				float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
-				auto cam = platform::Context::Instance()->GetRendererInterface()->GetCamera();
-				// printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
+		world.RegisterUpdate(
+		    [](world::World *c)
+		    {
+			    c->Each<MyComponent>(
+			        [](world::Entity *e, MyComponent *comp)
+			        {
+				        float speed    = 10.f * event::TimeManager::Instance()->GetDeltaTime();
+				        float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
+				        auto cam       = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+				        // printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
 
-				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(-speed, 0, 0);
-					cam->SetPosition(pos);
-				}
-				else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(speed, 0, 0);
-					cam->SetPosition(pos);
-				}
+				        /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(-speed, 0, 0);
+					        cam->SetPosition(pos);
+				        }
+				        else if(event::InputManager::Instance()->IsKeyPressed(event::K_D))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(speed, 0, 0);
+					        cam->SetPosition(pos);
+				        }
 
-				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(0, 0, -speed);
-					cam->SetPosition(pos);
-				}
-				else if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(0, 0, speed);
-					cam->SetPosition(pos);
-				}
+				        /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_W))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(0, 0, -speed);
+					        cam->SetPosition(pos);
+				        }
+				        else if(event::InputManager::Instance()->IsKeyPressed(event::K_S))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(0, 0, speed);
+					        cam->SetPosition(pos);
+				        }
 
-				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_LeftShift))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(0, -speed, 0);
-					cam->SetPosition(pos);
-				}
-				else if(event::InputManager::Instance()->IsKeyPressed(event::K_Space))
-				{
-					auto pos = cam->GetPosition();
-					pos += cam->GetRotation() * glm::vec3(0, speed, 0);
-					cam->SetPosition(pos);
-				}
+				        /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_LeftShift))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(0, -speed, 0);
+					        cam->SetPosition(pos);
+				        }
+				        else if(event::InputManager::Instance()->IsKeyPressed(event::K_Space))
+				        {
+					        auto pos = cam->GetPosition();
+					        pos += cam->GetRotation() * glm::vec3(0, speed, 0);
+					        cam->SetPosition(pos);
+				        }
 
-				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_Q))
-				{
-					auto rot = cam->GetRotation();
-					rot = glm::angleAxis(rotSpeed, glm::vec3(0, 1, 0)) * rot;
-					cam->SetRotation(rot);
-				}
-				else if(event::InputManager::Instance()->IsKeyPressed(event::K_E))
-				{
-					auto rot = cam->GetRotation();
-					rot = glm::angleAxis(-rotSpeed, glm::vec3(0, 1, 0)) * rot;
-					cam->SetRotation(rot);
-				}
+				        /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_Q))
+				        {
+					        auto rot = cam->GetRotation();
+					        rot      = glm::angleAxis(rotSpeed, glm::vec3(0, 1, 0)) * rot;
+					        cam->SetRotation(rot);
+				        }
+				        else if(event::InputManager::Instance()->IsKeyPressed(event::K_E))
+				        {
+					        auto rot = cam->GetRotation();
+					        rot      = glm::angleAxis(-rotSpeed, glm::vec3(0, 1, 0)) * rot;
+					        cam->SetRotation(rot);
+				        }
 
-				float rdOffset = 30.f;
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_0))
-					worldInstance->SetRenderDistance(rdOffset + 100.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_1))
-					worldInstance->SetRenderDistance(rdOffset + 10.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_2))
-					worldInstance->SetRenderDistance(rdOffset + 20.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_3))
-					worldInstance->SetRenderDistance(rdOffset + 30.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_4))
-					worldInstance->SetRenderDistance(rdOffset + 40.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_5))
-					worldInstance->SetRenderDistance(rdOffset + 50.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_6))
-					worldInstance->SetRenderDistance(rdOffset + 60.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_7))
-					worldInstance->SetRenderDistance(rdOffset + 70.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_8))
-					worldInstance->SetRenderDistance(rdOffset + 80.f);
-				if(event::InputManager::Instance()->IsKeyPressed(event::K_9))
-					worldInstance->SetRenderDistance(rdOffset + 90.f);
-			});
-		});
+				        float rdOffset = 30.f;
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_0)) worldInstance->SetRenderDistance(rdOffset + 100.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_1)) worldInstance->SetRenderDistance(rdOffset + 10.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_2)) worldInstance->SetRenderDistance(rdOffset + 20.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_3)) worldInstance->SetRenderDistance(rdOffset + 30.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_4)) worldInstance->SetRenderDistance(rdOffset + 40.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_5)) worldInstance->SetRenderDistance(rdOffset + 50.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_6)) worldInstance->SetRenderDistance(rdOffset + 60.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_7)) worldInstance->SetRenderDistance(rdOffset + 70.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_8)) worldInstance->SetRenderDistance(rdOffset + 80.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_9)) worldInstance->SetRenderDistance(rdOffset + 90.f);
+			        });
+		    });
 
 		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
 		e.GetComponent<world::TransformComponent>().Position = glm::vec3(0, -1.0f, -6.0f);

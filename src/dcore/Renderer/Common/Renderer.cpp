@@ -49,8 +49,8 @@ void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vecto
 	if(!mesh) return;
 	std::vector<uint8_t> vertexData;
 
-	// Converting from std::vector<Vertex> to std::vector<uint8_t> (`vertices` must be unusable now, somehow this works with a const vector...)
-	// I hope this doesn't allocate another vector of the same size or atleast deallocs vertices afterward.
+	// Converting from std::vector<Vertex> to std::vector<uint8_t> (`vertices` must be unusable now, somehow this works with a const
+	// vector...) I hope this doesn't allocate another vector of the same size or atleast deallocs vertices afterward.
 	vertexData.insert(vertexData.end(), std::make_move_iterator((uint8_t *)&vertices[0]),
 	                  std::make_move_iterator((uint8_t *)&vertices[vertices.size()]));
 

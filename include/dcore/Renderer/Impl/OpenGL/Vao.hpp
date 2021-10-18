@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/Renderer/Impl/OpenGL.hpp>
+#include <dcore/Renderer/Impl/OpenGL/GL.hpp>
 #include <cinttypes>
 #include <vector>
 
@@ -12,22 +12,22 @@ namespace dcore::graphics::impl::opengl
 {
 	class Vao
 	{
-		struct Attribute
-		{
-			enum
-			{
-				Float,
-				Int
-			} Type;
-			int Count;
-			int Offset;
-		};
+		// struct Attribute
+		// {
+		// 	enum
+		// 	{
+		// 		Float,
+		// 		Int
+		// 	} Type;
+		// 	int Count;
+		// 	int Offset;
+		// };
 
 		UInt VBO_, VAO_, EBO_;
 		size_t IndexCount_;
 
 		size_t Stride_, LastOffset_, LastIndex_;
-		std::vector<Attribute> Attributes_;
+		// std::vector<Attribute> Attributes_;
 
 		friend class dcore::graphics::Renderer;
 
