@@ -8,9 +8,12 @@
 
 using namespace dcore::graphics;
 
+#define FOG_COLOR 0.2f, 0.4f, 0.5f, 1.0f
+
 void Renderer::OnBeginRender()
 {
-	glClearColor(.1f, .1f, .1f, 1.f);
+	// TODO: ClearColor field.
+	glClearColor(FOG_COLOR);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

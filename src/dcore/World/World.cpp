@@ -34,7 +34,7 @@ void World::Update()
 
 void World::Render(graphics::RendererInterface *render)
 {
-	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), 70.0f);
+	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 	auto v = Registry_.view<StaticMeshComponent, TransformComponent>();
 
 	for(auto e : v)
@@ -56,3 +56,6 @@ Entity::Entity(entt::entity e, World *world) : Id_(e), World_(world) {}
 Entity World::CreateEntity() { return Entity(Registry_.create(), this); }
 
 void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
+
+float World::GetRenderDistance() const { return RenderDistance_; }
+void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }

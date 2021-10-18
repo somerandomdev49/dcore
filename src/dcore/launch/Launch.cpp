@@ -12,6 +12,7 @@
 	DCORE_LOG_INFO << __LINE__ << " | " << #STMT; \
 	STMT;
 
+dcore::world::World *worldInstance; // TODO: Move to world::World and add GetWorld to platform::Context
 namespace dcore
 {
 	void launch::Launch::Run(int argc, char *argv[])
@@ -31,6 +32,7 @@ namespace dcore
 
 		ctx.Rend_  = &rend;
 		ctx.World_ = &world;
+		worldInstance = &world;
 
 		ctx.Initialize();
 		platform::Context::SetInstance(&ctx);
@@ -125,6 +127,28 @@ namespace dcore
 					rot = glm::angleAxis(-rotSpeed, glm::vec3(0, 1, 0)) * rot;
 					cam->SetRotation(rot);
 				}
+
+				float rdOffset = 30.f;
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_0))
+					worldInstance->SetRenderDistance(rdOffset + 100.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_1))
+					worldInstance->SetRenderDistance(rdOffset + 10.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_2))
+					worldInstance->SetRenderDistance(rdOffset + 20.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_3))
+					worldInstance->SetRenderDistance(rdOffset + 30.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_4))
+					worldInstance->SetRenderDistance(rdOffset + 40.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_5))
+					worldInstance->SetRenderDistance(rdOffset + 50.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_6))
+					worldInstance->SetRenderDistance(rdOffset + 60.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_7))
+					worldInstance->SetRenderDistance(rdOffset + 70.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_8))
+					worldInstance->SetRenderDistance(rdOffset + 80.f);
+				if(event::InputManager::Instance()->IsKeyPressed(event::K_9))
+					worldInstance->SetRenderDistance(rdOffset + 90.f);
 			});
 		});
 

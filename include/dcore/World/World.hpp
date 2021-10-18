@@ -85,6 +85,9 @@ namespace dcore::world
 		void Each(FunctionType func);
 
 		const terrain::Terrain &GetTerrain() const;
+		
+		float GetRenderDistance() const;
+		void SetRenderDistance(float newRenderDistance);
 
 	private:
 		friend class WorldUpdateInfo;
@@ -97,6 +100,7 @@ namespace dcore::world
 		std::vector<void (*)(World *)> Updates_;
 		entt::registry Registry_;
 		terrain::Terrain Terrain_;
+		float RenderDistance_ = 32.0f;
 	};
 } // namespace dcore::world
 

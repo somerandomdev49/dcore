@@ -1,7 +1,8 @@
 #version 410 core
 
-in vec2 s_TexCoord;
+in vec4 s_Position;
 in vec3 s_Normal;
+in vec2 s_TexCoord;
 
 out vec4 o_Color;
 uniform sampler2D u_BlendMap;
@@ -13,8 +14,23 @@ uniform sampler2D u_TexB;
 uniform float u_Tiling = 10.f;
 
 const vec3 SUN = normalize(vec3(1, -1, 0));
+const vec4 FOG_COLOR = vec4(0.2, 0.4, 0.5, 1.0);
 
-void main() {
+const float zNear = 0.1;
+const float zFar = 100.0;
+
+const float zFogNear = 40.0;
+const float zFogFar  = 80.0;
+
+// float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
+// float linearDepth(vec4 clipSpacePos)
+// {
+//     float ndcDepth = clipSpacePos.z / clipSpacePos.w;
+//     return (((zFar - zNear) * ndcDepth) + zNear + zFar) / 2.0;
+// }
+
+void main()
+{
     // vec2 texCoord = s_TexCoord * u_Tiling;
 
     // vec4 mapperColor = texture(u_Tex_Mapper, s_TexCoord);
@@ -29,4 +45,11 @@ void main() {
     // o_Color = vec4(0.0, 1.0, 0.25, 1.0);
     float shadow = dot(s_Normal, SUN);
     o_Color *= vec4(vec3(shadow), 1.0);
+
+    float dist = length(s_Position.xyz);
+    float fogAmount = (zFogFar - dist) / (zFogFar - zFogNear);
+
+    //calculateFogAmount(linearDepth(s_Position));
+    fogAmount = clamp(fogAmount, 0.0, 1.0);
+    o_Color = mix(FOG_COLOR, o_Color, fogAmount);
 }
