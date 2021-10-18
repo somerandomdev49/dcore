@@ -22,7 +22,7 @@ const float zFar = 100.0;
 const float zFogNear = 40.0;
 const float zFogFar  = 80.0;
 
-// float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
+float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
 // float linearDepth(vec4 clipSpacePos)
 // {
 //     float ndcDepth = clipSpacePos.z / clipSpacePos.w;
