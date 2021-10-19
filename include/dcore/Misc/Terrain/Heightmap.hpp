@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <dcore/Uni.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 
 namespace dcore::terrain
@@ -25,7 +26,7 @@ namespace dcore::terrain
 		static void Heightmap_DeConstructor(void *placement);
 
 		glm::ivec2 Size_;
-		uint8_t *Data_;
+		byte *Data_;
 		int ComponentCount_;
 	};
 

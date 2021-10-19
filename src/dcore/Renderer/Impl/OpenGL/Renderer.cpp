@@ -137,7 +137,7 @@ void Renderer::RShader_DeConstructor(void *placement)
 	delete shader;
 }
 
-void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData)
+void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData)
 {
 	if(!mesh) return;
 	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));

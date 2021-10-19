@@ -1,5 +1,6 @@
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Util/LoaderUtil.hpp>
+#include <dcore/Uni.hpp>
 #include <cstring>
 #include <cstdlib>
 
@@ -13,7 +14,7 @@ void Heightmap::Heightmap_Constructor(const std::string &path, void *placement)
 	util::LoaderUtil::LoadImage(data, path);
 
 	h->Size_           = data.size;
-	h->Data_           = new uint8_t[h->Size_.x * h->Size_.y * data.channels];
+	h->Data_           = new byte[h->Size_.x * h->Size_.y * data.channels];
 	h->ComponentCount_ = data.channels;
 	std::memcpy(h->Data_, data.data, h->Size_.x * h->Size_.y * data.channels);
 	std::free(data.data);

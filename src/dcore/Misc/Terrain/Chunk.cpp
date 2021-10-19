@@ -1,6 +1,8 @@
 #include <dcore/Misc/Terrain/Chunk.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Core/Log.hpp>
+#include <dcore/Uni.hpp>
+
 using namespace dcore::terrain;
 
 #define UNIT_PER_PIXEL 1
@@ -38,11 +40,11 @@ void Chunk::DeActivate()
 void Chunk::GenerateMesh_()
 {
 	std::vector<uint32_t> indices;
-	std::vector<uint8_t> vertexData;
+	std::vector<byte> vertexData;
 
 	const auto pushFloat = [&](float f)
 	{
-		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
+		byte *bytes = reinterpret_cast<byte *>(&f);
 		vertexData.push_back(bytes[0]);
 		vertexData.push_back(bytes[1]);
 		vertexData.push_back(bytes[2]);

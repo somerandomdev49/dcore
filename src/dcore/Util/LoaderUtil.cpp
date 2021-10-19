@@ -1,5 +1,6 @@
 #include <dcore/Util/LoaderUtil.hpp>
 #include <dcore/Core/Log.hpp>
+#include <dcore/Uni.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -52,7 +53,7 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 
 	const auto pushFloat = [&](float f)
 	{
-		uint8_t *bytes = reinterpret_cast<uint8_t *>(&f);
+		byte *bytes = reinterpret_cast<byte *>(&f);
 		d.vertexData.push_back(bytes[0]);
 		d.vertexData.push_back(bytes[1]);
 		d.vertexData.push_back(bytes[2]);

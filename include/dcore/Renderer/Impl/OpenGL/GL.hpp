@@ -97,6 +97,13 @@ namespace dcore::graphics::impl::opengl
 		FrontAndBackFaces = GL_FRONT_AND_BACK,
 	};
 
+	enum BufferUsage
+	{
+		BufferUsageStaticDraw = GL_STATIC_DRAW,
+		BufferUsageStreamDraw = GL_STREAM_DRAW,
+		BufferUsageDynamicDraw = GL_DYNAMIC_DRAW,
+	};
+
 	/** These functions should be called instead of native glXXX functions. */
 	namespace Gl
 	{
@@ -138,7 +145,7 @@ namespace dcore::graphics::impl::opengl
 		inline void GenerateVertexArray(int count, UInt *arrays) _INL;
 
 		inline void BindBuffer(BufferType type, UInt buffer) _INL;
-		inline void SetBufferData(BufferType type, Size) _INL;
+		inline void SetBufferData(BufferType type, SizePtr size, const void *data, BufferUsage usage) _INL;
 
 		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride, SizePtr offset, bool norm = false) _INL;
 		inline void EnableVertexAttributeArray(UInt index) _INL;
@@ -193,6 +200,21 @@ namespace dcore::graphics::impl::opengl
 		
 		inline void UseProgram(UInt program) { glUseProgram(program); }
 		inline void SetPolygonMode(Faces face, PolygonMode mode) { glPolygonMode(face, mode); }
+	
+		inline UInt GenerateBuffer() { UInt b; glGenBuffers(1, &b); return b; }
+		inline UInt GenerateVertexArray() { UInt b; glGenVertexArrays(1, &b); return b; }
+		inline void BindBuffer(BufferType type, UInt buffer) { glBindBuffer(type, buffer); }
+	
+		inline void SetBufferData(BufferType type, SizePtr size, const void *data, BufferUsage usage)
+		{ glBufferData(type, size, data, usage); }
+
+		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride, SizePtr offset, bool norm)
+		{ glVertexAttribPointer(index, size, type, norm, stride, (void*)offset); }
+
+		inline void EnableVertexAttributeArray(UInt index) { glEnableVertexAttribArray(index); }
+	
+		inline void DeleteBuffer(UInt buffer) { glDeleteBuffers(1, &buffer); }
+		inline void DeleteVertexArray(UInt buffer) { glDeleteVertexArrays(1, &buffer); }
 	}
 
 } // namespace dcore::graphics::impl::opengl

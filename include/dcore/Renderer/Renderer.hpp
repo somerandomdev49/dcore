@@ -1,10 +1,12 @@
 #pragma once
+#include <dcore/Uni.hpp>
 #include <dcore/Renderer/RSkeletalMesh.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
+#include <dcore/Uni.hpp>
 
 namespace dcore::platform
 {
@@ -100,9 +102,11 @@ namespace dcore::graphics
 			glm::vec2 texcoord;
 		};
 
+		enum class TextureFormat { Red, Rg, Rgb, Rgba };
+
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
-		 * If you can, use the uint8_t version of this function.
+		 * If you can, use the byte version of this function.
 		 * `vertices` will be unusable after this call.
 		 * You should call `vertices.erase(vertices.begin(), vertices.end())` after this!
 		 * */
@@ -111,7 +115,12 @@ namespace dcore::graphics
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
 		 * */
-		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<uint8_t> &vertexData);
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData);
+
+		/**
+		 * Creates a texture with the specified data, size and format.
+		 * */
+		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format);
 
 		/** Deletes a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff) */
 		static void DeleteStaticMesh(RStaticMesh *mesh);

@@ -1,8 +1,9 @@
 #pragma once
+#include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
+#include <dcore/Uni.hpp>
+#include <glm/glm.hpp>
 #include <string>
 #include <vector>
-#include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
-#include <glm/glm.hpp>
 
 namespace dcore::util
 {
@@ -16,7 +17,7 @@ namespace dcore::util
 	struct MeshData
 	{
 		std::vector<uint32_t> indices;
-		std::vector<uint8_t> vertexData;
+		std::vector<byte> vertexData;
 		size_t stride;
 	};
 
