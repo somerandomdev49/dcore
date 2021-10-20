@@ -4,6 +4,7 @@
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
+#include <dcore/Renderer/RFastVertexBuffer.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Uni.hpp>
@@ -53,11 +54,15 @@ namespace dcore::graphics
 		void Render(RStaticMesh *mesh);
 
 		/**
+		 * @brief Renders a mesh without passing data to the shader.
+		 * */
+		void Render(RFastVertexBuffer *buf);
+
+		/**
 		 * @brief Renders a skeletal mesh with a specified texture
-		 * @note if shader is nullptr, the previous shader is used.
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
-		void Render(RShader *shader, RSkeletalMesh *mesh, RTexture *texture);
+		void Render(RSkeletalMesh *mesh);
 
 		void SetWireframeMode(bool newIsWireframeMode);
 		bool IsWireframeMode() const;
@@ -102,7 +107,13 @@ namespace dcore::graphics
 			glm::vec2 texcoord;
 		};
 
-		enum class TextureFormat { Red, Rg, Rgb, Rgba };
+		enum class TextureFormat
+		{
+			Red,
+			Rg,
+			Rgb,
+			Rgba
+		};
 
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
@@ -122,7 +133,19 @@ namespace dcore::graphics
 		 * */
 		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format);
 
-		/** Deletes a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff) */
+		/**
+		 * Creates a fast vertex buffer with the specified index count.
+		 * */
+		static void CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount);
+
+		/**
+		 * Deletes a fast vertex buffer.
+		 * */
+		static void DeleteFastVertexBuffer(RFastVertexBuffer *buf);
+
+		/**
+		 * Deletes a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
+		 * */
 		static void DeleteStaticMesh(RStaticMesh *mesh);
 	};
 } // namespace dcore::graphics

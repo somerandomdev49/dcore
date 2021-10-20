@@ -39,6 +39,12 @@ void Renderer::Render(RStaticMesh *mesh)
 	Gl::DrawElements(ElementTriangles, mesh->Data_.Vao_.IndexCount_, TypeUnsignedInt);
 }
 
+void Renderer::Render(RFastVertexBuffer *buf)
+{
+	Gl::BindVertexArray(buf->Data_.Vao_.VAO_);
+	Gl::DrawArrays(ElementTriangleStrip, buf->Data_.Vao_.IndexCount_);
+}
+
 void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(u.Data_.Location, v); }
 void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(u.Data_.Location, v); }
 void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { Gl::SetUniform(u.Data_.Location, v); }
@@ -72,8 +78,9 @@ void Renderer::SetWireframeMode(bool newIsWireframeMode)
 
 void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 {
-	static impl::opengl::TextureFormat formats[4] = {impl::opengl::TextureFormatR, impl::opengl::TextureFormatRg, impl::opengl::TextureFormatRgb,
-	                                                 impl::opengl::TextureFormatRgba};
+	using RRM = RenderResourceManager;
+
+	static RRM::TextureFormat formats[4] = {RRM::TextureFormat::Red, RRM::TextureFormat::Rg, RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
 
 	// This constructs a RTexture at the specified address (see "placement new")
 	RTexture *tex = new(placement) RTexture();
@@ -89,16 +96,7 @@ void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 	auto fmt = formats[d.channels - 1];
 
 	DCORE_LOG_INFO << "Generating image (" << d.channels << 'x' << d.size.x << 'x' << d.size.y << ')';
-
-	tex->Data_.Texture_.Generate(impl::opengl::Texture2D);
-
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapS, impl::opengl::TextureWrapRepeat);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapT, impl::opengl::TextureWrapRepeat);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMinFilter, impl::opengl::TextureFilterNearest);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMagFilter, impl::opengl::TextureFilterLinear);
-
-	tex->Data_.Texture_.LoadData(impl::opengl::TextureFormatRgba, d.size, fmt, d.data);
-	tex->Data_.Texture_.GenMipmaps();
+	RenderResourceManager::CreateTexture(tex, (byte *)d.data, d.size, fmt);
 
 	free(d.data);
 }
@@ -150,4 +148,33 @@ void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
 {
 	if(!mesh) return;
 	mesh->Data_.Vao_.Delete();
+}
+
+// TODO: DeleteTexture
+void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format)
+{
+	// RRM::TextureFormat -> opengl::TextureFormat
+	static impl::opengl::TextureFormat formats[4] = {impl::opengl::TextureFormatR, impl::opengl::TextureFormatRg, impl::opengl::TextureFormatRgb,
+	                                                 impl::opengl::TextureFormatRgba};
+	tex->Data_.Texture_.Generate(impl::opengl::Texture2D);
+
+	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapS, impl::opengl::TextureWrapRepeat);
+	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapT, impl::opengl::TextureWrapRepeat);
+	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMinFilter, impl::opengl::TextureFilterMipmapLinear);
+	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMagFilter, impl::opengl::TextureFilterLinear);
+
+	tex->Data_.Texture_.LoadData(impl::opengl::TextureFormatRgba, size, formats[static_cast<int>(format)], data);
+	tex->Data_.Texture_.GenMipmaps();
+}
+
+void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
+{
+	// very short indeed.
+	buf->Data_.Vao_.Load(indexCount);
+}
+
+void RenderResourceManager::DeleteFastVertexBuffer(RFastVertexBuffer *buf)
+{
+	// also very short.
+	buf->Data_.Vao_.Delete();
 }

@@ -3,6 +3,8 @@
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Graphics/GUI/Font.hpp>
+#include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/World/World.hpp>
@@ -54,8 +56,12 @@ namespace dcore
 		rm.Initialize();
 		graphics::RenderResourceManager::Register(&rl);
 		terrain::TerrainResourceManager::Register(&rl);
+		graphics::gui::FontResourceManager::Register(&rl);
 		rl.LoadMappings("ResourceMap.ini");
 		rl.LoadFromManifest("Manifest.cfg");
+
+		graphics::gui::GuiGraphics guig;
+		guig.Initialize(resource::ResourceManager::Instance());
 
 		world.Initialize();
 		world::Entity e = world.CreateEntity();
@@ -75,7 +81,7 @@ namespace dcore
 		    {
 			    c->Each<MyComponent>(
 			        [](world::Entity *e, MyComponent *comp)
-			        {
+			        { (void)e; (void)comp;
 				        float speed    = 10.f * event::TimeManager::Instance()->GetDeltaTime();
 				        float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
 				        auto cam       = platform::Context::Instance()->GetRendererInterface()->GetCamera();
@@ -167,6 +173,7 @@ namespace dcore
 		im.DeInitialize();
 		tm.DeInitialize();
 		world.DeInitialize();
+		guig.DeInitialize();
 		ctx.DeInitialize();
 	}
 } // namespace dcore

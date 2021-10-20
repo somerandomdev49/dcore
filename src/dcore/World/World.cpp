@@ -1,5 +1,7 @@
 #include <dcore/World/World.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Graphics/GUI/GuiGraphics.hpp>
+#include <dcore/Graphics/GUI/Font.hpp>
 
 using namespace dcore::world;
 
@@ -10,11 +12,13 @@ void TransformComponent::ReCalculateMatrix()
 	Matrix = glm::translate(Matrix, Position);
 }
 
+dcore::resource::Resource<dcore::graphics::gui::Font> font__tmp;
 void World::Initialize()
 {
 	// TODO: This should not be constant!
 	Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
 	Terrain_.ActivateAllChunks();
+	font__tmp = resource::ResourceManager::Instance()->Get<graphics::gui::Font>("DCore.Font.Debug");
 }
 
 void World::DeInitialize() {}
@@ -48,6 +52,14 @@ void World::Render(graphics::RendererInterface *render)
 
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+
+	graphics::gui::GuiGraphics::Instance()->RenderQuad(graphics::gui::Quad {
+		glm::vec2(0.1f, 0.1f),
+		glm::vec2(1.0f, 1.0f),
+		0.0f,
+		font__tmp.Get()->GetAtlasTexture(),
+		glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)
+	});
 }
 
 entt::entity Entity::GetId() const { return Id_; }

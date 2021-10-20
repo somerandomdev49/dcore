@@ -8,4 +8,4 @@
 
 using ubyte = uint8_t;
 using sbyte = int8_t;
-using byte = ubyte;
+using byte  = ubyte;
