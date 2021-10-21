@@ -60,9 +60,6 @@ namespace dcore
 		rl.LoadMappings("ResourceMap.ini");
 		rl.LoadFromManifest("Manifest.cfg");
 
-		graphics::gui::GuiGraphics guig;
-		guig.Initialize(resource::ResourceManager::Instance());
-
 		world.Initialize();
 		world::Entity e = world.CreateEntity();
 		e.AddComponent(world::TransformComponent());
@@ -160,6 +157,10 @@ namespace dcore
 
 		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
+
+		graphics::gui::GuiGraphics guig;
+		guig.Initialize(resource::ResourceManager::Instance());
+		graphics::gui::GuiGraphics::SetInstance(&guig);
 
 		// ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(0, 0, 0)));
 		// ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);

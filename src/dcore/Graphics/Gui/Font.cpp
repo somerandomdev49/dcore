@@ -26,8 +26,8 @@ void Font::Initialize(const byte *data, int pixelHeight, int fontNo)
 void Font::DeInitialize() { delete F_INF_(FontInfo__); }
 
 // TODO! Dynamic language.
-#define ATLAS_BEGIN_CHAR_ASCII (' ' + 1)
-#define ATLAS_END_CHAR_ASCII   ('~')
+#define ATLAS_BEGIN_CHAR_ASCII ('a')
+#define ATLAS_END_CHAR_ASCII   ('b')
 
 // All of the glyphs are on a single line in a very wide texture.
 Font::Bitmap Font::CreateAtlasBitmap_()
@@ -66,6 +66,8 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 		CodePointTable_[i].YOffset = 0;
 		currentX += w;
 	}
+
+	printf("Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
 
 	return bitmap;
 }
