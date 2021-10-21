@@ -20,7 +20,12 @@ void Renderer::OnBeginRender()
 
 void Renderer::OnEndRender() {}
 
-void Renderer::Initialize() { glEnable(GL_DEPTH_TEST); }
+void Renderer::Initialize()
+{
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
 
 void Renderer::DeInitialize() {}
 
@@ -151,19 +156,21 @@ void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
 }
 
 // TODO: DeleteTexture
-void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format)
+void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format, TextureScaling scaling)
 {
+	namespace gl = impl::opengl;
 	// RRM::TextureFormat -> opengl::TextureFormat
-	static impl::opengl::TextureFormat formats[4] = {impl::opengl::TextureFormatR, impl::opengl::TextureFormatRg, impl::opengl::TextureFormatRgb,
-	                                                 impl::opengl::TextureFormatRgba};
-	tex->Data_.Texture_.Generate(impl::opengl::Texture2D);
+	static gl::TextureFormat formats[4]        = {gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb, gl::TextureFormatRgba};
+	static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
+	static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
+	tex->Data_.Texture_.Generate(gl::Texture2D);
 
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapS, impl::opengl::TextureWrapRepeat);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamWrapT, impl::opengl::TextureWrapRepeat);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMinFilter, impl::opengl::TextureFilterMipmapLinear);
-	tex->Data_.Texture_.SetParam(impl::opengl::TextureParamMagFilter, impl::opengl::TextureFilterLinear);
+	tex->Data_.Texture_.SetParam(gl::TextureParamWrapS, gl::TextureWrapRepeat);
+	tex->Data_.Texture_.SetParam(gl::TextureParamWrapT, gl::TextureWrapRepeat);
+	tex->Data_.Texture_.SetParam(gl::TextureParamMinFilter, filtersMin[static_cast<int>(scaling)]);
+	tex->Data_.Texture_.SetParam(gl::TextureParamMagFilter, filtersMag[static_cast<int>(scaling)]);
 
-	tex->Data_.Texture_.LoadData(impl::opengl::TextureFormatRgba, size, formats[static_cast<int>(format)], data);
+	tex->Data_.Texture_.LoadData(gl::TextureFormatRgba, size, formats[static_cast<int>(format)], data);
 	tex->Data_.Texture_.GenMipmaps();
 }
 

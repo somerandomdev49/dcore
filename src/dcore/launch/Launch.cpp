@@ -78,7 +78,9 @@ namespace dcore
 		    {
 			    c->Each<MyComponent>(
 			        [](world::Entity *e, MyComponent *comp)
-			        { (void)e; (void)comp;
+			        {
+				        (void)e;
+				        (void)comp;
 				        float speed    = 10.f * event::TimeManager::Instance()->GetDeltaTime();
 				        float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
 				        auto cam       = platform::Context::Instance()->GetRendererInterface()->GetCamera();

@@ -115,7 +115,11 @@ namespace dcore::graphics
 			Rgba
 		};
 
-		enum class TextureScaling { Linear, Nearest }
+		enum class TextureScaling
+		{
+			Linear,
+			Nearest
+		};
 
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
@@ -133,7 +137,8 @@ namespace dcore::graphics
 		/**
 		 * Creates a texture with the specified data, size and format.
 		 * */
-		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format, TextureScaling scaling = TextureScaling::Linear);
+		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
+		                          TextureScaling scaling = TextureScaling::Linear);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.

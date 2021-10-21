@@ -17,6 +17,8 @@ namespace dcore::graphics::gui
 		int LeftSideBearing;
 		// Offset in the texture atlas.
 		int XOffset, YOffset;
+		// Size of the character in the texture atlas.
+		int Width, Height;
 	};
 
 	class Font
