@@ -1,5 +1,6 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Core/Log.hpp>
 #include <cstring>
 #include <fstream> // FIXME: add LoaderUntil::LoadBinary()
 #include <iterator>
@@ -18,17 +19,27 @@ void Font::Initialize(const byte *data, int pixelHeight, int fontNo)
 	stbtt_InitFont(fontinfo, data, stbtt_GetFontOffsetForIndex(data, fontNo));
 	PixelHeight_ = pixelHeight;
 	Scale_       = stbtt_ScaleForPixelHeight(fontinfo, pixelHeight);
+	ScaleEm_     = stbtt_ScaleForMappingEmToPixels(fontinfo, pixelHeight);
 	printf("Initialized font: pixel height = %d, scaling = %f\n", PixelHeight_, Scale_);
 	FontInfo__ = fontinfo;
 	CreateAtlasTexture_(CreateAtlasBitmap_());
+	printf("GetPointerKernAdvance('a', 'b') = %d\n", stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), 'a', 'b'));
 }
 
 void Font::DeInitialize() { delete F_INF_(FontInfo__); }
 
+int Font::GetKernAdvance(int a, int b)
+{
+	printf("FontInfo__ = 0x%zx\n", FontInfo__);
+	auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), 'a', 'b');
+	printf("kern advance %d\n", x);
+	return x;
+}
+
 // TODO! Dynamic language.
-#define ATLAS_BEGIN_CHAR_ASCII ('a')
-#define ATLAS_END_CHAR_ASCII   ('b'+1)
-#define GLTEX_ALIGNMENT 4
+#define ATLAS_BEGIN_CHAR_ASCII   ('a')
+#define ATLAS_END_CHAR_ASCII     ('b' + 1)
+#define GLTEX_ALIGNMENT          4
 #define PAD_ALIGN_TO_BYTES(N, A) ((~(N) + 1) & (A - 1))
 
 // All of the glyphs are on a single line in a very wide texture.
@@ -50,11 +61,11 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 		int ix0, ix1, iy0, iy1, aw, lsb;
 		stbtt_GetCodepointBitmapBox(fi, c, Scale_, Scale_, &ix0, &iy0, &ix1, &iy1);
 		stbtt_GetCodepointHMetrics(fi, c, &aw, &lsb);
-		CodePointTable_.push_back(CodePoint {c, aw, lsb, 0, 0, 0, 0});
+		CodePointTable_.push_back(CodePoint {c, aw, lsb, 0, 0, 0, 0, 0, 0, 0, 0});
 		bitmap.width += ix1 - ix0;
 		bitmap.height = std::max(bitmap.height, iy1 - iy0);
 	}
-	
+
 	printf("Total bitmap size (non-aligned): %dx%d\n", bitmap.width, bitmap.height);
 
 	// OpenGL requires its textures' width and height to be aligned to 4 bytes:
@@ -72,21 +83,26 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 
 		// int wpad = PAD_ALIGN_TO_BYTES(w, GLTEX_ALIGNMENT);
 
-		// Write upside-down rendered bitmap data to the output bitmap.
+		// Write the rendered bitmap data to the output bitmap.
 		for(int y = h - 1, yi = 0; y >= 0; --y, ++yi)
 		{
 			for(int x = 0; x < w; ++x)
 			{
 				// printf("Pixel at X%d <- X%d\n", currentX + x, x);
-				bitmap.data[currentX + x + yi * bitmap.width] = bitmapData[x + y * w];
+				bitmap.data[currentX + x + y * bitmap.width] = bitmapData[x + y * w];
 			}
 		}
 
-
-		CodePointTable_[i].XOffset = currentX;
-		CodePointTable_[i].YOffset = 0;
-		CodePointTable_[i].Width = w;
-		CodePointTable_[i].Height = h;
+		auto cp       = &CodePointTable_[i];
+		cp->XOffset   = currentX;
+		cp->YOffset   = 0;
+		cp->Width     = w;
+		cp->Height    = h;
+		cp->XOffsetUV = currentX / float(bitmap.width);
+		cp->YOffsetUV = 0 / float(bitmap.height);
+		cp->WidthUV   = w / float(bitmap.width);
+		cp->HeightUV  = h / float(bitmap.height);
+		printf("Offset UV: %f, %f, Size UV: %f, %f\n", cp->XOffsetUV, cp->YOffsetUV, cp->WidthUV, cp->HeightUV);
 		printf("Current X: %d, Width: %d\n", currentX, w);
 		currentX += w;
 	}
@@ -98,7 +114,7 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 	{
 		for(int i = 0; i < bitmap.width; ++i)
 		{
-			putc(" .:ioVM@"[bitmap.data[j*bitmap.width+i]>>5], stdout);
+			putc(" .:ioVM@"[bitmap.data[j * bitmap.width + i] >> 5], stdout);
 		}
 		putc('\n', stdout);
 	}
@@ -120,10 +136,23 @@ dcore::graphics::RTexture *Font::GetAtlasTexture() const { return Atlas_; }
 void Font::Constructor_Font(const std::string &path, void *placement)
 {
 	Font *f = new(placement) Font;
-	std::ifstream input(path, std::ios::binary);
+	auto split = path.rfind(':');
+	int size;
+	if(split == path.npos)
+	{
+		DCORE_LOG_ERROR << "Error loading font: no size specified!";
+		size = 64;
+	}
+	else
+	{
+		size = std::stoi(path.substr(split + 1));
+	}
+	std::string actualPath = path.substr(0, split);
+	printf("Reading font from '%s'\n", actualPath.c_str());
+	std::ifstream input(actualPath, std::ios::binary);
 	std::vector<byte> buffer(std::istreambuf_iterator<char>(input), {});
 	printf("Read %zu bytes of font data\n", buffer.size());
-	f->Initialize(buffer.data(), 24);
+	f->Initialize(buffer.data(), size);
 }
 
 void Font::DeConstructor_Font(void *placement)

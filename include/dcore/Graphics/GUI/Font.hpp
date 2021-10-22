@@ -19,6 +19,10 @@ namespace dcore::graphics::gui
 		int XOffset, YOffset;
 		// Size of the character in the texture atlas.
 		int Width, Height;
+		// Offset for uv.
+		float XOffsetUV, YOffsetUV;
+		// Size for uv.
+		float WidthUV, HeightUV;
 	};
 
 	class Font
@@ -36,7 +40,7 @@ namespace dcore::graphics::gui
 
 	private:
 		int Ascent_, Descent_, LineGap_;
-		float Scale_;
+		float Scale_, ScaleEm_;
 		int PixelHeight_;
 
 		void *FontInfo__; // Implementation specific.
@@ -49,8 +53,11 @@ namespace dcore::graphics::gui
 			byte *data;
 			int width, height;
 		};
+
 		Bitmap CreateAtlasBitmap_();
 		void CreateAtlasTexture_(const Bitmap &tb);
+
+		int GetKernAdvance(int a, int b);
 
 		friend class GuiGraphics;
 		friend class FontResourceManager;
