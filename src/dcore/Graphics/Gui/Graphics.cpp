@@ -75,9 +75,9 @@ void GuiGraphics::RenderQuad_(const Quad &quad, RShader *shader)
 	if(shader) Rend_->UseShader(shader);
 	if(quad.Texture) Rend_->UseTexture(0, quad.Texture);
 
-	glm::mat3 tr = glm::translate(glm::mat3(1.0f), quad.Position);
-	tr           = glm::rotate(tr, quad.Rotation);
-	tr           = glm::scale(tr, quad.Scale);
+	auto tr = glm::translate(glm::mat3(1.0f), quad.Position);
+	tr      = glm::rotate(tr, quad.Rotation);
+	tr      = glm::scale(tr, quad.Scale);
 	GuiShader_->SetTransform(tr);
 	GuiShader_->SetColor(quad.Color);
 	// Texture is 0 by default.
@@ -93,13 +93,13 @@ void GuiGraphics::RenderText(Font *font, const char *text)
 	if(!text) return;
 
 	// Bind once!
-	Rend_->UseShader(FontShader_->Get());
+	Rend_->UseShader(GuiShader_->Get());
 
 	// char c = text[0];
 	float currentX = 0.0f;
-	while(*text++)
+	while(*(text++))
 	{
-		if(*text >= 32 && *text <= 127)
+		if(*text >= 32)
 		{
 			auto &cp = font->CodePointTable_[*text];
 			// FontShader_->SetTexCoords(
@@ -116,12 +116,12 @@ void GuiGraphics::RenderText(Font *font, const char *text)
 			// );
 			Quad q;
 			q.Color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			q.Position = glm::vec2(currentX, 0.05f);
+			q.Position = glm::vec2(0.0f, 0.0f);
 			// q.Scale = glm::vec2(0.1f, (float(cp.Width) / float(cp.Height) * 0.1f));
 			q.Scale = glm::vec2(1.0f, 1.0f);
 			q.Rotation = 0.0f;
 			q.Texture = font->GetAtlasTexture(); // can be nullptr?
-			RenderQuad_(q, FontShader_->Get()); // shader already bound
+			RenderQuad_(q, GuiShader_->Get()); // shader already bound
 			currentX += 0.1f;
 		}
 	}

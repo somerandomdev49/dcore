@@ -77,7 +77,7 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 		{
 			for(int x = 0; x < w; ++x)
 			{
-				printf("Pixel at X%d <- X%d\n", currentX + x, x);
+				// printf("Pixel at X%d <- X%d\n", currentX + x, x);
 				bitmap.data[currentX + x + yi * bitmap.width] = bitmapData[x + y * w];
 			}
 		}
