@@ -185,10 +185,10 @@ namespace dcore
 
 		DCORE_LOG_INFO << "----------------------------------------";
 
-		graphics::gui::Font::FontLibDeInitialize();
 		rm.DeInitialize();
 		im.DeInitialize();
 		tm.DeInitialize();
+		graphics::gui::Font::FontLibDeInitialize();
 		world.DeInitialize();
 		guig.DeInitialize();
 		ctx.DeInitialize();

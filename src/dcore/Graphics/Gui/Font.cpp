@@ -39,7 +39,6 @@ int Font::GetAscent() const { return F_INF_(FontInfo__)->ascender >> 6; }
 
 void Font::DeInitialize()
 {
-	puts("De initializng font!");
 	FT_Done_Face(F_INF_(FontInfo__));
 }
 
