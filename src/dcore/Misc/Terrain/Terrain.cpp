@@ -14,16 +14,19 @@ void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 	Heightmap_ = heightmap;
 
 	glm::ivec2 chunkCount = Heightmap_.Get()->GetSize() / glm::ivec2(CHUNK_SIZE, CHUNK_SIZE);
-	DCORE_LOG_INFO << "Initializing terrain: Heightmap Size: " << Heightmap_.Get()->GetSize() << ", Chunk Count: " << chunkCount;
+	DCORE_LOG_INFO << "Initializing terrain: Heightmap Size: " << Heightmap_.Get()->GetSize()
+	               << ", Chunk Count: " << chunkCount;
 	Chunks_.reserve(chunkCount.x * chunkCount.y);
 
 	for(int y = 0; y < chunkCount.y; ++y)
 		for(int x = 0; x < chunkCount.x; ++x)
 		{
 			glm::ivec2 pos(x * CHUNK_SIZE, y * CHUNK_SIZE);
-			Chunks_.push_back(Chunk(HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(CHUNK_SIZE, CHUNK_SIZE)), pos));
+			Chunks_.push_back(
+			    Chunk(HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(CHUNK_SIZE, CHUNK_SIZE)), pos));
 			Chunks_[Chunks_.size() - 1].Initialize();
-			Chunks_[Chunks_.size() - 1].SetTexture(0, resource::ResourceManager::Instance()->Get<graphics::RTexture>("DCore.Texture.Main.Grass"));
+			Chunks_[Chunks_.size() - 1].SetTexture(
+			    0, resource::ResourceManager::Instance()->Get<graphics::RTexture>("DCore.Texture.Main.Grass"));
 		}
 }
 

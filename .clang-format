@@ -1,6 +1,6 @@
 ﻿---
 AccessModifierOffset: '-4'
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveMacros: 'true'
 AlignConsecutiveAssignments: 'true'
 AlignConsecutiveDeclarations: 'false'
@@ -25,7 +25,7 @@ BinPackParameters: 'true'
 BreakAfterJavaFieldAnnotations: 'true'
 BreakBeforeBraces: Attach
 BreakStringLiterals: 'true'
-ColumnLimit: '150'
+ColumnLimit: '120'
 CompactNamespaces: 'true'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
 Cpp11BracedListStyle: 'true'

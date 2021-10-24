@@ -9,9 +9,13 @@ void opengl::TextureBuffer::Generate(TextureType type)
 	glBindTexture(Type_, Id_);
 }
 
-void opengl::TextureBuffer::SetParam(TextureParam param, TextureParamValue value) { glTexParameteri(Type_, param, value); }
+void opengl::TextureBuffer::SetParam(TextureParam param, TextureParamValue value)
+{
+	glTexParameteri(Type_, param, value);
+}
 
-void opengl::TextureBuffer::LoadData(TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat, void *data)
+void opengl::TextureBuffer::LoadData(
+    TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat, void *data)
 {
 	glTexImage2D(Type_, 0, internalFormat, size.x, size.y, 0, dataFormat, TypeUnsignedByte, data);
 }

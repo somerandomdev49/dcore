@@ -52,9 +52,13 @@ void World::Render(graphics::RendererInterface *render)
 
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
-
-	graphics::gui::GuiGraphics::Instance()->RenderText(font__tmp.Get(), "ab");
-	// graphics::gui::GuiGraphics::Instance()->RenderQuad(graphics::gui::Quad {glm::vec2(0.1f, 0.1f), glm::vec2(0.5f, 0.5f), 0.0f,
+	
+	char posString[32];
+	const auto &camPos = render->GetCamera()->GetPosition();
+	snprintf(posString, 32, "%.1f, %.1f, %.1f", camPos.x, camPos.y, camPos.z);
+	graphics::gui::GuiGraphics::Instance()->RenderText(font__tmp.Get(), posString, glm::vec2(10, 10), 12);
+	// graphics::gui::GuiGraphics::Instance()->RenderQuad(graphics::gui::Quad {glm::vec2(0.1f, 0.1f), glm::vec2(0.5f,
+	// 0.5f), 0.0f,
 	//                                                                         font__tmp.Get()->GetAtlasTexture(),
 	//                                                                         glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)});
 }

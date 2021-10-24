@@ -20,7 +20,8 @@ void ResourceLoader::LoadFromManifest(const std::string &location)
 	for(const auto &p : files) LoadByName(p);
 }
 
-void ResourceLoader::FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
+void ResourceLoader::FindMappings_(
+    const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
 {
 	static std::string escapes = "[\\^$.|?+(){}";
 

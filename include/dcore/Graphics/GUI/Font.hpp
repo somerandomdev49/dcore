@@ -12,23 +12,31 @@ namespace dcore::graphics::gui
 		// The codepoint.
 		int Char;
 		// X advance. (how much to increase x offset to render the next glyph)
-		int AdvanceWidth;
-		// X offset of where to start rendering the glyph.
-		int LeftSideBearing;
+		float AdvanceWidth;
+
+		// Offset from baseline to left/top of glyph.
+		glm::ivec2 Bearing;
+
 		// Offset in the texture atlas.
-		int XOffset, YOffset;
+		glm::ivec2 AtlasOffset;
+
 		// Size of the character in the texture atlas.
-		int Width, Height;
+		glm::ivec2 AtlasSize;
+
 		// Offset for uv.
-		float XOffsetUV, YOffsetUV;
+		glm::vec2 UVOffset;
+
 		// Size for uv.
-		float WidthUV, HeightUV;
+		glm::vec2 UVSize;
 	};
 
 	class Font
 	{
 	public:
-		void Initialize(const byte *data, int pixelHeight, int fontNo = 0);
+		static void FontLibInitialize();
+		static void FontLibDeInitialize();
+
+		void Initialize(const char *name, int fontSize, int fontNo = 0);
 		void DeInitialize();
 
 		int GetAscent() const;
@@ -39,7 +47,6 @@ namespace dcore::graphics::gui
 		RTexture *GetAtlasTexture() const;
 
 	private:
-		int Ascent_, Descent_, LineGap_;
 		float Scale_, ScaleEm_;
 		int PixelHeight_;
 
@@ -51,13 +58,13 @@ namespace dcore::graphics::gui
 		struct Bitmap
 		{
 			byte *data;
-			int width, height;
+			unsigned int width, height;
 		};
 
 		Bitmap CreateAtlasBitmap_();
 		void CreateAtlasTexture_(const Bitmap &tb);
 
-		int GetKernAdvance(int a, int b);
+		int GetKerning(int a, int b) const;
 
 		friend class GuiGraphics;
 		friend class FontResourceManager;

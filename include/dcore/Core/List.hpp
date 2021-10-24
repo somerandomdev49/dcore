@@ -17,7 +17,9 @@ namespace dcore
 		void Delete(T *pointer) { delete[] pointer; }
 	};
 
-	template<typename T, typename SizeType = typename DefaultListAllocator<T>::SizeType, typename Allocator = DefaultListAllocator<T>>
+	template<
+	    typename T, typename SizeType = typename DefaultListAllocator<T>::SizeType,
+	    typename Allocator = DefaultListAllocator<T>>
 	class List
 	{
 		T *Data_;

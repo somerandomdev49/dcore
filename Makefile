@@ -3,7 +3,7 @@ BIN_NAME := dcore
 CXX = g++-10
 SRC_EXT = cpp
 SRC_PATH = src
-LIBS = # pkg-config files
+LIBS = freetype2 # pkg-config files
 COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -rdynamic -g
 RCOMPILE_FLAGS = -D NDEBUG
 DCOMPILE_FLAGS = -D DEBUG -rdynamic -g

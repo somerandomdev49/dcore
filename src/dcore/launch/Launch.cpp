@@ -5,6 +5,7 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
+#include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/World/World.hpp>
@@ -46,6 +47,8 @@ namespace dcore
 		event::TimeManager tm;
 		tm.Initialize();
 		event::TimeManager::SetInstance(&tm);
+
+		graphics::gui::Font::FontLibInitialize();
 
 		// Create the default config reader.
 		resource::ConfigReader cfg("data");
@@ -139,16 +142,26 @@ namespace dcore
 				        }
 
 				        float rdOffset = 30.f;
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_0)) worldInstance->SetRenderDistance(rdOffset + 100.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_1)) worldInstance->SetRenderDistance(rdOffset + 10.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_2)) worldInstance->SetRenderDistance(rdOffset + 20.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_3)) worldInstance->SetRenderDistance(rdOffset + 30.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_4)) worldInstance->SetRenderDistance(rdOffset + 40.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_5)) worldInstance->SetRenderDistance(rdOffset + 50.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_6)) worldInstance->SetRenderDistance(rdOffset + 60.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_7)) worldInstance->SetRenderDistance(rdOffset + 70.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_8)) worldInstance->SetRenderDistance(rdOffset + 80.f);
-				        if(event::InputManager::Instance()->IsKeyPressed(event::K_9)) worldInstance->SetRenderDistance(rdOffset + 90.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_0))
+					        worldInstance->SetRenderDistance(rdOffset + 100.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_1))
+					        worldInstance->SetRenderDistance(rdOffset + 10.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_2))
+					        worldInstance->SetRenderDistance(rdOffset + 20.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_3))
+					        worldInstance->SetRenderDistance(rdOffset + 30.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_4))
+					        worldInstance->SetRenderDistance(rdOffset + 40.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_5))
+					        worldInstance->SetRenderDistance(rdOffset + 50.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_6))
+					        worldInstance->SetRenderDistance(rdOffset + 60.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_7))
+					        worldInstance->SetRenderDistance(rdOffset + 70.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_8))
+					        worldInstance->SetRenderDistance(rdOffset + 80.f);
+				        if(event::InputManager::Instance()->IsKeyPressed(event::K_9))
+					        worldInstance->SetRenderDistance(rdOffset + 90.f);
 			        });
 		    });
 
@@ -172,6 +185,7 @@ namespace dcore
 
 		DCORE_LOG_INFO << "----------------------------------------";
 
+		graphics::gui::Font::FontLibDeInitialize();
 		rm.DeInitialize();
 		im.DeInitialize();
 		tm.DeInitialize();

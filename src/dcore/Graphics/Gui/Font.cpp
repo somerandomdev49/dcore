@@ -1,123 +1,156 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Core/Log.hpp>
+#include <dcore/Core/Assert.hpp>
 #include <cstring>
 #include <fstream> // FIXME: add LoaderUntil::LoadBinary()
 #include <iterator>
 
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb_truetype.h>
-#undef STB_TRUETYPE_IMPLEMENTATION
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+// #define STB_TRUETYPE_IMPLEMENTATION
+// #include <stb_truetype.h>
+// #undef STB_TRUETYPE_IMPLEMENTATION
 
 using namespace dcore::graphics::gui;
 
-#define F_INF_(EXPR) ((stbtt_fontinfo *)(EXPR))
+#define F_INF_(EXPR) ((FT_Face)(EXPR))
 
-void Font::Initialize(const byte *data, int pixelHeight, int fontNo)
+static FT_Library libft__;
+void Font::FontLibInitialize() { DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype"); }
+
+void Font::FontLibDeInitialize() { DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype"); }
+
+void Font::Initialize(const char *name, int fontSize, int fontNo)
 {
-	stbtt_fontinfo *fontinfo = new stbtt_fontinfo();
-	stbtt_InitFont(fontinfo, data, stbtt_GetFontOffsetForIndex(data, fontNo));
-	PixelHeight_ = pixelHeight;
-	Scale_       = stbtt_ScaleForPixelHeight(fontinfo, pixelHeight);
-	ScaleEm_     = stbtt_ScaleForMappingEmToPixels(fontinfo, pixelHeight);
-	printf("Initialized font: pixel height = %d, scaling = %f\n", PixelHeight_, Scale_);
-	FontInfo__ = fontinfo;
+	FT_Face fc;
+	PixelHeight_ = fontSize;
+	Scale_       = 1.0f;
+
+	DCORE_ASSERT(!FT_New_Face(libft__, name, fontNo, &fc), "Could not create font face");
+	FT_Set_Pixel_Sizes(fc, 0, PixelHeight_);
+
+	FontInfo__ = fc;
 	CreateAtlasTexture_(CreateAtlasBitmap_());
-	printf("GetPointerKernAdvance('a', 'b') = %d\n", stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), 'a', 'b'));
 }
 
-void Font::DeInitialize() { delete F_INF_(FontInfo__); }
+int Font::GetAscent() const { return F_INF_(FontInfo__)->ascender >> 6; }
 
-int Font::GetKernAdvance(int a, int b)
+void Font::DeInitialize()
+{
+	puts("De initializng font!");
+	FT_Done_Face(F_INF_(FontInfo__));
+}
+
+int Font::GetKerning(int a, int b) const
 {
 	// printf("FontInfo__ = 0x%zx\n", FontInfo__);
-	auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), a, b);
+	// auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), a, b);
 	// printf("kern advance %d\n", x);
-	return x;
+	if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
+	FT_Vector kern;
+	FT_Get_Kerning(F_INF_(FontInfo__), a, b, FT_KERNING_DEFAULT, &kern);
+	return kern.x >> 6;
 }
 
 // TODO! Dynamic language.
-#define ATLAS_BEGIN_CHAR_ASCII   ('a')
-#define ATLAS_END_CHAR_ASCII     ('b' + 1)
+#define ATLAS_BEGIN_CHAR_ASCII   (' ')
+#define ATLAS_END_CHAR_ASCII     ('~' + 1)
 #define GLTEX_ALIGNMENT          4
 #define PAD_ALIGN_TO_BYTES(N, A) ((~(N) + 1) & (A - 1))
 
 // All of the glyphs are on a single line in a very wide texture.
 Font::Bitmap Font::CreateAtlasBitmap_()
 {
-	stbtt_fontinfo *fi = F_INF_(FontInfo__);
-	printf("Font info: 0x%zx\n", fi);
+	FT_Face fc = F_INF_(FontInfo__);
+	// printf("Font info: 0x%zx\n", fi);
 
 	Bitmap bitmap = {nullptr, 0, 0};
-
-	int length;
-	const char *nm = stbtt_GetFontNameString(fi, &length, 0, 0, 0x409, 1);
-	printf("Font name: '%s'\n", nm);
-
 	CodePointTable_.reserve(ATLAS_END_CHAR_ASCII - ATLAS_BEGIN_CHAR_ASCII);
 	for(int c = ATLAS_BEGIN_CHAR_ASCII; c < ATLAS_END_CHAR_ASCII; ++c)
 	{
-		printf("Generating character #%d '%c'\n", c, c);
-		int ix0, ix1, iy0, iy1, aw, lsb;
-		stbtt_GetCodepointBitmapBox(fi, c, Scale_, Scale_, &ix0, &iy0, &ix1, &iy1);
-		stbtt_GetCodepointHMetrics(fi, c, &aw, &lsb);
-		CodePointTable_.push_back(CodePoint {c, aw, lsb, 0, 0, 0, 0, 0, 0, 0, 0});
-		bitmap.width += ix1 - ix0;
-		bitmap.height = std::max(bitmap.height, iy1 - iy0);
+		if(FT_Load_Char(fc, c, FT_LOAD_RENDER))
+		{
+			DCORE_LOG_ERROR << "Failed to load character '" << (char)c << "'from font face.";
+			continue;
+		}
+		bitmap.width += fc->glyph->bitmap.width;
+		bitmap.height = std::max(fc->glyph->bitmap.rows, bitmap.height);
+		CodePointTable_.push_back(CodePoint());
 	}
 
-	printf("Total bitmap size (non-aligned): %dx%d\n", bitmap.width, bitmap.height);
-
-	// OpenGL requires its textures' width and height to be aligned to 4 bytes:
-	bitmap.width += PAD_ALIGN_TO_BYTES(bitmap.width, GLTEX_ALIGNMENT);
-	bitmap.height += PAD_ALIGN_TO_BYTES(bitmap.height, GLTEX_ALIGNMENT);
+	printf("Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
 	bitmap.data = new byte[bitmap.width * bitmap.height];
-
 	std::memset(bitmap.data, 0, bitmap.width * bitmap.height);
 
 	int currentX = 0;
 	for(int c = ATLAS_BEGIN_CHAR_ASCII, i = 0; c < ATLAS_END_CHAR_ASCII; ++c, ++i)
 	{
-		int w, h;
-		auto bitmapData = stbtt_GetCodepointBitmap(fi, Scale_, Scale_, c, &w, &h, 0, 0);
-
-		// int wpad = PAD_ALIGN_TO_BYTES(w, GLTEX_ALIGNMENT);
+		if(FT_Load_Char(fc, c, FT_LOAD_RENDER))
+		{
+			DCORE_LOG_ERROR << "Failed to load character '" << (char)c << "'from font face.";
+			continue;
+		}
 
 		// Write the rendered bitmap data to the output bitmap.
-		for(int y = h - 1, yi = 0; y >= 0; --y, ++yi)
+		for(size_t y = 0; y < fc->glyph->bitmap.rows; ++y)
 		{
-			for(int x = 0; x < w; ++x)
+			for(size_t x = 0; x < fc->glyph->bitmap.width; ++x)
 			{
 				// printf("Pixel at X%d <- X%d\n", currentX + x, x);
-				bitmap.data[currentX + x + y * bitmap.width] = bitmapData[x + y * w];
+				bitmap.data[currentX + x + y * bitmap.width] =
+				    fc->glyph->bitmap.buffer[x + y * fc->glyph->bitmap.width];
 			}
 		}
 
-		auto cp       = &CodePointTable_[i];
-		cp->XOffset   = currentX;
-		cp->YOffset   = 0;
-		cp->Width     = w;
-		cp->Height    = h;
-		cp->XOffsetUV = currentX / float(bitmap.width);
-		cp->YOffsetUV = 0 / float(bitmap.height);
-		cp->WidthUV   = w / float(bitmap.width);
-		cp->HeightUV  = h / float(bitmap.height);
-		printf("Offset UV: %f, %f, Size UV: %f, %f\n", cp->XOffsetUV, cp->YOffsetUV, cp->WidthUV, cp->HeightUV);
-		printf("Current X: %d, Width: %d\n", currentX, w);
-		currentX += w;
+		auto cp          = &CodePointTable_[i];
+		cp->Char         = c;
+		cp->AdvanceWidth = fc->glyph->advance.x / 64.0f;
+		cp->Bearing      = glm::ivec2(fc->glyph->bitmap_left, fc->glyph->bitmap_top);
+		cp->AtlasOffset  = glm::ivec2(currentX, 0);
+		cp->AtlasSize    = glm::ivec2(fc->glyph->bitmap.width, fc->glyph->bitmap.rows);
+		cp->UVOffset     = glm::vec2(cp->AtlasOffset) / glm::vec2(bitmap.width, bitmap.height);
+		cp->UVSize       = glm::vec2(cp->AtlasSize) / glm::vec2(bitmap.width, bitmap.height);
+		printf(
+		    "Glyph '%c':\n  Advance: %f,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
+		    "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
+		    c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y, cp->Bearing.x,
+		    cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
+		currentX += fc->glyph->bitmap.width;
 	}
-	printf("Current X: %d\n", currentX);
 
-	printf("Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
+	// int currentX = 0;
+	// {
+	// 	int w, h;
+	// 	auto bitmapData = stbtt_GetCodepointBitmap(fi, Scale_, Scale_, c, &w, &h, 0, 0);
 
-	for(int j = 0; j < bitmap.height; ++j)
-	{
-		for(int i = 0; i < bitmap.width; ++i)
-		{
-			putc(" .:ioVM@"[bitmap.data[j * bitmap.width + i] >> 5], stdout);
-		}
-		putc('\n', stdout);
-	}
+	// 	// int wpad = PAD_ALIGN_TO_BYTES(w, GLTEX_ALIGNMENT);
+
+	// 	cp->XOffset   = currentX;
+	// 	cp->YOffset   = 0;
+	// 	cp->Width     = w;
+	// 	cp->Height    = h;
+	// 	cp->XOffsetUV = currentX / float(bitmap.width);
+	// 	cp->YOffsetUV = 0 / float(bitmap.height);
+	// 	cp->WidthUV   = w / float(bitmap.width);
+	// 	cp->HeightUV  = h / float(bitmap.height);
+	// 	printf("Offset UV: %f, %f, Size UV: %f, %f\n", cp->XOffsetUV, cp->YOffsetUV, cp->WidthUV, cp->HeightUV);
+	// 	printf("Current X: %d, Width: %d\n", currentX, w);
+	// 	currentX += w;
+	// }
+	// printf("Current X: %d\n", currentX);
+
+	// printf("Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
+
+	// for(size_t j = 0; j < bitmap.height; ++j)
+	// {
+	// 	for(size_t i = 0; i < bitmap.width; ++i)
+	// 	{
+	// 		putc(" .:ioVM@"[bitmap.data[j * bitmap.width + i] >> 5], stdout);
+	// 	}
+	// 	putc('\n', stdout);
+	// }
 
 	return bitmap;
 }
@@ -125,8 +158,10 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 void Font::CreateAtlasTexture_(const Bitmap &tb)
 {
 	Atlas_ = new RTexture();
-	RenderResourceManager::CreateTexture(Atlas_, tb.data, glm::ivec2(tb.width, tb.height), RenderResourceManager::TextureFormat::Red,
-	                                     RenderResourceManager::TextureScaling::Nearest);
+	RenderResourceManager::CreateTexture(
+	    Atlas_, tb.data, glm::ivec2(tb.width, tb.height), RenderResourceManager::TextureFormat::Red,
+	    RenderResourceManager::TextureScaling::Linear,
+	    /* alignment */ 1);
 
 	delete tb.data;
 }
@@ -135,7 +170,7 @@ dcore::graphics::RTexture *Font::GetAtlasTexture() const { return Atlas_; }
 
 void Font::Constructor_Font(const std::string &path, void *placement)
 {
-	Font *f = new(placement) Font;
+	Font *f    = new(placement) Font;
 	auto split = path.rfind(':');
 	int size;
 	if(split == path.npos)
@@ -149,10 +184,10 @@ void Font::Constructor_Font(const std::string &path, void *placement)
 	}
 	std::string actualPath = path.substr(0, split);
 	printf("Reading font from '%s'\n", actualPath.c_str());
-	std::ifstream input(actualPath, std::ios::binary);
-	std::vector<byte> buffer(std::istreambuf_iterator<char>(input), {});
-	printf("Read %zu bytes of font data\n", buffer.size());
-	f->Initialize(buffer.data(), size);
+	// std::ifstream input(actualPath, std::ios::binary);
+	// std::vector<byte> buffer(std::istreambuf_iterator<char>(input), {});
+	// printf("Read %zu bytes of font data\n", buffer.size());
+	f->Initialize(actualPath.c_str(), size, 0);
 }
 
 void Font::DeConstructor_Font(void *placement)

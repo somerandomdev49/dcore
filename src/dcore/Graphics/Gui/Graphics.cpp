@@ -2,6 +2,8 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 using namespace dcore::graphics::gui;
 
 CommonGuiShader::~CommonGuiShader() {}
@@ -102,50 +104,48 @@ void GuiGraphics::RenderQuad_(const Quad &quad, CommonGuiShader *shader, bool bi
 // TODO: inline?
 void GuiGraphics::RenderQuad(const Quad &quad) { RenderQuad_(quad, GuiShader_); }
 
-void GuiGraphics::RenderText(Font *font, const char *text)
+void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, int size, float scale)
 {
 	if(!text) return;
-	const float SIZE = 64.f;
+	float pixelScale = 1.0f;
+	if(size > 0) pixelScale *= float(size) / float(font->PixelHeight_);
+	if(scale > 0) pixelScale *= scale;
+	glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size / 2);
+
+	Rend_->DisableDepthCheck();
 
 	// Bind once!
 	Rend_->UseShader(FontShader_->Get());
 
 	// char c = text[0];
-	float currentX = 0.0f;
-	for(; *text; ++text)
+	glm::vec2 cursor = glm::vec2(0.0f, 0.0f);
+	auto textLength  = std::strlen(text);
+	for(size_t idx = 0; idx < textLength; ++idx)
 	{
-		if(*text >= 32)
+		if(text[idx] >= 32)
 		{
-			// puts("Draw");
-			// printf("Character: %d '%c'\n", (*text) - 'a', (*text));
-			auto &cp = font->CodePointTable_[(*text) - 'a'];
-			// currentX += cp.LeftSideBearing * font->Scale_;
-
-			// printf("Offset UV: %f, %f, Size UV: %f, %f\n",
-			// 	cp.XOffsetUV, cp.YOffsetUV, cp.WidthUV, cp.HeightUV);
+			auto &cp = font->CodePointTable_[text[idx] - ' '];
 			FontShader_->SetTexCoords(
-			    glm::vec4(glm::vec2(cp.XOffsetUV, cp.YOffsetUV + cp.HeightUV), glm::vec2(cp.XOffsetUV + cp.WidthUV, cp.YOffset + cp.HeightUV)),
-			    glm::vec4(glm::vec2(cp.XOffsetUV, cp.YOffsetUV), glm::vec2(cp.XOffsetUV + cp.WidthUV, cp.YOffsetUV))
 			    // glm::vec4(glm::vec2(0, 1), glm::vec2(1, 1)),
-			    // glm::vec4(glm::vec2(0, 0), glm::vec2(1, 0))
-			);
+			    // glm::vec4(glm::vec2(0, 0), glm::vec2(1, 0)));
+			    glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
+			    glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
+
+			glm::vec2 offset = glm::vec2(cp.Bearing.x, -cp.Bearing.y);
+
 			Quad q;
 			q.Color    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			q.Position = glm::vec2(100.0f + std::floor(currentX), 100.0f);
-			q.Scale    = glm::vec2(float(cp.Width) * font->Scale_ * SIZE, float(cp.Height) * font->Scale_ * SIZE);
+			q.Position = alignedOrigin + cursor + offset * pixelScale;
+			q.Scale    = glm::vec2(cp.AtlasSize) * pixelScale;
 			q.Rotation = 0.0f;
 			q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so doesnt matter)
 			RenderQuad_(q, FontShader_, false);   // shader already bound
-			if(*text && *(text + 1))
-			{
-				// puts("get kern advance");
-				// printf("a = '%c', b = '%c', font = 0x%zx\n", *text, *(text + 1), font);
-				currentX += font->GetKernAdvance(*text, *(text + 1)) * font->Scale_ * SIZE;
-				// puts("currentX is ok");
-			}
-			currentX += cp.AdvanceWidth * font->Scale_ + float(cp.Width) * font->Scale_ * SIZE; // * ;
+			if(idx > 0) cursor += font->GetKerning(text[idx - 1], text[idx]) * pixelScale;
+			cursor.x += cp.AdvanceWidth * pixelScale + cp.AtlasSize.x * 0.5f * pixelScale;
 		}
 	}
+
+	Rend_->EnableDepthCheck();
 }
 
 static GuiGraphics *guiGrInst = nullptr;

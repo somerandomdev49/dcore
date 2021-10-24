@@ -28,9 +28,15 @@ void Heightmap::Heightmap_DeConstructor(void *placement)
 }
 
 const glm::ivec2 &Heightmap::GetSize() const { return Size_; }
-float Heightmap::Get(const glm::ivec2 &pos) const { return (Data_[(pos.x + pos.y * Size_.x) * ComponentCount_] & 0xff) / 255.0f; }
+float Heightmap::Get(const glm::ivec2 &pos) const
+{
+	return (Data_[(pos.x + pos.y * Size_.x) * ComponentCount_] & 0xff) / 255.0f;
+}
 
-HeightmapRegion::HeightmapRegion(Heightmap *source, const glm::ivec2 &min, const glm::ivec2 &max) : Min_(min), Max_(max), Source_(source) {}
+HeightmapRegion::HeightmapRegion(Heightmap *source, const glm::ivec2 &min, const glm::ivec2 &max)
+    : Min_(min), Max_(max), Source_(source)
+{
+}
 glm::ivec2 HeightmapRegion::GetSize() const { return GetMax() - GetMin(); }
 const glm::ivec2 &HeightmapRegion::GetMax() const { return Max_; }
 const glm::ivec2 &HeightmapRegion::GetMin() const { return Min_; }

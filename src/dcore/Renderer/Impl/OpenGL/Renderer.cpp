@@ -18,11 +18,14 @@ void Renderer::OnBeginRender()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Renderer::EnableDepthCheck() { glEnable(GL_DEPTH_TEST); }
+void Renderer::DisableDepthCheck() { glDisable(GL_DEPTH_TEST); }
+
 void Renderer::OnEndRender() {}
 
 void Renderer::Initialize()
 {
-	glEnable(GL_DEPTH_TEST);
+	EnableDepthCheck();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -38,8 +41,8 @@ void Renderer::UseTexture(int unit, RTexture *texture)
 
 void Renderer::Render(RStaticMesh *mesh)
 {
-	// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more complicated, but will decrease memory usage.
-	// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
+	// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more complicated, but will
+	// decrease memory usage. printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
 	Gl::BindVertexArray(mesh->Data_.Vao_.VAO_);
 	Gl::DrawElements(ElementTriangles, mesh->Data_.Vao_.IndexCount_, TypeUnsignedInt);
 }
@@ -85,7 +88,8 @@ void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 {
 	using RRM = RenderResourceManager;
 
-	static RRM::TextureFormat formats[4] = {RRM::TextureFormat::Red, RRM::TextureFormat::Rg, RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
+	static RRM::TextureFormat formats[4] = {
+	    RRM::TextureFormat::Red, RRM::TextureFormat::Rg, RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
 
 	// This constructs a RTexture at the specified address (see "placement new")
 	RTexture *tex = new(placement) RTexture();
@@ -140,7 +144,8 @@ void Renderer::RShader_DeConstructor(void *placement)
 	delete shader;
 }
 
-void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData)
+void RenderResourceManager::CreateStaticMesh(
+    RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData)
 {
 	if(!mesh) return;
 	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
@@ -156,13 +161,23 @@ void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
 }
 
 // TODO: DeleteTexture
-void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format, TextureScaling scaling)
+void RenderResourceManager::CreateTexture(
+    RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format, TextureScaling scaling, int alignment)
 {
 	namespace gl = impl::opengl;
 	// RRM::TextureFormat -> opengl::TextureFormat
-	static gl::TextureFormat formats[4]        = {gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb, gl::TextureFormatRgba};
+	int prevAlignment;
+	if(alignment > 0)
+	{
+		prevAlignment = gl::Gl::GetPixelStore(gl::PixelStorageUnpackAlignment);
+		gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, alignment);
+	}
+	static gl::TextureFormat formats[4] = {
+	    gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb, gl::TextureFormatRgba};
+
 	static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
 	static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
+
 	tex->Data_.Texture_.Generate(gl::Texture2D);
 
 	tex->Data_.Texture_.SetParam(gl::TextureParamWrapS, gl::TextureWrapRepeat);
@@ -172,6 +187,8 @@ void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::
 
 	tex->Data_.Texture_.LoadData(gl::TextureFormatRgba, size, formats[static_cast<int>(format)], data);
 	tex->Data_.Texture_.GenMipmaps();
+
+	if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 }
 
 void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)

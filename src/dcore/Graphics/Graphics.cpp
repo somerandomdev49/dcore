@@ -61,7 +61,10 @@ void Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
 
 /**************************** StaticMesh ****************************/
 
-StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture) : Mesh_(mesh), Texture_(texture) {}
+StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture)
+    : Mesh_(mesh), Texture_(texture)
+{
+}
 
 const dcore::resource::Resource<RStaticMesh> &StaticMesh::GetMesh() const { return Mesh_; }
 const dcore::resource::Resource<RTexture> &StaticMesh::GetTexture() const { return Texture_; }

@@ -71,7 +71,8 @@ void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 	r.Data_ = nullptr;
 }
 
-const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
+const RawResource &
+    ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
 {
 	// DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource:
 	// Incorrect Resource Type!");
@@ -102,5 +103,11 @@ const RawResource &ResourceManager::GetRaw(const std::string &id, std::type_inde
 	return Resources_[type][id];
 }
 
-void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func) { Constructors_[type] = func; }
-void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func) { DeConstructors_[type] = func; }
+void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func)
+{
+	Constructors_[type] = func;
+}
+void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func)
+{
+	DeConstructors_[type] = func;
+}

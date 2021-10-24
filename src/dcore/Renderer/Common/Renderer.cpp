@@ -44,14 +44,18 @@ void RenderResourceManager::Register(resource::ResourceLoader *rl)
 	resource::ResourceManager::Instance()->RegisterDeConstructor<RStaticMesh>(&Renderer::RStaticMesh_DeConstructor);
 }
 
-void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices)
+void RenderResourceManager::CreateStaticMesh(
+    RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices)
 {
 	if(!mesh) return;
 	std::vector<byte> vertexData;
 
-	// Converting from std::vector<Vertex> to std::vector<byte> (`vertices` must be unusable now, somehow this works with a const
-	// vector...) I hope this doesn't allocate another vector of the same size or atleast deallocs vertices afterward.
-	vertexData.insert(vertexData.end(), std::make_move_iterator((byte *)&vertices[0]), std::make_move_iterator((byte *)&vertices[vertices.size()]));
+	// Converting from std::vector<Vertex> to std::vector<byte> (`vertices` must be unusable now, somehow this works
+	// with a const vector...) I hope this doesn't allocate another vector of the same size or atleast deallocs vertices
+	// afterward.
+	vertexData.insert(
+	    vertexData.end(), std::make_move_iterator((byte *)&vertices[0]),
+	    std::make_move_iterator((byte *)&vertices[vertices.size()]));
 
 	CreateStaticMesh(mesh, indices, vertexData);
 }
