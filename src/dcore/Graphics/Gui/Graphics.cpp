@@ -138,10 +138,10 @@ void GuiGraphics::RenderText(Font *font, const char *text)
 			RenderQuad_(q, FontShader_, false);   // shader already bound
 			if(*text && *(text + 1))
 			{
-				puts("get kern advance");
-				printf("a = '%c', b = '%c', font = 0x%zx\n", *text, *(text + 1), font);
+				// puts("get kern advance");
+				// printf("a = '%c', b = '%c', font = 0x%zx\n", *text, *(text + 1), font);
 				currentX += font->GetKernAdvance(*text, *(text + 1)) * font->Scale_ * SIZE;
-				puts("currentX is ok");
+				// puts("currentX is ok");
 			}
 			currentX += cp.AdvanceWidth * font->Scale_ + float(cp.Width) * font->Scale_ * SIZE; // * ;
 		}

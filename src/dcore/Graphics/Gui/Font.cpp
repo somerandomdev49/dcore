@@ -30,9 +30,9 @@ void Font::DeInitialize() { delete F_INF_(FontInfo__); }
 
 int Font::GetKernAdvance(int a, int b)
 {
-	printf("FontInfo__ = 0x%zx\n", FontInfo__);
-	auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), 'a', 'b');
-	printf("kern advance %d\n", x);
+	// printf("FontInfo__ = 0x%zx\n", FontInfo__);
+	auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), a, b);
+	// printf("kern advance %d\n", x);
 	return x;
 }
 
