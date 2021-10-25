@@ -41,13 +41,10 @@ void Font::DeInitialize() { FT_Done_Face(F_INF_(FontInfo__)); }
 
 int Font::GetKerning(int a, int b) const
 {
-	// printf("FontInfo__ = 0x%zx\n", FontInfo__);
-	// auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), a, b);
-	// printf("kern advance %d\n", x);
-	// if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
+	if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
 	FT_Vector kern;
 	FT_Get_Kerning(F_INF_(FontInfo__), a, b, FT_KERNING_DEFAULT, &kern);
-	return kern.x >> 6;
+	return kern.x;
 }
 
 // TODO! Dynamic language.
@@ -108,10 +105,10 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 		cp->AtlasSize    = glm::ivec2(fc->glyph->bitmap.width, fc->glyph->bitmap.rows);
 		cp->UVOffset     = glm::vec2(cp->AtlasOffset) / glm::vec2(bitmap.width, bitmap.height);
 		cp->UVSize       = glm::vec2(cp->AtlasSize) / glm::vec2(bitmap.width, bitmap.height);
-		printf("Glyph '%c':\n  Advance: %i,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
-		       "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
-		       c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y,
-		       cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
+		// printf("Glyph '%c':\n  Advance: %i,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
+		//        "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
+		//        c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y,
+		//        cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
 		currentX += fc->glyph->bitmap.width;
 	}
 

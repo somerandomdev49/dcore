@@ -118,33 +118,33 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 	Rend_->UseShader(FontShader_->Get());
 
 	// char c = text[0];
-	glm::vec2 cursor     = origin;
-	auto      textLength = std::strlen(text);
+	glm::vec2 cursor = origin;
+
+	auto textLength = std::strlen(text);
 	for(size_t idx = 0; idx < textLength; ++idx)
 	{
 		if(text[idx] >= 32)
 		{
 			auto &cp = font->CodePointTable_[text[idx] - ' '];
-			FontShader_->SetTexCoords(
-			    // glm::vec4(glm::vec2(0, 1), glm::vec2(1, 1)),
-			    // glm::vec4(glm::vec2(0, 0), glm::vec2(1, 0)));
-			    glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
-			    glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
-
 			glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale,
 			                          cursor.y - cp.Bearing.y * pixelScale);
 
+			if(idx < textLength - 1) cursor.x += font->GetKerning(text[idx], text[idx - 1]);
+			cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
+
 			Quad q;
 			q.Color    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			q.Position = pos + glm::vec2(cp.AtlasSize) * pixelScale * 0.5f;
+			q.Position = pos;
 			q.Scale    = glm::vec2(cp.AtlasSize) * pixelScale;
 			q.Rotation = 0.0f;
 			q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so doesnt matter)
-			RenderQuad_(q, FontShader_, false);   // shader already bound
-			if(text[idx + 1]) cursor.x += font->GetKerning(text[idx], text[idx + 1]) * pixelScale;
-			cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
-			// + cp.Bearing.x * pixelScale; // + cp.AtlasSize.x * pixelScale;
+
+			FontShader_->SetTexCoords(glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
+			                          glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
+
+			RenderQuad_(q, FontShader_, false); // shader already bound
 		}
+		;
 	}
 
 	Rend_->EnableDepthCheck();
