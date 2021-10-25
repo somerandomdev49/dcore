@@ -23,7 +23,7 @@ CommonShader::CommonShader(const resource::Resource<RShader> &sh) : Shader_(sh)
 }
 
 RShader *CommonShader::Get() const { return Shader_.Get(); }
-void CommonShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
+void     CommonShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
 
 /**************************** TerrainShader ****************************/
 
@@ -44,8 +44,8 @@ TerrainShader::TerrainShader(const resource::Resource<RShader> &sh) : Shader_(sh
 }
 
 RShader *TerrainShader::Get() const { return Shader_.Get(); }
-void TerrainShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
-void TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
+void     TerrainShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
+void     TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
 {
 	if(blend != -1) Renderer::Instance()->SetUniform(UBlendMapTex_, blend);
 	if(n != -1) Renderer::Instance()->SetUniform(UTexs_[0], n);
@@ -57,7 +57,7 @@ void TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
 /**************************** Renderable ****************************/
 
 const glm::mat4 &Renderable::GetTransform() const { return Transform_; }
-void Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
+void             Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
 
 /**************************** StaticMesh ****************************/
 
@@ -67,7 +67,7 @@ StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resour
 }
 
 const dcore::resource::Resource<RStaticMesh> &StaticMesh::GetMesh() const { return Mesh_; }
-const dcore::resource::Resource<RTexture> &StaticMesh::GetTexture() const { return Texture_; }
+const dcore::resource::Resource<RTexture>    &StaticMesh::GetTexture() const { return Texture_; }
 
 /**************************** Camera ****************************/
 
@@ -127,14 +127,14 @@ void Camera::SetFarZ(float newFarZ)
 }
 
 const glm::vec3 &Camera::GetPosition() const { return Position_; }
-void Camera::SetPosition(const glm::vec3 &newPosition)
+void             Camera::SetPosition(const glm::vec3 &newPosition)
 {
 	Position_  = newPosition;
 	DirtyView_ = true;
 }
 
 const glm::quat &Camera::GetRotation() const { return Rotation_; }
-void Camera::SetRotation(const glm::quat &newRotation)
+void             Camera::SetRotation(const glm::quat &newRotation)
 {
 	Rotation_  = newRotation;
 	DirtyView_ = true;

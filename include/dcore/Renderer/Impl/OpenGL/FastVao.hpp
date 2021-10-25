@@ -13,7 +13,7 @@ namespace dcore::graphics::impl::opengl
 {
 	class FastVao
 	{
-		UInt VAO_, VBO_;
+		UInt   VAO_, VBO_;
 		size_t IndexCount_;
 		friend class dcore::graphics::Renderer;
 

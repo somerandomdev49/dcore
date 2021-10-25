@@ -7,7 +7,7 @@ namespace dcore::graphics
 	{
 	public:
 		const glm::mat4 &GetTransform() const;
-		void SetTransform(const glm::mat4 &m);
+		void             SetTransform(const glm::mat4 &m);
 
 	private:
 		glm::mat4 Transform_;

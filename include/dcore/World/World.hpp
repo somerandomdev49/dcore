@@ -17,9 +17,9 @@ namespace dcore::world
 	struct TransformComponent
 	{
 		entt::entity Parent;
-		glm::vec3 Position;
-		glm::quat Rotation;
-		glm::vec3 Scale;
+		glm::vec3    Position;
+		glm::quat    Rotation;
+		glm::vec3    Scale;
 
 		glm::mat4 Matrix;
 
@@ -56,7 +56,7 @@ namespace dcore::world
 	private:
 		friend class World;
 		entt::entity Id_;
-		World *World_;
+		World       *World_;
 	};
 
 	class World
@@ -79,7 +79,7 @@ namespace dcore::world
 		void AddComponent(Entity *entity, const T &c);
 
 		Entity CreateEntity();
-		void RegisterUpdate(void (*f)(World *));
+		void   RegisterUpdate(void (*f)(World *));
 
 		template<typename ComponentType, typename FunctionType>
 		void Each(FunctionType func);
@@ -87,20 +87,20 @@ namespace dcore::world
 		const terrain::Terrain &GetTerrain() const;
 
 		float GetRenderDistance() const;
-		void SetRenderDistance(float newRenderDistance);
+		void  SetRenderDistance(float newRenderDistance);
 
 	private:
 		friend class WorldUpdateInfo;
 		friend class platform::Context;
 		friend class launch::Launch;
-		void Initialize();
-		void DeInitialize();
-		void Update();
-		void Render(graphics::RendererInterface *render);
+		void                           Initialize();
+		void                           DeInitialize();
+		void                           Update();
+		void                           Render(graphics::RendererInterface *render);
 		std::vector<void (*)(World *)> Updates_;
-		entt::registry Registry_;
-		terrain::Terrain Terrain_;
-		float RenderDistance_ = 32.0f;
+		entt::registry                 Registry_;
+		terrain::Terrain               Terrain_;
+		float                          RenderDistance_ = 32.0f;
 	};
 } // namespace dcore::world
 

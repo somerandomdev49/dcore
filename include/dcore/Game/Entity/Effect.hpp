@@ -7,8 +7,8 @@ namespace dg::entity
 	class Effect
 	{
 	public:
-		const float GetTimeSinceBegin() const;
-		const float GetEndTime() const;
+		const float        GetTimeSinceBegin() const;
+		const float        GetEndTime() const;
 		const std::string &GetName() const;
 
 		void Apply(ActorComponent *target, float timeSinceLastApply);

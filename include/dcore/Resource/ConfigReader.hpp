@@ -26,13 +26,13 @@ namespace dcore::resource
 		bool ReadManifest(const std::string &location, DataManifest &data);
 
 		glm::ivec2 StringToIVec2(const std::string &s, glm::ivec2 defaultValue = glm::ivec2(0, 0));
-		glm::vec2 StringToVec2(const std::string &s, glm::vec2 defaultValue = glm::vec2(0, 0));
+		glm::vec2  StringToVec2(const std::string &s, glm::vec2 defaultValue = glm::vec2(0, 0));
 		glm::ivec3 StringToIVec3(const std::string &s, glm::ivec3 defaultValue = glm::ivec3(0, 0, 0));
-		glm::vec3 StringToVec3(const std::string &s, glm::vec3 defaultValue = glm::vec3(0, 0, 0));
-		glm::quat StringToQuat(const std::string &s, glm::quat defaultValue = glm::identity<glm::quat>());
+		glm::vec3  StringToVec3(const std::string &s, glm::vec3 defaultValue = glm::vec3(0, 0, 0));
+		glm::quat  StringToQuat(const std::string &s, glm::quat defaultValue = glm::identity<glm::quat>());
 
 		static ConfigReader *DefaultReader();
-		static void SetDefaultReader(ConfigReader *newDefault);
+		static void          SetDefaultReader(ConfigReader *newDefault);
 
 	private:
 		static ConfigReader *DefaultInstance_;

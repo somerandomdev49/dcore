@@ -88,8 +88,8 @@ void Renderer::RTexture_Constructor(const std::string &path, void *placement)
 {
 	using RRM = RenderResourceManager;
 
-	static RRM::TextureFormat formats[4] = {
-	    RRM::TextureFormat::Red, RRM::TextureFormat::Rg, RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
+	static RRM::TextureFormat formats[4] = {RRM::TextureFormat::Red, RRM::TextureFormat::Rg, RRM::TextureFormat::Rgb,
+	                                        RRM::TextureFormat::Rgba};
 
 	// This constructs a RTexture at the specified address (see "placement new")
 	RTexture *tex = new(placement) RTexture();
@@ -122,7 +122,7 @@ void Renderer::RShader_Constructor(const std::string &path, void *placement)
 	RShader *shader = new(placement) RShader();
 
 	std::string vertexSource, fragmentSource;
-	bool success = true;
+	bool        success = true;
 	success &= util::LoaderUtil::LoadFile(vertexSource, path + ".vert");
 	success &= util::LoaderUtil::LoadFile(fragmentSource, path + ".frag");
 	if(!success)
@@ -144,8 +144,8 @@ void Renderer::RShader_DeConstructor(void *placement)
 	delete shader;
 }
 
-void RenderResourceManager::CreateStaticMesh(
-    RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData)
+void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
+                                             const std::vector<byte> &vertexData)
 {
 	if(!mesh) return;
 	mesh->Data_.Vao_.Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
@@ -161,8 +161,8 @@ void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
 }
 
 // TODO: DeleteTexture
-void RenderResourceManager::CreateTexture(
-    RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format, TextureScaling scaling, int alignment)
+void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format,
+                                          TextureScaling scaling, int alignment)
 {
 	namespace gl = impl::opengl;
 	// RRM::TextureFormat -> opengl::TextureFormat
@@ -172,8 +172,8 @@ void RenderResourceManager::CreateTexture(
 		prevAlignment = gl::Gl::GetPixelStore(gl::PixelStorageUnpackAlignment);
 		gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, alignment);
 	}
-	static gl::TextureFormat formats[4] = {
-	    gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb, gl::TextureFormatRgba};
+	static gl::TextureFormat formats[4] = {gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb,
+	                                       gl::TextureFormatRgba};
 
 	static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
 	static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};

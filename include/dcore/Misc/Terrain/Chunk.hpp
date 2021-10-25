@@ -55,7 +55,7 @@ namespace dcore::terrain
 		dcore::resource::Resource<dcore::graphics::RTexture> Textures_[4];
 
 		dcore::graphics::RStaticMesh DCORE_OWN *Mesh_;
-		glm::ivec2 LocalPosition_;
-		bool IsActive_;
+		glm::ivec2                              LocalPosition_;
+		bool                                    IsActive_;
 	};
 } // namespace dcore::terrain

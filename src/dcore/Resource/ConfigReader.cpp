@@ -32,15 +32,15 @@ bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data)
 
 bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
 {
-	std::string s = FullPath(location);
+	std::string   s = FullPath(location);
 	std::ifstream ifs(s);
 	if(!ifs)
 	{
 		DCORE_LOG_ERROR << "Could not load file at '" << s << '\'';
 		return false;
 	}
-	std::string name = "_Default";
-	int lineno       = 0;
+	std::string name   = "_Default";
+	int         lineno = 0;
 	for(std::string line; std::getline(ifs, line);)
 	{
 		lineno += 1;

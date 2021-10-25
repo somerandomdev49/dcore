@@ -10,12 +10,12 @@ namespace dcore::platform::impl::glfw
 		Frame();
 		~Frame();
 
-		void Initialize(const glm::ivec2 &size) override;
-		bool ShouldEnd() override;
-		void OnBeginFrame() override;
+		void  Initialize(const glm::ivec2 &size) override;
+		bool  ShouldEnd() override;
+		void  OnBeginFrame() override;
 		float GetCurrentTime() override;
-		void OnEndFrame() override;
-		void DeInitialize() override;
+		void  OnEndFrame() override;
+		void  DeInitialize() override;
 
 		bool CheckKeyPressed(event::KeyCode key) override;
 		bool CheckMouseButtonPressed(int button) override;

@@ -27,20 +27,20 @@ namespace dcore::graphics
 		void UseShader(RShader *shader);
 
 		RUniform GetUniform(RShader *shader, const char *name);
-		void SetUniform(const RUniform &u, float v);
-		void SetUniform(const RUniform &u, int v);
-		void SetUniform(const RUniform &u, const glm::vec2 &v);
-		void SetUniform(const RUniform &u, const glm::vec3 &v);
-		void SetUniform(const RUniform &u, const glm::vec4 &v);
-		void SetUniform(const RUniform &u, const glm::mat2x2 &v);
-		void SetUniform(const RUniform &u, const glm::mat2x3 &v);
-		void SetUniform(const RUniform &u, const glm::mat2x4 &v);
-		void SetUniform(const RUniform &u, const glm::mat3x2 &v);
-		void SetUniform(const RUniform &u, const glm::mat3x3 &v);
-		void SetUniform(const RUniform &u, const glm::mat3x4 &v);
-		void SetUniform(const RUniform &u, const glm::mat4x2 &v);
-		void SetUniform(const RUniform &u, const glm::mat4x3 &v);
-		void SetUniform(const RUniform &u, const glm::mat4x4 &v);
+		void     SetUniform(const RUniform &u, float v);
+		void     SetUniform(const RUniform &u, int v);
+		void     SetUniform(const RUniform &u, const glm::vec2 &v);
+		void     SetUniform(const RUniform &u, const glm::vec3 &v);
+		void     SetUniform(const RUniform &u, const glm::vec4 &v);
+		void     SetUniform(const RUniform &u, const glm::mat2x2 &v);
+		void     SetUniform(const RUniform &u, const glm::mat2x3 &v);
+		void     SetUniform(const RUniform &u, const glm::mat2x4 &v);
+		void     SetUniform(const RUniform &u, const glm::mat3x2 &v);
+		void     SetUniform(const RUniform &u, const glm::mat3x3 &v);
+		void     SetUniform(const RUniform &u, const glm::mat3x4 &v);
+		void     SetUniform(const RUniform &u, const glm::mat4x2 &v);
+		void     SetUniform(const RUniform &u, const glm::mat4x3 &v);
+		void     SetUniform(const RUniform &u, const glm::mat4x4 &v);
 
 		/**
 		 * @brief Binds a texture unit. if texture is nullptr, nothing happens.
@@ -63,12 +63,12 @@ namespace dcore::graphics
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
 		void Render(RSkeletalMesh *mesh);
-		
+
 		/**
 		 * @brief Enables depth testing.
 		 */
 		void EnableDepthCheck();
-		
+
 		/**
 		 * @brief Disables depth testing.
 		 */
@@ -100,7 +100,7 @@ namespace dcore::graphics
 		static void RShader_Constructor(const std::string &path, void *placement);
 		static void RShader_DeConstructor(void *placement);
 
-		bool IsWireframeMode_ = false;
+		bool      IsWireframeMode_ = false;
 		glm::vec4 ClearColor_;
 	};
 
@@ -137,21 +137,20 @@ namespace dcore::graphics
 		 * `vertices` will be unusable after this call.
 		 * You should call `vertices.erase(vertices.begin(), vertices.end())` after this!
 		 * */
-		static void CreateStaticMesh(
-		    RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<Vertex> &vertices);
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
+		                             const std::vector<Vertex> &vertices);
 
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
 		 * */
-		static void CreateStaticMesh(
-		    RStaticMesh *mesh, const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData);
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
+		                             const std::vector<byte> &vertexData);
 
 		/**
 		 * Creates a texture with the specified data, size and format.
 		 * */
-		static void CreateTexture(
-		    RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
-		    TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
+		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
+		                          TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.

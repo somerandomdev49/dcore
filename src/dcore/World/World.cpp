@@ -13,7 +13,7 @@ void TransformComponent::ReCalculateMatrix()
 }
 
 dcore::resource::Resource<dcore::graphics::gui::Font> font__tmp;
-void World::Initialize()
+void                                                  World::Initialize()
 {
 	// TODO: This should not be constant!
 	Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
@@ -52,8 +52,8 @@ void World::Render(graphics::RendererInterface *render)
 
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
-	
-	char posString[32];
+
+	char        posString[32];
 	const auto &camPos = render->GetCamera()->GetPosition();
 	snprintf(posString, 32, "%.1f, %.1f, %.1f", camPos.x, camPos.y, camPos.z);
 	graphics::gui::GuiGraphics::Instance()->RenderText(font__tmp.Get(), posString, glm::vec2(10, 10), 12);
@@ -71,4 +71,4 @@ Entity World::CreateEntity() { return Entity(Registry_.create(), this); }
 void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
 
 float World::GetRenderDistance() const { return RenderDistance_; }
-void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }
+void  World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }

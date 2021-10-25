@@ -142,7 +142,7 @@ namespace dcore::graphics::impl::opengl
 		inline void SetUniform(Int location, const glm::mat4x2 &v) _INL;
 		inline void SetUniform(Int location, const glm::mat4x3 &v) _INL;
 		inline void SetUniform(Int location, const glm::mat4x4 &v) _INL;
-		inline Int GetUniformLocation(UInt program, const char *name) _INL;
+		inline Int  GetUniformLocation(UInt program, const char *name) _INL;
 
 		inline void UseProgram(UInt program) _INL;
 
@@ -155,8 +155,8 @@ namespace dcore::graphics::impl::opengl
 		inline void BindBuffer(BufferType type, UInt buffer) _INL;
 		inline void SetBufferData(BufferType type, SizePtr size, const void *data, BufferUsage usage) _INL;
 
-		inline void VertexAttributePointer(
-		    UInt index, Int size, GlType type, Size stride, SizePtr offset, bool norm = false) _INL;
+		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride, SizePtr offset,
+		                                   bool norm = false) _INL;
 		inline void EnableVertexAttributeArray(UInt index) _INL;
 
 		inline void DeleteBuffer(UInt buffer);
@@ -169,23 +169,20 @@ namespace dcore::graphics::impl::opengl
 		inline void GenerateTextures(int count, UInt *textures) _INL;
 
 		inline void PixelStore(PixelStorage param, int value) _INL;
-		inline int GetPixelStore(PixelStorage param) _INL;
+		inline int  GetPixelStore(PixelStorage param) _INL;
 
 		inline void TextureParameter(TextureType type, TextureParam param, int value) _INL;
 		inline void TextureParameter(TextureType type, TextureParam param, float value) _INL;
 		inline void TextureParameter(TextureType type, TextureParam param, TextureParamValue value) _INL;
 
-		inline void TextureImage2D(
-		    TextureType type, TextureFormat intFormat, const glm::ivec1 &size, TextureFormat dataFormat,
-		    GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage2D(TextureType type, TextureFormat intFormat, const glm::ivec1 &size,
+		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
 
-		inline void TextureImage2D(
-		    TextureType type, TextureFormat intFormat, const glm::ivec2 &size, TextureFormat dataFormat,
-		    GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage2D(TextureType type, TextureFormat intFormat, const glm::ivec2 &size,
+		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
 
-		inline void TextureImage3D(
-		    TextureType type, TextureFormat intFormat, const glm::ivec3 &size, TextureFormat dataFormat,
-		    GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage3D(TextureType type, TextureFormat intFormat, const glm::ivec3 &size,
+		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
 	} // namespace Gl
 
 	// DEFINITION
@@ -277,7 +274,7 @@ namespace dcore::graphics::impl::opengl
 		inline void DeleteVertexArray(UInt buffer) { glDeleteVertexArrays(1, &buffer); }
 
 		inline void PixelStore(PixelStorage param, int value) { glPixelStorei(param, value); }
-		inline int GetPixelStore(PixelStorage param)
+		inline int  GetPixelStore(PixelStorage param)
 		{
 			int v;
 			glGetIntegerv(param, &v);

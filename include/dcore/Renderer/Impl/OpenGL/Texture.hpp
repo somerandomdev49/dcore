@@ -14,7 +14,7 @@ namespace dcore::graphics::impl::opengl
 	class TextureBuffer
 	{
 		TextureType Type_;
-		UInt Id_;
+		UInt        Id_;
 		friend class dcore::graphics::Renderer;
 
 	public:

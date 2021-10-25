@@ -6,7 +6,7 @@ namespace dcore
 {
 	struct Error
 	{
-		bool Critical;
+		bool        Critical;
 		std::string Label, Desc;
 	};
 
@@ -16,8 +16,8 @@ namespace dcore
 		static class InfoT
 		{
 		public:
-			void SetError(const Error &err);
-			void SetError(bool critical, const std::string &label, const std::string &desc);
+			void         SetError(const Error &err);
+			void         SetError(bool critical, const std::string &label, const std::string &desc);
 			const Error &GetError();
 
 		private:

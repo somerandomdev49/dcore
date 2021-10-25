@@ -36,7 +36,7 @@ void Terrain::DeInitialize()
 }
 
 const std::vector<uint32_t> &Terrain::GetActiveChunks() const { return ActiveChunks_; }
-const std::vector<Chunk> &Terrain::GetChunks() const { return Chunks_; }
+const std::vector<Chunk>    &Terrain::GetChunks() const { return Chunks_; }
 
 void Terrain::ActivateChunks_()
 {

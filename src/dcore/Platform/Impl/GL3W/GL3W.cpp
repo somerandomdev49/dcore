@@ -11,8 +11,8 @@ void gl3w::Initialize()
 {
 	if(gl3wInit())
 	{
-		Application::Info.SetError(
-		    true, "Could not initialize OpenGL context!", "Check if your drivers are up to date");
+		Application::Info.SetError(true, "Could not initialize OpenGL context!",
+		                           "Check if your drivers are up to date");
 		return;
 	}
 

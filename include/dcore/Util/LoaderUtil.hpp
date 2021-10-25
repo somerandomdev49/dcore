@@ -9,16 +9,16 @@ namespace dcore::util
 {
 	struct ImageData
 	{
-		void *data;
-		int channels;
+		void      *data;
+		int        channels;
 		glm::ivec2 size;
 	};
 
 	struct MeshData
 	{
 		std::vector<uint32_t> indices;
-		std::vector<byte> vertexData;
-		size_t stride;
+		std::vector<byte>     vertexData;
+		size_t                stride;
 	};
 
 	class LoaderUtil

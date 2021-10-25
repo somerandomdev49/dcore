@@ -110,7 +110,7 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 	float pixelScale = 1.0f;
 	if(size > 0) pixelScale *= float(size) / float(font->PixelHeight_);
 	if(scale > 0) pixelScale *= scale;
-	glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size / 2);
+	// glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size / 2);
 
 	Rend_->DisableDepthCheck();
 
@@ -118,8 +118,8 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 	Rend_->UseShader(FontShader_->Get());
 
 	// char c = text[0];
-	glm::vec2 cursor = glm::vec2(0.0f, 0.0f);
-	auto textLength  = std::strlen(text);
+	glm::vec2 cursor     = origin;
+	auto      textLength = std::strlen(text);
 	for(size_t idx = 0; idx < textLength; ++idx)
 	{
 		if(text[idx] >= 32)
@@ -131,17 +131,19 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 			    glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
 			    glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
 
-			glm::vec2 offset = glm::vec2(cp.Bearing.x, -cp.Bearing.y);
+			glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale,
+			                          cursor.y - cp.Bearing.y * pixelScale);
 
 			Quad q;
 			q.Color    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			q.Position = alignedOrigin + cursor + offset * pixelScale;
+			q.Position = pos + glm::vec2(cp.AtlasSize) * pixelScale * 0.5f;
 			q.Scale    = glm::vec2(cp.AtlasSize) * pixelScale;
 			q.Rotation = 0.0f;
 			q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so doesnt matter)
 			RenderQuad_(q, FontShader_, false);   // shader already bound
-			if(idx > 0) cursor += font->GetKerning(text[idx - 1], text[idx]) * pixelScale;
-			cursor.x += cp.AdvanceWidth * pixelScale + cp.AtlasSize.x * 0.5f * pixelScale;
+			if(text[idx + 1]) cursor.x += font->GetKerning(text[idx], text[idx + 1]) * pixelScale;
+			cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
+			// + cp.Bearing.x * pixelScale; // + cp.AtlasSize.x * pixelScale;
 		}
 	}
 
@@ -149,7 +151,7 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 }
 
 static GuiGraphics *guiGrInst = nullptr;
-GuiGraphics *GuiGraphics::Instance()
+GuiGraphics        *GuiGraphics::Instance()
 {
 	if(guiGrInst == nullptr) guiGrInst = new GuiGraphics;
 	return guiGrInst;

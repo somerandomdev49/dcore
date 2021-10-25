@@ -11,7 +11,7 @@ namespace dg::entity
 		float GetBaseDamage() const;
 
 		const std::vector<Effect> &GetEffects() const;
-		void AddEffect(const Effect &newEffect);
+		void                       AddEffect(const Effect &newEffect);
 
 		// CharacterModel *GetCharacterModel() const;
 

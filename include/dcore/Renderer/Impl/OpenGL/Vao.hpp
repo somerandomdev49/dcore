@@ -24,7 +24,7 @@ namespace dcore::graphics::impl::opengl
 		// 	int Offset;
 		// };
 
-		UInt VBO_, VAO_, EBO_;
+		UInt   VBO_, VAO_, EBO_;
 		size_t IndexCount_;
 
 		size_t Stride_, LastOffset_, LastIndex_;
@@ -36,8 +36,8 @@ namespace dcore::graphics::impl::opengl
 		void Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride);
 		void Load(const std::vector<uint32_t> &indices, const byte *vertexData, size_t vertexDataSize, size_t stride);
 		void Load(const uint32_t *indices, size_t indicesSize, const std::vector<byte> &vertexData, size_t stride);
-		void Load(
-		    const uint32_t *indices, size_t indicesSize, const byte *vertexData, size_t vertexDataSize, size_t stride);
+		void Load(const uint32_t *indices, size_t indicesSize, const byte *vertexData, size_t vertexDataSize,
+		          size_t stride);
 		void CreateFloatAttribute(int count);
 		void CreateIntAttribute(int count);
 		void Delete();

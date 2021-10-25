@@ -8,7 +8,7 @@ namespace dcore::graphics::gui
 	{
 		glm::vec2 Position;
 		glm::vec2 Scale;
-		float Rotation;
+		float     Rotation;
 		RTexture *Texture;
 		glm::vec4 Color;
 	};

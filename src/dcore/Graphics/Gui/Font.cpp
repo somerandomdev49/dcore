@@ -37,17 +37,14 @@ void Font::Initialize(const char *name, int fontSize, int fontNo)
 
 int Font::GetAscent() const { return F_INF_(FontInfo__)->ascender >> 6; }
 
-void Font::DeInitialize()
-{
-	FT_Done_Face(F_INF_(FontInfo__));
-}
+void Font::DeInitialize() { FT_Done_Face(F_INF_(FontInfo__)); }
 
 int Font::GetKerning(int a, int b) const
 {
 	// printf("FontInfo__ = 0x%zx\n", FontInfo__);
 	// auto x = stbtt_GetCodepointKernAdvance(F_INF_(FontInfo__), a, b);
 	// printf("kern advance %d\n", x);
-	if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
+	// if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
 	FT_Vector kern;
 	FT_Get_Kerning(F_INF_(FontInfo__), a, b, FT_KERNING_DEFAULT, &kern);
 	return kern.x >> 6;
@@ -105,17 +102,16 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 
 		auto cp          = &CodePointTable_[i];
 		cp->Char         = c;
-		cp->AdvanceWidth = fc->glyph->advance.x / 64.0f;
+		cp->AdvanceWidth = fc->glyph->advance.x;
 		cp->Bearing      = glm::ivec2(fc->glyph->bitmap_left, fc->glyph->bitmap_top);
 		cp->AtlasOffset  = glm::ivec2(currentX, 0);
 		cp->AtlasSize    = glm::ivec2(fc->glyph->bitmap.width, fc->glyph->bitmap.rows);
 		cp->UVOffset     = glm::vec2(cp->AtlasOffset) / glm::vec2(bitmap.width, bitmap.height);
 		cp->UVSize       = glm::vec2(cp->AtlasSize) / glm::vec2(bitmap.width, bitmap.height);
-		printf(
-		    "Glyph '%c':\n  Advance: %f,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
-		    "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
-		    c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y, cp->Bearing.x,
-		    cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
+		printf("Glyph '%c':\n  Advance: %i,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
+		       "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
+		       c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y,
+		       cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
 		currentX += fc->glyph->bitmap.width;
 	}
 
@@ -157,10 +153,10 @@ Font::Bitmap Font::CreateAtlasBitmap_()
 void Font::CreateAtlasTexture_(const Bitmap &tb)
 {
 	Atlas_ = new RTexture();
-	RenderResourceManager::CreateTexture(
-	    Atlas_, tb.data, glm::ivec2(tb.width, tb.height), RenderResourceManager::TextureFormat::Red,
-	    RenderResourceManager::TextureScaling::Linear,
-	    /* alignment */ 1);
+	RenderResourceManager::CreateTexture(Atlas_, tb.data, glm::ivec2(tb.width, tb.height),
+	                                     RenderResourceManager::TextureFormat::Red,
+	                                     RenderResourceManager::TextureScaling::Linear,
+	                                     /* alignment */ 1);
 
 	delete tb.data;
 }
@@ -169,9 +165,9 @@ dcore::graphics::RTexture *Font::GetAtlasTexture() const { return Atlas_; }
 
 void Font::Constructor_Font(const std::string &path, void *placement)
 {
-	Font *f    = new(placement) Font;
-	auto split = path.rfind(':');
-	int size;
+	Font *f     = new(placement) Font;
+	auto  split = path.rfind(':');
+	int   size;
 	if(split == path.npos)
 	{
 		DCORE_LOG_ERROR << "Error loading font: no size specified!";

@@ -20,8 +20,8 @@ void ResourceLoader::LoadFromManifest(const std::string &location)
 	for(const auto &p : files) LoadByName(p);
 }
 
-void ResourceLoader::FindMappings_(
-    const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matched)
+void ResourceLoader::FindMappings_(const std::string                                &pattern,
+                                   std::vector<std::pair<std::string, std::string>> &matched)
 {
 	static std::string escapes = "[\\^$.|?+(){}";
 
@@ -75,7 +75,7 @@ void ResourceLoader::LoadMappings(const std::string &location)
 	// auto actual = FullPath(location);
 	DCORE_LOG_INFO << "[ResourceLoader] Loading mappings file at " << location;
 	ConfigReader::DataINI d;
-	int m = ConfigReader::DefaultReader()->ReadINI(location, d);
+	int                   m = ConfigReader::DefaultReader()->ReadINI(location, d);
 	DCORE_ASSERT(m, "Could not load ini file");
 	ResMappings_ = d["_Default"];
 	for(const auto &m : ResMappings_)

@@ -8,7 +8,7 @@ using namespace dcore::resource;
 
 RawResource::RawResource() {}
 RawResource::RawResource(std::type_index type, void *data) : Type_(type), Data_(data) {}
-void *RawResource::Get() const { return Data_; }
+void                  *RawResource::Get() const { return Data_; }
 const std::type_index &RawResource::GetType() const { return Type_; }
 
 static RawResource NullResource;
@@ -71,8 +71,8 @@ void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 	r.Data_ = nullptr;
 }
 
-const RawResource &
-    ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx, size_t allocSize)
+const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx,
+                                            size_t allocSize)
 {
 	// DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource:
 	// Incorrect Resource Type!");

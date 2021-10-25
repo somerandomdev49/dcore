@@ -11,8 +11,9 @@ namespace dcore::graphics::gui
 	{
 		// The codepoint.
 		int Char;
+
 		// X advance. (how much to increase x offset to render the next glyph)
-		float AdvanceWidth;
+		unsigned int AdvanceWidth;
 
 		// Offset from baseline to left/top of glyph.
 		glm::ivec2 Bearing;
@@ -39,30 +40,31 @@ namespace dcore::graphics::gui
 		void Initialize(const char *name, int fontSize, int fontNo = 0);
 		void DeInitialize();
 
-		int GetAscent() const;
-		int GetDescent() const;
-		int GetLineGap() const;
-		int GetPixelHeight() const;
-		float GetScale() const;
+		int       GetAscent() const;
+		int       GetDescent() const;
+		int       GetLineGap() const;
+		int       GetPixelHeight() const;
+		float     GetScale() const;
 		RTexture *GetAtlasTexture() const;
 
 	private:
 		float Scale_, ScaleEm_;
-		int PixelHeight_;
+		int   PixelHeight_;
 
-		void *FontInfo__; // Implementation specific.
-		int AtlasWidth_, AtlasHeight_;
-		std::vector<CodePoint> CodePointTable_;
+		void     *FontInfo__; // Implementation specific.
+		int       AtlasWidth_, AtlasHeight_;
 		RTexture *Atlas_;
+
+		std::vector<CodePoint> CodePointTable_;
 
 		struct Bitmap
 		{
-			byte *data;
+			byte        *data;
 			unsigned int width, height;
 		};
 
 		Bitmap CreateAtlasBitmap_();
-		void CreateAtlasTexture_(const Bitmap &tb);
+		void   CreateAtlasTexture_(const Bitmap &tb);
 
 		int GetKerning(int a, int b) const;
 

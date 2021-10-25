@@ -14,10 +14,10 @@ namespace dcore::graphics
 		StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture);
 
 		const resource::Resource<RStaticMesh> &GetMesh() const;
-		const resource::Resource<RTexture> &GetTexture() const;
+		const resource::Resource<RTexture>    &GetTexture() const;
 
 	private:
 		resource::Resource<RStaticMesh> Mesh_;
-		resource::Resource<RTexture> Texture_;
+		resource::Resource<RTexture>    Texture_;
 	};
 } // namespace dcore::graphics
