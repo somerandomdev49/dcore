@@ -31,11 +31,11 @@ void opengl::ShaderProgram::Create()
 void opengl::ShaderProgram::AttachShader(ShaderType type, const std::string &source)
 {
 	const char *src = source.c_str();
-	UInt        s   = glCreateShader(type);
+	UInt s          = glCreateShader(type);
 	glShaderSource(s, 1, &src, nullptr);
 	glCompileShader(s);
 
-	int  shaderStatus;
+	int shaderStatus;
 	char errors[512];
 	glGetShaderiv(s, GL_COMPILE_STATUS, &shaderStatus);
 	if(!shaderStatus)
@@ -53,7 +53,7 @@ void opengl::ShaderProgram::Link()
 {
 	glLinkProgram(Id_);
 
-	int  shaderStatus;
+	int shaderStatus;
 	char errors[512];
 	glGetProgramiv(Id_, GL_LINK_STATUS, &shaderStatus);
 	if(!shaderStatus)

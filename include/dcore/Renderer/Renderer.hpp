@@ -27,20 +27,20 @@ namespace dcore::graphics
 		void UseShader(RShader *shader);
 
 		RUniform GetUniform(RShader *shader, const char *name);
-		void     SetUniform(const RUniform &u, float v);
-		void     SetUniform(const RUniform &u, int v);
-		void     SetUniform(const RUniform &u, const glm::vec2 &v);
-		void     SetUniform(const RUniform &u, const glm::vec3 &v);
-		void     SetUniform(const RUniform &u, const glm::vec4 &v);
-		void     SetUniform(const RUniform &u, const glm::mat2x2 &v);
-		void     SetUniform(const RUniform &u, const glm::mat2x3 &v);
-		void     SetUniform(const RUniform &u, const glm::mat2x4 &v);
-		void     SetUniform(const RUniform &u, const glm::mat3x2 &v);
-		void     SetUniform(const RUniform &u, const glm::mat3x3 &v);
-		void     SetUniform(const RUniform &u, const glm::mat3x4 &v);
-		void     SetUniform(const RUniform &u, const glm::mat4x2 &v);
-		void     SetUniform(const RUniform &u, const glm::mat4x3 &v);
-		void     SetUniform(const RUniform &u, const glm::mat4x4 &v);
+		void SetUniform(const RUniform &u, float v);
+		void SetUniform(const RUniform &u, int v);
+		void SetUniform(const RUniform &u, const glm::vec2 &v);
+		void SetUniform(const RUniform &u, const glm::vec3 &v);
+		void SetUniform(const RUniform &u, const glm::vec4 &v);
+		void SetUniform(const RUniform &u, const glm::mat2x2 &v);
+		void SetUniform(const RUniform &u, const glm::mat2x3 &v);
+		void SetUniform(const RUniform &u, const glm::mat2x4 &v);
+		void SetUniform(const RUniform &u, const glm::mat3x2 &v);
+		void SetUniform(const RUniform &u, const glm::mat3x3 &v);
+		void SetUniform(const RUniform &u, const glm::mat3x4 &v);
+		void SetUniform(const RUniform &u, const glm::mat4x2 &v);
+		void SetUniform(const RUniform &u, const glm::mat4x3 &v);
+		void SetUniform(const RUniform &u, const glm::mat4x4 &v);
 
 		/**
 		 * @brief Binds a texture unit. if texture is nullptr, nothing happens.
@@ -100,7 +100,7 @@ namespace dcore::graphics
 		static void RShader_Constructor(const std::string &path, void *placement);
 		static void RShader_DeConstructor(void *placement);
 
-		bool      IsWireframeMode_ = false;
+		bool IsWireframeMode_ = false;
 		glm::vec4 ClearColor_;
 	};
 

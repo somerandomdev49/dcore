@@ -9,7 +9,7 @@ bool InputManager::IsMousePressed(int button) { return platform::Context::Instan
 void InputManager::DeInitialize() {}
 
 static InputManager *inpMngr;
-InputManager        *InputManager::Instance()
+InputManager *InputManager::Instance()
 {
 	if(inpMngr == nullptr) inpMngr = new InputManager();
 	return inpMngr;

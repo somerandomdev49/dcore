@@ -32,9 +32,9 @@ namespace dcore::graphics
 		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend = nullptr);
 		void DeInitialize();
 
-		Camera DCORE_OWN        *Camera_;
-		CommonShader DCORE_OWN  *ObjectShader_;
+		Camera DCORE_OWN *Camera_;
+		CommonShader DCORE_OWN *ObjectShader_;
 		TerrainShader DCORE_OWN *TerrainShader_;
-		Renderer DCORE_REF      *Renderer_;
+		Renderer DCORE_REF *Renderer_;
 	};
 } // namespace dcore::graphics

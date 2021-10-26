@@ -23,7 +23,7 @@ namespace dcore::graphics::gui
 	private:
 		friend class launch::Launch;
 		friend class platform::Context;
-		void    SetInstance(GuiManager *manager);
+		void SetInstance(GuiManager *manager);
 		Widget *RootWidget_;
 	};
 } // namespace dcore::graphics::gui

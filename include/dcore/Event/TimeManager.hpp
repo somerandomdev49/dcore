@@ -6,8 +6,8 @@ namespace dcore::event
 	class TimeManager
 	{
 	public:
-		void  Initialize();
-		void  DeInitialize();
+		void Initialize();
+		void DeInitialize();
 		float GetDeltaTime();
 
 		/** Do not call if not needed. */
@@ -18,6 +18,6 @@ namespace dcore::event
 	private:
 		friend class launch::Launch;
 		static void SetInstance(TimeManager *newInstance);
-		float       DeltaTime_;
+		float DeltaTime_;
 	};
 } // namespace dcore::event

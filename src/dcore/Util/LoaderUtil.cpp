@@ -121,7 +121,7 @@ bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::strin
 bool LoaderUtil::LoadFile(std::string &out, const std::string &path)
 {
 	constexpr auto read_size = std::size_t {4096};
-	std::ifstream  stream(path);
+	std::ifstream stream(path);
 	if(!stream) return false;
 	stream.exceptions(std::ios_base::badbit);
 

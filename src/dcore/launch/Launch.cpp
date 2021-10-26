@@ -30,7 +30,7 @@ namespace dcore
 		(void)ps;
 		platform::Context ctx;
 
-		world::World       world;
+		world::World world;
 		graphics::Renderer rend;
 
 		ctx.Rend_     = &rend;
@@ -53,7 +53,7 @@ namespace dcore
 		// Create the default config reader.
 		resource::ConfigReader cfg("data");
 		resource::ConfigReader::SetDefaultReader(&cfg);
-		resource::ResourceLoader  rl("data");
+		resource::ResourceLoader rl("data");
 		resource::ResourceManager rm("data");
 		resource::ResourceManager::SetInstance(&rm);
 		rm.Initialize();
@@ -86,7 +86,7 @@ namespace dcore
 				        (void)comp;
 				        float speed    = 10.f * event::TimeManager::Instance()->GetDeltaTime();
 				        float rotSpeed = 1.f * event::TimeManager::Instance()->GetDeltaTime();
-				        auto  cam      = platform::Context::Instance()->GetRendererInterface()->GetCamera();
+				        auto cam       = platform::Context::Instance()->GetRendererInterface()->GetCamera();
 				        // printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
 
 				        /**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))

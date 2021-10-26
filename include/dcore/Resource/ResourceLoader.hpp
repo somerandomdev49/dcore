@@ -38,13 +38,13 @@ namespace dcore::resource
 		struct TypeInfo
 		{
 			std::type_index idx;
-			size_t          allocSize;
+			size_t allocSize;
 		};
 
 		void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
 
 		std::unordered_map<std::string, std::string> ResMappings_;
-		std::unordered_map<std::string, TypeInfo>    ResTypes_;
+		std::unordered_map<std::string, TypeInfo> ResTypes_;
 	};
 
 	template<typename T>

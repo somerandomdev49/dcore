@@ -162,9 +162,9 @@ dcore::graphics::RTexture *Font::GetAtlasTexture() const { return Atlas_; }
 
 void Font::Constructor_Font(const std::string &path, void *placement)
 {
-	Font *f     = new(placement) Font;
-	auto  split = path.rfind(':');
-	int   size;
+	Font *f    = new(placement) Font;
+	auto split = path.rfind(':');
+	int size;
 	if(split == path.npos)
 	{
 		DCORE_LOG_ERROR << "Error loading font: no size specified!";

@@ -122,7 +122,7 @@ void Renderer::RShader_Constructor(const std::string &path, void *placement)
 	RShader *shader = new(placement) RShader();
 
 	std::string vertexSource, fragmentSource;
-	bool        success = true;
+	bool success = true;
 	success &= util::LoaderUtil::LoadFile(vertexSource, path + ".vert");
 	success &= util::LoaderUtil::LoadFile(fragmentSource, path + ".frag");
 	if(!success)

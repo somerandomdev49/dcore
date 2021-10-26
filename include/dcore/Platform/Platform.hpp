@@ -29,8 +29,8 @@ namespace dcore::platform
 	{
 	public:
 		dcore::graphics::RendererInterface *GetRendererInterface() const;
-		Frame                              *GetFrame() const;
-		static Context                     *Instance();
+		Frame *GetFrame() const;
+		static Context *Instance();
 
 	private:
 		friend class event::InputManager;
@@ -46,9 +46,9 @@ namespace dcore::platform
 		void CloseWindow();
 		void DeInitialize();
 
-		graphics::Renderer                 *Rend_;
-		world::World                       *World_;
-		Frame                              *Frame_;
+		graphics::Renderer *Rend_;
+		world::World *World_;
+		Frame *Frame_;
 		dcore::graphics::RendererInterface *RI_;
 	};
 } // namespace dcore::platform

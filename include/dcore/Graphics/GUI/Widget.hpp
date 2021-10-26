@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/GraphicsData.hpp>
+#include <dcore/Event/EventManager.hpp>
 #include <dcore/Graphics/GUI/Event.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Uni.hpp>
@@ -23,16 +24,16 @@ namespace dcore::graphics::gui
 		virtual void Initialize()           = 0;
 		virtual void DeInitialize()         = 0;
 		virtual void Render(GuiGraphics *g) = 0;
-		virtual void Event(Event *e)        = 0;
+		virtual void Event(event::Event *e) = 0;
 
 		const glm::vec2 &GetPosition() const;
-		void             SetPosition(const glm::vec2 &newPosition);
+		void SetPosition(const glm::vec2 &newPosition);
 
 		float GetRotation() const;
-		void  SetRotation(float newRotation);
+		void SetRotation(float newRotation);
 
 		const glm::vec2 &GetSize() const;
-		void             SetSize(const glm::vec2 &newSize);
+		void SetSize(const glm::vec2 &newSize);
 
 		template<typename T>
 		T *AllocChild();
@@ -44,10 +45,10 @@ namespace dcore::graphics::gui
 		void Focus();
 
 	private:
-		bool                            IsFocused_;
-		Quad                            Quad_;
-		std::vector<RTexture *>         Texture_;
-		DCORE_REF Widget               *Parent_;
+		bool IsFocused_;
+		Quad Quad_;
+		std::vector<RTexture *> Texture_;
+		DCORE_REF Widget *Parent_;
 		std::vector<DCORE_OWN Widget *> Children_;
 	};
 

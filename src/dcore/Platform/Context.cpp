@@ -64,7 +64,7 @@ void Context::DeInitialize()
 }
 
 static Context *ctx;
-void            Context::SetInstance(Context *newContext) { ctx = newContext; }
+void Context::SetInstance(Context *newContext) { ctx = newContext; }
 
 Context *Context::Instance()
 {

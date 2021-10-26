@@ -29,10 +29,10 @@ namespace dcore::graphics
 		void SetFarZ(float newFarZ);
 
 		const glm::vec3 &GetPosition() const;
-		void             SetPosition(const glm::vec3 &newPosition);
+		void SetPosition(const glm::vec3 &newPosition);
 
 		const glm::quat &GetRotation() const;
-		void             SetRotation(const glm::quat &newRotation);
+		void SetRotation(const glm::quat &newRotation);
 
 		void RecalcViewMatrix();
 		void RecalcProjMatrix();
@@ -41,7 +41,7 @@ namespace dcore::graphics
 		glm::vec3 Position_;
 		glm::quat Rotation_;
 		glm::mat4 ViewMatrix_, ProjMatrix_;
-		float     Fov_, Aspect_, NearZ_, FarZ_;
-		bool      DirtyView_, DirtyProj_;
+		float Fov_, Aspect_, NearZ_, FarZ_;
+		bool DirtyView_, DirtyProj_;
 	};
 } // namespace dcore::graphics

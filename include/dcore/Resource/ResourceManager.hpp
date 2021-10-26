@@ -25,7 +25,7 @@ namespace dcore::resource
 	public:
 		RawResource();
 
-		void                  *Get() const;
+		void *Get() const;
 		const std::type_index &GetType() const;
 
 	private:
@@ -95,14 +95,14 @@ namespace dcore::resource
 
 	private:
 		friend class dcore::launch::Launch;
-		void        Initialize();
-		void        DeInitialize();
+		void Initialize();
+		void DeInitialize();
 		static void SetInstance(ResourceManager *newInstance);
 
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
 
-		std::unordered_map<std::type_index, ResourceMap>               Resources_;
-		std::unordered_map<std::type_index, ResourceConstructorFunc>   Constructors_;
+		std::unordered_map<std::type_index, ResourceMap> Resources_;
+		std::unordered_map<std::type_index, ResourceConstructorFunc> Constructors_;
 		std::unordered_map<std::type_index, ResourceDeConstructorFunc> DeConstructors_;
 	};
 

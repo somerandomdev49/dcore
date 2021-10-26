@@ -13,7 +13,7 @@ namespace dcore
 	public:
 		using SizeType = std::size_t;
 
-		T   *Alloc(const SizeType size) { return new T[size]; }
+		T *Alloc(const SizeType size) { return new T[size]; }
 		void Delete(T *pointer) { delete[] pointer; }
 	};
 
@@ -21,7 +21,7 @@ namespace dcore
 	         typename Allocator = DefaultListAllocator<T>>
 	class List
 	{
-		T       *Data_;
+		T *Data_;
 		SizeType Size_, Reserved_;
 
 	public:

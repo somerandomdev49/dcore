@@ -125,9 +125,8 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 	{
 		if(text[idx] >= 32)
 		{
-			auto &cp = font->CodePointTable_[text[idx] - ' '];
-			glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale,
-			                          cursor.y - cp.Bearing.y * pixelScale);
+			auto &cp      = font->CodePointTable_[text[idx] - ' '];
+			glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale, cursor.y - cp.Bearing.y * pixelScale);
 
 			if(idx < textLength - 1) cursor.x += font->GetKerning(text[idx], text[idx - 1]);
 			cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
@@ -143,15 +142,14 @@ void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &orig
 			                          glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
 
 			RenderQuad_(q, FontShader_, false); // shader already bound
-		}
-		;
+		};
 	}
 
 	Rend_->EnableDepthCheck();
 }
 
 static GuiGraphics *guiGrInst = nullptr;
-GuiGraphics        *GuiGraphics::Instance()
+GuiGraphics *GuiGraphics::Instance()
 {
 	if(guiGrInst == nullptr) guiGrInst = new GuiGraphics;
 	return guiGrInst;

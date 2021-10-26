@@ -142,7 +142,7 @@ namespace dcore::graphics::impl::opengl
 		inline void SetUniform(Int location, const glm::mat4x2 &v) _INL;
 		inline void SetUniform(Int location, const glm::mat4x3 &v) _INL;
 		inline void SetUniform(Int location, const glm::mat4x4 &v) _INL;
-		inline Int  GetUniformLocation(UInt program, const char *name) _INL;
+		inline Int GetUniformLocation(UInt program, const char *name) _INL;
 
 		inline void UseProgram(UInt program) _INL;
 
@@ -169,7 +169,7 @@ namespace dcore::graphics::impl::opengl
 		inline void GenerateTextures(int count, UInt *textures) _INL;
 
 		inline void PixelStore(PixelStorage param, int value) _INL;
-		inline int  GetPixelStore(PixelStorage param) _INL;
+		inline int GetPixelStore(PixelStorage param) _INL;
 
 		inline void TextureParameter(TextureType type, TextureParam param, int value) _INL;
 		inline void TextureParameter(TextureType type, TextureParam param, float value) _INL;
@@ -274,7 +274,7 @@ namespace dcore::graphics::impl::opengl
 		inline void DeleteVertexArray(UInt buffer) { glDeleteVertexArrays(1, &buffer); }
 
 		inline void PixelStore(PixelStorage param, int value) { glPixelStorei(param, value); }
-		inline int  GetPixelStore(PixelStorage param)
+		inline int GetPixelStore(PixelStorage param)
 		{
 			int v;
 			glGetIntegerv(param, &v);

@@ -24,7 +24,7 @@ namespace dcore::graphics::impl::opengl
 		// 	int Offset;
 		// };
 
-		UInt   VBO_, VAO_, EBO_;
+		UInt VBO_, VAO_, EBO_;
 		size_t IndexCount_;
 
 		size_t Stride_, LastOffset_, LastIndex_;

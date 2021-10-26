@@ -39,7 +39,7 @@ namespace dcore::physics
 		virtual ~Collider();
 
 		ColliderType GetType() const;
-		const AABB  &GetBroadCollider() const;
+		const AABB &GetBroadCollider() const;
 
 		bool DoesOverlap(Collider *other);
 
@@ -47,7 +47,7 @@ namespace dcore::physics
 		using CollisionFunction = bool (*)(Collider *other);
 		CollisionFunction NarrowPhaseColliders[ColliderTypeCount];
 
-		AABB         BroadCollider_;
+		AABB BroadCollider_;
 		ColliderType Type_;
 	};
 
@@ -76,9 +76,9 @@ namespace dcore::physics
 		void DeInitialize();
 
 	private:
-		void          DoBroadPhase();
-		void          DoNarrowPhase();
-		void          CollideAndResolve();
+		void DoBroadPhase();
+		void DoNarrowPhase();
+		void CollideAndResolve();
 		world::World *World_;
 	};
 } // namespace dcore::physics

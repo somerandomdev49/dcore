@@ -16,7 +16,7 @@ bool Renderer::IsWireframeMode() const { return IsWireframeMode_; }
 
 void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 {
-	RStaticMesh   *mesh = new(placement) RStaticMesh();
+	RStaticMesh *mesh = new(placement) RStaticMesh();
 	util::MeshData d;
 	util::LoaderUtil::LoadMesh(d, path, "pnt");
 	RenderResourceManager::CreateStaticMesh(mesh, d.indices, d.vertexData);

@@ -14,10 +14,10 @@ namespace dcore::resource
 		void Load(const std::string &location);
 
 		const glm::ivec2 &GetWindowSize();
-		void              DeInitialize();
+		void DeInitialize();
 
 		static Properties *DefaultInstance();
-		static void        SetDefaultInstance(Properties *newDefault);
+		static void SetDefaultInstance(Properties *newDefault);
 
 	private:
 		std::unordered_map<std::string, std::string> Data_;

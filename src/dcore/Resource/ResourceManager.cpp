@@ -8,7 +8,7 @@ using namespace dcore::resource;
 
 RawResource::RawResource() {}
 RawResource::RawResource(std::type_index type, void *data) : Type_(type), Data_(data) {}
-void                  *RawResource::Get() const { return Data_; }
+void *RawResource::Get() const { return Data_; }
 const std::type_index &RawResource::GetType() const { return Type_; }
 
 static RawResource NullResource;

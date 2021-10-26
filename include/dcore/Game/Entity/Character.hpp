@@ -15,11 +15,11 @@ namespace dg::entity
 	class CharacterComponent
 	{
 	public:
-		Quest                      *GetAssignedQuest(int index) const;
+		Quest *GetAssignedQuest(int index) const;
 		const std::vector<Quest *> &GetAssignedQuests() const;
 
 	private:
 		std::vector<Inventory> Bags_;
-		std::vector<Quest *>   AssignedQuests_;
+		std::vector<Quest *> AssignedQuests_;
 	};
 } // namespace dg::entity

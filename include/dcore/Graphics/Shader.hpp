@@ -16,8 +16,8 @@ namespace dcore::graphics
 
 	private:
 		resource::Resource<RShader> Shader_;
-		RUniform                    UTransform_;
-		RUniform                    UTex_;
+		RUniform UTransform_;
+		RUniform UTex_;
 	};
 
 	class TerrainShader
@@ -31,8 +31,8 @@ namespace dcore::graphics
 
 	private:
 		resource::Resource<RShader> Shader_;
-		RUniform                    UTransform_;
-		RUniform                    UBlendMapTex_;
-		RUniform                    UTexs_[4]; // 0, R, G, B
+		RUniform UTransform_;
+		RUniform UBlendMapTex_;
+		RUniform UTexs_[4]; // 0, R, G, B
 	};
 } // namespace dcore::graphics
