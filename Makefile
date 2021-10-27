@@ -1,34 +1,4 @@
-#### PROJECT SETTINGS ####
-BIN_NAME := dcore
-CXX = g++-10
-SRC_EXT = cpp
-SRC_PATH = src
-LIBS = freetype2 # pkg-config files
-COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -rdynamic -g
-RCOMPILE_FLAGS = -D NDEBUG
-DCOMPILE_FLAGS = -D DEBUG -rdynamic -g
-INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include
-LINK_FLAGS = -std=c++17 -rdynamic -g# -L3rd-party/fwdraw/lib -lfwdraw
-
-ifeq ($(shell uname),Darwin)
-	LINK_FLAGS += -lglfw3
-else
-	LINK_FLAGS += -lglfw -ldl -lpthread
-endif
-
-RLINK_FLAGS = 
-DLINK_FLAGS = -rdynamic -g
-DESTDIR = /
-INSTALL_PREFIX = usr/local
-
-ifeq ($(shell uname),Darwin)
-	LINK_FLAGS += -framework OpenGL -framework Cocoa -framework IOKit
-endif
-#### END PROJECT SETTINGS ####
-
-# Optionally you may move the section above to a separate config.mk file, and
-# uncomment the line below
-# include config.mk
+include make/config.mk
 
 # Generally should not need to edit below this line
 

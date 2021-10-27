@@ -6,3 +6,4 @@ build
 .localfiles
 .vscode/c_cpp_properties.json
 docs/html
+make/config.mk

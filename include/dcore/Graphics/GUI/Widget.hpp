@@ -21,11 +21,6 @@ namespace dcore::graphics::gui
 		Widget();
 		virtual ~Widget();
 
-		virtual void Initialize()           = 0;
-		virtual void DeInitialize()         = 0;
-		virtual void Render(GuiGraphics *g) = 0;
-		virtual void Event(event::Event *e) = 0;
-
 		const glm::vec2 &GetPosition() const;
 		void SetPosition(const glm::vec2 &newPosition);
 
@@ -44,7 +39,38 @@ namespace dcore::graphics::gui
 		bool IsFocused() const;
 		void Focus();
 
+	protected:
+		/** Called when the widget is initialized (only called by DoInitialize_)*/
+		virtual void Initialize() = 0;
+
+		/** Called when the widget is deinitialized (only called by DoDeInitialize_)*/
+		virtual void DeInitialize() = 0;
+
+		/** Called when the widget is rendered (only called by DoRender_)*/
+		virtual void Render(GuiGraphics *g) = 0;
+
+		/** Called when the widget has received an event (only called by DoHandleEvent_)*/
+		virtual void HandleEvent(event::Event *e) = 0;
+
 	private:
+		friend class GuiManager;
+
+		/** Called by the GuiManager when the widget is initialized.
+		 * Handles children logic and calls Initialize(). */
+		void DoInitialize_();
+
+		/** Called by the GuiManager when the widget is deinitialized.
+		 * Handles children logic and calls DeInitialize() */
+		void DoDeInitialize_();
+
+		/** Called by the GuiManager when the widget is rendered.
+		 * Handles children logic and calls Render() */
+		void DoRender_(GuiGraphics *g);
+
+		/** Called by the GuiManager when the widget has received an event.
+		 *  Handles children logic and calls HandleEvent() */
+		void DoHandleEvent_(event::Event *e);
+
 		bool IsFocused_;
 		Quad Quad_;
 		std::vector<RTexture *> Texture_;
@@ -55,7 +81,7 @@ namespace dcore::graphics::gui
 	template<typename T>
 	T *Widget::AllocChild()
 	{
-		auto placement = new byte[sizeof(T)];
+		auto placement = reinterpret_cast<T *>(new byte[sizeof(T)]);
 		Children_.push_back(placement);
 		return placement;
 	}

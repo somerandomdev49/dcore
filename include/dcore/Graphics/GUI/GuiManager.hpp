@@ -25,5 +25,6 @@ namespace dcore::graphics::gui
 		friend class platform::Context;
 		void SetInstance(GuiManager *manager);
 		Widget *RootWidget_;
+		Widget *Focused_;
 	};
 } // namespace dcore::graphics::gui

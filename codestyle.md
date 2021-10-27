@@ -7,12 +7,15 @@
 
 * Public: `PascalCase`
 * Private: `PascalCase_`
+* Private that are shared with `friend`s: `PascalCase`
 * Parameter/Return Types: Applies to everything!
    if type is non-complex (int, float, pointer): `<Type> a`
    otherwise (e.g. `std::vector`): `const <Type> &a`
 * Getters: `Get<FieldName>() const`
    Note: if field is a boolean, `Is<FieldName>() const`
 * Setters: `Set<FieldName>(<Type> new<FieldName>)`
+* Note: if a getter returns an immedeate value, it can only return `<Type>`
+   becasue c++
 
 ## Fields
 
@@ -36,30 +39,90 @@
    What is easier to read:
 
    ```c++
-   Self::RootCause<Unnoticed::Do<Self::Actions::All<3>,This::Z<0x1662>>>.PollAllUpgrades<System::RootConsole::UI>(FindAll<Utility::Self<4>>);
-   if(very::complex::thing<typename myfunc::conditional<3, (size_t)Value.size>>(Value.argument + 3) == (this->Values() + 16*(Condition::V<17>))) {
+   Self::RootCause<Unnoticed::Do<Self::Actions::All<3>,This::Z<0x1662>>>
+      .PollAllUpgrades<System::RootConsole::UI>(FindAll<Utility::Self<4>>).GenerateInternalStateMachine(143);
+   if(very::complex::thing<typename myfunc::conditional<3>(Value.argument + 3) == (Condition::V<17>)) {
       behaviour::Tree<FindValue_t<Self, This::Y<14, Value.reason + Self>>>::Generate<K13 == (this->ValuesT<3>().argument)>();
       Self::TreeLike<Behaviour::FindBoxed_t<Self, This::X<19283, 0x1662>>>.Poll<Console>(Logger::SelectAllMatching<this->Predicate<3>);
    }
+   More::Stuff("Important String [commons::selector(findroot)])", 127382.28f 0x17283 + 7128372.2f & 3)
    ```
 
    Do you see *at a glance* where the code block begins and ends? I don't.
 
     ```c++
-   Self::RootCause<Unnoticed::Do<Self::Actions::All<3>,This::Z<0x1662>>>.PollAllUpgrades<System::RootConsole::UI>(FindAll<Utility::Self<4>>);
-   if(very::complex::thing<typename myfunc::conditional<3, (size_t)Value.size>>(Value.argument + 3) == (this->Values() + 16*(Condition::V<17>)))
+   Self::RootCause<Unnoticed::Do<Self::Actions::All<3>,This::Z<0x1662>>>
+      .PollAllUpgrades<System::RootConsole::UI>(FindAll<Utility::Self<4>>).GenerateInternalStateMachine(143);
+   if(very::complex::thing<typename myfunc::conditional<3>(Value.argument + 3) == (Condition::V<17>))
    {
       behaviour::Tree<FindValue_t<Self, This::Y<14, Value.reason + Self>>>::Generate<K13 == (this->ValuesT<3>().argument)>();
       Self::TreeLike<Behaviour::FindBoxed_t<Self, This::X<19283, 0x1662>>>.Poll<Console>(Logger::SelectAllMatching<this->Predicate<3>);
    }
+   More::Stuff("Important String [commons::selector(findroot)])", 127382.28f 0x17283 + 7128372.2f & 3)
    ```
 
    Still a mess, but you at least see where the `if` is.
+
+## Comments
+
+### Documentation Comments
+
+* I dislike using `@brief`, but you can use it if you want to.
+* If a doc-comment contains othe doxygen tags (like `@warning`, `@deprecated`) it must have a `@brief`
+
+### "TODO"/"FIXME" Comments
+
+* A 'bare' TODO comment begins with `TODO:` and explanation what to do later (Note: explanation doesnt have to be long)
+* A 'bare' FIXME comment begins with `FIXME:` and explanation of what the bug is (do not misuse!)
+* You can direct a TODO/FIXME onto someone (like git blame or sth.) with this syntax:
+  `TODO(->NICKNAME): ...` or `FIXME(->NICKNAME): ...` (Note: do not use real names!)
+* If you indend to fix the issue yourself and make sure others don't fix it, add *just* your nickname in parens.
+  `TODO(NICKNAME): <Very context-dependent thing with a lot of stuff that only you know/understand>`
+* If a TODO/FIXME explanation is redundant (rarely) you can write it without a message
+
+### Other Comments
+
+* In general, use C99-style comments:
+
+  ```c++
+  // This is a comment.
+  
+  // This is a very very very very very very long comment message
+  // with a lot of stuff that is very important. TODO: gotta to somethin'!
+
+  "(Note^) nothing goes after a TODO/FIXME in a multi-line comment"
+
+  /** This is a documentation comment */
+  int MyCoolFunction();
+
+  "(Note^) Two stars at the beginning"
+
+  /**
+   * This is a multi-line documentation comment
+   **/
+  int MultilineFunction();
+
+  "(Note^) Two stars at the end"
+
+  /**
+   * And this
+   * */
+  int MultilineFunctionV2();
+
+  "(Note^) The space between the two stars at the end"
+
+  /**
+   * And also this.
+   */
+  int MultilineFunctionV3();
+  
+  "(Note^) A single space at the end"
+  ```
 
 ## General Style
 
 clang-format shoud handle it all.
 so you can read `.clang-format` or
-write some code and see what it changed.
+write some code and see what changed.
 
 [cpp_help1]: https://stackoverflow.com/a/333964/9110517
