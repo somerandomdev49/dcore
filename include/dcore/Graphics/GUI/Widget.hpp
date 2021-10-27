@@ -16,9 +16,7 @@ namespace dcore::graphics::gui
 	class Widget
 	{
 	public:
-		// Note: to fully (de)initialize a widget, it's constructor/destructor must be called.
-
-		Widget();
+		Widget(const glm::vec2 &position, dcore::graphics::RTexture *tex);
 		virtual ~Widget();
 
 		const glm::vec2 &GetPosition() const;
@@ -29,6 +27,9 @@ namespace dcore::graphics::gui
 
 		const glm::vec2 &GetSize() const;
 		void SetSize(const glm::vec2 &newSize);
+
+		/** Returns the quad that is used to render the widget. */
+		const Quad &GetQuad() const;
 
 		template<typename T>
 		T *AllocChild();
@@ -52,8 +53,14 @@ namespace dcore::graphics::gui
 		/** Called when the widget has received an event (only called by DoHandleEvent_)*/
 		virtual void HandleEvent(event::Event *e) = 0;
 
+		/** Non-const version of GetQuad() */
+		Quad &GetQuad();
+
 	private:
 		friend class GuiManager;
+
+		/** Sets the defaults for all of the fields. */
+		void SetDefaults_();
 
 		/** Called by the GuiManager when the widget is initialized.
 		 * Handles children logic and calls Initialize(). */
@@ -73,7 +80,6 @@ namespace dcore::graphics::gui
 
 		bool IsFocused_;
 		Quad Quad_;
-		std::vector<RTexture *> Texture_;
 		DCORE_REF Widget *Parent_;
 		std::vector<DCORE_OWN Widget *> Children_;
 	};

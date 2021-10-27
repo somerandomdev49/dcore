@@ -78,6 +78,9 @@
   `TODO(->NICKNAME): ...` or `FIXME(->NICKNAME): ...` (Note: do not use real names!)
 * If you indend to fix the issue yourself and make sure others don't fix it, add *just* your nickname in parens.
   `TODO(NICKNAME): <Very context-dependent thing with a lot of stuff that only you know/understand>`
+* If you are not sure whether this is an issue, use a question mark instead
+of a colon:
+  `TODO? Move this text 3 pixels to the left, but looks fine either way`
 * If a TODO/FIXME explanation is redundant (rarely) you can write it without a message
 
 ### Other Comments
@@ -117,6 +120,12 @@
   int MultilineFunctionV3();
   
   "(Note^) A single space at the end"
+
+  /** This is also possible
+   * Im not sure if I want to leave it though */
+  int MultilineFunctionV4();
+  
+  "(Note^) No newlines before/after end and start"
   ```
 
 ## General Style
@@ -124,5 +133,19 @@
 clang-format shoud handle it all.
 so you can read `.clang-format` or
 write some code and see what changed.
+
+## Semantics style
+
+* redundant namespaces:
+  Sometimes, c++ can't resolve a symbol, so you are required to
+  write out the full name of the namespace. Also sometimes, you
+  have similar symbols in different namespaces, you might want
+  to specify the partical name of the namespace. For example:
+  you have two symbols: `EventTypeMouseMoved` and `EventTypeFocus`
+  from  different categories (one from the input system and the
+  other from the widget system) If you have both avaliable in
+  the same context, write `event::EventTypeMouseMoved` and
+  `gui::EventTypeFocus` (but sometimes it's obvious, so don't
+  specify the namespace)
 
 [cpp_help1]: https://stackoverflow.com/a/333964/9110517

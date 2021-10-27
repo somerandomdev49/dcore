@@ -2,14 +2,16 @@
 #include <dcore/Event/InputManager.hpp>
 #include <unordered_map>
 
+// TODO? Fix statically setting enums!
+
 namespace dcore::event
 {
 	enum CommonEventTypes
 	{
-		EventTypeClick,
-		EventTypeDoubleClick,
-		EventTypeKeyDown,
-		EventTypeKeyUp
+		EventTypeClick       = 100 + 0,
+		EventTypeDoubleClick = 100 + 1,
+		EventTypeKeyDown     = 100 + 2,
+		EventTypeKeyUp       = 100 + 3
 	};
 
 	struct Event

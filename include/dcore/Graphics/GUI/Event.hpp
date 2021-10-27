@@ -4,6 +4,12 @@
 
 namespace dcore::graphics::gui
 {
+	enum GuiEventTypes
+	{
+		EventTypeFocus     = 200 + 4,
+		EventTypeTextInput = 200 + 5
+	};
+
 	struct FocusEvent : public event::Event
 	{
 		bool IsFocused;
