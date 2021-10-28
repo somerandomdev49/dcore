@@ -16,7 +16,7 @@ namespace dcore::graphics::gui
 	class Widget
 	{
 	public:
-		Widget(const glm::vec2 &position, dcore::graphics::RTexture *tex);
+		Widget();
 		virtual ~Widget();
 
 		const glm::vec2 &GetPosition() const;
@@ -58,6 +58,9 @@ namespace dcore::graphics::gui
 
 	private:
 		friend class GuiManager;
+
+		/** Finds a widget that the user has clicked on. */
+		Widget *GetFocusWithin_(FocusEvent *e);
 
 		/** Sets the defaults for all of the fields. */
 		void SetDefaults_();

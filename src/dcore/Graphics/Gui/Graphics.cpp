@@ -59,6 +59,17 @@ void FontShader::SetTexCoords(const glm::vec4 &s, const glm::vec4 &e)
 }
 dcore::graphics::RShader *FontShader::Get() const { return Shader_.Get(); }
 
+/**************************** Quad ****************************/
+
+// TODO(!): Rotation
+bool Quad::OverlapPoint(const glm::vec2 &pointer)
+{
+	return pointer.x >= Position.x && pointer.x <= Position.x + Scale.x
+	    && pointer.y >= Position.y && pointer.y <= Position.y + Scale.y;
+}
+
+bool Quad::OverlapQuad(const Quad &other) { return false; }
+
 /**************************** GuiGraphics ****************************/
 
 void GuiGraphics::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend)
