@@ -2,6 +2,8 @@
 
 using namespace dcore::graphics::gui;
 
+Widget::Widget() { SetDefaults_(); }
+
 void Widget::SetDefaults_()
 {
 	IsFocused_     = false;
@@ -15,7 +17,6 @@ void Widget::SetDefaults_()
 
 void Widget::DoInitialize_()
 {
-	SetDefaults_();
 	Initialize(); // Call the user method.
 	for(const auto &child : Children_) child->DoInitialize_();
 }
@@ -27,13 +28,20 @@ void Widget::DoDeInitialize_()
 	SetDefaults_();
 }
 
+Widget *Widget::GetFocusWithin_(FocusEvent *e)
+{
+	Widget *foundWidget = this;
+	// iterate all widgets and check mouse pointer with the widget's quad.
+	return foundWidget;
+}
+
 void Widget::DoHandleEvent_(event::Event *e)
 {
 	if(e->Type == gui::EventTypeFocus)
 	{
 		auto focused = GetFocusWithin_(reinterpret_cast<FocusEvent*>(e));
 		if(focused == this) IsFocused_ = true;
-		// TODO: separate method for focus event, so we can call it directly
+		// TODO(->idkarn): separate method for focus event, so we can call it directly
 		// and spare the event type check.
 		else focused->DoHandleEvent_(e); 
 	}

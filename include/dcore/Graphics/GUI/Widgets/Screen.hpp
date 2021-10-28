@@ -6,6 +6,7 @@ namespace dcore::graphics::gui::common
 	class Screen : public Widget
 	{
 	public:
+		Screen(const glm::vec2 &size);
 		virtual void Initialize() override;
 		virtual void DeInitialize() override;
 		virtual void Render(GuiGraphics *g) override;
