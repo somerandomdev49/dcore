@@ -3,6 +3,7 @@
 using namespace dcore::graphics::gui;
 
 Widget::Widget() { SetDefaults_(); }
+Widget::~Widget() { }
 
 void Widget::SetDefaults_()
 {
@@ -57,3 +58,15 @@ void Widget::DoRender_(GuiGraphics *g)
 	// nothing here fow now. (for now?)
 	Render(g); // Call the user method.
 }
+
+const glm::vec2 &Widget::GetPosition() const { return Quad_.Position; }
+void Widget::SetPosition(const glm::vec2 &newPosition) { Quad_.Position = newPosition; }
+
+float Widget::GetRotation() const { return Quad_.Rotation; }
+void Widget::SetRotation(float newRotation) { Quad_.Rotation = newRotation; }
+
+const glm::vec2 &Widget::GetSize() const { return Quad_.Scale; }
+void Widget::SetSize(const glm::vec2 &newSize) { Quad_.Scale = newSize; }
+
+const Quad &Widget::GetQuad() const { return Quad_; }
+Quad &Widget::GetQuad() { return Quad_; }

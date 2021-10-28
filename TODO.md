@@ -1,11 +1,14 @@
+# [TODO]
+
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
 - [x] ~~InputManager~~
-- [ ] World loading
+- [ ] World loading (terrain loading done)
 
 ## Local TODOs
 
 ### somerandomdev49
+
 - heightmap loading
 - terrain chunk separation
 - chunk rendering
