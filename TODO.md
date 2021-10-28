@@ -1,16 +1,20 @@
+# [TODO]
+
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
 - [x] ~~InputManager~~
-- [ ] World loading
+- [ ] World loading (terrain loading done)
 
 ## Local TODOs
 
 ### somerandomdev49
-- heightmap loading
-- terrain chunk separation
-- chunk rendering
-- world terrain rendering
-- debug camera
+
+- [x] ~~heightmap loading~~
+- [x] ~~terrain chunk separation~~
+- [x] ~~chunk rendering~~
+- [x] ~~world terrain rendering~~
+- [x] ~~debug camera~~
+- [ ] terrain collision
 
 ### idkarn
 
