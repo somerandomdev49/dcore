@@ -10,6 +10,7 @@ namespace dcore::world
 {
 	class World;
 }
+
 namespace dcore::graphics
 {
 	class Renderer;
@@ -31,7 +32,8 @@ namespace dcore::platform
 		dcore::graphics::RendererInterface *GetRendererInterface() const;
 		Frame *GetFrame() const;
 		static Context *Instance();
-
+		
+		world::World *GetWorld() const;
 	private:
 		friend class event::InputManager;
 		friend class launch::Launch;

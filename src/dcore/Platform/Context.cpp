@@ -51,6 +51,7 @@ void Context::Start()
 }
 
 Frame *Context::GetFrame() const { return Frame_; }
+dcore::world::World *Context::GetWorld() const { return World_; }
 
 void Context::CloseWindow() {}
 

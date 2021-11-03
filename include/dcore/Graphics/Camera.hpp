@@ -9,11 +9,11 @@ namespace dcore::graphics
 	public:
 		/**
 		 * @param fov Vertical field of view of the camera
-		 * @param aspect Aspect ration of the view
+		 * @param aspect Aspect ratio of the view
 		 * @param near Near depth
 		 * @param far Far depth
 		 */
-		Camera(float fov = 70.f, float aspect = 4.f / 3.f, float near = 0.1f, float far = 100.f);
+		Camera(float fov = 70.f, float aspect = 4.f / 3.f, float near = 0.1f, float far = 200.f);
 
 		const glm::mat4 &GetViewMatrix();
 		const glm::mat4 &GetProjMatrix();

@@ -2,6 +2,7 @@
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Data/FileOutput.hpp>
 #include <entt/entity/registry.hpp>
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
@@ -88,6 +89,8 @@ namespace dcore::world
 
 		float GetRenderDistance() const;
 		void SetRenderDistance(float newRenderDistance);
+
+		void Save(data::FileOutput &output);
 
 	private:
 		friend class WorldUpdateInfo;

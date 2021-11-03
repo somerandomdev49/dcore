@@ -1,16 +1,38 @@
---- 
-Map1:
-  Terrain: DCore.Heightmap.World1
-  Entities:
-  - Name: TestEntity1
-    Components:
-    - Transform:
-        Position: 0 0 0
-        Rotation: 0 0 0
-        Scale: 1 1 1
-    - StaticMesh:
-        Mesh: DCore.Mesh.Cube
-        Texture: DCore.Texture.Main.Grass
-    - MyComponent:
-        NonEmpty: _
-
+// # --- 
+// # Map1:
+// #   Terrain: DCore.Heightmap.World1
+// #   Entities:
+// #   - Name: TestEntity1
+// #     Components:
+// #     - Transform:
+// #         Position: 0 0 0
+// #         Rotation: 0 0 0
+// #         Scale: 1 1 1
+// #     - StaticMesh:
+// #         Mesh: DCore.Mesh.Cube
+// #         Texture: DCore.Texture.Main.Grass
+// #     - MyComponent:
+// #         NonEmpty: _
+{
+    "Name": "Map1",
+    "Terrain": "DCore.Heightmap.World1",
+    "Entities": [
+        {
+            "Name": "TestEntity1",
+            "Components": {
+                "Transform": {
+                    "Position": [0, 0, 0],
+                    "Rotation": [0, 0, 0],
+                    "Scale": [1, 1, 1]
+                },
+                "StaticMesh": {
+                    "Mesh": "DCore.Mesh.Cube",
+                    "Texture": "DCore.Texture.Main.Grass"
+                },
+                "MyComponent": {
+                    "Non-Empty": null
+                }
+            }
+        }
+    ]
+}

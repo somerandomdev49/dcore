@@ -19,8 +19,8 @@ const vec4 FOG_COLOR = vec4(0.2, 0.4, 0.5, 1.0);
 const float zNear = 0.1;
 const float zFar = 100.0;
 
-const float zFogNear = 40.0;
-const float zFogFar  = 80.0;
+const float zFogNear = 40.0 + 40.0;
+const float zFogFar  = 80.0 + 40.0;
 
 float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
 // float linearDepth(vec4 clipSpacePos)
