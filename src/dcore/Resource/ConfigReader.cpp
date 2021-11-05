@@ -27,6 +27,8 @@ bool ConfigReader::ReadManifest(const std::string &location, DataManifest &data)
 		data.push_back(line.substr(start, end + 1));
 	}
 
+	ifs.close();
+
 	return true;
 }
 
@@ -78,6 +80,8 @@ bool ConfigReader::ReadINI(const std::string &location, DataINI &data)
 			data[name][key.substr(0, keyEnd + 1)] = value.substr(valueStart);
 		}
 	}
+
+	ifs.close();
 
 	return true;
 }

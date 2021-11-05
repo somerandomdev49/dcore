@@ -129,5 +129,7 @@ bool LoaderUtil::LoadFile(std::string &out, const std::string &path)
 	while(stream.read(&buf[0], read_size)) out.append(buf, 0, stream.gcount());
 	out.append(buf, 0, stream.gcount());
 
+	stream.close();
+
 	return true;
 }

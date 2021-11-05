@@ -1,4 +1,5 @@
 #include <dcore/Launch.hpp>
+#include <dcore/Data/Adapters/JsonAdapter.hpp>
 #include <dcore/Resource/ConfigReader.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
@@ -180,6 +181,14 @@ namespace dcore
 		ctx.CloseWindow();
 
 		DCORE_LOG_INFO << "----------------------------------------";
+
+		{
+			data::FileOutput fileOutput("saves", "save1.json");
+			data::adapters::JsonOutputAdapter jsonAdapter;
+			fileOutput.SetAdapter(&jsonAdapter);
+			ctx.GetWorld()->Save(fileOutput);
+			fileOutput.Write();
+		}
 
 		rm.DeInitialize();
 		im.DeInitialize();

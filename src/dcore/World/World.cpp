@@ -3,6 +3,8 @@
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 
+// TODO: Switch to nlohmann/json
+
 using namespace dcore::world;
 
 void TransformComponent::ReCalculateMatrix()
@@ -68,3 +70,10 @@ void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
 
 float World::GetRenderDistance() const { return RenderDistance_; }
 void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }
+
+void World::Save(data::FileOutput &output)
+{
+	auto val = picojson::object();
+	
+	output.Set(picojson::value(std::move(val)));
+}
