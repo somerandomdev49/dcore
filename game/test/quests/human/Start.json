@@ -1,0 +1,42 @@
+{
+	"id": "DCore.Quest.Main.Starting.Human.1",
+	"target": "DCore.Npc.Main.Bagomir.FelixAxelnorder",
+	"quest": {
+		"title": "A Beginning",
+		"text": [
+			"Feeling good about your training, eh? Well, show me some stuff you got then, #pname!",
+			"Interestingly, I wanted you to use your abilities on dummy targets, but about five minutes",
+			"ago, I was notified about a spider invasion on the nearby village, Eastheel! Giant spiders",
+			"from a long forgotten cave near the lake... I've sent quite a few soldiers but I haven't",
+			"gotten any news from them since last night. I'm pretty sure they're find though, nothing",
+			"serious about some spiders! Not that they haven't seen them before.", "#-", "So I decided to",
+			"give you a chance to experience something more serious than a dummy. Or you still want to practice",
+			"on a leather target?"
+		],
+		"note": "Is this your first time playing? Practice on dummies first, to understand the controls!",
+		"choices": [
+			{ "name": "Practice", "req": null, "index": 0 },
+			{ "name": "Go to Eastheel Village", "req": null, "index": 1 }
+		],
+		"subquests": [
+			{
+				"type": "kill_n_enemies",
+				"count": 3,
+				"enemy_tags": ["DCore.Tag.Main.Bagomir.TavernHaldamor.Dummy"],
+				"triggers": {
+					"on_take": ["practice_mode_activate"],
+					"on_finish": []
+				}
+			},
+			{
+				"type": "kill_n_enemies",
+				"count": 8,
+				"enemy_tags": ["DCore.Tag.Main.Bagomir.Eastheel.Spider.*"],
+				"triggers": {
+					"on_take": [],
+					"on_finish": ["take_quest DCore.Quest.Main.Starting.Human.2", "get_xp 20"]
+				}
+			}
+		]
+	}
+}

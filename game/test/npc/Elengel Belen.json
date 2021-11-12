@@ -1,0 +1,14 @@
+{
+	"id": "DCore.Npc.Main.Bagomir.FelixAxelnorder",
+	"location": {
+		"anchor": "DCore.Anchor.Main.Bagomir.Belendur.TavernHaldamor.Entrance.Center",
+		"offset": [0, 20, 0]
+	},
+	"npc": {
+		"fullname": "Felix Axelnorder",
+		"player_relation": 100,
+		"rank": "General",
+		"master": "DCore.Npc.Main.Bagomir.MyrgotHellthrow",
+		"kind": "Unkillable"
+	}
+}

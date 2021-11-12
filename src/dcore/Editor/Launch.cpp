@@ -167,6 +167,9 @@ namespace dcore
 		e.GetComponent<world::TransformComponent>().Rotation = glm::identity<glm::quat>();
 		e.GetComponent<world::TransformComponent>().Scale    = glm::vec3(1.0f, 1.0f, 1.0f);
 
+		platform::Context::Instance()->GetWorld()->
+			RegisterSaveFunction<world::TransformComponent>(&world::TransformComponent::Save);
+
 		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
 

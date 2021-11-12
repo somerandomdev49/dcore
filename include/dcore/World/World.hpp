@@ -26,6 +26,8 @@ namespace dcore::world
 
 		/** Recalculates the transform matrix. */
 		void ReCalculateMatrix();
+
+		static void Save(data::FileOutput &output, void *comp);
 	};
 
 	struct StaticMeshComponent
@@ -63,15 +65,8 @@ namespace dcore::world
 	class World
 	{
 	public:
-		// class WorldUpdateInfo
-		// {
-		// public:
-		//     template<typename T>
-		//     void Each(void (*func)(Entity *entity, T *component));
-		// private:
-		//     friend class World;
-		//     World *World_;
-		// };
+		/** void SaveFunction(data::FileOutput &out, ); */
+		using SaveFunction = void (*)(data::FileOutput&, void*);
 
 		template<typename T>
 		T &GetComponent(const Entity *entity);
@@ -92,6 +87,9 @@ namespace dcore::world
 
 		void Save(data::FileOutput &output);
 
+		template<typename T>
+		void RegisterSaveFunction(SaveFunction func);
+
 	private:
 		friend class WorldUpdateInfo;
 		friend class platform::Context;
@@ -104,6 +102,7 @@ namespace dcore::world
 		entt::registry Registry_;
 		terrain::Terrain Terrain_;
 		float RenderDistance_ = 32.0f;
+		std::unordered_map<entt::id_type, SaveFunction> SaveFunctions_;
 	};
 } // namespace dcore::world
 
@@ -141,4 +140,10 @@ void dcore::world::World::Each(FunctionType f)
 		    Entity entity(entityid, this);
 		    f(&entity, &c);
 	    });
+}
+
+template<typename T>
+void dcore::world::World::RegisterSaveFunction(SaveFunction func)
+{
+	SaveFunctions_[entt::type_hash<T>::value()] = func;
 }

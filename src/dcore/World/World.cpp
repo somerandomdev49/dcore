@@ -73,7 +73,14 @@ void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRe
 
 void World::Save(data::FileOutput &output)
 {
-	auto val = picojson::object();
+	output.Get() = nlohmann::json { { "version", "0.02" }, { "entities", nlohmann::json::array() } };
+	std::vector<entt::id_type> types; types.reserve(SaveFunctions_.size());
+	for(const auto &[type, saveFunc] : SaveFunctions_)
+		types.push_back(type); // TODO: c++ thing to make this into a single call?
 	
-	output.Set(picojson::value(std::move(val)));
+	auto view = Registry_.runtime_view(types.cbegin(), types.cend());
+	for(auto entity : view)
+	{
+		output.Get()["entities"].push_back(nlohmann::json({}));
+	}
 }
