@@ -71,7 +71,7 @@ void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
 float World::GetRenderDistance() const { return RenderDistance_; }
 void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }
 
-void World::Save(data::FileOutput &output)
+void World::Save(data::FileOutput &output) 
 {
 	output.Get() = nlohmann::json { { "version", "0.02" }, { "entities", nlohmann::json::array() } };
 	std::vector<entt::id_type> types; types.reserve(SaveFunctions_.size());

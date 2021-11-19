@@ -5,10 +5,28 @@
 * `glm` - `brew install glm` - mathematics
 * `freetype` - `brew install freetype` - font rendering
 * `json` - `brew install nlohmann_json` - json serialization/deserialization
-	
+* `bullet3` - `git clone https://github.com/bulletphysics/bullet3` - bullet3 physics
+
 ## Specific installation steps
 
-### If Vscode can't find sutff in `/usr/include`, do this
+### Installing Bullet3 (!important!)
+
+> Requirements: `cmake`, `make`
+
+```shell
+cd <library-path> # Not `dcore/`!
+git clone https://github.com/bulletphysics/bullet3
+cd bullet3
+mkdir build
+cd build
+cmake .. -D CMAKE_C_COMPILER=<C++ COMPILER> -D CMAKE_CXX_COMPILER=<C++ COMPILER> # Generates the Makefiles
+make # Builds the necessary Bullet3 modules.
+sudo make install # Installs the libraries.
+```
+
+## vscode
+
+### If vscode can't find sutff in `/usr/include`, do this
 
 make a symlink for json
 

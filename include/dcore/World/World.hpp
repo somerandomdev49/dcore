@@ -147,3 +147,4 @@ void dcore::world::World::RegisterSaveFunction(SaveFunction func)
 {
 	SaveFunctions_[entt::type_hash<T>::value()] = func;
 }
+  
