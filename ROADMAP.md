@@ -1,6 +1,6 @@
 # General Plan
 
-- Mid-September - End-of-Novemver/Mid-December 2021:
+- Mid-September - End-of-Novemver/Mid-End-December 2021:
   Finish the engine, start writing the lore and such.
   Begin writing the main game subsystems.
 
