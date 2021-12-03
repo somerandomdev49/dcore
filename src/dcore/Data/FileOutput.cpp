@@ -6,6 +6,8 @@ FileOutput::FileOutput(const std::string &root, const std::string &initialPath) 
 
 void FileOutput::SetAdapter(OutputAdapter *adapter) { Adapter_ = adapter; }
 void FileOutput::Set(const Json &value) { RootValue_ = value; }
+const Json &FileOutput::Get() const { return RootValue_; }
+Json &FileOutput::Get() { return RootValue_; }
 void FileOutput::Write()
 {
 	if(!Adapter_) return;

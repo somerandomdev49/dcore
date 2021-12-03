@@ -2,6 +2,7 @@
 #include <dcore/Data/FileOutput.hpp>
 #include <dcore/Core/SparseSet.hpp>
 #include <dcore/Core/Log.hpp>
+#include <dcore/Uni.hpp>
 #include <type_traits>
 #include <typeindex>
 
@@ -53,7 +54,7 @@ namespace dcore::world
 		const std::vector<EntityHandle> &GetAllEntities() const;
 
 		/** Note: expensive method? */
-		std::vector<System> GetSystems(const EntityHandle &entity);
+		std::vector<const System*> GetSystems(const EntityHandle &entity);
 
 		template<typename ComponentType>
 		ComponentType &GetComponent(const EntityHandle &entity);
@@ -178,5 +179,12 @@ namespace dcore::world
 	const std::vector<EntityHandle> &ECS::GetEntities() const
 	{
 		return this->AllEntities_;
+	}
+	
+	template<typename ComponentType>
+	void ECS::RegisterSystem(System &&system)
+	{
+		ComponentPools_[std::type_index(typeid(ComponentType))].SystemIndex_ = AllSystems_.size();
+		AllSystems_.push_back(std::move(system));
 	}
 }; // namespace dcore::world

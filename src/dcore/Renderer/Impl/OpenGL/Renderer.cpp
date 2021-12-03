@@ -9,7 +9,7 @@
 using namespace dcore::graphics;
 using namespace dcore::graphics::impl::opengl;
 
-#define FOG_COLOR 0.2f, 0.4f, 0.5f, 1.0f
+#define FOG_COLOR 0.517f, 0.686f, 0.850f, 1.0f
 
 void Renderer::OnBeginRender()
 {

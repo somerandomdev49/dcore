@@ -14,7 +14,7 @@ uniform sampler2D u_TexB;
 uniform float u_Tiling = 10.f;
 
 const vec3 SUN = normalize(vec3(1, -1, 0));
-const vec4 FOG_COLOR = vec4(0.2, 0.4, 0.5, 1.0);
+const vec4 FOG_COLOR = vec4(0.517, 0.686, 0.850, 1.0);
 
 const float zNear = 0.1;
 const float zFar = 100.0;

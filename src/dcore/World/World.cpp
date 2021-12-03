@@ -29,6 +29,8 @@ void TransformComponent::ReCalculateMatrix()
 	Dirty_  = false;
 }
 
+bool TransformComponent::IsDirty() const { return Dirty_; }
+
 glm::mat4 TransformComponent::GetNewMatrix() const
 {
 	glm::mat4 m = glm::mat4_cast(Rotation_);
@@ -128,7 +130,7 @@ void World::Save(data::FileOutput &output)
 	{
 		data::Json out      = data::Json::object();
 		const auto &systems = ECSInstance()->GetSystems(entity);
-		for(const auto &system : systems) system.SaveFunction(entity, out);
+		for(const auto &system : systems) system->SaveFunction(entity, out);
 	}
 	// auto view = Registry_.runtime_view(types.cbegin(), types.cend());
 	// for(auto entity : view)
@@ -136,3 +138,5 @@ void World::Save(data::FileOutput &output)
 	// 	output.Get()["entities"].push_back(data::Json({}));
 	// }
 }
+
+

@@ -3,7 +3,7 @@
 * `glfw` - `brew install glfw` - cross platform window/input management.
 * `glm` - `brew install glm` - mathematics
 * `freetype` - `brew install freetype` - font rendering
-* `json` - `brew install nlohmann_json` - json serialization/deserialization
+* `json` - `brew install nlohmann_json/nlohmann-json` - json serialization/deserialization
 * `bullet3` - `git clone https://github.com/bulletphysics/bullet3` - bullet3 physics
 
 ## Specific installation steps
