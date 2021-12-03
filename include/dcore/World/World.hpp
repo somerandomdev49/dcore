@@ -1,9 +1,11 @@
 #pragma once
+#include <dcore/Core/Refl.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Data/FileOutput.hpp>
-#include <entt/entity/registry.hpp>
+// #include <entt/entity/registry.hpp>
+#include <dcore/World/Entity.hpp>
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -15,37 +17,70 @@ namespace dcore::platform
 
 namespace dcore::world
 {
-	struct TransformComponent
-	{
-		entt::entity Parent;
-		glm::vec3 Position;
-		glm::quat Rotation;
-		glm::vec3 Scale;
+	class Entity; // forward declaration.
 
-		glm::mat4 Matrix;
+	/**
+	 * @brief Component that contains positional and hierarchical data for an entity.
+	 */
+	struct TransformComponent : ComponentBase<TransformComponent>
+	{
+	public:
+		Entity *GetParent() const;
+		const glm::vec3 &GetPosition() const;
+		const glm::quat &GetRotation() const;
+		const glm::vec3 &GetScale() const;
+		const glm::mat4 &GetMatrix() const;
+		const glm::mat4 &GetMatrix();
+
+		void SetPosition(const glm::vec3 &newPosition);
+		void SetRotation(const glm::quat &newRotation);
+		void SetScale(const glm::vec3 &newScale);
+
+		bool IsDirty() const;
 
 		/** Recalculates the transform matrix. */
 		void ReCalculateMatrix();
 
-		static void Save(data::FileOutput &output, void *comp);
+		void Save(const EntityHandle &entity, data::Json &output);
+
+	private:
+		glm::mat4 GetNewMatrix() const;
+
+		Entity *Parent_;
+		glm::vec3 Position_;
+		glm::quat Rotation_;
+		glm::vec3 Scale_;
+		glm::mat4 Matrix_;
+		bool Dirty_;
 	};
 
-	struct StaticMeshComponent
+	/**
+	 * @brief Component that includes a static mesh for rendering.
+	 */
+	struct StaticMeshComponent : ComponentBase<StaticMeshComponent>
 	{
 		graphics::StaticMesh Mesh;
 	};
 
 	class World;
-	struct DynamicComponent
+
+	/**
+	 * @brief Component for scripting, currently deprecated.
+	 * @deprecated
+	 */
+	struct DynamicComponent : ComponentBase<DynamicComponent>
 	{
 		void *Data;
-		void (*Update)(void *, World *);
+		// void (*Update)(void *, World *);
 	};
 
+	/**
+	 * @brief Wrapper for @ref dcore::world::EntityHandle
+	 */
 	class Entity
 	{
 	public:
-		Entity(entt::entity id, World *world);
+		Entity(EntityHandle id, World *world);
 
 		template<typename T>
 		void AddComponent(const T &c);
@@ -54,19 +89,22 @@ namespace dcore::world
 		T &GetComponent() const;
 
 		/** Returns the entity's id. */
-		entt::entity GetId() const;
+		EntityHandle GetId() const;
 
 	private:
 		friend class World;
-		entt::entity Id_;
+		EntityHandle Id_;
 		World *World_;
 	};
 
+	/**
+	 * @brief Wrapper for @ref dcore::world::ECS and terrain
+	 */
 	class World
 	{
 	public:
 		/** void SaveFunction(data::FileOutput &out, ); */
-		using SaveFunction = void (*)(data::FileOutput&, void*);
+		using SaveFunction = void (*)(data::FileOutput &, void *);
 
 		template<typename T>
 		T &GetComponent(const Entity *entity);
@@ -77,8 +115,8 @@ namespace dcore::world
 		Entity CreateEntity();
 		void RegisterUpdate(void (*f)(World *));
 
-		template<typename ComponentType, typename FunctionType>
-		void Each(FunctionType func);
+		// template<typename ComponentType, typename FunctionType>
+		// void Each(FunctionType func);
 
 		const terrain::Terrain &GetTerrain() const;
 
@@ -86,9 +124,6 @@ namespace dcore::world
 		void SetRenderDistance(float newRenderDistance);
 
 		void Save(data::FileOutput &output);
-
-		template<typename T>
-		void RegisterSaveFunction(SaveFunction func);
 
 	private:
 		friend class WorldUpdateInfo;
@@ -99,10 +134,8 @@ namespace dcore::world
 		void Update();
 		void Render(graphics::RendererInterface *render);
 		std::vector<void (*)(World *)> Updates_;
-		entt::registry Registry_;
 		terrain::Terrain Terrain_;
 		float RenderDistance_ = 32.0f;
-		std::unordered_map<entt::id_type, SaveFunction> SaveFunctions_;
 	};
 } // namespace dcore::world
 
@@ -121,30 +154,29 @@ void dcore::world::Entity::AddComponent(const T &c)
 template<typename T>
 T &dcore::world::World::GetComponent(const Entity *entity)
 {
-	return Registry_.get<T>(entity->Id_);
+	return ECSInstance()->GetComponent<T>(entity->Id_);
 }
 
 template<typename T>
 void dcore::world::World::AddComponent(Entity *entity, const T &c)
 {
-	Registry_.emplace<T>(entity->Id_, c);
+	ECSInstance()->AddComponent<T>(entity->Id_, c);
 }
 
-template<typename ComponentType, typename FunctionType>
-void dcore::world::World::Each(FunctionType f)
-{
-	auto view = Registry_.view<ComponentType>();
-	view.each(
-	    [&](auto entityid, auto &c)
-	    {
-		    Entity entity(entityid, this);
-		    f(&entity, &c);
-	    });
-}
+// template<typename ComponentType, typename FunctionType>
+// void dcore::world::World::Each(FunctionType f)
+// {
+// 	auto view = Registry_.view<ComponentType>();
+// 	view.each(
+// 	    [&](auto entityid, auto &c)
+// 	    {
+// 		    Entity entity(entityid, this);
+// 		    f(&entity, &c);
+// 	    });
+// }
 
-template<typename T>
-void dcore::world::World::RegisterSaveFunction(SaveFunction func)
-{
-	SaveFunctions_[entt::type_hash<T>::value()] = func;
-}
-  
+// template<typename T>
+// void dcore::world::World::RegisterSaveFunction(SaveFunction func)
+// {
+// 	SaveFunctions_[std::type_index(typeid(func))] = func;
+// }

@@ -3,7 +3,7 @@
 using namespace dcore::graphics::gui;
 
 Widget::Widget() { SetDefaults_(); }
-Widget::~Widget() { }
+Widget::~Widget() {}
 
 void Widget::SetDefaults_()
 {
@@ -40,11 +40,11 @@ void Widget::DoHandleEvent_(event::Event *e)
 {
 	if(e->Type == gui::EventTypeFocus)
 	{
-		auto focused = GetFocusWithin_(reinterpret_cast<FocusEvent*>(e));
+		auto focused = GetFocusWithin_(reinterpret_cast<FocusEvent *>(e));
 		if(focused == this) IsFocused_ = true;
 		// TODO(->idkarn): separate method for focus event, so we can call it directly
 		// and spare the event type check.
-		else focused->DoHandleEvent_(e); 
+		else focused->DoHandleEvent_(e);
 	}
 	else
 	{

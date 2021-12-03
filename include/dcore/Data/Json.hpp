@@ -4,5 +4,5 @@
 namespace dcore::data
 {
 	namespace nlh = nlohmann;
-	using Json = nlh::json;
-}
+	using Json    = nlh::json;
+} // namespace dcore::data

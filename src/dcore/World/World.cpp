@@ -2,16 +2,73 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
-
-// TODO: Switch to nlohmann/json
-
+#include <dcore/Util/JsonConverters.hpp>
 using namespace dcore::world;
+
+DCORE_COMPONENT_REGISTER(TransformComponent);
+DCORE_COMPONENT_AUTO_NAME(TransformComponent);
+
+DCORE_COMPONENT_REGISTER(StaticMeshComponent);
+DCORE_COMPONENT_AUTO_NAME(StaticMeshComponent);
+
+DCORE_COMPONENT_REGISTER(DynamicComponent);
+DCORE_COMPONENT_AUTO_NAME(DynamicComponent);
+
+void TransformComponent::Save(const EntityHandle &self, data::Json &output)
+{
+	output = data::Json::object({
+	    {"position", util::JsonConverters::Glm(this->Position_)},
+	    {"rotation", util::JsonConverters::Glm(this->Position_)},
+	    {"scale", util::JsonConverters::Glm(this->Position_)},
+	});
+}
 
 void TransformComponent::ReCalculateMatrix()
 {
-	Matrix = glm::mat4_cast(Rotation);
-	Matrix = glm::scale(Matrix, Scale);
-	Matrix = glm::translate(Matrix, Position);
+	Matrix_ = GetNewMatrix();
+	Dirty_  = false;
+}
+
+glm::mat4 TransformComponent::GetNewMatrix() const
+{
+	glm::mat4 m = glm::mat4_cast(Rotation_);
+	m           = glm::scale(Matrix_, Scale_);
+	m           = glm::translate(Matrix_, Position_);
+	return m;
+}
+
+Entity *TransformComponent::GetParent() const { return Parent_; }
+const glm::vec3 &TransformComponent::GetPosition() const { return Position_; }
+const glm::quat &TransformComponent::GetRotation() const { return Rotation_; }
+const glm::vec3 &TransformComponent::GetScale() const { return Scale_; }
+const glm::mat4 &TransformComponent::GetMatrix()
+{
+	if(Dirty_) ReCalculateMatrix();
+	return Matrix_;
+}
+const glm::mat4 &TransformComponent::GetMatrix() const
+{
+	static glm::mat4 newMatrixTemp; // We still need to return a reference!
+	if(Dirty_) return newMatrixTemp = GetNewMatrix();
+	return Matrix_;
+}
+
+void TransformComponent::SetPosition(const glm::vec3 &newPosition)
+{
+	Position_ = newPosition;
+	Dirty_    = true;
+}
+
+void TransformComponent::SetRotation(const glm::quat &newRotation)
+{
+	Rotation_ = newRotation;
+	Dirty_    = true;
+}
+
+void TransformComponent::SetScale(const glm::vec3 &newScale)
+{
+	Scale_ = newScale;
+	Dirty_ = true;
 }
 
 dcore::resource::Resource<dcore::graphics::gui::Font> font__tmp;
@@ -27,60 +84,55 @@ void World::DeInitialize() {}
 
 void World::Update()
 {
-	auto v = Registry_.view<DynamicComponent>();
-
-	for(const auto e : v)
+	const auto &systems = ECSInstance()->GetAllSystems();
+	for(const auto &system : systems)
 	{
-		const auto &dc = Registry_.get<DynamicComponent>(e);
-		dc.Update(dc.Data, this);
+		(void)system;
 	}
-
-	for(const auto p : Updates_) p(this);
 }
 
 void World::Render(graphics::RendererInterface *render)
 {
 	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
-	auto v = Registry_.view<StaticMeshComponent, TransformComponent>();
-
-	for(auto e : v)
+	const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
+	for(const auto &entity : entities)
 	{
-		auto &t = Registry_.get<TransformComponent>(e);
-		auto &r = Registry_.get<StaticMeshComponent>(e);
-		t.ReCalculateMatrix();
-		r.Mesh.SetTransform(t.Matrix);
-		render->RenderStaticMesh(&r.Mesh);
+		auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
+		auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
+
+		if(transform.IsDirty()) transform.ReCalculateMatrix();
+		staticMesh.Mesh.SetTransform(transform.GetMatrix());
+		render->RenderStaticMesh(&staticMesh.Mesh);
 	}
 
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
-
-	// graphics::gui::GuiGraphics::Instance()->RenderQuad(graphics::gui::Quad {glm::vec2(0.1f, 0.1f), glm::vec2(0.5f,
-	// 0.5f), 0.0f,
-	// font__tmp.Get()->GetAtlasTexture(),
-	// glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)});
 }
 
-entt::entity Entity::GetId() const { return Id_; }
-Entity::Entity(entt::entity e, World *world) : Id_(e), World_(world) {}
+dcore::world::EntityHandle Entity::GetId() const { return Id_; }
+Entity::Entity(dcore::world::EntityHandle e, World *world) : Id_(e), World_(world) {}
 
-Entity World::CreateEntity() { return Entity(Registry_.create(), this); }
+Entity World::CreateEntity() { return Entity(ECSInstance()->CreateEntity(), this); }
 
 void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
 
 float World::GetRenderDistance() const { return RenderDistance_; }
 void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }
 
-void World::Save(data::FileOutput &output) 
+void World::Save(data::FileOutput &output)
 {
-	output.Get() = nlohmann::json { { "version", "0.02" }, { "entities", nlohmann::json::array() } };
-	std::vector<entt::id_type> types; types.reserve(SaveFunctions_.size());
-	for(const auto &[type, saveFunc] : SaveFunctions_)
-		types.push_back(type); // TODO: c++ thing to make this into a single call?
-	
-	auto view = Registry_.runtime_view(types.cbegin(), types.cend());
-	for(auto entity : view)
+	output.Get() = data::Json {{"version", "0.02"}, {"entities", data::Json::array()}};
+
+	const auto &entities = ECSInstance()->GetAllEntities();
+	for(const auto &entity : entities)
 	{
-		output.Get()["entities"].push_back(nlohmann::json({}));
+		data::Json out      = data::Json::object();
+		const auto &systems = ECSInstance()->GetSystems(entity);
+		for(const auto &system : systems) system.SaveFunction(entity, out);
 	}
+	// auto view = Registry_.runtime_view(types.cbegin(), types.cend());
+	// for(auto entity : view)
+	// {
+	// 	output.Get()["entities"].push_back(data::Json({}));
+	// }
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Game/Entity/Inventory.hpp>
 #include <dcore/Game/Entity/Actor.hpp>
+#include <dcore/World/Entity.hpp>
 #include <dcore/Game/Quest.hpp>
 #include <dcore/Uni.hpp>
 #include <vector>
@@ -12,7 +13,7 @@
 
 namespace dg::entity
 {
-	class CharacterComponent
+	class CharacterComponent : dcore::world::ComponentBase<CharacterComponent>
 	{
 	public:
 		Quest *GetAssignedQuest(int index) const;

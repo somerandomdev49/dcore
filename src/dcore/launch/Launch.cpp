@@ -5,5 +5,5 @@
 
 namespace dcore
 {
-	
+
 } // namespace dcore

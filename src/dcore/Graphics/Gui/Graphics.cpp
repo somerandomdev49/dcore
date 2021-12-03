@@ -64,8 +64,8 @@ dcore::graphics::RShader *FontShader::Get() const { return Shader_.Get(); }
 // TODO(!): Rotation
 bool Quad::OverlapPoint(const glm::vec2 &pointer)
 {
-	return pointer.x >= Position.x && pointer.x <= Position.x + Scale.x
-	    && pointer.y >= Position.y && pointer.y <= Position.y + Scale.y;
+	return pointer.x >= Position.x && pointer.x <= Position.x + Scale.x && pointer.y >= Position.y &&
+	       pointer.y <= Position.y + Scale.y;
 }
 
 bool Quad::OverlapQuad(const Quad &other) { return false; }

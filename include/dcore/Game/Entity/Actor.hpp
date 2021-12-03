@@ -1,4 +1,5 @@
 #include <vector>
+#include <dcore/World/Entity.hpp>
 #include <dcore/Game/Entity/Effect.hpp>
 
 namespace dg::entity
@@ -15,7 +16,7 @@ namespace dg::entity
 
 		// CharacterModel *GetCharacterModel() const;
 
-		static void Update(ActorComponent *self);
+		void Update(dcore::world::Entity &entity);
 
 	private:
 		float MaxHealth_, Health_, BaseDamage_;

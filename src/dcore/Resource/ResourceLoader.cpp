@@ -57,7 +57,7 @@ void ResourceLoader::LoadByName(const std::string &name)
 	DCORE_LOG_INFO << "[ResourceLoader] Loading resource(s) of type " << type << " at " << path;
 	std::vector<std::pair<std::string, std::string>> maps;
 	FindMappings_(path, maps);
-	for(const auto p : maps)
+	for(const auto &p : maps)
 	{
 		auto actual = FullPath(p.second);
 		DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << p.first << " at " << actual << " [" << type << ']';

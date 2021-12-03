@@ -1,6 +1,5 @@
 # Deps
 
-* `entt` - `brew install skypjack/entt/entt` - ECS
 * `glfw` - `brew install glfw` - cross platform window/input management.
 * `glm` - `brew install glm` - mathematics
 * `freetype` - `brew install freetype` - font rendering

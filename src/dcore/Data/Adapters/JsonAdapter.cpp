@@ -4,7 +4,7 @@
 
 using namespace dcore::data::adapters;
 
-void JsonOutputAdapter::Write(const std::string &path, const picojson::value &value)
+void JsonOutputAdapter::Write(const std::string &path, const Json &value)
 {
 	std::ofstream out(path);
 	if(!out)
@@ -13,7 +13,7 @@ void JsonOutputAdapter::Write(const std::string &path, const picojson::value &va
 		return;
 	}
 
-	value.serialize(std::ostream_iterator<char>(out));
+	out << value.dump(); //(std::ostream_iterator<char>(out));
 
 	out.close();
 }

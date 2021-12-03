@@ -13,14 +13,17 @@ namespace dg::entity
 
 		class Iterator
 		{
-			Inventory &inv;
+			friend Inventory;
+			Inventory *inv;
 			int index;
 
+			Iterator(Inventory *inv, int index) : inv(inv), index(index) {}
+
 		public:
-			Item &operator*() const;
-			Item *operator->() const;
-			Iterator &operator++();
-			bool operator==(const Iterator &other) const;
+			Item &operator*() const { return inv->Items_[index]; }
+			Item *operator->() const { return &inv->Items_[index]; }
+			Iterator &operator++() { ++index; }
+			bool operator==(const Iterator &other) const { return inv == other.inv && index == other.index; }
 		};
 
 		class ConstIterator
@@ -35,12 +38,14 @@ namespace dg::entity
 			bool operator==(const ConstIterator &other) const;
 		};
 
-		Iterator begin() const;
-		Iterator end() const;
+		Iterator begin() { return Iterator(this, 0); }
+		Iterator end() { return Iterator(this, Items_.size()); }
 		ConstIterator cbegin() const;
 		ConstIterator cend() const;
 
 	private:
+		friend class Iterator;
+		friend class ConstIterator;
 		std::vector<Item> Items_;
 	};
 } // namespace dg::entity

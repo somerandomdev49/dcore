@@ -1,29 +1,32 @@
 # Implementation Notes: Entity Management
 
 The engine has an ECS, but we need something more specific for an rpg.
-
 > Note: all of the code below should be copied only partially.
 
 An actor component has all of the basic info for living things (e.g. health, effects...)
-```c++
-class dg::entity::ActorComponent
-{
-public:
-    float GetMaxHealth() const;
-    float GetHealth() const;
-    
-    const std::vector<Effect> &GetEffects() const;
-    void AddEffect(const Effect &newEffect);
 
-    CharacterModel *GetCharacterModel() const;
-    
-    /** Due to performance and library reasons, this how the components are updated. */
-    static void Update(ActorComponent *self);
-    ...
-};
+```c++
+namespace dg::entity
+{
+    class ActorComponent : dcore::world::ComponentBase<ActorComponent>
+    {
+    public:
+        CharacterModel *GetCharacterModel() const;
+
+        float GetMaxHealth() const;
+        float GetHealth() const;
+        
+        const std::vector<Effect> &GetEffects() const;
+        void AddEffect(const Effect &newEffect);
+        
+        void Update(const dcore::world::EntityHandle &self);
+        ...
+    };
+}
 ```
 
 An effect is something that affects an actor during a period of time.
+
 ```c++
 class dg::entity::Effect
 {
@@ -37,6 +40,7 @@ public:
 ```
 
 EntityManager the class that creates the `dcore::world::Entity` entities.
+
 ```c++
 class EntityManager
 {
@@ -45,4 +49,3 @@ class EntityManager
     void Spawn(ActorType *type, const SpawnPoint &where);
 };
 ```
-

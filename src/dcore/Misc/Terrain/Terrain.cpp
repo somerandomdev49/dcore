@@ -1,13 +1,16 @@
 #include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Core/Log.hpp>
 
-using namespace dcore::terrain;
-
-inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
+namespace glm
 {
-	os << "(" << v.x << ", " << v.y << ")";
-	return os;
-}
+	inline std::ostream &operator<<(std::ostream &os, const ivec2 &v)
+	{
+		os << "(" << v.x << ", " << v.y << ")";
+		return os;
+	}
+} // namespace glm
+
+using namespace dcore::terrain;
 
 void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 {
