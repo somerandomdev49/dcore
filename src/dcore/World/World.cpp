@@ -1,8 +1,9 @@
 #include <dcore/World/World.hpp>
-#include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
-#include <dcore/Graphics/GUI/Font.hpp>
+#include <dcore/Graphics/GUI/GuiManager.hpp>
 #include <dcore/Util/JsonConverters.hpp>
+#include <dcore/Graphics/GUI/Font.hpp>
+#include <dcore/Graphics/Graphics.hpp>
 using namespace dcore::world;
 
 DCORE_COMPONENT_REGISTER(TransformComponent);
@@ -73,25 +74,22 @@ void TransformComponent::SetScale(const glm::vec3 &newScale)
 	Dirty_ = true;
 }
 
-dcore::resource::Resource<dcore::graphics::gui::Font> font__tmp;
 void World::Initialize()
 {
-	// TODO: This should not be constant!
 	Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
 	Terrain_.ActivateAllChunks();
-	font__tmp = resource::ResourceManager::Instance()->Get<graphics::gui::Font>("DCore.Font.Debug");
 }
 
 void World::DeInitialize() {}
 
 void World::Update()
 {
+	// TODO: Handle UI clicks and other events.
 	const auto &entities = ECSInstance()->GetAllEntities();
 	for(const auto &entity : entities)
 	{
 		const auto &systems = ECSInstance()->GetSystems(entity);
-		for(const auto &system : systems)
-			system->UpdateFunction(entity);
+		for(const auto &system : systems) system->UpdateFunction(entity);
 	}
 }
 
@@ -107,12 +105,15 @@ void World::Render(graphics::RendererInterface *render)
 
 		if(transform.IsDirty()) transform.ReCalculateMatrix();
 		staticMesh.Mesh.SetTransform(transform.GetMatrix());
-		
+
 		render->RenderStaticMesh(&staticMesh.Mesh);
 	}
 
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+
+	// Rebder the UI. (Maybe doesn't belong here...)
+	graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
 }
 
 dcore::world::EntityHandle Entity::GetId() const { return Id_; }
@@ -137,5 +138,3 @@ void World::Save(data::FileOutput &output)
 		for(const auto &system : systems) system->SaveFunction(entity, out);
 	}
 }
-
-

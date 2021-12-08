@@ -55,8 +55,8 @@ void Widget::DoHandleEvent_(event::Event *e)
 
 void Widget::DoRender_(GuiGraphics *g)
 {
-	// nothing here fow now. (for now?)
 	Render(g); // Call the user method.
+	for(auto &child : Children_) child->DoRender_(g);
 }
 
 const glm::vec2 &Widget::GetPosition() const { return Quad_.Position; }

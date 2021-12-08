@@ -25,6 +25,7 @@ namespace dcore::world
 		EndFunctionType EndFunction;
 		SaveFunctionType SaveFunction;
 		LoadFunctionType LoadFunction;
+		const std::type_info &Type;
 	};
 
 	namespace detail
@@ -34,12 +35,12 @@ namespace dcore::world
 		DCORE_HAS_MEMBER(End);
 		DCORE_HAS_MEMBER(Save);
 		DCORE_HAS_MEMBER(Load);
-	}
+	} // namespace detail
 
 	template<class S>
 	System GetSystem()
 	{
-		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load};
+		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, typeid(S)};
 	}
 
 	class ECS
@@ -52,20 +53,20 @@ namespace dcore::world
 
 		/**
 		 * @brief Get every registered system
-		 * 
+		 *
 		 * @return Vector of every registered system
 		 */
 		const std::vector<System> &GetAllSystems() const;
 
 		/**
 		 * @brief Get all of entities in the ECS.
-		 * 
+		 *
 		 * @return Vector of every entity
 		 */
 		const std::vector<EntityHandle> &GetAllEntities() const;
 
 		/** Note: expensive method? */
-		std::vector<const System*> GetSystems(const EntityHandle &entity);
+		std::vector<const System *> GetSystems(const EntityHandle &entity);
 
 		template<typename ComponentType>
 		ComponentType &GetComponent(const EntityHandle &entity);
@@ -94,17 +95,17 @@ namespace dcore::world
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);
 
-#define DCORE_COMPONENT_NAME(T, N)                    \
-	template<>                                        \
-	const char *ComponentBase<T>::ThisComponentName() \
-	{                                                 \
-		return N;                                     \
+#define DCORE_COMPONENT_NAME(T, N)                                     \
+	template<>                                                         \
+	const char * ::dcore::world::ComponentBase<T>::ThisComponentName() \
+	{                                                                  \
+		return N;                                                      \
 	}
-#define DCORE_COMPONENT_AUTO_NAME(T)                  \
-	template<>                                        \
-	const char *ComponentBase<T>::ThisComponentName() \
-	{                                                 \
-		return #T;                                    \
+#define DCORE_COMPONENT_AUTO_NAME(T)                                   \
+	template<>                                                         \
+	const char * ::dcore::world::ComponentBase<T>::ThisComponentName() \
+	{                                                                  \
+		return #T;                                                     \
 	}
 #define DCORE_COMPONENT_REGISTER(T)                                \
 	template<>                                                     \
@@ -118,11 +119,7 @@ namespace dcore::world
 	protected:
 		static const struct Reg
 		{
-			Reg()
-			{
-				printf("ComponentBase<%s>: => Registering\n", ThisComponentName());
-				ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>>());
-			}
+			Reg() { ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>>()); }
 		} RegStatic_;
 
 	public:
@@ -143,7 +140,6 @@ namespace dcore::world
 
 		static void Update(const EntityHandle &self)
 		{
-			printf("ComponentBase<%s>::Update(%ld)\n", util::Debug::Demangle(typeid(T).name()).c_str(), self);
 			if constexpr(!detail::has_Update<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Update(self);
@@ -185,8 +181,8 @@ namespace dcore::world
 		this->AllComponents_.push_back(c);
 		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
 		printf("Component pool for type %s has %ld entities.\n",
-			util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
-			this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
+		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
+		       this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
 		return *(ComponentType *)c;
 	}
 
@@ -195,11 +191,10 @@ namespace dcore::world
 	{
 		std::vector<EntityHandle> entities;
 		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
-		for(const auto &p : packed)
-			entities.push_back(p.first);
+		for(const auto &p : packed) entities.push_back(p.first);
 		return entities;
 	}
-	
+
 	template<typename ComponentType>
 	void ECS::RegisterSystem(System &&system)
 	{

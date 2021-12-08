@@ -10,29 +10,15 @@ namespace dcore::world
 		return i;
 	}
 
-	const std::vector<System> &ECS::GetAllSystems() const
-	{
-		return AllSystems_;
-	}
+	const std::vector<System> &ECS::GetAllSystems() const { return AllSystems_; }
 
-	const std::vector<EntityHandle> &ECS::GetAllEntities() const
-	{
-		return AllEntities_;
-	}
+	const std::vector<EntityHandle> &ECS::GetAllEntities() const { return AllEntities_; }
 
-	std::vector<const System*> ECS::GetSystems(const EntityHandle &entity)
+	std::vector<const System *> ECS::GetSystems(const EntityHandle &entity)
 	{
-		std::vector<const System*> systems;
+		std::vector<const System *> systems;
 		for(const auto &pool : ComponentPools_)
-			if(pool.second.Set_.Contains(entity))
-			{
-				printf("ECS::GetSystems(%d) -> Pool %s contains an entity!\n", entity, util::Debug::Demangle(pool.first.name()).c_str());
-				systems.push_back(&AllSystems_[pool.second.SystemIndex_]);
-			}
-			else
-			{
-				printf("ECS::GetSystems(%d) -> Pool %s doesn't contain an entity!\n", entity, util::Debug::Demangle(pool.first.name()).c_str());
-			}
+			if(pool.second.Set_.Contains(entity)) systems.push_back(&AllSystems_[pool.second.SystemIndex_]);
 		return systems;
 	}
 
@@ -44,7 +30,7 @@ namespace dcore::world
 			AllEntities_.push_back(AllEntities_.size());
 			return AllEntities_.size() - 1;
 		}
-		size_t lastAv = NextAvailable_;
+		size_t lastAv  = NextAvailable_;
 		NextAvailable_ = AllEntities_[NextAvailable_];
 		return lastAv;
 	}

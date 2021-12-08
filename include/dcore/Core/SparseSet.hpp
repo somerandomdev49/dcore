@@ -59,7 +59,7 @@ namespace dcore
 
 		/**
 		 * @brief Get the internal packed array.
-		 * 
+		 *
 		 * @return The packed array.
 		 */
 		const std::vector<std::pair<size_t, T>> &GetPacked() const { return Packed_; }
