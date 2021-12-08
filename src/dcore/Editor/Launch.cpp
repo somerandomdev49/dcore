@@ -154,6 +154,8 @@ namespace dcore
 			}
 		};
 
+		static_assert(dcore::world::detail::has_Update<MyComponent>(), "no update!!!");
+
 		e.AddComponent(MyComponent {});
 
 		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());

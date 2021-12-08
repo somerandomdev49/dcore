@@ -120,7 +120,7 @@ namespace dcore::world
 		{
 			Reg()
 			{
-				printf("Registering component %s.\n", ThisComponentName());
+				printf("ComponentBase<%s>: => Registering\n", ThisComponentName());
 				ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>>());
 			}
 		} RegStatic_;
@@ -143,7 +143,8 @@ namespace dcore::world
 
 		static void Update(const EntityHandle &self)
 		{
-			// if constexpr(!detail::has_Update<T>()) return;
+			printf("ComponentBase<%s>::Update(%ld)\n", util::Debug::Demangle(typeid(T).name()).c_str(), self);
+			if constexpr(!detail::has_Update<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Update(self);
 		}
@@ -202,7 +203,9 @@ namespace dcore::world
 	template<typename ComponentType>
 	void ECS::RegisterSystem(System &&system)
 	{
+		printf("ECS::RegisterSystem()\n");
 		ComponentPools_[std::type_index(typeid(ComponentType))].SystemIndex_ = AllSystems_.size();
+		printf("New system index: %ld\n", AllSystems_.size());
 		AllSystems_.push_back(std::move(system));
 	}
 }; // namespace dcore::world

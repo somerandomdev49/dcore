@@ -25,7 +25,14 @@ namespace dcore::world
 		std::vector<const System*> systems;
 		for(const auto &pool : ComponentPools_)
 			if(pool.second.Set_.Contains(entity))
+			{
+				printf("ECS::GetSystems(%d) -> Pool %s contains an entity!\n", entity, util::Debug::Demangle(pool.first.name()).c_str());
 				systems.push_back(&AllSystems_[pool.second.SystemIndex_]);
+			}
+			else
+			{
+				printf("ECS::GetSystems(%d) -> Pool %s doesn't contain an entity!\n", entity, util::Debug::Demangle(pool.first.name()).c_str());
+			}
 		return systems;
 	}
 
