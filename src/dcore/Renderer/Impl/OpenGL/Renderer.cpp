@@ -191,6 +191,7 @@ void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::
 	if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 }
 
+// TODO: USE THIS METHOD!!!!!!
 void RenderResourceManager::DeleteTexture(RTexture *texture)
 {
 	texture->Data_.Texture_.Delete();
