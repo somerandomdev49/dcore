@@ -1,10 +1,12 @@
 #pragma once
+#include <dcore/Util/TypeTraits.hpp>
 #include <dcore/Data/FileOutput.hpp>
 #include <dcore/Core/SparseSet.hpp>
+#include <dcore/Util/Debug.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dcore/Uni.hpp>
-#include <type_traits>
 #include <typeindex>
+#include <cstdio>
 
 namespace dcore::world
 {
@@ -24,6 +26,15 @@ namespace dcore::world
 		SaveFunctionType SaveFunction;
 		LoadFunctionType LoadFunction;
 	};
+
+	namespace detail
+	{
+		DCORE_HAS_MEMBER(Update);
+		DCORE_HAS_MEMBER(Start);
+		DCORE_HAS_MEMBER(End);
+		DCORE_HAS_MEMBER(Save);
+		DCORE_HAS_MEMBER(Load);
+	}
 
 	template<class S>
 	System GetSystem()
@@ -63,7 +74,7 @@ namespace dcore::world
 		ComponentType &AddComponent(const EntityHandle &entity, const ComponentType &comp);
 
 		template<typename ComponentType>
-		const std::vector<EntityHandle> &GetEntities() const;
+		std::vector<EntityHandle> GetEntities() const;
 
 	private:
 		using ComponentHandle = void *;
@@ -78,7 +89,7 @@ namespace dcore::world
 		std::vector<System> AllSystems_;
 		std::vector<EntityHandle> AllEntities_;
 		std::vector<ComponentHandle> AllComponents_;
-		size_t NextAvailable_;
+		size_t NextAvailable_ = 0;
 	};
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);
@@ -109,7 +120,7 @@ namespace dcore::world
 		{
 			Reg()
 			{
-				DCORE_LOG_INFO << "Registering component " << ThisComponentName();
+				printf("Registering component %s.\n", ThisComponentName());
 				ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>>());
 			}
 		} RegStatic_;
@@ -125,35 +136,35 @@ namespace dcore::world
 		static void Start(const EntityHandle &self)
 		{
 			// Do not run if the Component type doesn't implement Start.
-			if constexpr(!std::is_member_function_pointer<decltype(&T::Start)>::value) return;
+			if constexpr(!detail::has_Start<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Start(self);
 		}
 
 		static void Update(const EntityHandle &self)
 		{
-			if constexpr(!std::is_member_function_pointer<decltype(&T::Update)>::value) return;
+			// if constexpr(!detail::has_Update<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Update(self);
 		}
 
 		static void End(const EntityHandle &self)
 		{
-			if constexpr(!std::is_member_function_pointer<decltype(&T::End)>::value) return;
+			if constexpr(!detail::has_End<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.End(self);
 		}
 
 		static void Save(const EntityHandle &self, data::Json &output)
 		{
-			if constexpr(!std::is_member_function_pointer<decltype(&T::Save)>::value) return;
+			if constexpr(!detail::has_Save<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Save(self, output);
 		}
 
 		static void Load(const EntityHandle &self, const data::Json &input)
 		{
-			if constexpr(!std::is_member_function_pointer<decltype(&T::Load)>::value) return;
+			if constexpr(!detail::has_Load<T>()) return;
 			T &comp = ECSInstance()->GetComponent<T>(self);
 			comp.Load(self, input);
 		}
@@ -172,13 +183,20 @@ namespace dcore::world
 		std::memcpy(c, &comp, sizeof(ComponentType));
 		this->AllComponents_.push_back(c);
 		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
+		printf("Component pool for type %s has %ld entities.\n",
+			util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
+			this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
 		return *(ComponentType *)c;
 	}
 
 	template<typename ComponentType>
-	const std::vector<EntityHandle> &ECS::GetEntities() const
+	std::vector<EntityHandle> ECS::GetEntities() const
 	{
-		return this->AllEntities_;
+		std::vector<EntityHandle> entities;
+		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
+		for(const auto &p : packed)
+			entities.push_back(p.first);
+		return entities;
 	}
 	
 	template<typename ComponentType>

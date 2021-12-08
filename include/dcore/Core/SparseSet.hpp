@@ -26,8 +26,9 @@ namespace dcore
 		void Set(size_t index, const T &value)
 		{
 			Sparse_[index] = Packed_.size();
-			Packed_.push_back({Sparse_.size() - 1, value});
+			Packed_.push_back({index, value});
 		}
+
 		/**
 		 * @brief Checks if the sparse set contains an index.
 		 *
@@ -37,8 +38,7 @@ namespace dcore
 		bool Contains(size_t index) const
 		{
 			auto found = Sparse_.find(index);
-			// TODO:      do we need this?   vvvvvvvvv
-			return found != Sparse_.end() && found->first > 0 && found->first < Packed_.size();
+			return found != Sparse_.end() && found->first < Packed_.size();
 		}
 
 		/**
@@ -56,5 +56,12 @@ namespace dcore
 		 * @return the value found.
 		 */
 		T &operator[](size_t index) { return Packed_[Sparse_[index]].second; }
+
+		/**
+		 * @brief Get the internal packed array.
+		 * 
+		 * @return The packed array.
+		 */
+		const std::vector<std::pair<size_t, T>> &GetPacked() const { return Packed_; }
 	};
 } // namespace dcore

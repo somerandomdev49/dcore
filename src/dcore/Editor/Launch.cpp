@@ -11,6 +11,7 @@
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
+#include <iostream>
 
 namespace dcore
 {
@@ -76,7 +77,6 @@ namespace dcore
 				float speed        = 10.f * event::TimeManager::Instance()->GetDeltaTime();
 				float rotSpeed     = 1.f * event::TimeManager::Instance()->GetDeltaTime();
 				auto cam           = platform::Context::Instance()->GetRendererInterface()->GetCamera();
-				// printf("Delta Time: %f\n", event::TimeManager::Instance()->GetDeltaTime());
 
 				/**/ if(event::InputManager::Instance()->IsKeyPressed(event::K_A))
 				{

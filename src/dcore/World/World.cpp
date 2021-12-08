@@ -86,16 +86,19 @@ void World::DeInitialize() {}
 
 void World::Update()
 {
-	const auto &systems = ECSInstance()->GetAllSystems();
-	for(const auto &system : systems)
+	const auto &entities = ECSInstance()->GetAllEntities();
+	for(const auto &entity : entities)
 	{
-		(void)system;
+		const auto &systems = ECSInstance()->GetSystems(entity);
+		for(const auto &system : systems)
+			system->UpdateFunction(entity);
 	}
 }
 
 void World::Render(graphics::RendererInterface *render)
 {
 	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
+
 	const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 	for(const auto &entity : entities)
 	{
@@ -104,6 +107,7 @@ void World::Render(graphics::RendererInterface *render)
 
 		if(transform.IsDirty()) transform.ReCalculateMatrix();
 		staticMesh.Mesh.SetTransform(transform.GetMatrix());
+		
 		render->RenderStaticMesh(&staticMesh.Mesh);
 	}
 
@@ -123,7 +127,7 @@ void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRe
 
 void World::Save(data::FileOutput &output)
 {
-	output.Get() = data::Json {{"version", "0.02"}, {"entities", data::Json::array()}};
+	output.Get() = data::Json {{"version", "0.01"}, {"entities", data::Json::array()}};
 
 	const auto &entities = ECSInstance()->GetAllEntities();
 	for(const auto &entity : entities)
@@ -132,11 +136,6 @@ void World::Save(data::FileOutput &output)
 		const auto &systems = ECSInstance()->GetSystems(entity);
 		for(const auto &system : systems) system->SaveFunction(entity, out);
 	}
-	// auto view = Registry_.runtime_view(types.cbegin(), types.cend());
-	// for(auto entity : view)
-	// {
-	// 	output.Get()["entities"].push_back(data::Json({}));
-	// }
 }
 
 
