@@ -163,8 +163,13 @@ namespace dcore::graphics
 		static void DeleteFastVertexBuffer(RFastVertexBuffer *buf);
 
 		/**
-		 * Deletes a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
+		 * Deletes a static mesh.
 		 * */
 		static void DeleteStaticMesh(RStaticMesh *mesh);
+
+		/**
+		 * Deletes a texture.
+		 */
+		static void DeleteTexture(RTexture *texture);
 	};
 } // namespace dcore::graphics

@@ -6,6 +6,7 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
+#include <dcore/Graphics/Gui/GuiManager.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
@@ -175,6 +176,10 @@ namespace dcore
 		guig.Initialize(resource::ResourceManager::Instance());
 		graphics::gui::GuiGraphics::SetInstance(&guig);
 
+		graphics::gui::GuiManager guimngr;
+		guimngr.Initialize();
+		graphics::gui::GuiManager::SetInstance(&guimngr);
+
 		// ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(0, 0, 0)));
 		// ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
 
@@ -196,6 +201,7 @@ namespace dcore
 		tm.DeInitialize();
 		graphics::gui::Font::FontLibDeInitialize();
 		world.DeInitialize();
+		guimngr.DeInitialize();
 		guig.DeInitialize();
 		ctx.DeInitialize();
 	}

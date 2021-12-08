@@ -77,9 +77,19 @@ void GuiGraphics::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer D
 	if(rend == nullptr) rend = Renderer::Instance();
 	Rend_ = rend;
 
-	GuiShader_  = new GuiShader(rm->Get<RShader>("DCore.Shader.GuiShader"));
-	FontShader_ = new FontShader(rm->Get<RShader>("DCore.Shader.FontShader"));
-	Quad_       = new RFastVertexBuffer();
+	GuiShader_     = new GuiShader(rm->Get<RShader>("DCore.Shader.GuiShader"));
+	FontShader_    = new FontShader(rm->Get<RShader>("DCore.Shader.FontShader"));
+	Quad_          = new RFastVertexBuffer();
+	SolidTexture_  = new RTexture();
+
+	byte data[] = { 0xff, 0xff, 0xff, 0xff };
+	RenderResourceManager::CreateTexture(
+		SolidTexture_,
+		data,
+		glm::ivec2(1, 1),
+		RenderResourceManager::TextureFormat::Rgba,
+		RenderResourceManager::TextureScaling::Nearest);
+
 	RenderResourceManager::CreateFastVertexBuffer(Quad_, 4);
 }
 
@@ -89,13 +99,19 @@ void GuiGraphics::DeInitialize()
 	delete FontShader_;
 	RenderResourceManager::DeleteFastVertexBuffer(Quad_);
 	delete Quad_;
+	RenderResourceManager::DeleteTexture(SolidTexture_);
+	delete SolidTexture_;
 }
 
 void GuiGraphics::RenderQuad_(const Quad &quad, CommonGuiShader *shader, bool bind)
 {
 	if(!shader) return;
-	if(bind) Rend_->UseShader(shader->Get());
-	if(bind && quad.Texture) Rend_->UseTexture(0, quad.Texture);
+	if(bind)
+	{
+		Rend_->UseShader(shader->Get());
+		if(quad.Texture) Rend_->UseTexture(0, quad.Texture);
+		else Rend_->UseTexture(0, SolidTexture_);
+	}
 
 	auto tr = glm::mat4(1.0f);
 	tr      = glm::translate(tr, glm::vec3(quad.Position, 0.0f));

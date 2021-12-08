@@ -191,6 +191,11 @@ void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::
 	if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 }
 
+void RenderResourceManager::DeleteTexture(RTexture *texture)
+{
+	texture->Data_.Texture_.Delete();
+}
+
 void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
 {
 	// very short indeed.

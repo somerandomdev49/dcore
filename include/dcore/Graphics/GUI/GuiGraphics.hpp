@@ -79,6 +79,7 @@ namespace dcore::graphics::gui
 		GuiShader *GuiShader_;
 		FontShader *FontShader_;
 		RFastVertexBuffer *Quad_;
+		RTexture *SolidTexture_;
 		Renderer *Rend_;
 	};
 } // namespace dcore::graphics::gui
