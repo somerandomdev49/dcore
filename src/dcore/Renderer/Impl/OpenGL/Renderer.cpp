@@ -192,10 +192,7 @@ void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::
 }
 
 // TODO: USE THIS METHOD!!!!!!
-void RenderResourceManager::DeleteTexture(RTexture *texture)
-{
-	texture->Data_.Texture_.Delete();
-}
+void RenderResourceManager::DeleteTexture(RTexture *texture) { texture->Data_.Texture_.Delete(); }
 
 void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
 {

@@ -17,6 +17,7 @@ DCORE_COMPONENT_AUTO_NAME(DynamicComponent);
 
 void TransformComponent::Save(const EntityHandle &self, data::Json &output)
 {
+	puts("Saving TransformComponent...");
 	output = data::Json::object({
 	    {"position", util::JsonConverters::Glm(this->Position_)},
 	    {"rotation", util::JsonConverters::Glm(this->Position_)},
@@ -34,10 +35,10 @@ bool TransformComponent::IsDirty() const { return Dirty_; }
 
 glm::mat4 TransformComponent::GetNewMatrix() const
 {
-	glm::mat4 m = glm::mat4_cast(Rotation_);
-	m           = glm::scale(Matrix_, Scale_);
-	m           = glm::translate(Matrix_, Position_);
-	return m;
+	glm::mat4 rot = glm::mat4_cast(Rotation_);
+	glm::mat4 pos = glm::translate(glm::mat4(1.0f), Position_);
+	glm::mat4 scl = glm::scale(glm::mat4(1.0f), Scale_);
+	return scl * pos * rot;
 }
 
 Entity *TransformComponent::GetParent() const { return Parent_; }
@@ -49,9 +50,10 @@ const glm::mat4 &TransformComponent::GetMatrix()
 	if(Dirty_) ReCalculateMatrix();
 	return Matrix_;
 }
+
 const glm::mat4 &TransformComponent::GetMatrix() const
 {
-	static glm::mat4 newMatrixTemp; // We still need to return a reference!
+	static glm::mat4 newMatrixTemp; // Hacky solution but we need to return a reference!
 	if(Dirty_) return newMatrixTemp = GetNewMatrix();
 	return Matrix_;
 }
@@ -93,6 +95,29 @@ void World::Update()
 	}
 }
 
+static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
+void World::Start()
+{
+	const auto &entities = ECSInstance()->GetAllEntities();
+	for(const auto &entity : entities)
+	{
+		const auto &systems = ECSInstance()->GetSystems(entity);
+		for(const auto &system : systems) system->StartFunction(entity);
+	}
+
+	cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>("DCore.Mesh.Cube");
+}
+
+void World::End()
+{
+	const auto &entities = ECSInstance()->GetAllEntities();
+	for(const auto &entity : entities)
+	{
+		const auto &systems = ECSInstance()->GetSystems(entity);
+		for(const auto &system : systems) system->EndFunction(entity);
+	}
+}
+
 void World::Render(graphics::RendererInterface *render)
 {
 	Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
@@ -103,7 +128,7 @@ void World::Render(graphics::RendererInterface *render)
 		auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
 		auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
 
-		if(transform.IsDirty()) transform.ReCalculateMatrix();
+		// if(transform.IsDirty()) transform.ReCalculateMatrix();
 		staticMesh.Mesh.SetTransform(transform.GetMatrix());
 
 		render->RenderStaticMesh(&staticMesh.Mesh);
@@ -112,7 +137,7 @@ void World::Render(graphics::RendererInterface *render)
 	auto &chunks = Terrain_.GetChunks();
 	for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
-	// Rebder the UI. (Maybe doesn't belong here...)
+	// Render the UI. (Maybe this doesn't belong here...)
 	graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
 }
 

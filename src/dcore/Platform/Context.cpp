@@ -31,6 +31,7 @@ dcore::graphics::RendererInterface *Context::GetRendererInterface() const { retu
 void Context::Start()
 {
 	float lastTime = Frame_->GetCurrentTime();
+	World_->Start();
 	while(!Frame_->ShouldEnd())
 	{
 		float thisTime = Frame_->GetCurrentTime();
@@ -48,6 +49,7 @@ void Context::Start()
 
 		lastTime = thisTime;
 	}
+	World_->End();
 }
 
 Frame *Context::GetFrame() const { return Frame_; }

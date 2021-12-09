@@ -46,12 +46,12 @@ namespace dcore::world
 	private:
 		glm::mat4 GetNewMatrix() const;
 
-		Entity *Parent_;
-		glm::vec3 Position_;
-		glm::quat Rotation_;
-		glm::vec3 Scale_;
-		glm::mat4 Matrix_;
-		bool Dirty_;
+		Entity *Parent_     = nullptr;
+		glm::vec3 Position_ = glm::vec3(0);
+		glm::quat Rotation_ = glm::identity<glm::quat>();
+		glm::vec3 Scale_    = glm::vec3(1);
+		glm::mat4 Matrix_   = glm::mat4(1);
+		bool Dirty_         = false;
 	};
 
 	/**
@@ -59,6 +59,7 @@ namespace dcore::world
 	 */
 	struct StaticMeshComponent : ComponentBase<StaticMeshComponent>
 	{
+		StaticMeshComponent(const graphics::StaticMesh &mesh) : Mesh(mesh) {}
 		graphics::StaticMesh Mesh;
 	};
 
@@ -131,8 +132,10 @@ namespace dcore::world
 		friend class launch::Launch;
 		void Initialize();
 		void DeInitialize();
+		void Start();
 		void Update();
 		void Render(graphics::RendererInterface *render);
+		void End();
 		std::vector<void (*)(World *)> Updates_;
 		terrain::Terrain Terrain_;
 		float RenderDistance_ = 32.0f;

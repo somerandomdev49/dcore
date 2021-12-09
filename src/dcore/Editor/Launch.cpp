@@ -6,7 +6,7 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
-#include <dcore/Graphics/Gui/GuiManager.hpp>
+#include <dcore/Graphics/GUI/GuiManager.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
@@ -106,6 +106,32 @@ namespace dcore
 	DCORE_COMPONENT_REGISTER(MyComponent);
 	DCORE_COMPONENT_AUTO_NAME(MyComponent);
 
+	struct MovementComponent : world::ComponentBase<MovementComponent>
+	{
+		world::TransformComponent *Transform;
+		float Speed  = 3.0f;
+		float Height = 1.0f;
+		float Time   = 0.0f;
+
+		void Start(const world::EntityHandle &self)
+		{
+			auto worldInstance = platform::Context::Instance()->GetWorld();
+			Transform          = &world::Entity(self, worldInstance).GetComponent<world::TransformComponent>();
+		}
+
+		void Update(const world::EntityHandle &self)
+		{
+			glm::vec3 orig = Transform->GetPosition();
+			orig.y         = (std::sin(Time * Speed) / 2 + 0.1f) * Height;
+			Transform->SetPosition(orig);
+
+			Transform->ReCalculateMatrix();
+			Time += event::TimeManager::Instance()->GetDeltaTime();
+		}
+	};
+	DCORE_COMPONENT_REGISTER(MovementComponent);
+	DCORE_COMPONENT_AUTO_NAME(MovementComponent);
+
 	void launch::Launch::Run(int argc, char *argv[])
 	{
 		// (void)argc; (void)argv;
@@ -151,25 +177,32 @@ namespace dcore
 		rl.LoadFromManifest("Manifest.cfg");
 
 		world.Initialize();
-		world::Entity e = world.CreateEntity();
-		e.AddComponent(world::TransformComponent());
-		// e.AddComponent(world::StaticMeshComponent {
-		//     graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
-		//     rm.Get<graphics::RTexture>("DCore.Texture.Main.Grass"))});
 
-		static_assert(dcore::world::detail::has_Update<MyComponent>(), "no update!!!");
+		{
+			world::Entity e = world.CreateEntity();
+			e.AddComponent(world::TransformComponent());
+			static_assert(dcore::world::detail::has_Update<MyComponent>(), "no update!!!");
 
-		e.AddComponent(MyComponent {});
+			e.AddComponent(MyComponent {});
+			e.GetComponent<world::TransformComponent>().SetPosition(glm::vec3(0, -1.0f, -6.0f));
+			e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
+			e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+		}
+		{
+			world::Entity e = world.CreateEntity();
+			e.AddComponent(world::TransformComponent());
+			e.AddComponent(world::StaticMeshComponent(
+			    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
+			                         rm.Get<graphics::RTexture>("DCore.Texture.Main.Dirt"))));
 
-		// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
-		e.GetComponent<world::TransformComponent>().SetPosition(glm::vec3(0, -1.0f, -6.0f));
-		e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
-		e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+			e.AddComponent(MovementComponent {});
+			e.GetComponent<world::TransformComponent>().SetPosition(glm::vec3(0, 0, 0));
+			e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
+			e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
-		// platform::Context::Instance()->GetWorld()->RegisterSaveFunction<world::TransformComponent>(
-		//     &world::TransformComponent::Save);
+			// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
+		}
 
-		DCORE_LOG_WARNING << "Starting...";
 		ctx.DefaultResourceInit(&rm);
 
 		graphics::gui::GuiGraphics guig;
@@ -180,8 +213,7 @@ namespace dcore
 		guimngr.Initialize();
 		graphics::gui::GuiManager::SetInstance(&guimngr);
 
-		// ctx.GetRendererInterface()->GetCamera()->SetRotation(glm::quat(glm::vec3(0, 0, 0)));
-		// ctx.GetRendererInterface()->GetRenderer()->SetWireframeMode(true);
+		DCORE_LOG_WARNING << "Starting...";
 
 		ctx.Start();
 		ctx.CloseWindow();

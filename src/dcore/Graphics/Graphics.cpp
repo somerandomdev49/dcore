@@ -187,6 +187,7 @@ void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
 {
 	// TODO: Do not set the shader each time we render something, it's expensive!
 	Renderer_->UseShader(ObjectShader_->Get());
+	Renderer_->UseTexture(0, sm->GetTexture().Get());
 	ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
 	Renderer_->Render(sm->GetMesh().Get());
 }

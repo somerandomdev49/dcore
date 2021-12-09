@@ -13,23 +13,17 @@ void GuiManager::Initialize()
 void GuiManager::DeInitialize()
 {
 	delete RootWidget_;
-	Focused_ = nullptr;
+	Focused_    = nullptr;
 	RootWidget_ = nullptr;
 }
 
-void GuiManager::Render(GuiGraphics *g)
-{
-	RootWidget_->DoRender_(g);
-}
+void GuiManager::Render(GuiGraphics *g) { RootWidget_->DoRender_(g); }
 
 static GuiManager *guimngrInstance = nullptr;
-GuiManager *GuiManager::Instance() {
-	if(guimngrInstance == nullptr)
-		guimngrInstance = new GuiManager();
+GuiManager *GuiManager::Instance()
+{
+	if(guimngrInstance == nullptr) guimngrInstance = new GuiManager();
 	return guimngrInstance;
 }
 
-void GuiManager::SetInstance(GuiManager *newGuiManager)
-{
-	guimngrInstance = newGuiManager;
-}
+void GuiManager::SetInstance(GuiManager *newGuiManager) { guimngrInstance = newGuiManager; }

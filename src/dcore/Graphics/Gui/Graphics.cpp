@@ -77,18 +77,15 @@ void GuiGraphics::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer D
 	if(rend == nullptr) rend = Renderer::Instance();
 	Rend_ = rend;
 
-	GuiShader_     = new GuiShader(rm->Get<RShader>("DCore.Shader.GuiShader"));
-	FontShader_    = new FontShader(rm->Get<RShader>("DCore.Shader.FontShader"));
-	Quad_          = new RFastVertexBuffer();
-	SolidTexture_  = new RTexture();
+	GuiShader_    = new GuiShader(rm->Get<RShader>("DCore.Shader.GuiShader"));
+	FontShader_   = new FontShader(rm->Get<RShader>("DCore.Shader.FontShader"));
+	Quad_         = new RFastVertexBuffer();
+	SolidTexture_ = new RTexture();
 
-	byte data[] = { 0xff, 0xff, 0xff, 0xff };
-	RenderResourceManager::CreateTexture(
-		SolidTexture_,
-		data,
-		glm::ivec2(1, 1),
-		RenderResourceManager::TextureFormat::Rgba,
-		RenderResourceManager::TextureScaling::Nearest);
+	byte data[] = {0xff, 0xff, 0xff, 0xff};
+	RenderResourceManager::CreateTexture(SolidTexture_, data, glm::ivec2(1, 1),
+	                                     RenderResourceManager::TextureFormat::Rgba,
+	                                     RenderResourceManager::TextureScaling::Nearest);
 
 	RenderResourceManager::CreateFastVertexBuffer(Quad_, 4);
 }
