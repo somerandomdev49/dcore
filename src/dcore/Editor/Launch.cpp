@@ -16,6 +16,31 @@
 
 namespace dcore
 {
+	struct PlayerController : world::ComponentBase<PlayerController>
+	{
+		float SPEED = 10.0f;
+#if DCORE__CONCEPT // Physics API Concept
+
+		physics::RigidBodyComponent *rb;
+		physics::CapsuleCollider *collider;
+		
+		void Start(const world::EntityHandle &entity)
+		{
+			rb = &world::Entity(self, worldInstance).GetComponent<physics::RigidBodyComponent>();
+			rb->LockRotation(); // see btRigidBody::setAngularFactor()
+			
+			collider = new physics::CapsuleCollider(DG_CONST_PLAYER_HEIGHT, DG_CONST_PLAYER_SIZE / 2);	
+			rb->SetCollider(collider);
+		}
+
+		void Update(const world::EntityHandle &entity)
+		{
+			
+		}
+
+#endif
+	};
+
 	struct MyComponent : world::ComponentBase<MyComponent>
 	{
 		int nonEmpty;
