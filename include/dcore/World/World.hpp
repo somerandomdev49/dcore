@@ -61,6 +61,8 @@ namespace dcore::world
 	{
 		StaticMeshComponent(const graphics::StaticMesh &mesh) : Mesh(mesh) {}
 		graphics::StaticMesh Mesh;
+		
+		void Save(const EntityHandle &entity, data::Json &output);
 	};
 
 	class World;

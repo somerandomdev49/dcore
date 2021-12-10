@@ -4,6 +4,7 @@
 #include <dcore/Util/JsonConverters.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <iostream>
 using namespace dcore::world;
 
 DCORE_COMPONENT_REGISTER(TransformComponent);
@@ -15,13 +16,26 @@ DCORE_COMPONENT_AUTO_NAME(StaticMeshComponent);
 DCORE_COMPONENT_REGISTER(DynamicComponent);
 DCORE_COMPONENT_AUTO_NAME(DynamicComponent);
 
+void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
+{
+	std::string name = Mesh.GetTexture().GetName();
+	std::cout << "Saving StaticMeshComponent, GetTexture().GetName() = " << name << std::endl;
+	auto meshInfo = data::Json {
+		{ "mesh", Mesh.GetMesh().GetName() },
+		{ "texture", Mesh.GetTexture().GetName() },
+	};
+
+	output = data::Json {
+		{"mesh", meshInfo}
+	};
+}
+
 void TransformComponent::Save(const EntityHandle &self, data::Json &output)
 {
-	puts("Saving TransformComponent...");
 	output = data::Json::object({
 	    {"position", util::JsonConverters::Glm(this->Position_)},
-	    {"rotation", util::JsonConverters::Glm(this->Position_)},
-	    {"scale", util::JsonConverters::Glm(this->Position_)},
+	    {"rotation", util::JsonConverters::Glm(this->Rotation_)},
+	    {"scale", util::JsonConverters::Glm(this->Scale_)},
 	});
 }
 
@@ -158,8 +172,21 @@ void World::Save(data::FileOutput &output)
 	const auto &entities = ECSInstance()->GetAllEntities();
 	for(const auto &entity : entities)
 	{
-		data::Json out      = data::Json::object();
+		data::Json comps = data::Json::array();
+
 		const auto &systems = ECSInstance()->GetSystems(entity);
-		for(const auto &system : systems) system->SaveFunction(entity, out);
+		for(const auto &system : systems)
+		{
+			data::Json out = data::Json::object();
+			system->SaveFunction(entity, out);
+
+			out["@type"] = system->Name;
+			comps.push_back(out);
+		}
+
+		output.Get()["entities"].push_back(data::Json {
+			{"id", entity},
+			{"components", comps}
+		});
 	}
 }

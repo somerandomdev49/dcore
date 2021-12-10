@@ -12,6 +12,7 @@
 // #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Resource/Resources.hpp>
 #include <dcore/Launch.hpp>
+#include <iostream>
 
 namespace dcore::resource
 {
@@ -42,14 +43,18 @@ namespace dcore::resource
 	class Resource
 	{
 	public:
-		Resource() : Data_(nullptr) {};
+		Resource(const std::string &name = "UNKNOWN") : Data_(nullptr), Name_(name) {}
 
 		T *Get() const { return Data_; };
+		const std::string &GetName() const { return Name_; }
 
 	private:
 		friend class ResourceManager;
-		Resource(T *data) : Data_(data) {}
+		Resource(const std::string &name, T *data) : Data_(data), Name_(name) {
+			std::cout << "Creating Resource, name: " << Name_ << std::endl;
+		}
 		T DCORE_REF *Data_;
+		std::string Name_;
 	};
 
 	// TODO: Add Lazy loading?
@@ -109,14 +114,13 @@ namespace dcore::resource
 	template<typename T>
 	Resource<T> ResourceManager::Get(const std::string &id)
 	{
-		return Resource<T>(reinterpret_cast<T *>(GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_));
+		return Resource<T>(id, reinterpret_cast<T *>(GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_));
 	}
 
 	template<typename T>
 	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
 	{
-		return Resource<T>(
-		    reinterpret_cast<T *>(LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
+		return Resource<T>(id, reinterpret_cast<T *>(LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
 	}
 
 	template<typename T>

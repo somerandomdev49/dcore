@@ -25,6 +25,7 @@ namespace dcore::world
 		EndFunctionType EndFunction;
 		SaveFunctionType SaveFunction;
 		LoadFunctionType LoadFunction;
+		const char *Name;
 		const std::type_info &Type;
 	};
 
@@ -40,7 +41,7 @@ namespace dcore::world
 	template<class S>
 	System GetSystem()
 	{
-		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, typeid(S)};
+		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(S)};
 	}
 
 	class ECS
@@ -101,12 +102,7 @@ namespace dcore::world
 	{                                                                  \
 		return N;                                                      \
 	}
-#define DCORE_COMPONENT_AUTO_NAME(T)                                   \
-	template<>                                                         \
-	const char * ::dcore::world::ComponentBase<T>::ThisComponentName() \
-	{                                                                  \
-		return #T;                                                     \
-	}
+#define DCORE_COMPONENT_AUTO_NAME(T) DCORE_COMPONENT_NAME(T, #T)
 #define DCORE_COMPONENT_REGISTER(T)                                \
 	template<>                                                     \
 	const T::ComponentBase<T>::Reg T::ComponentBase<T>::RegStatic_ \
