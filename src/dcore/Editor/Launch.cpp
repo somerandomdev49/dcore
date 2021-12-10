@@ -45,6 +45,8 @@ namespace dcore
 	{
 		float SPEED = 10.0f;
 
+		bool IsOnGround;
+		float Rotation;
 		physics::RigidBodyComponent *rb;
 		physics::CapsuleCollider *collider;
 		
@@ -55,14 +57,31 @@ namespace dcore
 			
 			collider = new physics::CapsuleCollider(DG_CONST_PLAYER_HEIGHT, DG_CONST_PLAYER_SIZE / 2);	
 			rb->SetCollider(collider);
+
+			IsOnGround = false;
 		}
 
 		void Update(const world::EntityHandle &entity)
 		{
 			auto inputManager = event::InputManager::Instance();
 			auto settings = dg::Settings::Instance();
+
+			glm::vec2 delta = glm::vec2(0);
+			
 			if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Forward)))
-				rb->MoveTo(); // Sets the transform colliding.
+				delta.y = 1;
+			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Backward)))
+				delta.y = -1;
+
+			if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Leftward)))
+				delta.x = -1;
+
+			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Rightward)))
+				delta.x = 1;
+			
+			glm::vec3 p(delta.x, 0, delta.y);
+			p *= SPEED * dcore::event::TimeManager::Instance()->GetDeltaTime();
+			rb->MoveTo(rb->GetTransform()->GetPosition() + p);
 
 		}
 
