@@ -260,37 +260,49 @@ namespace dcore
 			e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
 			e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 		}
+
+		world::Entity theEnt = world.CreateEntity();
 		{
-			world::Entity e = world.CreateEntity();
+			world::Entity &e = theEnt;
 			e.AddComponent(world::TransformComponent());
 			e.AddComponent(world::StaticMeshComponent(
 			    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
 			                         rm.Get<graphics::RTexture>("DCore.Texture.Main.Dirt"))));
+			
+			std::cout << "1. mesh name: " << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 			e.AddComponent(MovementComponent {});
 			e.GetComponent<world::TransformComponent>().SetPosition(glm::vec3(0, 0, 0));
 			e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
 			e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
+			std::cout << "2. mesh name: " << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 			// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
 		}
 
 		ctx.DefaultResourceInit(&rm);
+		std::cout << "3. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 		graphics::gui::GuiGraphics guig;
 		guig.Initialize(resource::ResourceManager::Instance());
 		graphics::gui::GuiGraphics::SetInstance(&guig);
+		std::cout << "4. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 		graphics::gui::GuiManager guimngr;
+		std::cout << "4.1. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 		guimngr.Initialize();
+		std::cout << "4.2. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 		graphics::gui::GuiManager::SetInstance(&guimngr);
+		std::cout << "4.3. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 		DCORE_LOG_WARNING << "Starting...";
+		std::cout << "5. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 		ctx.Start();
 		ctx.CloseWindow();
 
 		DCORE_LOG_INFO << "----------------------------------------";
+		std::cout << "6. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName() << std::endl;
 
 		{
 			data::FileOutput fileOutput("saves", "save1.json");
