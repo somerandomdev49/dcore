@@ -3,21 +3,25 @@
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
 - [x] ~~InputManager~~
-- [ ] World loading (terrain loading done)
+- [x] ~~World loading (terrain loading done)~~
+- [ ] GUI
+- [ ] Fix up memory leak problems
 
 ## Local TODOs
 
 ### somerandomdev49
 
-- heightmap loading
-- terrain chunk separation
-- chunk rendering
-- world terrain rendering
-- debug camera
+- [x] heightmap loading
+- [x] terrain chunk separation
+- [x] chunk rendering
+- [x] world terrain rendering
+- [x] debug camera
+- [ ] valgrind
 
 ### idkarn
+
+- [ ] create the necessary widgets.
 
 ### ptoushka
 
 ### JosephOfTheBread
-
