@@ -16,10 +16,34 @@
 
 namespace dcore
 {
+#if DCORE__CONCEPT // Physics API Concept
+	
+	Entity CreateActor(const dg::SaveData::ActorSaveData &data)
+	{
+		World *worldInstance = world::World::Instance();
+		auto rm = resource::ResourceManager::Instance();
+		auto e = worldInstance->CreateEntity();
+		e.AddComponent(world::TransformComponent());
+		e.AddComponent(world::SkeletalMeshComponent(
+			rm.Get<graphics::RSkeletalMesh>(data.MeshId),
+			rm.Get<graphics::RTexture>(data.TextureId),
+		));
+		e.AddComponent(physics::RigidBodyComponent(physics::KinematicBody));
+		e.AddComponent(dg::ActorComponent{});
+		return e;
+	}
+
+	Entity CreatePlayerEntity(const dg::SaveData::PlayerSaveData &data)
+	{
+		auto e = CreateActor(data.ActorInfo);
+		e.AddComponent(dg::PlayerController{});
+		// ...
+		return e;
+	}
+
 	struct PlayerController : world::ComponentBase<PlayerController>
 	{
 		float SPEED = 10.0f;
-#if DCORE__CONCEPT // Physics API Concept
 
 		physics::RigidBodyComponent *rb;
 		physics::CapsuleCollider *collider;
@@ -35,11 +59,15 @@ namespace dcore
 
 		void Update(const world::EntityHandle &entity)
 		{
-			
+			auto inputManager = event::InputManager::Instance();
+			auto settings = dg::Settings::Instance();
+			if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Forward)))
+				rb->MoveTo(); // Sets the transform colliding.
+
 		}
 
-#endif
 	};
+#endif
 
 	struct MyComponent : world::ComponentBase<MyComponent>
 	{
