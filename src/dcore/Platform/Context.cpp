@@ -11,69 +11,71 @@
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GL3W/GL3W.hpp>
 
-using namespace dcore::platform;
-
-void Context::Initialize()
+namespace dcore::platform
 {
-	// auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
-	platform::impl::glfw::Initialize();
-	Frame_ = new platform::impl::glfw::Frame();
-	Frame_->Initialize(glm::ivec2(800, 600));
-	platform::impl::gl3w::Initialize();
-	Rend_->Initialize();
-	RI_ = new graphics::RendererInterface();
-}
 
-void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm) { RI_->Initialize(rm, Rend_); }
-
-dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return RI_; }
-
-void Context::Start()
-{
-	float lastTime = Frame_->GetCurrentTime();
-	World_->Start();
-	while(!Frame_->ShouldEnd())
+	void Context::Initialize()
 	{
-		float thisTime = Frame_->GetCurrentTime();
-		float dt       = thisTime - lastTime;
-		event::TimeManager::Instance()->SetDeltaTime(dt);
-
-		Frame_->OnBeginFrame();
-		World_->Update();
-
-		Rend_->OnBeginRender();
-		World_->Render(RI_);
-		Rend_->OnEndRender();
-
-		Frame_->OnEndFrame();
-
-		lastTime = thisTime;
+		// auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
+		platform::impl::glfw::Initialize();
+		Frame_ = new platform::impl::glfw::Frame();
+		Frame_->Initialize(glm::ivec2(800, 600));
+		platform::impl::gl3w::Initialize();
+		Rend_->Initialize();
+		RI_ = new graphics::RendererInterface();
 	}
-	World_->End();
-}
 
-Frame *Context::GetFrame() const { return Frame_; }
-dcore::world::World *Context::GetWorld() const { return World_; }
+	void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm) { RI_->Initialize(rm, Rend_); }
 
-void Context::CloseWindow() {}
+	dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return RI_; }
 
-void Context::DeInitialize()
-{
-	RI_->DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
-	delete RI_;
-	Rend_->DeInitialize();
-	Frame_->DeInitialize();
-	delete Frame_;
-}
+	void Context::Start()
+	{
+		float lastTime = Frame_->GetCurrentTime();
+		World_->Start();
+		while(!Frame_->ShouldEnd())
+		{
+			float thisTime = Frame_->GetCurrentTime();
+			float dt       = thisTime - lastTime;
+			event::TimeManager::Instance()->SetDeltaTime(dt);
 
-static Context *ctx;
-void Context::SetInstance(Context *newContext) { ctx = newContext; }
+			Frame_->OnBeginFrame();
+			World_->Update();
 
-Context *Context::Instance()
-{
-	if(ctx == nullptr) ctx = new Context;
-	return ctx;
-}
+			Rend_->OnBeginRender();
+			World_->Render(RI_);
+			Rend_->OnEndRender();
 
-bool Context::IsKeyPressed(event::KeyCode key) { return Frame_->CheckKeyPressed(key); }
-bool Context::IsMousePressed(int button) { return Frame_->CheckMouseButtonPressed(button); }
+			Frame_->OnEndFrame();
+
+			lastTime = thisTime;
+		}
+		World_->End();
+	}
+
+	Frame *Context::GetFrame() const { return Frame_; }
+	dcore::world::World *Context::GetWorld() const { return World_; }
+
+	void Context::CloseWindow() {}
+
+	void Context::DeInitialize()
+	{
+		RI_->DeInitialize(); // TODO: Move to DefaultResourceDeInit or sth.
+		delete RI_;
+		Rend_->DeInitialize();
+		Frame_->DeInitialize();
+		delete Frame_;
+	}
+
+	static Context *ctx;
+	void Context::SetInstance(Context *newContext) { ctx = newContext; }
+
+	Context *Context::Instance()
+	{
+		if(ctx == nullptr) ctx = new Context;
+		return ctx;
+	}
+
+	bool Context::IsKeyPressed(event::KeyCode key) { return Frame_->CheckKeyPressed(key); }
+	bool Context::IsMousePressed(int button) { return Frame_->CheckMouseButtonPressed(button); }
+} // namespace dcore::platform

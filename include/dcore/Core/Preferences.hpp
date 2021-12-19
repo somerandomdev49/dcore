@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Data/FileInput.hpp>
 #include <dcore/Data/FileOutput.hpp>
+#include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 
 namespace dcore
@@ -26,7 +27,12 @@ namespace dcore
 		const DisplaySettings &GetDisplaySettings() const;
 		const GraphicsSettings &GetGraphicsSettings() const;
 
+		static Preferences *Instance();
+
 	private:
+		friend class launch::Launch;
+		static void SetInstance(Preferences *newInstance);
+
 		int Version_;
 		DisplaySettings DisplaySettings_;
 		GraphicsSettings GraphicsSettings_;

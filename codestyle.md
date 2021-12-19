@@ -67,8 +67,7 @@
 
 ### Documentation Comments
 
-* I dislike using `@brief`, but you can use it if you want to.
-* If a doc-comment contains othe doxygen tags (like `@warning`, `@deprecated`) it must have a `@brief`
+* If you're using vscode install the [Doxygen Documentation Generator](https://marketplace.visualstudio.com/items?itemName=cschlosser.doxdocgen)
 
 ### "TODO"/"FIXME" Comments
 
@@ -119,7 +118,7 @@ of a colon:
    */
   int MultilineFunctionV3();
   
-  "(Note^) A single space at the end"
+  "(Note^) A single star at the end"
 
   /** This is also possible
    * Im not sure if I want to leave it though */

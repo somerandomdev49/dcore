@@ -1,4 +1,5 @@
 #include <dcore/Core/Preferences.hpp>
+#include <dcore/Core/Log.hpp>
 
 namespace dcore
 {
@@ -16,6 +17,17 @@ namespace dcore
 			const auto &graphics             = input.Get()["graphics"];
 			GraphicsSettings_.RenderDistance = graphics["render-distance"].get<int>();
 		}
+		break;
+		default: DCORE_LOG_ERROR << "Bad Preferences file version (" << Version_ << ")"; break;
 		}
 	}
+
+	static Preferences *prefinst_ = nullptr;
+	Preferences *Preferences::Instance()
+	{
+		if(prefinst_ == nullptr) prefinst_ = new Preferences();
+		return prefinst_;
+	}
+
+	void Preferences::SetInstance(Preferences *newInstance) { prefinst_ = newInstance; }
 } // namespace dcore

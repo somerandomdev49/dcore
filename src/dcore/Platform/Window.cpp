@@ -1,8 +1,9 @@
 #include <dcore/Platform/Window.hpp>
 
-using namespace dcore::platform;
+namespace dcore::platform
+{
+	Frame::~Frame() {}
 
-Frame::~Frame() {}
-
-const glm::ivec2 &Frame::GetSize() const { return Size_; }
-void Frame::SetSize(const glm::ivec2 &v) { Size_ = v; }
+	const glm::ivec2 &Frame::GetSize() const { return Size_; }
+	void Frame::SetSize(const glm::ivec2 &v) { Size_ = v; }
+} // namespace dcore::platform
