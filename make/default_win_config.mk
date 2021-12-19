@@ -7,8 +7,13 @@ LIBS = freetype2 nlohmann_json
 COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -g
 RCOMPILE_FLAGS = -D NDEBUG
 DCOMPILE_FLAGS = -D DEBUG -rdynamic -g
+<<<<<<< HEAD
 INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include -Iinclude/gsl
 LINK_FLAGS = -lglfw3 -lpthread -lole32 -std=c++17 -g
+=======
+INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include
+LINK_FLAGS = -lglfw -ldl -lpthread -std=c++17 -g
+>>>>>>> f8a368ecbf857a2f710359ed79601cc403b0686d
 RLINK_FLAGS = 
 DLINK_FLAGS = -g
 DESTDIR = /
