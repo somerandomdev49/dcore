@@ -20,6 +20,19 @@ extern "C" {
 #define WIN32_LEAN_AND_MEAN 1
 #endif
 #include <windows.h>
+
+// Windows is very mean >:(
+#ifdef GetCurrentTime
+#undef GetCurrentTime
+#endif
+
+#ifdef near
+#undef near
+#endif
+
+#ifdef far
+#undef far
+#endif
 #endif
 
 #ifndef APIENTRY
