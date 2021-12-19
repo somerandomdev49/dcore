@@ -7,3 +7,5 @@ bin
 .localfiles
 3rd-party
 docs
+.vscode
+Doxyfile

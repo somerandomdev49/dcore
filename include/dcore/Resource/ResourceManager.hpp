@@ -50,7 +50,8 @@ namespace dcore::resource
 
 	private:
 		friend class ResourceManager;
-		Resource(const std::string &name, T *data) : Data_(data), Name_(name) {
+		Resource(const std::string &name, T *data) : Data_(data), Name_(name)
+		{
 			std::cout << "Creating Resource, name: " << Name_ << std::endl;
 		}
 		T DCORE_REF *Data_;
@@ -120,7 +121,8 @@ namespace dcore::resource
 	template<typename T>
 	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
 	{
-		return Resource<T>(id, reinterpret_cast<T *>(LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
+		return Resource<T>(id, reinterpret_cast<T *>(
+		                           LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
 	}
 
 	template<typename T>

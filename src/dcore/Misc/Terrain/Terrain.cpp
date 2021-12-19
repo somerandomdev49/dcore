@@ -29,8 +29,7 @@ void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 			Chunks_.push_back(
 			    Chunk(HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(CHUNK_SIZE, CHUNK_SIZE)), pos));
 			Chunks_[Chunks_.size() - 1].Initialize();
-			Chunks_[Chunks_.size() - 1].SetTexture(
-			    0, texture);
+			Chunks_[Chunks_.size() - 1].SetTexture(0, texture);
 		}
 }
 

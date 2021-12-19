@@ -8,33 +8,27 @@
 namespace dcore::data
 {
 	/** Base class responsible from writing in a specific format. */
-	class OutputAdapter
+	class InputAdapter
 	{
 	public:
-		virtual ~OutputAdapter();
-		virtual void Write(const std::string &where, const Json &value) = 0;
+		virtual ~InputAdapter();
+		virtual Json Read(const std::string &where) = 0;
 	};
 
 	/** Class for outpting serialized json data. */
-	class FileOutput : public resource::Resources
+	class FileInput : public resource::Resources
 	{
 	public:
-		FileOutput(const std::string &root, const std::string &initialPath);
-
-		/** Sets the value of the file. */
-		void Set(const Json &value);
-
-		/** Gets the value of the file. */
-		Json &Get();
+		FileInput(const std::string &root, const std::string &initialPath);
 
 		/** Gets the value of the file. */
 		const Json &Get() const;
 
-		/** Writes with the adapter. */
-		void Write();
+		/** Reads with the adapter. */
+		void Read();
 
-		OutputAdapter *GetAdapter() const;
-		void SetAdapter(OutputAdapter *newAdapter);
+		InputAdapter *GetAdapter() const;
+		void SetAdapter(InputAdapter *newAdapter);
 
 		void SetPath(const std::string &newPath);
 		const std::string &GetPath() const;
@@ -42,6 +36,6 @@ namespace dcore::data
 	private:
 		std::string Path_;
 		Json RootValue_;
-		OutputAdapter *Adapter_;
+		InputAdapter *Adapter_;
 	};
 } // namespace dcore::data

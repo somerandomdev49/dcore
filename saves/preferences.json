@@ -1,0 +1,12 @@
+{
+	"version": 1,
+	"settings": {
+		"display": {
+			"resolution": [960, 540],
+			"fullscreen": false
+		},
+		"graphics": {
+			"render-distance": 100
+		}
+	}
+}

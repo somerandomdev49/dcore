@@ -21,13 +21,11 @@ void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
 	std::string name = Mesh.GetTexture().GetName();
 	std::cout << "Saving StaticMeshComponent, GetTexture().GetName() = " << name << std::endl;
 	auto meshInfo = data::Json {
-		{ "mesh", Mesh.GetMesh().GetName() },
-		{ "texture", Mesh.GetTexture().GetName() },
+	    {"mesh", Mesh.GetMesh().GetName()},
+	    {"texture", Mesh.GetTexture().GetName()},
 	};
 
-	output = data::Json {
-		{"mesh", meshInfo}
-	};
+	output = data::Json {{"mesh", meshInfo}};
 }
 
 void TransformComponent::Save(const EntityHandle &self, data::Json &output)
@@ -184,9 +182,6 @@ void World::Save(data::FileOutput &output)
 			comps.push_back(out);
 		}
 
-		output.Get()["entities"].push_back(data::Json {
-			{"id", entity},
-			{"components", comps}
-		});
+		output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
 	}
 }
