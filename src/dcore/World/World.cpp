@@ -4,6 +4,7 @@
 #include <dcore/Util/JsonConverters.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Core/Preferences.hpp>
 #include <iostream>
 
 namespace dcore::world
@@ -94,6 +95,7 @@ namespace dcore::world
 	{
 		Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
 		Terrain_.ActivateAllChunks();
+		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
 	}
 
 	void World::DeInitialize() {}

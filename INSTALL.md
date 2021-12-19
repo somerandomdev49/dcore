@@ -5,6 +5,7 @@
 * `freetype` - `brew install freetype` - font rendering
 * `json` - `brew install nlohmann_json/nlohmann-json` - json serialization/deserialization
 * `bullet3` - `git clone https://github.com/bulletphysics/bullet3` - bullet3 physics
+* `uuid` - (only linux) `sudo apt install uuid-dev`
 
 ## Specific installation steps
 

@@ -10,6 +10,7 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
+#include <dcore/Core/Preferences.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 #include <iostream>
@@ -204,9 +205,21 @@ namespace dcore
 		loguru::g_preamble_time    = false;
 		loguru::g_preamble_thread  = false;
 		loguru::init(argc, argv);
+		Preferences pref;
+		Preferences::SetInstance(&pref);
+
+		{
+			data::FileInput fileInput("saves", "preferences.json");
+			data::adapters::JsonInputAdapter jsonAdapter;
+			fileInput.SetAdapter(&jsonAdapter);
+			fileInput.Read();
+			pref.Read(fileInput);
+		}
+
 		platform::PlatformSpecific ps;
 		(void)ps;
 		platform::Context ctx;
+
 
 		world::World world;
 		graphics::Renderer rend;

@@ -10,6 +10,7 @@
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GL3W/GL3W.hpp>
+#include <dcore/Core/Preferences.hpp>
 
 namespace dcore::platform
 {
@@ -19,7 +20,7 @@ namespace dcore::platform
 		// auto size = resource::Properties::DefaultInstance()->GetIVec2("WindowSize");
 		platform::impl::glfw::Initialize();
 		Frame_ = new platform::impl::glfw::Frame();
-		Frame_->Initialize(glm::ivec2(800, 600));
+		Frame_->Initialize(Preferences::Instance()->GetDisplaySettings().Resolution);
 		platform::impl::gl3w::Initialize();
 		Rend_->Initialize();
 		RI_ = new graphics::RendererInterface();

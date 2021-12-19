@@ -1,18 +1,27 @@
 #pragma once
+#include <string>
 
 namespace dcore::random
 {
-	void InitializeRandom();
-
-	template<typename T>
-	T Random();
-
-	// Returns a random number in range [-1.0f, 1.0f)
+	/**
+	 * @brief Generates a random float in range of [0, 1)
+	 *
+	 * @return float
+	 */
 	float RandomFloat();
 
-	// Returns a random number in range [MIN(INT); MAX(INT) - 1]
+	/**
+	 * @brief Generates a random signed integer (usually 32 bits)
+	 */
 	int RandomInt();
 
-	// Returns a random number in range [MIN(ULL); MAX(ULL) - 1]
-	unsigned long long RandomUUID();
+	/**
+	 * @brief Generates a random unsigned long long (usually 64 bits)
+	 */
+	unsigned long long RandomInt64();
+
+	/**
+	 * @brief Generates a random UUID string
+	 */
+	std::string RandomUUIDString();
 } // namespace dcore::random
