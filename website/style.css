@@ -1,0 +1,88 @@
+@font-face {
+    font-family: "Chomsky";
+    src: url(Chomsky.otf);
+}
+
+@font-face {
+    font-family: "Squealer";
+    src: url(squealer.ttf);
+}
+
+@font-face {
+    font-family: "Squealer Embossed";
+    src: url(squealerem.ttf);
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    /* color: gold; */
+    color: #D7CEA4;
+}
+
+body {
+    background: linear-gradient(to bottom, transparent 30%, black),
+                url(dcore.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+* { box-sizing: border-box; }
+
+main {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 2fr 4fr 1fr 4fr 2fr;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 1px 1px 0px black;
+}
+
+main > div {
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#logo {
+    font-family: "Squealer";
+    display: flex;
+    justify-content: center;
+    /* text-shadow: 2px 2px 0px black; */
+}
+
+#logo *:first-child {
+    font-weight: normal;
+    font-size: 100px;
+    margin: 0;
+}
+
+main div:first-child {
+    grid-column: 2;
+}
+
+main div:last-child {
+    grid-column: 4;
+}
+
+main div h4 {
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+}
+
+main div p::first-letter, main div h4 span::first-letter {
+    font-family: "Chomsky";
+    /* font-size: 140%; */
+}
+
+main div div.roadmap ul {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+main div div.roadmap span {
+    opacity: 0.5;
+}
