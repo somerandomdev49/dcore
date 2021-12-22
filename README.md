@@ -1,8 +1,14 @@
 <h1 align="center">DragonCore</h1>
 <p align="center">Dragon Core Game/Engine</p>
 
-# Important!
+## Important!
 
 - Have a look in `CODESTYLE.md`
 - everything engine-related is in the `dcore` namespace/sub-namespace.
 - everything game-related is in the `dg` namespace/sub-namespace.
+
+## Features:
+
+- Custom standard library, for literally no reason:
+  - Better suits the codestyle, more utility functions.
+  - Custom allocator.

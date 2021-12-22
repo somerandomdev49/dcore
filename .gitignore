@@ -2,8 +2,6 @@ bin
 build
 3rd-party/spdlog
 .release_time
-dcore
-dcore.exe
 __pycache__
 **/__pycache__
 .localfiles

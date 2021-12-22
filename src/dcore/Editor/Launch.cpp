@@ -220,7 +220,6 @@ namespace dcore
 		(void)ps;
 		platform::Context ctx;
 
-
 		world::World world;
 		graphics::Renderer rend;
 

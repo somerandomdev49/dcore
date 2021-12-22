@@ -21,6 +21,7 @@ namespace dcore::world
 
 	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
 	{
+		(void)self;
 		std::string name = Mesh.GetTexture().GetName();
 		std::cout << "Saving StaticMeshComponent, GetTexture().GetName() = " << name << std::endl;
 		auto meshInfo = data::Json {
@@ -33,6 +34,7 @@ namespace dcore::world
 
 	void TransformComponent::Save(const EntityHandle &self, data::Json &output)
 	{
+		(void)self;
 		output = data::Json::object({
 		    {"position", util::JsonConverters::Glm(this->Position_)},
 		    {"rotation", util::JsonConverters::Glm(this->Rotation_)},

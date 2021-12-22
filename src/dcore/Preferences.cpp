@@ -5,7 +5,7 @@ namespace dcore
 {
 	void Preferences::Read(const dcore::data::FileInput &input)
 	{
-		Version_ = input.Get()["version"].get<int>();
+		Version_      = input.Get()["version"].get<int>();
 		auto settings = input.Get()["settings"];
 		switch(Version_)
 		{

@@ -176,7 +176,7 @@ namespace dcore::world
 		std::memcpy(c, &comp, sizeof(ComponentType));
 		this->AllComponents_.push_back(c);
 		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
-		printf("Component pool for type %s has %ld entities.\n",
+		printf("Component pool for type %s has %zu entities.\n",
 		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
 		       this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
 		return *(ComponentType *)c;
@@ -196,7 +196,7 @@ namespace dcore::world
 	{
 		printf("ECS::RegisterSystem()\n");
 		ComponentPools_[std::type_index(typeid(ComponentType))].SystemIndex_ = AllSystems_.size();
-		printf("New system index: %ld\n", AllSystems_.size());
+		printf("New system index: %zu\n", AllSystems_.size());
 		AllSystems_.push_back(std::move(system));
 	}
 }; // namespace dcore::world
