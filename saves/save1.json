@@ -1,1 +1,0 @@
-{"entities":[{"components":[{"@type":"StaticMeshComponent","mesh":{"mesh":"DCore.Mesh.Cube","texture":"DCore.Texture.Ma\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}},{"@type":"TransformComponent","position":[0.0,0.1554294377565384,0.0],"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0]},{"@type":"MovementComponent"},{"@type":"MyComponent"}],"id":0}],"version":"0.01"}

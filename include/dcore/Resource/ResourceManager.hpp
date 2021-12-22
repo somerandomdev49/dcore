@@ -6,10 +6,6 @@
 #include <array>
 #include <typeindex>
 #include <typeinfo>
-// #include <dcore/Renderer/RShader.hpp>
-// #include <dcore/Renderer/RSkeletalMesh.hpp>
-// #include <dcore/Renderer/RStaticMesh.hpp>
-// #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Resource/Resources.hpp>
 #include <dcore/Launch.hpp>
 #include <iostream>
