@@ -24,15 +24,21 @@ namespace dcore::world
 
 	EntityHandle ECS::CreateEntity()
 	{
+		constexpr EntityHandle mask = ~(1 << ((sizeof(EntityHandle) * 8) - 1));
+
 		// All entities list is full!
 		if(NextAvailable_ == AllEntities_.size())
 		{
+			NextAvailable_ += 1;
 			AllEntities_.push_back(AllEntities_.size());
 			return AllEntities_.size() - 1;
 		}
-		size_t lastAv  = NextAvailable_;
-		NextAvailable_ = AllEntities_[NextAvailable_];
-		return lastAv;
+		else
+		{
+			size_t lastAv  = NextAvailable_;
+			NextAvailable_ = AllEntities_[NextAvailable_] & mask;
+			return lastAv;
+		}
 	}
 
 } // namespace dcore::world

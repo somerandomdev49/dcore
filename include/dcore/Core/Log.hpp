@@ -8,3 +8,12 @@
 #define DCORE_LOG_ERROR    LOG_S(ERROR)
 #define DCORE_LOG_CRITICAL LOG_S(CRITICAL)
 #define DCORE_LOG_WARNING  LOG_S(WARNING)
+
+// namespace dcore
+// {
+// 	template<typename... Args>
+// 	void LogF(const char *fmt, Args... args)
+// 	{
+
+// 	}
+// }

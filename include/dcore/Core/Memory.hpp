@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/Core/Type.hpp>
+#include <dcore/Core/Allocators/Common.hpp>
 
 namespace dstd
 {
@@ -8,4 +9,12 @@ namespace dstd
 	{
 		for(USize i = 0; i != bufSize; ++i) dest[i] = source[i];
 	}
+
+	template<typename Allocator>
+	Byte *GenericAllocBuffer(USize size)
+	{
+		return Allocator::AllocN<Byte>(size);
+	}
+	Byte *AllocBuffer(USize size) { return GenericAllocBuffer<CommonAllocator>(size); }
+
 } // namespace dstd

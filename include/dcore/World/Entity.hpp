@@ -3,6 +3,7 @@
 #include <dcore/Data/FileOutput.hpp>
 #include <dcore/Core/SparseSet.hpp>
 #include <dcore/Util/Debug.hpp>
+#include <dcore/Core/Type.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dcore/Uni.hpp>
 #include <typeindex>
@@ -10,7 +11,8 @@
 
 namespace dcore::world
 {
-	using EntityHandle = uint32_t;
+	// If the first bit is 1 then the entity is considered dead, alive otherwise.
+	using EntityHandle = dstd::UInt64;
 
 	struct System
 	{
@@ -53,6 +55,14 @@ namespace dcore::world
 		EntityHandle CreateEntity();
 
 		/**
+		 * @brief Create an entity with an already existing id.
+		 * @note Used for world loading, use @c CreateEntity for everything else.
+		 * 
+		 * @param id The id of the entity
+		 */
+		void CreateEntityWithId(const EntityHandle &id);
+
+		/**
 		 * @brief Get every registered system
 		 *
 		 * @return Vector of every registered system
@@ -60,14 +70,66 @@ namespace dcore::world
 		const std::vector<System> &GetAllSystems() const;
 
 		/**
-		 * @brief Get all of entities in the ECS.
+		 * @brief Get all of entities in the ECS (including dead ones).
+		 * @warning This includes the dead entities (msb is 1)!
+		 * @deprecated Use iterators (e.g. for(... : *ECSInstance()) { ... })
 		 *
-		 * @return Vector of every entity
+		 * @return Vector of every entity (including dead ones)
 		 */
 		const std::vector<EntityHandle> &GetAllEntities() const;
 
+		class AllEntityIterator
+		{
+		public:
+			AllEntityIterator &operator++()
+			{
+				constexpr EntityHandle mask = 1 << ((sizeof(EntityHandle) * 8) - 1);
+				Index_ += 1;
+				while(Bound_->AllEntities_[Index_] & mask) ++Index_;
+				return *this;
+			}
+
+			bool operator==(const AllEntityIterator &other)
+			{
+				return other.Index_ == this->Index_ && other.Bound_ == this->Bound_;
+			}
+
+			bool operator!=(const AllEntityIterator &other)
+			{
+				return !(*this == other);
+			}
+
+			const EntityHandle &operator*() { return Bound_->AllEntities_[Index_]; }
+
+		private:
+			friend class ECS;
+			AllEntityIterator(ECS *bound, dstd::USize index) : Index_(index), Bound_(bound) {}
+			dstd::USize Index_;
+			ECS *Bound_;
+		};
+
+		AllEntityIterator begin() { return AllEntityIterator(this, 0); }
+		AllEntityIterator end() { return AllEntityIterator(this, AllEntities_.size()); }
+
 		/** Note: expensive method? */
 		std::vector<const System *> GetSystems(const EntityHandle &entity);
+
+		/**
+		 * @brief Gets the index of a system with a specific name
+		 *
+		 * @param name The name of the system to get
+		 * @return The index to a system (meaningless to user).
+		 */
+		dstd::USize GetSystemByName(const std::string &name) const;
+
+		/**
+		 * @brief Gets the pointer to a system at an index.
+		 * @see GetSystemByName
+		 *
+		 * @param index The index of a system (returned by @c GetSystemByName)
+		 * @return A const pointer to the system
+		 */
+		const System *GetSystemByIndex(dstd::USize index) const;
 
 		template<typename ComponentType>
 		ComponentType &GetComponent(const EntityHandle &entity);
@@ -77,6 +139,15 @@ namespace dcore::world
 
 		template<typename ComponentType>
 		std::vector<EntityHandle> GetEntities() const;
+
+		/**
+		 * @brief Similar to add component but takes the system index.
+		 * @see GetSystemByName
+		 *
+		 * @param index The index of the system
+		 * @param entity The entity handle that will be added to the system
+		 */
+		void AddEntityToSystem(dstd::USize index, const EntityHandle &entity);
 
 	private:
 		using ComponentHandle = void *;
@@ -91,7 +162,8 @@ namespace dcore::world
 		std::vector<System> AllSystems_;
 		std::vector<EntityHandle> AllEntities_;
 		std::vector<ComponentHandle> AllComponents_;
-		size_t NextAvailable_ = 0;
+		size_t NextAvailable_  = 0;
+		size_t AvailableCount_ = 0;
 	};
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);

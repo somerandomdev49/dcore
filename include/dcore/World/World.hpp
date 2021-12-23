@@ -4,6 +4,7 @@
 #include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Data/FileOutput.hpp>
+#include <dcore/Data/FileInput.hpp>
 // #include <entt/entity/registry.hpp>
 #include <dcore/World/Entity.hpp>
 #include <dcore/Launch.hpp>
@@ -127,6 +128,7 @@ namespace dcore::world
 		void SetRenderDistance(float newRenderDistance);
 
 		void Save(data::FileOutput &output);
+		void Load(data::FileInput &input);
 
 	private:
 		friend class WorldUpdateInfo;

@@ -12,6 +12,8 @@ namespace dstd
 	using Int64  = signed long;
 	using UInt64 = unsigned long;
 	using USize  = UInt64;
+
+	using Byte = UInt8;
 #else
 #error DragonCore only supports 64 bit platorms (define DCORE_STD_64BIT)
 #endif

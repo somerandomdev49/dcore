@@ -16,7 +16,8 @@
 - [x] chunk rendering
 - [x] world terrain rendering
 - [x] debug camera
-- [ ] valgrind
+- [ ] ~~valgring~~ fix the thing pls omg
+- [ ] finish basic dstd.
 
 ### idkarn
 

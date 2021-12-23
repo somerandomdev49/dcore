@@ -105,8 +105,7 @@ namespace dcore::world
 	void World::Update()
 	{
 		// TODO: Handle UI clicks and other events.
-		const auto &entities = ECSInstance()->GetAllEntities();
-		for(const auto &entity : entities)
+		for(const auto &entity : *ECSInstance())
 		{
 			const auto &systems = ECSInstance()->GetSystems(entity);
 			for(const auto &system : systems) system->UpdateFunction(entity);
@@ -116,8 +115,7 @@ namespace dcore::world
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		const auto &entities = ECSInstance()->GetAllEntities();
-		for(const auto &entity : entities)
+		for(const auto &entity : *ECSInstance())
 		{
 			const auto &systems = ECSInstance()->GetSystems(entity);
 			for(const auto &system : systems) system->StartFunction(entity);
@@ -128,8 +126,7 @@ namespace dcore::world
 
 	void World::End()
 	{
-		const auto &entities = ECSInstance()->GetAllEntities();
-		for(const auto &entity : entities)
+		for(const auto &entity : *ECSInstance())
 		{
 			const auto &systems = ECSInstance()->GetSystems(entity);
 			for(const auto &system : systems) system->EndFunction(entity);
@@ -173,8 +170,7 @@ namespace dcore::world
 	{
 		output.Get() = data::Json {{"version", "0.01"}, {"entities", data::Json::array()}};
 
-		const auto &entities = ECSInstance()->GetAllEntities();
-		for(const auto &entity : entities)
+		for(const auto &entity : *ECSInstance())
 		{
 			data::Json comps = data::Json::array();
 
@@ -189,6 +185,42 @@ namespace dcore::world
 			}
 
 			output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
+		}
+	}
+
+	void World::Load(data::FileInput &input)
+	{
+		if(input.Get()["version"] != "0.01")
+		{
+			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
+			// TODO: Create backup here.
+		}
+
+		const auto &entities = input.Get()["entities"];
+		for(const auto &ej : entities)
+		{
+			EntityHandle id = ej["id"].get<std::decay_t<EntityHandle>>();
+			ECSInstance()->CreateEntityWithId(id);
+
+			for(const auto &comp : ej["components"])
+			{
+				const auto &system = ECSInstance()->GetSystemByName(e["@type"]);
+				ECSInstance()->AddEntityToSystem(system, id);
+			}
+
+			// data::Json comps = data::Json::array();
+
+			// const auto &systems = ECSInstance()->GetSystems(entity);
+			// for(const auto &system : systems)
+			// {
+			// 	data::Json out = data::Json::object();
+			// 	system->SaveFunction(entity, out);
+
+			// 	out["@type"] = system->Name;
+			// 	comps.push_back(out);
+			// }
+
+			// output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
 		}
 	}
 } // namespace dcore::world

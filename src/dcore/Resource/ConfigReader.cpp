@@ -59,7 +59,7 @@ namespace dcore::resource
 				// [tag]
 				if(line[end] != ']')
 				{
-					LOG_F(ERROR, "Expected ']' in %s:%d (column %ld)", s.c_str(), lineno, end);
+					LOG_F(ERROR, "Expected ']' in %s:%d (column %zu)", s.c_str(), lineno, end);
 					return false;
 				}
 				name = line.substr(start + 1, end);
