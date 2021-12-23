@@ -35,5 +35,18 @@
 [church.higher-class.example]: https://wowpedia.fandom.com/wiki/Tranquil_Gardens_Cemetery?file=Tranquil_Gardens_Cemetery.jpg
 [church.middle-class.example]: https://thumbs.dreamstime.com/z/medieval-stone-church-wooden-roof-voss-norway-46971883.jpg
 
-## Humans:
+## Living Things:
 
+- Races:
+  - Human: (Playable)
+    - Normal
+    - Gnome: Very short humans
+  - Orc: (Playable) Buffer humans with low foreheads and no hair
+    - Grey (Common)
+    - Green (Rare)
+  - Elves: (Playable) Tall humans with long ears, moon and forest have differnet ear shapes
+    - Forest
+    - Moon
+  - Goblin: Green orkish gnomes
+  - Werewolf: (maybe playable)
+    
