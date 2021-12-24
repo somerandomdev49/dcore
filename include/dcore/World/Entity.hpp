@@ -57,7 +57,7 @@ namespace dcore::world
 		/**
 		 * @brief Create an entity with an already existing id.
 		 * @note Used for world loading, use @c CreateEntity for everything else.
-		 * 
+		 *
 		 * @param id The id of the entity
 		 */
 		void CreateEntityWithId(const EntityHandle &id);
@@ -94,10 +94,7 @@ namespace dcore::world
 				return other.Index_ == this->Index_ && other.Bound_ == this->Bound_;
 			}
 
-			bool operator!=(const AllEntityIterator &other)
-			{
-				return !(*this == other);
-			}
+			bool operator!=(const AllEntityIterator &other) { return !(*this == other); }
 
 			const EntityHandle &operator*() { return Bound_->AllEntities_[Index_]; }
 

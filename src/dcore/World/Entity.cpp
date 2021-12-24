@@ -22,6 +22,22 @@ namespace dcore::world
 		return systems;
 	}
 
+	void ECS::CreateEntityWithId(const EntityHandle &entity)
+	{
+		// TODO: Stub
+	}
+
+	void ECS::AddEntityToSystem(dstd::USize index, const EntityHandle &enyity)
+	{
+		// TODO: Stub
+	}
+
+	dstd::USize ECS::GetSystemByName(const std::string &name) const
+	{
+		// TODO: Stub
+		return 0;
+	}
+
 	EntityHandle ECS::CreateEntity()
 	{
 		constexpr EntityHandle mask = ~(1 << ((sizeof(EntityHandle) * 8) - 1));

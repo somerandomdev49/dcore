@@ -26,7 +26,7 @@ namespace dcore::platform
 		RI_ = new graphics::RendererInterface();
 	}
 
-	void Context::DefaultResourceInit(resource::ResourceManager DCORE_REF *rm) { RI_->Initialize(rm, Rend_); }
+	void Context::DefaultResourceInit() { RI_->Initialize(resource::ResourceManager::Instance(), Rend_); }
 
 	dcore::graphics::RendererInterface *Context::GetRendererInterface() const { return RI_; }
 

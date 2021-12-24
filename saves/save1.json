@@ -1,1 +1,1 @@
-{"entities":[{"components":[{"@type":"StaticMeshComponent","mesh":{"mesh":"DCore.Mesh.Cube","texture":"DCore.Main.Dirt"}},{"@type":"TransformComponent","position":[0.0,-0.39745858311653137,0.0],"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0]},{"@type":"MovementComponent"},{"@type":"MyComponent"}],"id":0}],"version":"0.01"}
+{"entities":[],"version":"0.01"}

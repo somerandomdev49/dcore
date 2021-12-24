@@ -15,6 +15,8 @@
 #include <dcore/Core/Log.hpp>
 #include <iostream>
 
+#ifdef DCORE_LAUNCH_EDITOR
+
 namespace dcore
 {
 #if DCORE__CONCEPT // Physics API Concept
@@ -335,3 +337,5 @@ namespace dcore
 		ctx.DeInitialize();
 	}
 } // namespace dcore
+
+#endif

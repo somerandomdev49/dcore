@@ -204,7 +204,7 @@ namespace dcore::world
 
 			for(const auto &comp : ej["components"])
 			{
-				const auto &system = ECSInstance()->GetSystemByName(e["@type"]);
+				const auto &system = ECSInstance()->GetSystemByName(comp["@type"]);
 				ECSInstance()->AddEntityToSystem(system, id);
 			}
 

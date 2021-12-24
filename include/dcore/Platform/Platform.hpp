@@ -44,7 +44,7 @@ namespace dcore::platform
 		static void SetInstance(Context *newContext);
 
 		void Initialize();
-		void DefaultResourceInit(resource::ResourceManager DCORE_REF *rm);
+		void DefaultResourceInit();
 		void Start();
 		void CloseWindow();
 		void DeInitialize();

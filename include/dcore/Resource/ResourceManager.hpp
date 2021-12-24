@@ -48,7 +48,7 @@ namespace dcore::resource
 		friend class ResourceManager;
 		Resource(const std::string &name, T *data) : Data_(data), Name_(name)
 		{
-			std::cout << "Creating Resource, name: " << Name_ << std::endl;
+			// std::cout << "Creating Resource, name: " << Name_ << std::endl;
 		}
 		T DCORE_REF *Data_;
 		std::string Name_;

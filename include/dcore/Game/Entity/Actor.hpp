@@ -4,7 +4,7 @@
 
 namespace dg::entity
 {
-	class ActorComponent
+	class ActorComponent : public dcore::world::ComponentBase<ActorComponent>
 	{
 	public:
 		float GetMaxHealth() const;
@@ -16,7 +16,7 @@ namespace dg::entity
 
 		// CharacterModel *GetCharacterModel() const;
 
-		void Update(dcore::world::Entity &entity);
+		void Update(dcore::world::EntityHandle &self);
 
 	private:
 		float MaxHealth_, Health_, BaseDamage_;
