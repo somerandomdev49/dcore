@@ -6,14 +6,13 @@ namespace dg
 	class ActorComponent;
 
 	/**
-	 * @brief Virtual spell class 
-	 * 
+	 * @brief Abstract base class for any spell.
 	 */
 	class Spell
 	{
 	public:
 		dstd::USize GetId() const;
-		void Cast(ActorComponent *caster, ActorComponent *target);
+		virtual void Cast(ActorComponent *caster, ActorComponent *target) = 0;
 	private:
 		dstd::USize Id_;
 	};
