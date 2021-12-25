@@ -8,7 +8,7 @@ An actor component has all of the basic info for living things (e.g. health, eff
 ```c++
 namespace dg::entity
 {
-    class ActorComponent : dcore::world::ComponentBase<ActorComponent>
+    class ActorComponent : public dcore::world::ComponentBase<ActorComponent>
     {
     public:
         CharacterModel *GetCharacterModel() const;

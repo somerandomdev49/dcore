@@ -13,6 +13,7 @@
 #include <dcore/Core/Preferences.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
+#include <dg/Game.hpp>
 #include <iostream>
 
 namespace dcore::launch
@@ -98,11 +99,18 @@ namespace dcore::launch
 		platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
 
+		dg::Game game;
+		// dg::Game::SetInstance(&game);
+		game.Initialize();
+
 		DCORE_LOG_WARNING << "======================== Starting ========================";
 		platform::Context::Instance()->Start();
 		platform::Context::Instance()->CloseWindow();
 
 		DCORE_LOG_INFO << "======================== Exiting ========================";
+
+		game.DeInitialize();
+
 		{
 			data::FileOutput fileOutput("saves", "save1.json");
 			data::adapters::JsonOutputAdapter jsonAdapter;

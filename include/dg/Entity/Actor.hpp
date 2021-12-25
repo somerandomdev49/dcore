@@ -1,6 +1,9 @@
-#include <vector>
+#pragma once
 #include <dcore/World/Entity.hpp>
-#include <dcore/Game/Entity/Effect.hpp>
+
+#include <dg/Entity/Effect.hpp>
+
+#include <vector>
 
 namespace dg::entity
 {

@@ -27,7 +27,7 @@ namespace dcore::world
 		EndFunctionType EndFunction;
 		SaveFunctionType SaveFunction;
 		LoadFunctionType LoadFunction;
-		const char *Name;
+		std::string Name;
 		const std::type_info &Type;
 	};
 
@@ -165,13 +165,6 @@ namespace dcore::world
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);
 
-#define DCORE_COMPONENT_NAME(T, N)                                     \
-	template<>                                                         \
-	const char * ::dcore::world::ComponentBase<T>::ThisComponentName() \
-	{                                                                  \
-		return N;                                                      \
-	}
-#define DCORE_COMPONENT_AUTO_NAME(T) DCORE_COMPONENT_NAME(T, #T)
 #define DCORE_COMPONENT_REGISTER(T)                                \
 	template<>                                                     \
 	const T::ComponentBase<T>::Reg T::ComponentBase<T>::RegStatic_ \
@@ -193,7 +186,7 @@ namespace dcore::world
 		 *
 		 * @return The name of the component class if specialized, otherwise the typeinfo name.
 		 */
-		static const char *ThisComponentName() { return typeid(T).name(); }
+		static std::string ThisComponentName() { return util::Debug::Demangle(typeid(T).name()); }
 
 		static void Start(const EntityHandle &self)
 		{

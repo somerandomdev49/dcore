@@ -9,15 +9,9 @@
 
 namespace dcore::world
 {
-
 	DCORE_COMPONENT_REGISTER(TransformComponent);
-	DCORE_COMPONENT_AUTO_NAME(TransformComponent);
-
 	DCORE_COMPONENT_REGISTER(StaticMeshComponent);
-	DCORE_COMPONENT_AUTO_NAME(StaticMeshComponent);
-
 	DCORE_COMPONENT_REGISTER(DynamicComponent);
-	DCORE_COMPONENT_AUTO_NAME(DynamicComponent);
 
 	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
 	{

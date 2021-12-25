@@ -1,9 +1,12 @@
 #pragma once
-#include <dcore/Game/Entity/Inventory.hpp>
-#include <dcore/Game/Entity/Actor.hpp>
 #include <dcore/World/Entity.hpp>
-#include <dcore/Game/Quest.hpp>
 #include <dcore/Uni.hpp>
+
+#include <dg/Entity/Inventory.hpp>
+#include <dg/Entity/Actor.hpp>
+#include <dg/Spell.hpp>
+#include <dg/Quest.hpp>
+
 #include <vector>
 
 #define DCORE_INV_BASE_SLOTS       16
@@ -13,7 +16,7 @@
 
 namespace dg::entity
 {
-	class CharacterComponent : dcore::world::ComponentBase<CharacterComponent>
+	class CharacterComponent : public dcore::world::ComponentBase<CharacterComponent>
 	{
 	public:
 		Quest *GetAssignedQuest(int index) const;

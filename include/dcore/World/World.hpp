@@ -21,7 +21,7 @@ namespace dcore::world
 	class Entity; // forward declaration.
 
 	/**
-	 * @brief Component that contains positional and hierarchical data for an entity.
+	 * @brief A component that contains positional and hierarchical data for an entity.
 	 */
 	struct TransformComponent : ComponentBase<TransformComponent>
 	{

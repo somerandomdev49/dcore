@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/Game/Entity/Item.hpp>
+#include <dg/Entity/Item.hpp>
 #include <vector>
 
 namespace dg::entity

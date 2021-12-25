@@ -171,7 +171,6 @@ namespace dcore
 		}
 	};
 	DCORE_COMPONENT_REGISTER(MyComponent);
-	DCORE_COMPONENT_AUTO_NAME(MyComponent);
 
 	struct MovementComponent : world::ComponentBase<MovementComponent>
 	{
@@ -197,8 +196,7 @@ namespace dcore
 		}
 	};
 	DCORE_COMPONENT_REGISTER(MovementComponent);
-	DCORE_COMPONENT_AUTO_NAME(MovementComponent);
-
+	
 	void launch::Launch::Run(int argc, char *argv[])
 	{
 		// (void)argc; (void)argv;
