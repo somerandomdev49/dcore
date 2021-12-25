@@ -1,5 +1,85 @@
 # Assets
 
+## Format
+
+### Asset location:
+- Path to asset: `data/dcore/main/<TYPE>/<CATEGORY>/<SUB-CATEGORY>/.../<ASSET>`. 
+- `<TYPE>`: `mesh`, `texture`, etc.
+- `<CATEGORY>`:
+  - For `mesh`: `building`, `details`, `characters`, ...
+  - For `texture`: `terrain`, `mesh`, `other`
+- `<SUB-CATEGORY>`:
+  - For `mesh`:
+    - `buidling` category: `house`, `church`, `castle`, `inside` ...
+    - `details` category: `path`, `city`, ...
+  - For `texture`:
+    - `terrain` category: `plains`, other zones/biomes (todo)
+    - `mesh` category: path to mesh the texture is for
+- `<SUB-SUB-CATEGORY>`:
+  - For `mesh`:
+    - `castle` sub-category: `wall`, `tower`, `other`, ...
+    - `house` sub-category: `outside`, `inside`, `other`
+    - `inside` sub-category: `door`, `bench`, `table`, `stool`, `chair`, ...
+    
+
+### Mesh asset format:
+
+Each mesh is inside of it's own folder:
+```haskell
++- AssetName -- Asset folder
+   |
+   +- AssetName.(blend/3ds/...) -- Source file
+   |
+   +- AssetName.obj -- Exported .obj file
+   |
+   +- AssetName.refs -- References file
+   |
+   +- AssetName.srefs -- Suggestions file (optional)
+```
+
+#### Exporting .obj files:
+
+- Blender:
+  - Expand `Geometry` on the right panel
+  - Uncheck `Write Materials`
+  - Check `Triangulate Faces`
+  - Make sure `Write Normals` is checked
+  - Make sure `Include UVs` is checked
+- TODO: Add more software.
+
+#### References/Suggestions file:
+
+A reference file contains the ids of assets that are used in the model,
+for example a texture, another mesh (e.g. a door), a sound (maybe).
+
+##### The file's format:
+
+```haskell
+ReferenceName0: TargetId0
+ReferenceName1: TargetId1
+ . . . . . .  :  . . . .
+```
+
+##### Example for a tavern
+
+##### References file:
+```yaml
+# Only this door is fit for this building
+Door: DCore.Mesh.Main.Building.Inside.Door.Door01
+```
+
+##### Suggestions file:
+```yaml
+# This file can be modified through the editor by placing assets inside of the house.
+DoorOpenSoundPack: DCore.SoundPack.Main.Building.Inside.DoorOpen.Wooden
+DoorCloseSoundPack: DCore.SoundPack.Main.Building.Inside.DoorClose.Wooden
+Table0: DCore.Sound.Main.Building.Inside.Table.DiningTable.02
+Table1: DCore.Sound.Main.Building.Inside.Table.DiningTable.14
+Stool0: DCore.Sound.Main.Building.Inside.Stool.64
+Stool1: DCore.Sound.Main.Building.Inside.Stool.02
+Stool2: DCore.Sound.Main.Building.Inside.Stool.38
+Chair0: DCore.Sound.Main.Building.Inside.Chair.Simple.03
+```
 
 ## World
 
@@ -18,15 +98,15 @@
     - Middle-class, medium gothic building, stone in the base. [Example][church.middle-class.example]
   - Castles:
     - See [Stormwind][stormwind]
-  - City Details:
-    - Fountains
-    - Parks (?)
-    - Bridges
-    - Canals
-    - Streets (Stone streets)
-  - Path Details:
-    - Fences
-    - Lamp posts (not tall, thicc stone base)
+- City Details:
+  - Fountains
+  - Parks (?)
+  - Bridges
+  - Canals
+  - Streets (Stone streets)
+- Path Details:
+  - Fences
+  - Lamp posts (not tall, thicc stone base)
 
 [stormwind]: https://www.google.com/search?q=world+of+warcraft+classic+stormwind&tbm=isch
 [houses.middle-class.example]: https://www.pinterest.ru/pin/350647520989843174/
