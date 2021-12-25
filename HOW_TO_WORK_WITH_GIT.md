@@ -1,16 +1,17 @@
 # How to use git (github)
 
-> for YAKOMEGA and another artist.
+> for YAKOMEGA and other artists.
 
 ## What is Git and Github, how to use them:
-- [In Russian](https://codex.so/github-start)
+- General overview, [in Russian](https://codex.so/github-start)
+- Pull requests, [in English](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests)
 
 ## Developer workflow
 
 > u know ur stuff
 
 ## Artists
-
+ 
 ### Setup
 
 1. Click `Fork` in the top left corner ([here](https://github.com/somerandomdev49/dcore/))
@@ -25,9 +26,12 @@
 
 ### Workflow
 
-1. Add/Edit files
-2. Open *Github Desktop*
-3. Enter the summary of your commit (for example `Added tavern`)
-4. Click `Commit to master`
-5. A panel will pop up, click `Push`
-5. Make a pull request
+1. Pull from upstream 
+2. Add/Edit files
+3. Open *Github Desktop*
+4. Write the summary of the commit (for example `Added Tavern02`)
+5. Enter the description of your commit (long, *very* optional)
+6. Click `Commit to master`
+7. If you want to do more stuff, repeat **1**, otherwise:
+8. Click `Push origin` (or `Repository > Push`)
+9. Create a pull request (or `Branch > Create pull request`)
