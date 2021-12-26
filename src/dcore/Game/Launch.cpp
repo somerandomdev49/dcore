@@ -11,6 +11,7 @@
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/Core/Preferences.hpp>
+#include <dcore/Core/FrameLog.hpp>
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dg/Game.hpp>
@@ -88,6 +89,10 @@ namespace dcore::launch
 		event::TimeManager timeManager;
 		graphics::gui::GuiManager guiManager;
 		graphics::gui::GuiGraphics guiGraphics;
+		FrameLog frameLog;
+		FrameLog::SetInstance(&frameLog);
+		
+		graphics::gui::Font::FontLibInitialize();
 
 		LoadPrefs(&prefs);
 		InitContext(&context, &world, &renderer);
@@ -95,9 +100,9 @@ namespace dcore::launch
 		InitResources(&resourceManager, &resourceLoader);
 		InitGUI(&guiGraphics, &guiManager);
 
-		graphics::gui::Font::FontLibInitialize();
 		platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
+
 
 		dg::Game game;
 		// dg::Game::SetInstance(&game);
@@ -105,7 +110,6 @@ namespace dcore::launch
 
 		DCORE_LOG_WARNING << "======================== Starting ========================";
 		platform::Context::Instance()->Start();
-		platform::Context::Instance()->CloseWindow();
 
 		DCORE_LOG_INFO << "======================== Exiting ========================";
 

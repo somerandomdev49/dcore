@@ -167,6 +167,33 @@ namespace dcore::terrain
 		Textures_[index] = newTexture;
 	}
 
+	float Chunk::GetHeightAtGlobal(const glm::vec2 &v) const
+	{
+		return GetHeightAtLocal(v - GetGlobalPosition());
+	}
+
+	float Chunk::GetHeightAtLocal(const glm::vec2 &v) const
+	{
+		glm::ivec2 grid = v / (float)CHUNK_SIZE;
+		
+		if(grid.x >= Region_.GetSize().x - 1 || grid.x < 0
+		|| grid.y >= Region_.GetSize().y - 1 || grid.y < 0)
+			return 0;
+		
+		float p00 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 0)),
+		      p01 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 1)),
+			  p10 = Region_.Get(glm::ivec2(grid.x + 1, grid.y + 0)),
+			  p11 = Region_.Get(glm::ivec2(grid.x + 1, grid.y + 1));
+		
+		glm::vec2 pos = glm::vec2((glm::ivec2)v % CHUNK_SIZE) / (float)CHUNK_SIZE;
+
+		return p00 * (1 - pos.x) * (1 - pos.y)
+		     + p10 * (0 + pos.x) * (1 - pos.y)
+		     + p01 * (1 - pos.x) * (0 + pos.y)
+		     + p11 * (0 + pos.x) * (0 + pos.y)
+			 ;
+	}
+
 	glm::vec2 Chunk::GetGlobalPosition() const { return LocalPosition_ * UNIT_PER_PIXEL; }
 	const glm::ivec2 &Chunk::GetLocalPosition() const { return LocalPosition_; }
 	dcore::graphics::RStaticMesh *Chunk::GetMesh() const { return Mesh_; }

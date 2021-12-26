@@ -137,7 +137,7 @@ namespace dcore::graphics::gui
 		if(scale > 0) pixelScale *= scale;
 		// glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size / 2);
 
-		Rend_->DisableDepthCheck();
+		// Rend_->DisableDepthCheck();
 
 		// Bind once!
 		Rend_->UseShader(FontShader_->Get());
@@ -170,7 +170,7 @@ namespace dcore::graphics::gui
 			};
 		}
 
-		Rend_->EnableDepthCheck();
+		// Rend_->EnableDepthCheck();
 	}
 
 	static GuiGraphics *guiGrInst = nullptr;

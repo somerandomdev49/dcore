@@ -5,8 +5,9 @@
 #include <dcore/Graphics/Graphics.hpp>
 #include <dcore/Platform/Window.hpp>
 #include <dcore/World/World.hpp>
+#include <dcore/Core/FrameLog.hpp>
 
-// TODO: Make ethe implementation dynamic.
+// TODO: Make the implementation dynamic.
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GL3W/GL3W.hpp>
@@ -50,6 +51,8 @@ namespace dcore::platform
 			Frame_->OnEndFrame();
 
 			lastTime = thisTime;
+
+			FrameLog::Instance()->Flush();
 		}
 		World_->End();
 	}

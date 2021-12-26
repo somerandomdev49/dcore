@@ -28,6 +28,9 @@ namespace dcore::terrain
 
 		/** Returns whether the chunk is active. (can be rendered) */
 		bool IsActive() const;
+		
+		float GetHeightAtGlobal(const glm::vec2 &v) const;
+		float GetHeightAtLocal(const glm::vec2 &v) const;
 
 		const dcore::resource::Resource<dcore::graphics::RTexture> &GetBlendMap() const;
 		const dcore::resource::Resource<dcore::graphics::RTexture> *GetTextures() const;
@@ -54,6 +57,10 @@ namespace dcore::terrain
 		dcore::resource::Resource<dcore::graphics::RTexture> BlendMap_;
 		dcore::resource::Resource<dcore::graphics::RTexture> Textures_[4];
 
+		// struct {
+		// 	int Width_, Height_;
+		// 	std::vector<float> Heights;
+		// } MeshData_;
 		dcore::graphics::RStaticMesh DCORE_OWN *Mesh_;
 		glm::ivec2 LocalPosition_;
 		bool IsActive_;

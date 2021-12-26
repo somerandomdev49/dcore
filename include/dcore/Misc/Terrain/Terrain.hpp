@@ -19,6 +19,8 @@ namespace dcore::terrain
 		/** Activates chunks */
 		void ActivateAllChunks();
 
+		const Chunk &GetChunkAtGlobal(const glm::vec3 &position) const;
+
 		const std::vector<Chunk> &GetChunks() const;
 		const std::vector<uint32_t> &GetActiveChunks() const;
 

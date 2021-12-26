@@ -19,12 +19,18 @@ namespace dcore::graphics::gui
 	void Widget::DoInitialize_()
 	{
 		Initialize(); // Call the user method.
+		fprintf(stderr, "widget child count: %zu\n", Children_.size());
 		for(const auto &child : Children_) child->DoInitialize_();
 	}
 
 	void Widget::DoDeInitialize_()
 	{
-		for(const auto &child : Children_) child->DoDeInitialize_();
+		for(auto child : Children_)
+		{
+			child->DoDeInitialize_();
+			delete child;
+		}
+		Children_.clear();
 		DeInitialize(); // Call the user method.
 		SetDefaults_();
 	}

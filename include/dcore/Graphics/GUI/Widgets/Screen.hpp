@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/Graphics/GUI/Widget.hpp>
+#include <dcore/Graphics/GUI/Widgets/Console.hpp>
 
 namespace dcore::graphics::gui::common
 {
@@ -11,5 +12,7 @@ namespace dcore::graphics::gui::common
 		virtual void DeInitialize() override;
 		virtual void Render(GuiGraphics *g) override;
 		virtual void HandleEvent(event::Event *e) override;
+	private:
+		common::Console *Console_;
 	};
 } // namespace dcore::graphics::gui::common

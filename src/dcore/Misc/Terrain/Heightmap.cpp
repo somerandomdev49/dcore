@@ -6,7 +6,6 @@
 
 namespace dcore::terrain
 {
-
 	void Heightmap::Heightmap_Constructor(const std::string &path, void *placement)
 	{
 		auto h = new(placement) Heightmap();
@@ -38,9 +37,15 @@ namespace dcore::terrain
 	    : Min_(min), Max_(max), Source_(source)
 	{
 	}
+	
 	glm::ivec2 HeightmapRegion::GetSize() const { return GetMax() - GetMin(); }
 	const glm::ivec2 &HeightmapRegion::GetMax() const { return Max_; }
 	const glm::ivec2 &HeightmapRegion::GetMin() const { return Min_; }
+
+	float HeightmapRegion::GetHeight(const glm::vec2 &normalized) const
+	{
+		return 0.0f; // TODO
+	}
 
 	float HeightmapRegion::Get(const glm::ivec2 &pos) const { return Source_->Get(Min_ + pos); }
 } // namespace dcore::terrain

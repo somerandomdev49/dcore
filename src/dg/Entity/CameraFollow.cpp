@@ -18,7 +18,7 @@ namespace dg::entity
 
 	void CameraFollowComponent::Update(const dcore::world::EntityHandle &self)
 	{
-		glm::vec3 offset = glm::vec3(0, 0, 10); // TODO: Offset field + Getter/Setter for zooming in/out.
+		glm::vec3 offset = glm::vec3(0, 10, 40); // TODO: Offset field + Getter/Setter for zooming in/out.
 		// offset = glm::mat3_cast(TransformComponent_->GetRotation()) * offset;
 		Camera_->SetPosition(TransformComponent_->GetPosition() + offset);
 	}

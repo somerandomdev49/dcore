@@ -1,4 +1,5 @@
 #include <dcore/Graphics/GUI/Widgets/Screen.hpp>
+#include <cstdio>
 
 namespace dcore::graphics::gui::common
 {
@@ -15,7 +16,12 @@ namespace dcore::graphics::gui::common
 		// GetQuad().Texture = this->TextureA_;
 	}
 
-	void Screen::Initialize() {}
+	void Screen::Initialize()
+	{
+		fputs("Screen::Initialize()\n", stderr);
+		Console_ = this->CreateChild<common::Console>();
+	}
+
 	void Screen::DeInitialize() {}
 
 	void Screen::Render(GuiGraphics *g)

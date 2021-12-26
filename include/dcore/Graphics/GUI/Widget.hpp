@@ -99,6 +99,6 @@ namespace dcore::graphics::gui
 	T *Widget::CreateChild(Args &&...args)
 	{
 		Children_.push_back(new T(std::forward<Args>(args)...));
-		return reinterpret_cast<T *>(Children_.back());
+		return dynamic_cast<T *>(Children_.back());
 	}
 } // namespace dcore::graphics::gui

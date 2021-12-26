@@ -4,6 +4,7 @@
 #include <dcore/Util/JsonConverters.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/Graphics.hpp>
+#include <dcore/Platform/Platform.hpp>
 #include <dcore/Core/Preferences.hpp>
 #include <iostream>
 
@@ -94,6 +95,8 @@ namespace dcore::world
 		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
 	}
 
+	const terrain::Terrain &World::GetTerrain() const { return Terrain_; }
+
 	void World::DeInitialize() {}
 
 	void World::Update()
@@ -146,8 +149,12 @@ namespace dcore::world
 		auto &chunks = Terrain_.GetChunks();
 		for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
+		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
+
 		// Render the UI. (Maybe this doesn't belong here...)
 		graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
+
+		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->EnableDepthCheck();
 	}
 
 	dcore::world::EntityHandle Entity::GetId() const { return Id_; }

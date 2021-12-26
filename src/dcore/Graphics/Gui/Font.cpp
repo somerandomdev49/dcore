@@ -13,6 +13,16 @@
 // #include <stb_truetype.h>
 // #undef STB_TRUETYPE_IMPLEMENTATION
 
+static const char *GetFreetypeErrorMessage(FT_Error err)
+{
+    #undef FTERRORS_H_
+    #define FT_ERRORDEF( e, v, s )  case e: return s;
+    #define FT_ERROR_START_LIST     switch (err) {
+    #define FT_ERROR_END_LIST       }
+    #include FT_ERRORS_H
+    return "(Unknown error)";
+}
+
 namespace dcore::graphics::gui
 {
 #define F_INF_(EXPR) ((FT_Face)(EXPR))
@@ -28,7 +38,13 @@ namespace dcore::graphics::gui
 		PixelHeight_ = fontSize;
 		Scale_       = 1.0f;
 
-		DCORE_ASSERT(!FT_New_Face(libft__, name, fontNo, &fc), "Could not create font face");
+		FT_Error err = FT_New_Face(libft__, name, fontNo, &fc);
+		if(err)
+		{
+			DCORE_LOG_ERROR << "Could not create font face: " << GetFreetypeErrorMessage(err);
+			DCORE_ASSERT(false, "Could not create font face");
+		}
+
 		FT_Set_Pixel_Sizes(fc, 0, PixelHeight_);
 
 		FontInfo__ = fc;
@@ -175,7 +191,7 @@ namespace dcore::graphics::gui
 			size = std::stoi(path.substr(split + 1));
 		}
 		std::string actualPath = path.substr(0, split);
-		printf("Reading font from '%s'\n", actualPath.c_str());
+		LOG_F(INFO, "Reading font from '%s'", actualPath.c_str());
 		// std::ifstream input(actualPath, std::ios::binary);
 		// std::vector<byte> buffer(std::istreambuf_iterator<char>(input), {});
 		// printf("Read %zu bytes of font data\n", buffer.size());

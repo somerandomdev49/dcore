@@ -50,8 +50,8 @@ namespace dcore::terrain
 		/** Returns the pixel value at a location. */
 		float Get(const glm::ivec2 &pos) const;
 
-		/** Returns a bilinearly interpolated height based on horizonal and vertical scale of a heightmap. */
-		float GetHeight(const glm::vec2 &worldPos, float horizScale, float vertScale) const;
+		/** Returns an interpolated height based on a normalized (x,z) vector */
+		float GetHeight(const glm::vec2 &normalized) const;
 
 	private:
 		glm::ivec2 Min_, Max_;

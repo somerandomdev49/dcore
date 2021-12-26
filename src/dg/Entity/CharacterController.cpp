@@ -2,6 +2,7 @@
 #include <dcore/Event/InputManager.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/Platform/Platform.hpp>
+#include <dcore/Core/FrameLog.hpp>
 
 DCORE_COMPONENT_REGISTER(dg::entity::CharacterControllerComponent);
 
@@ -34,9 +35,21 @@ namespace dg::entity
 		// Velocity_ += glm::vec3(0, -Gravity_ * 0, 0);
 
 		auto position = TransformComponent_->GetPosition();
+
+		const dcore::terrain::Chunk &currentChunk =
+			dcore::platform::Context::Instance()->GetWorld()->GetTerrain().GetChunkAtGlobal(
+				position
+			);
+
 		position += v * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 		// position += Velocity_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
+
+		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z));
+		if(position.y < terrainHeight)
+			position.y = terrainHeight + 0.5f /* TODO: Half-height of the capsule? */;
+
 		TransformComponent_->SetPosition(position);
+		dcore::FrameLog::SLog("Test");
 		// fprintf(stderr, "pos: %f, %f, %f\n", position.x, position.y, position.z);
 	}
 }

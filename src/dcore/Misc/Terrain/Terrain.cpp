@@ -12,7 +12,6 @@ namespace glm
 
 namespace dcore::terrain
 {
-
 	void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 	{
 		Heightmap_ = heightmap;
@@ -64,6 +63,13 @@ namespace dcore::terrain
 			if(glm::distance(glm::vec3(pos.x, 0, pos.y), position) < radius) ActiveChunks_.push_back(i);
 		}
 		ActivateChunks_();
+	}
+
+	const Chunk &Terrain::GetChunkAtGlobal(const glm::vec3 &position) const
+	{
+		auto chunkCount = Heightmap_.Get()->GetSize() / glm::ivec2(CHUNK_SIZE, CHUNK_SIZE);
+		glm::ivec2 gridPos = glm::vec2(position.x, position.z) / (float)CHUNK_SIZE;
+		return Chunks_[gridPos.x + gridPos.y * chunkCount.x];
 	}
 
 	void TerrainResourceManager::Register(resource::ResourceLoader *rl)
