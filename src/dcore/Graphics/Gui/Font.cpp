@@ -81,7 +81,7 @@ namespace dcore::graphics::gui
 		{
 			if(FT_Load_Char(fc, c, FT_LOAD_RENDER))
 			{
-				DCORE_LOG_ERROR << "Failed to load character '" << (char)c << "'from font face.";
+				DCORE_LOG_ERROR << "Failed to load character '" << (char)c << "' from font face.";
 				continue;
 			}
 			bitmap.width += fc->glyph->bitmap.width;
@@ -89,7 +89,7 @@ namespace dcore::graphics::gui
 			CodePointTable_.push_back(CodePoint());
 		}
 
-		printf("Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
+		LOG_F(INFO, "Total bitmap size: %dx%d\n", bitmap.width, bitmap.height);
 		bitmap.data = new byte[bitmap.width * bitmap.height];
 		std::memset(bitmap.data, 0, bitmap.width * bitmap.height);
 

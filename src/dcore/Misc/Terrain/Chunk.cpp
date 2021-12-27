@@ -1,5 +1,6 @@
 #include <dcore/Misc/Terrain/Chunk.hpp>
 #include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Core/FrameLog.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dcore/Uni.hpp>
 
@@ -7,7 +8,6 @@ namespace dcore::terrain
 {
 
 #define UNIT_PER_PIXEL 1
-#define VERT_SCALE     45.f
 
 	inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
 	{
@@ -172,20 +172,24 @@ namespace dcore::terrain
 		return GetHeightAtLocal(v - GetGlobalPosition());
 	}
 
+	// TODO: Generate mesh which is smaller than the chunk region by 1 on each axis.
 	float Chunk::GetHeightAtLocal(const glm::vec2 &v) const
 	{
-		glm::ivec2 grid = v / (float)CHUNK_SIZE;
+		glm::ivec2 grid = v * (float)UNIT_PER_PIXEL;
+		FrameLog::SLogF("ch: grid pos: %d, %d", grid.x, grid.y);
 		
-		if(grid.x >= Region_.GetSize().x - 1 || grid.x < 0
-		|| grid.y >= Region_.GetSize().y - 1 || grid.y < 0)
-			return 0;
+		glm::ivec2 d(1, 1);
+		if(grid.x >= Region_.GetSize().x - 1 || grid.x < 0) d.x = 0;
+		if(grid.y >= Region_.GetSize().y - 1 || grid.y < 0) d.y = 0;
 		
-		float p00 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 0)),
-		      p01 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 1)),
-			  p10 = Region_.Get(glm::ivec2(grid.x + 1, grid.y + 0)),
-			  p11 = Region_.Get(glm::ivec2(grid.x + 1, grid.y + 1));
+		float p00 = Region_.Get(glm::ivec2(grid.x + 0  , grid.y + 0  )),
+		      p01 = Region_.Get(glm::ivec2(grid.x + 0  , grid.y + d.y)),
+			  p10 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + 0  )),
+			  p11 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + d.y));
 		
-		glm::vec2 pos = glm::vec2((glm::ivec2)v % CHUNK_SIZE) / (float)CHUNK_SIZE;
+		FrameLog::SLogF("00 - %.2f, 01 - %.2f, 10 - %.2f, 11 - %.2f", p00, p01, p10, p11);
+		
+		glm::vec2 pos = glm::vec2(fmod(v.x, CHUNK_SIZE), fmod(v.x, CHUNK_SIZE)) / (float)CHUNK_SIZE;
 
 		return p00 * (1 - pos.x) * (1 - pos.y)
 		     + p10 * (0 + pos.x) * (1 - pos.y)

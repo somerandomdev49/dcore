@@ -2,6 +2,7 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include <dcore/Core/Preferences.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -116,7 +117,8 @@ namespace dcore::graphics::gui
 		tr      = glm::rotate(tr, quad.Rotation, glm::vec3(0, 0, 1));
 		tr      = glm::scale(tr, glm::vec3(quad.Scale, 1.0f));
 
-		auto pr = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);
+		auto res = Preferences::Instance()->GetDisplaySettings().Resolution;
+		auto pr = glm::ortho(0.0f, (float)res.x, (float)res.y, 0.0f, -1.0f, 1.0f);
 
 		shader->SetTransform(tr);
 		shader->SetProjection(pr);
@@ -166,7 +168,7 @@ namespace dcore::graphics::gui
 				FontShader_->SetTexCoords(glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
 				                          glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
 
-				RenderQuad_(q, FontShader_, false); // shader already bound
+				RenderQuad_(q, FontShader_, true); // shader already bound
 			};
 		}
 

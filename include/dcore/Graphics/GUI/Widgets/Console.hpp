@@ -14,5 +14,6 @@ namespace dcore::graphics::gui::common
 		virtual void HandleEvent(event::Event *e) override;
 	private:
 		Font *Font_; // TODO: Have a default font somewhere.
+		float PrevWidth_ = 250.0f;
 	};
 } // namespace dcore::graphics::gui::common

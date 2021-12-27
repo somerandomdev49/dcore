@@ -4,6 +4,7 @@
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #define CHUNK_SIZE 15
+#define VERT_SCALE 45.f
 
 namespace dcore::terrain
 {

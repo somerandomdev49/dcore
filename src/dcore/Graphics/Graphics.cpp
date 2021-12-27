@@ -6,6 +6,7 @@
 #include <dcore/Graphics/StaticMesh.hpp>
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Core/Preferences.hpp>
 #include <glm/ext.hpp>
 
 // TODO: Separate these into different files
@@ -167,7 +168,8 @@ namespace dcore::graphics
 		ObjectShader_  = new CommonShader(sobj);
 		TerrainShader_ = new TerrainShader(ster);
 
-		Camera_ = new Camera();
+		glm::vec2 res = Preferences::Instance()->GetDisplaySettings().Resolution;
+		Camera_ = new Camera(70.0f, res.x / res.y);
 
 		Renderer_ = rend;
 	}

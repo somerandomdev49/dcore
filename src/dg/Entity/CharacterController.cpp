@@ -44,12 +44,12 @@ namespace dg::entity
 		position += v * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 		// position += Velocity_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 
-		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z));
-		if(position.y < terrainHeight)
-			position.y = terrainHeight + 0.5f /* TODO: Half-height of the capsule? */;
+		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z)) * VERT_SCALE;
+		// if(position.y < terrainHeight)
+		position.y = terrainHeight + 1.0f /* TODO: Half-height of the capsule? */;
 
 		TransformComponent_->SetPosition(position);
-		dcore::FrameLog::SLog("Test");
-		// fprintf(stderr, "pos: %f, %f, %f\n", position.x, position.y, position.z);
+		dcore::FrameLog::SLogF("pos: %.2f, %.2f, %.2f", position.x, position.y, position.z);
+		dcore::FrameLog::SLogF("chunk: %d, %d", currentChunk.GetLocalPosition().x, currentChunk.GetLocalPosition().y);
 	}
 }
