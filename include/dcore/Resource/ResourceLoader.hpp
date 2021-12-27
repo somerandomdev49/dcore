@@ -41,7 +41,8 @@ namespace dcore::resource
 			size_t allocSize;
 		};
 
-		void FindMappings_(const std::string &pattern, std::vector<std::pair<std::string, std::string>> &matching);
+		void FindMappings_(const std::string &pattern,
+		                   std::vector<std::pair<std::string, std::string>> &matching);
 
 		std::unordered_map<std::string, std::string> ResMappings_;
 		std::unordered_map<std::string, TypeInfo> ResTypes_;

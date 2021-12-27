@@ -6,15 +6,11 @@ namespace dcore
 	static FrameLog *instFrameLog = nullptr;
 	FrameLog *FrameLog::Instance()
 	{
-		if(instFrameLog == nullptr)
-			instFrameLog = new FrameLog;
+		if(instFrameLog == nullptr) instFrameLog = new FrameLog;
 		return instFrameLog;
 	}
 
-	void FrameLog::SetInstance(FrameLog *newInstance)
-	{
-		instFrameLog = newInstance;
-	}
+	void FrameLog::SetInstance(FrameLog *newInstance) { instFrameLog = newInstance; }
 
 	void FrameLog::SLog(const std::string &message) { FrameLog::Instance()->Log(message); }
 	void FrameLog::SLogF(const char *format, ...)
@@ -40,20 +36,11 @@ namespace dcore
 		std::vsprintf(&output[0], format, va);
 		Log(output);
 	}
-	
-	void FrameLog::Log(const std::string &message)
-	{ 
-		Queue_.push_back(message);
-	}
-	
-	void FrameLog::Flush()
-	{
-		Queue_.clear();
-	}
 
-	const std::vector<std::string> &FrameLog::GetQueue() const
-	{
-		return Queue_;
-	}
-	
-}
+	void FrameLog::Log(const std::string &message) { Queue_.push_back(message); }
+
+	void FrameLog::Flush() { Queue_.clear(); }
+
+	const std::vector<std::string> &FrameLog::GetQueue() const { return Queue_; }
+
+} // namespace dcore

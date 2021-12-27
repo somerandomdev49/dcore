@@ -30,14 +30,17 @@ namespace dcore::terrain
 	const glm::ivec2 &Heightmap::GetSize() const { return Size_; }
 	float Heightmap::Get(const glm::ivec2 &pos) const
 	{
+		if(pos.x >= Size_.x || pos.y >= Size_.y)
+			return 0.0f;
 		return (Data_[(pos.x + pos.y * Size_.x) * ComponentCount_] & 0xff) / 255.0f;
 	}
 
-	HeightmapRegion::HeightmapRegion(Heightmap *source, const glm::ivec2 &min, const glm::ivec2 &max)
+	HeightmapRegion::HeightmapRegion(Heightmap *source, const glm::ivec2 &min,
+	                                 const glm::ivec2 &max)
 	    : Min_(min), Max_(max), Source_(source)
 	{
 	}
-	
+
 	glm::ivec2 HeightmapRegion::GetSize() const { return GetMax() - GetMin(); }
 	const glm::ivec2 &HeightmapRegion::GetMax() const { return Max_; }
 	const glm::ivec2 &HeightmapRegion::GetMin() const { return Min_; }

@@ -4,7 +4,8 @@
 
 namespace dcore::graphics::impl
 {
-	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride)
+	void opengl::Vao::Load(const std::vector<uint32_t> &indices,
+	                       const std::vector<byte> &vertexData, size_t stride)
 	{
 		IndexCount_ = indices.size();
 
@@ -16,7 +17,8 @@ namespace dcore::graphics::impl
 		Gl::SetBufferData(ArrayBuffer, vertexData.size(), &vertexData[0], BufferUsageStaticDraw);
 
 		Gl::BindBuffer(ElementArrayBuffer, EBO_);
-		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), &indices[0], BufferUsageStaticDraw);
+		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), &indices[0],
+		                  BufferUsageStaticDraw);
 
 		LastOffset_ = 0;
 		LastIndex_  = 0;
@@ -25,8 +27,8 @@ namespace dcore::graphics::impl
 
 	void opengl::Vao::CreateFloatAttribute(int count)
 	{
-		// printf("CreateFloatAttribute(count = %d): LastIndex_ = %zu, LastOffset_ = %zu, Stride_ = %zu\n", count,
-		// LastIndex_,
+		// printf("CreateFloatAttribute(count = %d): LastIndex_ = %zu, LastOffset_ = %zu, Stride_ =
+		// %zu\n", count, LastIndex_,
 		//        LastOffset_, Stride_);
 		Gl::VertexAttributePointer(LastIndex_, count, TypeFloat, Stride_, LastOffset_);
 		Gl::EnableVertexAttributeArray(LastIndex_);

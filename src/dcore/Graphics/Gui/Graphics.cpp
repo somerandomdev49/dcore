@@ -24,8 +24,14 @@ namespace dcore::graphics::gui
 	}
 
 	void GuiShader::SetColor(const glm::vec4 &v) { Renderer::Instance()->SetUniform(UColor_, v); }
-	void GuiShader::SetTransform(const glm::mat4 &v) { Renderer::Instance()->SetUniform(UTransform_, v); }
-	void GuiShader::SetProjection(const glm::mat4 &v) { Renderer::Instance()->SetUniform(UProjection_, v); }
+	void GuiShader::SetTransform(const glm::mat4 &v)
+	{
+		Renderer::Instance()->SetUniform(UTransform_, v);
+	}
+	void GuiShader::SetProjection(const glm::mat4 &v)
+	{
+		Renderer::Instance()->SetUniform(UProjection_, v);
+	}
 	void GuiShader::SetTexture(int unit) { Renderer::Instance()->SetUniform(UColor_, unit); }
 	dcore::graphics::RShader *GuiShader::Get() const { return Shader_.Get(); }
 
@@ -34,7 +40,8 @@ namespace dcore::graphics::gui
 	FontShader::~FontShader() {}
 	FontShader::FontShader(const dcore::resource::Resource<dcore::graphics::RShader> &shader)
 	{
-		static const char *uniformNames[4] = {"u_TexCoords[0]", "u_TexCoords[1]", "u_TexCoords[2]", "u_TexCoords[3]"};
+		static const char *uniformNames[4] = {"u_TexCoords[0]", "u_TexCoords[1]", "u_TexCoords[2]",
+		                                      "u_TexCoords[3]"};
 
 		Shader_      = shader;
 		UTransform_  = Renderer::Instance()->GetUniform(Shader_.Get(), "u_Transform");
@@ -49,8 +56,14 @@ namespace dcore::graphics::gui
 	}
 
 	void FontShader::SetColor(const glm::vec4 &v) { Renderer::Instance()->SetUniform(UColor_, v); }
-	void FontShader::SetTransform(const glm::mat4 &v) { Renderer::Instance()->SetUniform(UTransform_, v); }
-	void FontShader::SetProjection(const glm::mat4 &v) { Renderer::Instance()->SetUniform(UProjection_, v); }
+	void FontShader::SetTransform(const glm::mat4 &v)
+	{
+		Renderer::Instance()->SetUniform(UTransform_, v);
+	}
+	void FontShader::SetProjection(const glm::mat4 &v)
+	{
+		Renderer::Instance()->SetUniform(UProjection_, v);
+	}
 	void FontShader::SetTexture(int unit) { Renderer::Instance()->SetUniform(UColor_, unit); }
 	void FontShader::SetTexCoords(const glm::vec4 &s, const glm::vec4 &e)
 	{
@@ -66,8 +79,8 @@ namespace dcore::graphics::gui
 	// TODO(!): Rotation
 	bool Quad::OverlapPoint(const glm::vec2 &pointer)
 	{
-		return pointer.x >= Position.x && pointer.x <= Position.x + Scale.x && pointer.y >= Position.y &&
-		       pointer.y <= Position.y + Scale.y;
+		return pointer.x >= Position.x && pointer.x <= Position.x + Scale.x &&
+		       pointer.y >= Position.y && pointer.y <= Position.y + Scale.y;
 	}
 
 	bool Quad::OverlapQuad(const Quad &other) { return false; }
@@ -118,7 +131,7 @@ namespace dcore::graphics::gui
 		tr      = glm::scale(tr, glm::vec3(quad.Scale, 1.0f));
 
 		auto res = Preferences::Instance()->GetDisplaySettings().Resolution;
-		auto pr = glm::ortho(0.0f, (float)res.x, (float)res.y, 0.0f, -1.0f, 1.0f);
+		auto pr  = glm::ortho(0.0f, (float)res.x, (float)res.y, 0.0f, -1.0f, 1.0f);
 
 		shader->SetTransform(tr);
 		shader->SetProjection(pr);
@@ -131,13 +144,15 @@ namespace dcore::graphics::gui
 	// TODO: inline?
 	void GuiGraphics::RenderQuad(const Quad &quad) { RenderQuad_(quad, GuiShader_); }
 
-	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, int size, float scale)
+	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, int size,
+	                             float scale)
 	{
 		if(!text) return;
 		float pixelScale = 1.0f;
 		if(size > 0) pixelScale *= float(size) / float(font->PixelHeight_);
 		if(scale > 0) pixelScale *= scale;
-		// glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size / 2);
+		// glm::vec2 alignedOrigin = origin + glm::vec2(0.0f, font->GetAscent() * pixelScale + size
+		// / 2);
 
 		// Rend_->DisableDepthCheck();
 
@@ -153,7 +168,8 @@ namespace dcore::graphics::gui
 			if(text[idx] >= 32)
 			{
 				auto &cp      = font->CodePointTable_[text[idx] - ' '];
-				glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale, cursor.y - cp.Bearing.y * pixelScale);
+				glm::vec2 pos = glm::vec2(cursor.x + cp.Bearing.x * pixelScale,
+				                          cursor.y - cp.Bearing.y * pixelScale);
 
 				if(idx < textLength - 1) cursor.x += font->GetKerning(text[idx], text[idx - 1]);
 				cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
@@ -163,10 +179,12 @@ namespace dcore::graphics::gui
 				q.Position = pos;
 				q.Scale    = glm::vec2(cp.AtlasSize) * pixelScale;
 				q.Rotation = 0.0f;
-				q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so doesnt matter)
+				q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so
+				                                      // doesnt matter)
 
-				FontShader_->SetTexCoords(glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
-				                          glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
+				FontShader_->SetTexCoords(
+				    glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
+				    glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
 
 				RenderQuad_(q, FontShader_, true); // shader already bound
 			};

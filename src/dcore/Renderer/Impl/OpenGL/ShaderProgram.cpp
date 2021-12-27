@@ -41,7 +41,8 @@ namespace dcore::graphics::impl
 		if(!shaderStatus)
 		{
 			glGetShaderInfoLog(s, 512, NULL, errors);
-			DCORE_LOG_ERROR << ConvertShaderTypeToString(type) << " shader compilation error:\n" << errors;
+			DCORE_LOG_ERROR << ConvertShaderTypeToString(type) << " shader compilation error:\n"
+			                << errors;
 			return;
 		}
 

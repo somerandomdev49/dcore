@@ -44,7 +44,7 @@ namespace dg::entity
 		position += v * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 		// position += Velocity_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 
-		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z)) * VERT_SCALE;
+		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z));
 		// if(position.y < terrainHeight)
 		position.y = terrainHeight + 1.0f /* TODO: Half-height of the capsule? */;
 

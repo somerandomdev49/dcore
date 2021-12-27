@@ -15,12 +15,16 @@
 
 static const char *GetFreetypeErrorMessage(FT_Error err)
 {
-    #undef FTERRORS_H_
-    #define FT_ERRORDEF( e, v, s )  case e: return s;
-    #define FT_ERROR_START_LIST     switch (err) {
-    #define FT_ERROR_END_LIST       }
-    #include FT_ERRORS_H
-    return "(Unknown error)";
+#undef FTERRORS_H_
+#define FT_ERRORDEF(e, v, s) \
+	case e:                  \
+		return s;
+#define FT_ERROR_START_LIST \
+	switch(err)             \
+	{
+#define FT_ERROR_END_LIST }
+#include FT_ERRORS_H
+	return "(Unknown error)";
 }
 
 namespace dcore::graphics::gui
@@ -28,9 +32,15 @@ namespace dcore::graphics::gui
 #define F_INF_(EXPR) ((FT_Face)(EXPR))
 
 	static FT_Library libft__;
-	void Font::FontLibInitialize() { DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype"); }
+	void Font::FontLibInitialize()
+	{
+		DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype");
+	}
 
-	void Font::FontLibDeInitialize() { DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype"); }
+	void Font::FontLibDeInitialize()
+	{
+		DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype");
+	}
 
 	void Font::Initialize(const char *name, int fontSize, int fontNo)
 	{
@@ -123,8 +133,9 @@ namespace dcore::graphics::gui
 			cp->UVSize       = glm::vec2(cp->AtlasSize) / glm::vec2(bitmap.width, bitmap.height);
 			// printf("Glyph '%c':\n  Advance: %i,\n  AtlasOffset: %d, %d\n  AtlasSize: %d, %d"
 			//        "\n  Bearing: %d, %d\n  UV: %f, %f; %f %f\n",
-			//        c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x, cp->AtlasSize.y,
-			//        cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y, cp->UVSize.x, cp->UVSize.y);
+			//        c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x,
+			//        cp->AtlasSize.y, cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y,
+			//        cp->UVSize.x, cp->UVSize.y);
 			currentX += fc->glyph->bitmap.width;
 		}
 
@@ -143,9 +154,9 @@ namespace dcore::graphics::gui
 		// 	cp->YOffsetUV = 0 / float(bitmap.height);
 		// 	cp->WidthUV   = w / float(bitmap.width);
 		// 	cp->HeightUV  = h / float(bitmap.height);
-		// 	printf("Offset UV: %f, %f, Size UV: %f, %f\n", cp->XOffsetUV, cp->YOffsetUV, cp->WidthUV, cp->HeightUV);
-		// 	printf("Current X: %d, Width: %d\n", currentX, w);
-		// 	currentX += w;
+		// 	printf("Offset UV: %f, %f, Size UV: %f, %f\n", cp->XOffsetUV, cp->YOffsetUV,
+		// cp->WidthUV, cp->HeightUV); 	printf("Current X: %d, Width: %d\n", currentX, w); 	currentX
+		// += w;
 		// }
 		// printf("Current X: %d\n", currentX);
 
@@ -208,6 +219,7 @@ namespace dcore::graphics::gui
 	{
 		rl->RegisterResourceType<Font>("Font");
 		resource::ResourceManager::Instance()->RegisterConstructor<Font>(&Font::Constructor_Font);
-		resource::ResourceManager::Instance()->RegisterDeConstructor<Font>(&Font::DeConstructor_Font);
+		resource::ResourceManager::Instance()->RegisterDeConstructor<Font>(
+		    &Font::DeConstructor_Font);
 	}
 } // namespace dcore::graphics::gui

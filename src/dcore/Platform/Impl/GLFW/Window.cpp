@@ -47,6 +47,12 @@ namespace dcore::platform::impl
 
 	float glfw::Frame::GetCurrentTime() { return (float)glfwGetTime(); }
 
-	bool glfw::Frame::CheckKeyPressed(event::KeyCode key) { return glfwGetKey(Window_, (int)key) == GLFW_PRESS; }
-	bool glfw::Frame::CheckMouseButtonPressed(int button) { return glfwGetMouseButton(Window_, button) == GLFW_PRESS; }
+	bool glfw::Frame::CheckKeyPressed(event::KeyCode key)
+	{
+		return glfwGetKey(Window_, (int)key) == GLFW_PRESS;
+	}
+	bool glfw::Frame::CheckMouseButtonPressed(int button)
+	{
+		return glfwGetMouseButton(Window_, button) == GLFW_PRESS;
+	}
 } // namespace dcore::platform::impl

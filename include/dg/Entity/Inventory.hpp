@@ -22,13 +22,13 @@ namespace dg::entity
 		public:
 			Item &operator*() const { return inv->Items_[index]; }
 			Item *operator->() const { return &inv->Items_[index]; }
-			Iterator &operator++() { ++index; }
+			Iterator &operator++() { ++index; return *this; }
 			bool operator==(const Iterator &other) const { return inv == other.inv && index == other.index; }
 		};
 
 		class ConstIterator
 		{
-			const Inventory &inv;
+			const Inventory *inv;
 			int index;
 
 		public:

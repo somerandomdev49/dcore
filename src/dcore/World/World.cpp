@@ -90,7 +90,8 @@ namespace dcore::world
 
 	void World::Initialize()
 	{
-		Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
+		Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>(
+		    "DCore.Heightmap.World1"));
 		Terrain_.ActivateAllChunks();
 		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
 	}
@@ -118,7 +119,8 @@ namespace dcore::world
 			for(const auto &system : systems) system->StartFunction(entity);
 		}
 
-		cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>("DCore.Mesh.Cube");
+		cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>(
+		    "DCore.Mesh.Cube");
 	}
 
 	void World::End()
@@ -193,7 +195,8 @@ namespace dcore::world
 	{
 		if(input.Get()["version"] != "0.01")
 		{
-			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
+			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"]
+			                << "', errors may occur.";
 			// TODO: Create backup here.
 		}
 
@@ -221,7 +224,8 @@ namespace dcore::world
 			// 	comps.push_back(out);
 			// }
 
-			// output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
+			// output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components",
+			// comps}});
 		}
 	}
 } // namespace dcore::world

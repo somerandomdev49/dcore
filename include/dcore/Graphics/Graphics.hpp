@@ -29,7 +29,8 @@ namespace dcore::graphics
 
 	private:
 		friend class platform::Context;
-		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend = nullptr);
+		void Initialize(resource::ResourceManager DCORE_REF *rm,
+		                Renderer DCORE_REF *rend = nullptr);
 		void DeInitialize();
 
 		Camera DCORE_OWN *Camera_;

@@ -66,8 +66,8 @@ namespace dcore::resource
 		const RawResource &GetRaw(const std::string &id, std::type_index type);
 
 		/** Returns a raw resource for a type with a specified id. */
-		const RawResource &LoadRaw(const std::string &id, const std::string &location, std::type_index type,
-		                           size_t allocSize);
+		const RawResource &LoadRaw(const std::string &id, const std::string &location,
+		                           std::type_index type, size_t allocSize);
 
 		/** Returns a raw resource for a type with a specified id. */
 		void UnLoadRaw(const std::string &id, std::type_index type);
@@ -111,14 +111,17 @@ namespace dcore::resource
 	template<typename T>
 	Resource<T> ResourceManager::Get(const std::string &id)
 	{
-		return Resource<T>(id, reinterpret_cast<T *>(GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_));
+		return Resource<T>(
+		    id, reinterpret_cast<T *>(GetRaw(id, std::type_index(typeid(std::decay_t<T>))).Data_));
 	}
 
 	template<typename T>
 	Resource<T> ResourceManager::Load(const std::string &id, const std::string &location)
 	{
-		return Resource<T>(id, reinterpret_cast<T *>(
-		                           LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
+		return Resource<T>(
+		    id,
+		    reinterpret_cast<T *>(
+		        LoadRaw(id, location, std::type_index(typeid(std::decay_t<T>)), sizeof(T)).Data_));
 	}
 
 	template<typename T>

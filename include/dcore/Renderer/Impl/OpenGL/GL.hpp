@@ -153,10 +153,11 @@ namespace dcore::graphics::impl::opengl
 		inline void GenerateVertexArray(int count, UInt *arrays) _INL;
 
 		inline void BindBuffer(BufferType type, UInt buffer) _INL;
-		inline void SetBufferData(BufferType type, SizePtr size, const void *data, BufferUsage usage) _INL;
+		inline void SetBufferData(BufferType type, SizePtr size, const void *data,
+		                          BufferUsage usage) _INL;
 
-		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride, SizePtr offset,
-		                                   bool norm = false) _INL;
+		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride,
+		                                   SizePtr offset, bool norm = false) _INL;
 		inline void EnableVertexAttributeArray(UInt index) _INL;
 
 		inline void DeleteBuffer(UInt buffer);
@@ -173,16 +174,20 @@ namespace dcore::graphics::impl::opengl
 
 		inline void TextureParameter(TextureType type, TextureParam param, int value) _INL;
 		inline void TextureParameter(TextureType type, TextureParam param, float value) _INL;
-		inline void TextureParameter(TextureType type, TextureParam param, TextureParamValue value) _INL;
+		inline void TextureParameter(TextureType type, TextureParam param,
+		                             TextureParamValue value) _INL;
 
-		inline void TextureImage2D(TextureType type, TextureFormat intFormat, const glm::ivec1 &size,
-		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage2D(TextureType type, TextureFormat intFormat,
+		                           const glm::ivec1 &size, TextureFormat dataFormat,
+		                           GlType dataType, const void *data, Int level = 0) _INL;
 
-		inline void TextureImage2D(TextureType type, TextureFormat intFormat, const glm::ivec2 &size,
-		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage2D(TextureType type, TextureFormat intFormat,
+		                           const glm::ivec2 &size, TextureFormat dataFormat,
+		                           GlType dataType, const void *data, Int level = 0) _INL;
 
-		inline void TextureImage3D(TextureType type, TextureFormat intFormat, const glm::ivec3 &size,
-		                           TextureFormat dataFormat, GlType dataType, const void *data, Int level = 0) _INL;
+		inline void TextureImage3D(TextureType type, TextureFormat intFormat,
+		                           const glm::ivec3 &size, TextureFormat dataFormat,
+		                           GlType dataType, const void *data, Int level = 0) _INL;
 	} // namespace Gl
 
 	// DEFINITION
@@ -192,7 +197,10 @@ namespace dcore::graphics::impl::opengl
 		inline void SetUniform(UInt loc, int v) { glUniform1i(loc, v); }
 		inline void SetUniform(UInt loc, const glm::vec2 &v) { glUniform2f(loc, v.x, v.y); }
 		inline void SetUniform(UInt loc, const glm::vec3 &v) { glUniform3f(loc, v.x, v.y, v.z); }
-		inline void SetUniform(UInt loc, const glm::vec4 &v) { glUniform4f(loc, v.x, v.y, v.z, v.w); }
+		inline void SetUniform(UInt loc, const glm::vec4 &v)
+		{
+			glUniform4f(loc, v.x, v.y, v.z, v.w);
+		}
 		inline void SetUniform(UInt loc, const glm::mat2x2 &v)
 		{
 			glUniformMatrix2fv(loc, 1, GL_FALSE, glm::value_ptr(v));
@@ -229,7 +237,10 @@ namespace dcore::graphics::impl::opengl
 		{
 			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(v));
 		}
-		inline Int GetUniformLocation(UInt program, const char *name) { return glGetUniformLocation(program, name); }
+		inline Int GetUniformLocation(UInt program, const char *name)
+		{
+			return glGetUniformLocation(program, name);
+		}
 
 		inline void SetActiveTexture(UInt unit) { glActiveTexture(unit); }
 		inline void BindTexture(TextureType type, UInt id) { glBindTexture(type, id); }
@@ -239,7 +250,10 @@ namespace dcore::graphics::impl::opengl
 		{
 			glDrawElements(mode, indexCount, type, 0);
 		}
-		inline void DrawArrays(ElementType elemType, int indexCount) { glDrawArrays(elemType, 0, indexCount); }
+		inline void DrawArrays(ElementType elemType, int indexCount)
+		{
+			glDrawArrays(elemType, 0, indexCount);
+		}
 
 		inline void UseProgram(UInt program) { glUseProgram(program); }
 		inline void SetPolygonMode(Faces face, PolygonMode mode) { glPolygonMode(face, mode); }
@@ -258,12 +272,14 @@ namespace dcore::graphics::impl::opengl
 		}
 		inline void BindBuffer(BufferType type, UInt buffer) { glBindBuffer(type, buffer); }
 
-		inline void SetBufferData(BufferType type, SizePtr size, const void *data, BufferUsage usage)
+		inline void SetBufferData(BufferType type, SizePtr size, const void *data,
+		                          BufferUsage usage)
 		{
 			glBufferData(type, size, data, usage);
 		}
 
-		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride, SizePtr offset, bool norm)
+		inline void VertexAttributePointer(UInt index, Int size, GlType type, Size stride,
+		                                   SizePtr offset, bool norm)
 		{
 			glVertexAttribPointer(index, size, type, norm, stride, (void *)offset);
 		}

@@ -4,7 +4,7 @@ CXX = g++
 SRC_EXT = cpp
 SRC_PATH = src
 LIBS = freetype2 nlohmann_json
-COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -g -mwindows -DDCORE_STD_64BIT
+COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -g -mwindows -DDCORE_STD_64BIT -Wno-unused-parameter
 RCOMPILE_FLAGS = -D NDEBUG
 DCOMPILE_FLAGS = -D DEBUG -rdynamic -g
 INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include -Iinclude/gsl

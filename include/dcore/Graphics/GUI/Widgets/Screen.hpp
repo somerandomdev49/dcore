@@ -12,6 +12,7 @@ namespace dcore::graphics::gui::common
 		virtual void DeInitialize() override;
 		virtual void Render(GuiGraphics *g) override;
 		virtual void HandleEvent(event::Event *e) override;
+
 	private:
 		common::Console *Console_;
 	};

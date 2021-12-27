@@ -67,10 +67,12 @@ namespace dcore::graphics::gui
 	{
 	public:
 		static GuiGraphics *Instance();
-		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend = nullptr);
+		void Initialize(resource::ResourceManager DCORE_REF *rm,
+		                Renderer DCORE_REF *rend = nullptr);
 		void DeInitialize();
 		void RenderQuad(const Quad &quad);
-		void RenderText(Font *font, const char *text, const glm::vec2 &origin, int size = -1, float scale = -1);
+		void RenderText(Font *font, const char *text, const glm::vec2 &origin, int size = -1,
+		                float scale = -1);
 
 	private:
 		friend class launch::Launch;

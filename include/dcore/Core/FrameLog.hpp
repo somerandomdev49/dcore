@@ -19,14 +19,15 @@ namespace dcore
 		void Log(const std::string &message);
 		void LogF(const char *format, ...);
 		void LogFV(const char *format, va_list va);
-		
+
 		const std::vector<std::string> &GetQueue() const;
 		void Flush();
 
 		static FrameLog *Instance();
+
 	private:
 		friend class launch::Launch;
 		static void SetInstance(FrameLog *newInstance);
 		std::vector<std::string> Queue_;
 	};
-}
+} // namespace dcore

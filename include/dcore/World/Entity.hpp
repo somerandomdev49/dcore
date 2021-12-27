@@ -43,7 +43,8 @@ namespace dcore::world
 	template<class S>
 	System GetSystem()
 	{
-		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(S)};
+		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(),
+		        typeid(S)};
 	}
 
 	class ECS
@@ -228,7 +229,8 @@ namespace dcore::world
 	template<typename ComponentType>
 	ComponentType &ECS::GetComponent(const EntityHandle &entity)
 	{
-		return *(ComponentType *)this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_[entity];
+		return *(ComponentType *)this->ComponentPools_[std::type_index(typeid(ComponentType))]
+		            .Set_[entity];
 	}
 
 	template<typename ComponentType>
@@ -237,10 +239,12 @@ namespace dcore::world
 		auto c = new byte[sizeof(ComponentType)];
 		std::memcpy(c, &comp, sizeof(ComponentType));
 		this->AllComponents_.push_back(c);
-		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
-		printf("Component pool for type %s has %zu entities.\n",
-		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
-		       this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
+		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity,
+		                                                                       ComponentHandle {c});
+		printf(
+		    "Component pool for type %s has %zu entities.\n",
+		    util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
+		    this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
 		return *(ComponentType *)c;
 	}
 
@@ -248,7 +252,8 @@ namespace dcore::world
 	std::vector<EntityHandle> ECS::GetEntities() const
 	{
 		std::vector<EntityHandle> entities;
-		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
+		const auto &packed =
+		    this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
 		for(const auto &p : packed) entities.push_back(p.first);
 		return entities;
 	}

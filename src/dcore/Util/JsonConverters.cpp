@@ -4,11 +4,20 @@ namespace dcore::util
 {
 	data::Json JsonConverters::Glm(const glm::vec2 &v) { return data::Json::array({v.x, v.y}); }
 
-	data::Json JsonConverters::Glm(const glm::vec3 &v) { return data::Json::array({v.x, v.y, v.z}); }
+	data::Json JsonConverters::Glm(const glm::vec3 &v)
+	{
+		return data::Json::array({v.x, v.y, v.z});
+	}
 
-	data::Json JsonConverters::Glm(const glm::vec4 &v) { return data::Json::array({v.x, v.y, v.z, v.w}); }
+	data::Json JsonConverters::Glm(const glm::vec4 &v)
+	{
+		return data::Json::array({v.x, v.y, v.z, v.w});
+	}
 
-	data::Json JsonConverters::Glm(const glm::quat &v) { return data::Json::array({v.x, v.y, v.z, v.w}); }
+	data::Json JsonConverters::Glm(const glm::quat &v)
+	{
+		return data::Json::array({v.x, v.y, v.z, v.w});
+	}
 
 	data::Json JsonConverters::Glm(const glm::mat4 &v)
 	{

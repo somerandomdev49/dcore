@@ -11,7 +11,8 @@ namespace dcore::graphics
 	class StaticMesh : public Renderable
 	{
 	public:
-		StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture);
+		StaticMesh(const resource::Resource<RStaticMesh> &mesh,
+		           const resource::Resource<RTexture> &texture);
 
 		const resource::Resource<RStaticMesh> &GetMesh() const;
 		const resource::Resource<RTexture> &GetTexture() const;

@@ -34,7 +34,13 @@ namespace dcore
 
 	int Preferences::GetVersion() { return Version_; }
 
-	const Preferences::DisplaySettings &Preferences::GetDisplaySettings() const { return DisplaySettings_; }
+	const Preferences::DisplaySettings &Preferences::GetDisplaySettings() const
+	{
+		return DisplaySettings_;
+	}
 
-	const Preferences::GraphicsSettings &Preferences::GetGraphicsSettings() const { return GraphicsSettings_; }
+	const Preferences::GraphicsSettings &Preferences::GetGraphicsSettings() const
+	{
+		return GraphicsSettings_;
+	}
 } // namespace dcore

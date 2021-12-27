@@ -1,4 +1,5 @@
 #include <dcore/Misc/Terrain/Chunk.hpp>
+#include <dcore/Misc/Terrain/Terrain.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Core/FrameLog.hpp>
 #include <dcore/Core/Log.hpp>
@@ -6,9 +7,6 @@
 
 namespace dcore::terrain
 {
-
-#define UNIT_PER_PIXEL 1
-
 	inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
 	{
 		os << "(" << v.x << ", " << v.y << ")";
@@ -19,6 +17,7 @@ namespace dcore::terrain
 	    : Region_(std::move(region)), LocalPosition_(localPosition)
 	{
 	}
+
 	void Chunk::Initialize() { IsActive_ = false; }
 	void Chunk::DeInitialize()
 	{
@@ -83,11 +82,12 @@ namespace dcore::terrain
 		for(int y = 0; y < regionSize.y; ++y)
 			for(int x = 0; x < regionSize.x; ++x)
 			{
-				float h = Region_.Get(glm::ivec2(x, y)) * VERT_SCALE;
-				pushVec3(
-				    glm::vec3(x * UNIT_PER_PIXEL - CHUNK_SIZE / 2, h, y * UNIT_PER_PIXEL - CHUNK_SIZE / 2)); // position
-				pushVec3(glm::vec3(0, 0, 0));                                                                // normal
-				pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y));                       // texcoord
+				float h = Region_.Get(glm::ivec2(x, y)) * Terrain::GetCHeight();
+				pushVec3(glm::vec3(
+				    (x - Terrain::GetCChunkSize() / 2) * Terrain::GetCUnitsPerPixel(), h,
+				    (y - Terrain::GetCChunkSize() / 2) * Terrain::GetCUnitsPerPixel())); // position
+				pushVec3(glm::vec3(0, 0, 0));                                            // normal
+				pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y));   // texcoord
 				++vertexCount;
 			}
 
@@ -143,26 +143,34 @@ namespace dcore::terrain
 			vertices[index].norm = glm::normalize(vertices[index].norm);
 		}
 
-		// DCORE_LOG_INFO << "Done generating chunk. Region Size: " << regionSize << ", Vertex Count: " << vertexCount
+		// DCORE_LOG_INFO << "Done generating chunk. Region Size: " << regionSize << ", Vertex
+		// Count: " << vertexCount
 		// << ", Index Count: " <<
 		indices.size();
 
 		// size_t vertexSize = sizeof(float) * (3 + 3 + 2);
-		// DCORE_LOG_INFO << "Index Count: " << indices.size() << ", Vertex Count: " << (float)vertexData.size() /
-		// (float)vertexSize;
+		// DCORE_LOG_INFO << "Index Count: " << indices.size() << ", Vertex Count: " <<
+		// (float)vertexData.size() / (float)vertexSize;
 
 		Mesh_ = new graphics::RStaticMesh();
 		graphics::RenderResourceManager::CreateStaticMesh(Mesh_, indices, vertexData);
 	}
 
-	const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }
-	const dcore::resource::Resource<dcore::graphics::RTexture> *Chunk::GetTextures() const { return &Textures_[0]; }
+	const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const
+	{
+		return BlendMap_;
+	}
+	const dcore::resource::Resource<dcore::graphics::RTexture> *Chunk::GetTextures() const
+	{
+		return &Textures_[0];
+	}
 	void Chunk::SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap)
 	{
 		BlendMap_ = newBlendMap;
 	}
 
-	void Chunk::SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture)
+	void Chunk::SetTexture(int index,
+	                       const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture)
 	{
 		Textures_[index] = newTexture;
 	}
@@ -175,30 +183,32 @@ namespace dcore::terrain
 	// TODO: Generate mesh which is smaller than the chunk region by 1 on each axis.
 	float Chunk::GetHeightAtLocal(const glm::vec2 &v) const
 	{
-		glm::ivec2 grid = v * (float)UNIT_PER_PIXEL;
+		glm::ivec2 grid = v / (float)Terrain::GetCUnitsPerPixel();
 		FrameLog::SLogF("ch: grid pos: %d, %d", grid.x, grid.y);
-		
+
 		glm::ivec2 d(1, 1);
 		if(grid.x >= Region_.GetSize().x - 1 || grid.x < 0) d.x = 0;
 		if(grid.y >= Region_.GetSize().y - 1 || grid.y < 0) d.y = 0;
-		
-		float p00 = Region_.Get(glm::ivec2(grid.x + 0  , grid.y + 0  )),
-		      p01 = Region_.Get(glm::ivec2(grid.x + 0  , grid.y + d.y)),
-			  p10 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + 0  )),
-			  p11 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + d.y));
-		
-		FrameLog::SLogF("00 - %.2f, 01 - %.2f, 10 - %.2f, 11 - %.2f", p00, p01, p10, p11);
-		
-		glm::vec2 pos = glm::vec2(fmod(v.x, CHUNK_SIZE), fmod(v.x, CHUNK_SIZE)) / (float)CHUNK_SIZE;
 
-		return p00 * (1 - pos.x) * (1 - pos.y)
-		     + p10 * (0 + pos.x) * (1 - pos.y)
-		     + p01 * (1 - pos.x) * (0 + pos.y)
-		     + p11 * (0 + pos.x) * (0 + pos.y)
-			 ;
+		float p00 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 0)),
+		      p01 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + d.y)),
+		      p10 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + 0)),
+		      p11 = Region_.Get(glm::ivec2(grid.x + d.x, grid.y + d.y));
+
+		FrameLog::SLogF("00 - %.2f, 01 - %.2f, 10 - %.2f, 11 - %.2f", p00, p01, p10, p11);
+
+		glm::vec2 pos =
+		    glm::vec2(fmod(v.x, Terrain::GetCChunkSize()), fmod(v.x, Terrain::GetCChunkSize())) /
+		    (float)Terrain::GetCChunkSize();
+
+		return(p00 * (1 - pos.x) * (1 - pos.y) + p10 * (0 + pos.x) * (1 - pos.y) +
+		       p01 * (1 - pos.x) * (0 + pos.y) + p11 * (0 + pos.x) * (0 + pos.y)) * Terrain::GetCHeight();
 	}
 
-	glm::vec2 Chunk::GetGlobalPosition() const { return LocalPosition_ * UNIT_PER_PIXEL; }
+	glm::vec2 Chunk::GetGlobalPosition() const
+	{
+		return glm::vec2(LocalPosition_) * Terrain::GetCUnitsPerPixel();
+	}
 	const glm::ivec2 &Chunk::GetLocalPosition() const { return LocalPosition_; }
 	dcore::graphics::RStaticMesh *Chunk::GetMesh() const { return Mesh_; }
 } // namespace dcore::terrain

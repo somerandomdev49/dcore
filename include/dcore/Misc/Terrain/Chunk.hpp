@@ -3,8 +3,6 @@
 #include <dcore/Misc/Terrain/Heightmap.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
-#define CHUNK_SIZE 15
-#define VERT_SCALE 45.f
 
 namespace dcore::terrain
 {
@@ -29,7 +27,7 @@ namespace dcore::terrain
 
 		/** Returns whether the chunk is active. (can be rendered) */
 		bool IsActive() const;
-		
+
 		float GetHeightAtGlobal(const glm::vec2 &v) const;
 		float GetHeightAtLocal(const glm::vec2 &v) const;
 
@@ -37,7 +35,8 @@ namespace dcore::terrain
 		const dcore::resource::Resource<dcore::graphics::RTexture> *GetTextures() const;
 
 		void SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap);
-		void SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture);
+		void SetTexture(int index,
+		                const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture);
 
 		dcore::graphics::RStaticMesh *GetMesh() const;
 

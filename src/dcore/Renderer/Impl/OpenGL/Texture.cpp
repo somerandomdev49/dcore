@@ -15,10 +15,11 @@ namespace dcore::graphics::impl
 		glTexParameteri(Type_, param, value);
 	}
 
-	void opengl::TextureBuffer::LoadData(TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat,
-	                                     void *data)
+	void opengl::TextureBuffer::LoadData(TextureFormat internalFormat, const glm::ivec2 &size,
+	                                     TextureFormat dataFormat, void *data)
 	{
-		glTexImage2D(Type_, 0, internalFormat, size.x, size.y, 0, dataFormat, TypeUnsignedByte, data);
+		glTexImage2D(Type_, 0, internalFormat, size.x, size.y, 0, dataFormat, TypeUnsignedByte,
+		             data);
 	}
 
 	void opengl::TextureBuffer::GenMipmaps() { glGenerateMipmap(Type_); }

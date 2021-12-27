@@ -18,7 +18,8 @@ namespace dcore::world
 	{
 		std::vector<const System *> systems;
 		for(const auto &pool : ComponentPools_)
-			if(pool.second.Set_.Contains(entity)) systems.push_back(&AllSystems_[pool.second.SystemIndex_]);
+			if(pool.second.Set_.Contains(entity))
+				systems.push_back(&AllSystems_[pool.second.SystemIndex_]);
 		return systems;
 	}
 

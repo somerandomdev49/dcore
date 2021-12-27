@@ -11,7 +11,8 @@
 namespace dcore::graphics::gui
 {
 	/**
-	 * A widget is a separate component in the user interface (not to be confused with entity components.)
+	 * A widget is a separate component in the user interface (not to be confused with entity
+	 * components.)
 	 * */
 	class Widget
 	{

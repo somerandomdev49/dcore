@@ -132,16 +132,17 @@ namespace dcore::graphics
 		};
 
 		/**
-		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
-		 * If you can, use the byte version of this function.
-		 * `vertices` will be unusable after this call.
-		 * You should call `vertices.erase(vertices.begin(), vertices.end())` after this!
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
+		 * impl-specific stuff) If you can, use the byte version of this function. `vertices` will
+		 * be unusable after this call. You should call `vertices.erase(vertices.begin(),
+		 * vertices.end())` after this!
 		 * */
 		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 		                             const std::vector<Vertex> &vertices);
 
 		/**
-		 * Creates a static mesh from the provided indices and vertices. (Wrapper around impl-specific stuff)
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
+		 * impl-specific stuff)
 		 * */
 		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 		                             const std::vector<byte> &vertexData);
@@ -149,8 +150,10 @@ namespace dcore::graphics
 		/**
 		 * Creates a texture with the specified data, size and format.
 		 * */
-		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
-		                          TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
+		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size,
+		                          TextureFormat format,
+		                          TextureScaling scaling = TextureScaling::Linear,
+		                          int unpackAlignment    = -1);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.

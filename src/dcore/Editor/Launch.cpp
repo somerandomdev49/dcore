@@ -56,7 +56,8 @@ namespace dcore
 			rb = &world::Entity(self, worldInstance).GetComponent<physics::RigidBodyComponent>();
 			rb->LockRotation(); // see btRigidBody::setAngularFactor()
 
-			collider = new physics::CapsuleCollider(DG_CONST_PLAYER_HEIGHT, DG_CONST_PLAYER_SIZE / 2);
+			collider =
+			    new physics::CapsuleCollider(DG_CONST_PLAYER_HEIGHT, DG_CONST_PLAYER_SIZE / 2);
 			rb->SetCollider(collider);
 
 			IsOnGround = false;
@@ -182,7 +183,8 @@ namespace dcore
 		void Start(const world::EntityHandle &self)
 		{
 			auto worldInstance = platform::Context::Instance()->GetWorld();
-			Transform          = &world::Entity(self, worldInstance).GetComponent<world::TransformComponent>();
+			Transform =
+			    &world::Entity(self, worldInstance).GetComponent<world::TransformComponent>();
 		}
 
 		void Update(const world::EntityHandle &self)
@@ -196,7 +198,7 @@ namespace dcore
 		}
 	};
 	DCORE_COMPONENT_REGISTER(MovementComponent);
-	
+
 	void launch::Launch::Run(int argc, char *argv[])
 	{
 		// (void)argc; (void)argv;
@@ -273,7 +275,8 @@ namespace dcore
 			    graphics::StaticMesh(rm.Get<graphics::RStaticMesh>("DCore.Mesh.Cube"),
 			                         rm.Get<graphics::RTexture>("DCore.Texture.Main.Dirt"))));
 
-			std::cout << "1. mesh name: " << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+			std::cout << "1. mesh name: "
+			          << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 			          << std::endl;
 
 			e.AddComponent(MovementComponent {});
@@ -281,40 +284,48 @@ namespace dcore
 			e.GetComponent<world::TransformComponent>().SetRotation(glm::identity<glm::quat>());
 			e.GetComponent<world::TransformComponent>().SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
 
-			std::cout << "2. mesh name: " << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+			std::cout << "2. mesh name: "
+			          << e.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 			          << std::endl;
 			// e.GetComponent<world::ModelRenderableComponent>().Mesh.SetTransform(e.GetComponent<world::TransformComponent>().CalculateMatrix());
 		}
 
 		ctx.DefaultResourceInit(&rm);
-		std::cout << "3. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "3. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 
 		graphics::gui::GuiGraphics guig;
 		guig.Initialize(resource::ResourceManager::Instance());
 		graphics::gui::GuiGraphics::SetInstance(&guig);
-		std::cout << "4. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "4. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 
 		graphics::gui::GuiManager guimngr;
-		std::cout << "4.1. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "4.1. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 		guimngr.Initialize();
-		std::cout << "4.2. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "4.2. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 		graphics::gui::GuiManager::SetInstance(&guimngr);
-		std::cout << "4.3. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "4.3. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 
 		DCORE_LOG_WARNING << "Starting...";
-		std::cout << "5. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "5. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 
 		ctx.Start();
 		ctx.CloseWindow();
 
 		DCORE_LOG_INFO << "----------------------------------------";
-		std::cout << "6. mesh name: " << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
+		std::cout << "6. mesh name: "
+		          << theEnt.GetComponent<world::StaticMeshComponent>().Mesh.GetMesh().GetName()
 		          << std::endl;
 
 		{
