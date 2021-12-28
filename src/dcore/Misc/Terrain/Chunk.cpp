@@ -84,8 +84,8 @@ namespace dcore::terrain
 			{
 				float h = Region_.Get(glm::ivec2(x, y)) * Terrain::GetCHeight();
 				pushVec3(glm::vec3(
-				    (x - Terrain::GetCChunkSize() / 2) * Terrain::GetCUnitsPerPixel(), h,
-				    (y - Terrain::GetCChunkSize() / 2) * Terrain::GetCUnitsPerPixel())); // position
+				    (x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
+				    (y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))); // position
 				pushVec3(glm::vec3(0, 0, 0));                                            // normal
 				pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y));   // texcoord
 				++vertexCount;
@@ -201,8 +201,9 @@ namespace dcore::terrain
 		    glm::vec2(fmod(v.x, Terrain::GetCChunkSize()), fmod(v.x, Terrain::GetCChunkSize())) /
 		    (float)Terrain::GetCChunkSize();
 
-		return(p00 * (1 - pos.x) * (1 - pos.y) + p10 * (0 + pos.x) * (1 - pos.y) +
-		       p01 * (1 - pos.x) * (0 + pos.y) + p11 * (0 + pos.x) * (0 + pos.y)) * Terrain::GetCHeight();
+		return (p00 * (1 - pos.x) * (1 - pos.y) + p10 * (0 + pos.x) * (1 - pos.y) +
+		        p01 * (1 - pos.x) * (0 + pos.y) + p11 * (0 + pos.x) * (0 + pos.y)) *
+		       Terrain::GetCHeight();
 	}
 
 	glm::vec2 Chunk::GetGlobalPosition() const

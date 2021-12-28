@@ -12,9 +12,9 @@ namespace glm
 
 namespace dcore::terrain
 {
-	dstd::UInt32 Terrain::ChunkSize_ = 15;
-	float Terrain::UnitSize_         = 1;
-	float Terrain::HeightMult_       = 45;
+	float Terrain::ChunkSize_  = 15;
+	float Terrain::UnitSize_   = 5;
+	float Terrain::HeightMult_ = 100;
 
 	void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 	{
@@ -30,15 +30,16 @@ namespace dcore::terrain
 		for(int y = 0; y < chunkCount.y; ++y)
 			for(int x = 0; x < chunkCount.x; ++x)
 			{
-				glm::ivec2 pos(x * ChunkSize_, y * ChunkSize_);
-				Chunks_.push_back(Chunk(
-				    HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(ChunkSize_)), pos));
+				glm::ivec2 pos = glm::vec2(x, y) * ChunkSize_;
+				Chunks_.push_back(
+				    Chunk(HeightmapRegion(Heightmap_.Get(), pos, pos + glm::ivec2(ChunkSize_)),
+				          pos * (int)UnitSize_));
 				Chunks_[Chunks_.size() - 1].Initialize();
 				Chunks_[Chunks_.size() - 1].SetTexture(0, texture);
 			}
 	}
-	
-	dstd::UInt32 Terrain::GetCChunkSize() { return ChunkSize_; }
+
+	float Terrain::GetCChunkSize() { return ChunkSize_; }
 	float Terrain::GetCUnitsPerPixel() { return UnitSize_; }
 	float Terrain::GetCHeight() { return HeightMult_; }
 
@@ -78,7 +79,7 @@ namespace dcore::terrain
 	const Chunk &Terrain::GetChunkAtGlobal(const glm::vec3 &position) const
 	{
 		auto chunkCount    = Heightmap_.Get()->GetSize() / glm::ivec2(ChunkSize_);
-		glm::ivec2 gridPos = glm::vec2(position.x, position.z) / (float)ChunkSize_;
+		glm::ivec2 gridPos = glm::vec2(position.x, position.z) / ChunkSize_ / UnitSize_;
 		return Chunks_[gridPos.x + gridPos.y * chunkCount.x];
 	}
 

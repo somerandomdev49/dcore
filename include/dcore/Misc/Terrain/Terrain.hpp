@@ -25,7 +25,7 @@ namespace dcore::terrain
 		const std::vector<Chunk> &GetChunks() const;
 		const std::vector<dstd::UInt32> &GetActiveChunks() const;
 
-		static dstd::UInt32 GetCChunkSize();
+		static float GetCChunkSize();
 		static float GetCUnitsPerPixel();
 		static float GetCHeight();
 
@@ -35,9 +35,9 @@ namespace dcore::terrain
 		std::vector<Chunk> Chunks_;
 		std::vector<dstd::UInt32> ActiveChunks_;
 		resource::Resource<Heightmap> Heightmap_;
-		static dstd::UInt32 ChunkSize_; // Chunk size in vertices
-		static float UnitSize_;         // Size of a single pixel in units
-		static float HeightMult_;       // Y multiplier
+		static float ChunkSize_;  // Chunk size in vertices
+		static float UnitSize_;   // Size of a single pixel in units
+		static float HeightMult_; // Y multiplier
 	};
 
 	class TerrainResourceManager

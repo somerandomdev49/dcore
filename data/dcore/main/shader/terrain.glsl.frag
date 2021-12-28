@@ -43,7 +43,7 @@ void main()
     o_Color = texture(u_Tex0, s_TexCoord * u_Tiling);
 
     // o_Color = vec4(0.0, 1.0, 0.25, 1.0);
-    float shadow = dot(s_Normal, SUN);
+    float shadow = 1.0; // dot(s_Normal, SUN);
     o_Color *= vec4(vec3(shadow), 1.0);
 
     float dist = length(s_Position.xyz);
