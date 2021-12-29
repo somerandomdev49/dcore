@@ -1,5 +1,9 @@
 # Assets
 
+## Resource Map
+
+File at `data/ResourceMap.ini` maps the file path to it's id. When you add a new asset, add the id to it.
+
 ## Format
 
 ### Asset location:
@@ -39,13 +43,17 @@ Each mesh is inside of it's own folder:
 
 #### Exporting .obj files:
 
+The resulting Wavefront OBJ file should only have triangles, no materials, normals, UVs and no curves.
+Preferably under 1k vertices.
+
 - Blender:
   - Expand `Geometry` on the right panel
   - Uncheck `Write Materials`
+  - Uncheck `Object as OBJ Objects` in the `Include` panel
   - Check `Triangulate Faces`
   - Make sure `Write Normals` is checked
   - Make sure `Include UVs` is checked
-- TODO: Add more software.
+- TODO: Add more software, if needed.
 
 #### References/Suggestions file:
 
