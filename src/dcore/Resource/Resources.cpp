@@ -8,8 +8,5 @@ namespace dcore::resource
 
 	Resources::Resources(const std::string &root) : RootPath_(root) {}
 
-	std::string Resources::FullPath(const std::string &location)
-	{
-		return RootPath_ + '/' + location;
-	}
+	std::string Resources::FullPath(const std::string &location) { return RootPath_ + '/' + location; }
 } // namespace dcore::resource

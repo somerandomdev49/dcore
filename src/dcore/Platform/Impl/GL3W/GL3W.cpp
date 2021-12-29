@@ -19,8 +19,7 @@ namespace dcore::platform::impl
 
 		if(!gl3wIsSupported(4, 1))
 		{
-			Application::Info.SetError(true, "OpenGL 4.1 is not supported!",
-			                           "Check if your drivers are up to date");
+			Application::Info.SetError(true, "OpenGL 4.1 is not supported!", "Check if your drivers are up to date");
 			return;
 		}
 

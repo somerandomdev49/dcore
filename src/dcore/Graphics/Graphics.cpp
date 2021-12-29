@@ -24,10 +24,7 @@ namespace dcore::graphics
 	}
 
 	RShader *CommonShader::Get() const { return Shader_.Get(); }
-	void CommonShader::SetTransform(const glm::mat4 &m)
-	{
-		Renderer::Instance()->SetUniform(UTransform_, m);
-	}
+	void CommonShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
 
 	/**************************** TerrainShader ****************************/
 
@@ -48,10 +45,7 @@ namespace dcore::graphics
 	}
 
 	RShader *TerrainShader::Get() const { return Shader_.Get(); }
-	void TerrainShader::SetTransform(const glm::mat4 &m)
-	{
-		Renderer::Instance()->SetUniform(UTransform_, m);
-	}
+	void TerrainShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
 	void TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
 	{
 		if(blend != -1) Renderer::Instance()->SetUniform(UBlendMapTex_, blend);
@@ -68,8 +62,7 @@ namespace dcore::graphics
 
 	/**************************** StaticMesh ****************************/
 
-	StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh,
-	                       const resource::Resource<RTexture> &texture)
+	StaticMesh::StaticMesh(const resource::Resource<RStaticMesh> &mesh, const resource::Resource<RTexture> &texture)
 	    : Mesh_(mesh), Texture_(texture)
 	{
 	}
@@ -154,9 +147,8 @@ namespace dcore::graphics
 		// ViewMatrix_ = glm::mat4_cast(Rotation_);
 		// ViewMatrix_ = glm::translate(ViewMatrix_, Position_);
 		// ViewMatrix_ = glm::inverse(ViewMatrix_);
-		ViewMatrix_ =
-		    glm::lookAt(Position_, Position_ + Rotation_ * glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-		DirtyView_ = false;
+		ViewMatrix_ = glm::lookAt(Position_, Position_ + Rotation_ * glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+		DirtyView_  = false;
 	}
 
 	void Camera::RecalcProjMatrix()
@@ -167,8 +159,7 @@ namespace dcore::graphics
 
 	/**************************** RendererInterface ****************************/
 
-	void RendererInterface::Initialize(resource::ResourceManager DCORE_REF *rm,
-	                                   Renderer DCORE_REF *rend)
+	void RendererInterface::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend)
 	{
 		// TODO: Should not be hard-written!
 		auto sobj = rm->Get<RShader>("DCore.Shader.ObjectShader");
@@ -199,8 +190,7 @@ namespace dcore::graphics
 		// TODO: Do not set the shader each time we render something, it's expensive!
 		Renderer_->UseShader(ObjectShader_->Get());
 		Renderer_->UseTexture(0, sm->GetTexture().Get());
-		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() *
-		                            sm->GetTransform());
+		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
 		Renderer_->Render(sm->GetMesh().Get());
 	}
 

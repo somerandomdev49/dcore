@@ -35,8 +35,7 @@ namespace dcore::terrain
 		const dcore::resource::Resource<dcore::graphics::RTexture> *GetTextures() const;
 
 		void SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap);
-		void SetTexture(int index,
-		                const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture);
+		void SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture);
 
 		dcore::graphics::RStaticMesh *GetMesh() const;
 

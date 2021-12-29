@@ -54,8 +54,7 @@ namespace dcore::data
 	{
 	};
 	/** @deprecated */
-	class DeSerializer
-	    : public GenericSerializer<DeSerializer, DeSerializerFunction, DeSerializerEntry>
+	class DeSerializer : public GenericSerializer<DeSerializer, DeSerializerFunction, DeSerializerEntry>
 	{
 	};
 } // namespace dcore::data

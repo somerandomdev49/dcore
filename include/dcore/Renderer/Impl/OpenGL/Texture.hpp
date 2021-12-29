@@ -20,8 +20,7 @@ namespace dcore::graphics::impl::opengl
 	public:
 		void Generate(TextureType type);
 		void SetParam(TextureParam param, TextureParamValue value);
-		void LoadData(TextureFormat internalFormat, const glm::ivec2 &size,
-		              TextureFormat dataFormat, void *data);
+		void LoadData(TextureFormat internalFormat, const glm::ivec2 &size, TextureFormat dataFormat, void *data);
 		void GenMipmaps();
 		void Delete();
 	};

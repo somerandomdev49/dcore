@@ -150,10 +150,8 @@ namespace dcore::graphics
 		/**
 		 * Creates a texture with the specified data, size and format.
 		 * */
-		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size,
-		                          TextureFormat format,
-		                          TextureScaling scaling = TextureScaling::Linear,
-		                          int unpackAlignment    = -1);
+		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
+		                          TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.

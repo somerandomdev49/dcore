@@ -14,10 +14,7 @@ namespace dcore::graphics::gui
 	struct FocusEvent : public event::Event
 	{
 		glm::vec2 MousePosition;
-		FocusEvent(const glm::vec2 &mousePosition)
-		    : event::Event(EventTypeFocus), MousePosition(mousePosition)
-		{
-		}
+		FocusEvent(const glm::vec2 &mousePosition) : event::Event(EventTypeFocus), MousePosition(mousePosition) {}
 	};
 
 	struct TextInputEvent : public event::Event

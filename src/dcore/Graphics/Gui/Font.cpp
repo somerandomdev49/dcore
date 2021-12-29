@@ -32,15 +32,9 @@ namespace dcore::graphics::gui
 #define F_INF_(EXPR) ((FT_Face)(EXPR))
 
 	static FT_Library libft__;
-	void Font::FontLibInitialize()
-	{
-		DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype");
-	}
+	void Font::FontLibInitialize() { DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype"); }
 
-	void Font::FontLibDeInitialize()
-	{
-		DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype");
-	}
+	void Font::FontLibDeInitialize() { DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype"); }
 
 	void Font::Initialize(const char *name, int fontSize, int fontNo)
 	{
@@ -219,7 +213,6 @@ namespace dcore::graphics::gui
 	{
 		rl->RegisterResourceType<Font>("Font");
 		resource::ResourceManager::Instance()->RegisterConstructor<Font>(&Font::Constructor_Font);
-		resource::ResourceManager::Instance()->RegisterDeConstructor<Font>(
-		    &Font::DeConstructor_Font);
+		resource::ResourceManager::Instance()->RegisterDeConstructor<Font>(&Font::DeConstructor_Font);
 	}
 } // namespace dcore::graphics::gui

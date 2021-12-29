@@ -39,8 +39,7 @@ namespace dcore::launch
 			pref->Read(fileInput);
 		};
 
-		static const auto InitContext =
-		    [](platform::Context *ctx, world::World *world, graphics::Renderer *rend)
+		static const auto InitContext = [](platform::Context *ctx, world::World *world, graphics::Renderer *rend)
 		{
 			platform::PlatformSpecific ps;
 			(void)ps;
@@ -58,8 +57,7 @@ namespace dcore::launch
 			tm->Initialize();
 		};
 
-		static const auto InitResources =
-		    [](resource::ResourceManager *rm, resource::ResourceLoader *rl)
+		static const auto InitResources = [](resource::ResourceManager *rm, resource::ResourceLoader *rl)
 		{
 			// Create the default config reader.
 			resource::ConfigReader cfg("data");
@@ -73,8 +71,7 @@ namespace dcore::launch
 			rl->LoadFromManifest("Manifest.cfg");
 		};
 
-		static const auto InitGUI =
-		    [](graphics::gui::GuiGraphics *guig, graphics::gui::GuiManager *guimngr)
+		static const auto InitGUI = [](graphics::gui::GuiGraphics *guig, graphics::gui::GuiManager *guimngr)
 		{
 			graphics::gui::GuiGraphics::SetInstance(guig);
 			guig->Initialize(resource::ResourceManager::Instance());

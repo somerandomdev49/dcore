@@ -102,10 +102,8 @@ namespace dcore::util
 
 						case 't':
 						{
-							tinyobj::real_t tx =
-							    attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-							tinyobj::real_t ty =
-							    attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+							tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
+							tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 							pushFloat(tx);
 							pushFloat(ty);
 							break;

@@ -20,13 +20,22 @@ namespace dcore::terrain
 		/** Activates chunks */
 		void ActivateAllChunks();
 
+		/** Returns a chunk below a global position */
 		const Chunk &GetChunkAtGlobal(const glm::vec3 &position) const;
 
+		/** Returns all of the chunks */
 		const std::vector<Chunk> &GetChunks() const;
+
+		/** Returns the currently active chunks' indices */
 		const std::vector<dstd::UInt32> &GetActiveChunks() const;
 
-		static float GetCChunkSize();
+		/** Returns the size of a chunk in pixels. */
+		static dstd::UInt32 GetCChunkSize();
+
+		/** Returns the size of a pixel in units. */
 		static float GetCUnitsPerPixel();
+
+		/** Returns height multiplier. */
 		static float GetCHeight();
 
 	private:
@@ -35,9 +44,9 @@ namespace dcore::terrain
 		std::vector<Chunk> Chunks_;
 		std::vector<dstd::UInt32> ActiveChunks_;
 		resource::Resource<Heightmap> Heightmap_;
-		static float ChunkSize_;  // Chunk size in vertices
-		static float UnitSize_;   // Size of a single pixel in units
-		static float HeightMult_; // Y multiplier
+		static dstd::UInt32 ChunkSize_; // Chunk size in vertices
+		static float UnitSize_;        // Size of a single pixel in units
+		static float HeightMult_;      // Y multiplier
 	};
 
 	class TerrainResourceManager

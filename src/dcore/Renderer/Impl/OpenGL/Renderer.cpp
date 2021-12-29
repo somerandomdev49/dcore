@@ -57,54 +57,18 @@ namespace dcore::graphics
 
 	void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(u.Data_.Location, v); }
 	void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(u.Data_.Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
-	{
-		Gl::SetUniform(u.Data_.Location, v);
-	}
+	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v) { Gl::SetUniform(u.Data_.Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v) { Gl::SetUniform(u.Data_.Location, v); }
 
 	RUniform Renderer::GetUniform(RShader *shader, const char *name)
 	{
@@ -142,8 +106,7 @@ namespace dcore::graphics
 		}
 		auto fmt = formats[d.channels - 1];
 
-		DCORE_LOG_INFO << "Generating image (" << d.channels << 'x' << d.size.x << 'x' << d.size.y
-		               << ')';
+		DCORE_LOG_INFO << "Generating image (" << d.channels << 'x' << d.size.x << 'x' << d.size.y << ')';
 		RenderResourceManager::CreateTexture(tex, (byte *)d.data, d.size, fmt);
 
 		free(d.data);
@@ -183,8 +146,7 @@ namespace dcore::graphics
 		delete shader;
 	}
 
-	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh,
-	                                             const std::vector<uint32_t> &indices,
+	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 	                                             const std::vector<byte> &vertexData)
 	{
 		if(!mesh) return;
@@ -201,9 +163,8 @@ namespace dcore::graphics
 	}
 
 	// TODO: DeleteTexture
-	void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size,
-	                                          TextureFormat format, TextureScaling scaling,
-	                                          int alignment)
+	void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format,
+	                                          TextureScaling scaling, int alignment)
 	{
 		namespace gl = impl::opengl;
 		// RRM::TextureFormat -> opengl::TextureFormat
@@ -213,35 +174,27 @@ namespace dcore::graphics
 			prevAlignment = gl::Gl::GetPixelStore(gl::PixelStorageUnpackAlignment);
 			gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, alignment);
 		}
-		static gl::TextureFormat formats[4] = {gl::TextureFormatR, gl::TextureFormatRg,
-		                                       gl::TextureFormatRgb, gl::TextureFormatRgba};
+		static gl::TextureFormat formats[4] = {gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb,
+		                                       gl::TextureFormatRgba};
 
-		static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear,
-		                                              gl::TextureFilterNearest};
-		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear,
-		                                              gl::TextureFilterNearest};
+		static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
+		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
 
 		tex->Data_.Texture_.Generate(gl::Texture2D);
 
 		tex->Data_.Texture_.SetParam(gl::TextureParamWrapS, gl::TextureWrapRepeat);
 		tex->Data_.Texture_.SetParam(gl::TextureParamWrapT, gl::TextureWrapRepeat);
-		tex->Data_.Texture_.SetParam(gl::TextureParamMinFilter,
-		                             filtersMin[static_cast<int>(scaling)]);
-		tex->Data_.Texture_.SetParam(gl::TextureParamMagFilter,
-		                             filtersMag[static_cast<int>(scaling)]);
+		tex->Data_.Texture_.SetParam(gl::TextureParamMinFilter, filtersMin[static_cast<int>(scaling)]);
+		tex->Data_.Texture_.SetParam(gl::TextureParamMagFilter, filtersMag[static_cast<int>(scaling)]);
 
-		tex->Data_.Texture_.LoadData(gl::TextureFormatRgba, size, formats[static_cast<int>(format)],
-		                             data);
+		tex->Data_.Texture_.LoadData(gl::TextureFormatRgba, size, formats[static_cast<int>(format)], data);
 		tex->Data_.Texture_.GenMipmaps();
 
 		if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 	}
 
 	// TODO: USE THIS METHOD!!!!!!
-	void RenderResourceManager::DeleteTexture(RTexture *texture)
-	{
-		texture->Data_.Texture_.Delete();
-	}
+	void RenderResourceManager::DeleteTexture(RTexture *texture) { texture->Data_.Texture_.Delete(); }
 
 	void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
 	{

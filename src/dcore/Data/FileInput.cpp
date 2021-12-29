@@ -3,8 +3,7 @@
 namespace dcore::data
 {
 	InputAdapter::~InputAdapter() {}
-	FileInput::FileInput(const std::string &root, const std::string &initialPath)
-	    : Resources(root), Path_(initialPath)
+	FileInput::FileInput(const std::string &root, const std::string &initialPath) : Resources(root), Path_(initialPath)
 	{
 	}
 

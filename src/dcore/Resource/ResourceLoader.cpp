@@ -61,15 +61,14 @@ namespace dcore::resource
 		for(const auto &p : maps)
 		{
 			auto actual = FullPath(p.second);
-			DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << p.first << " at " << actual
-			               << " [" << type << ']';
+			DCORE_LOG_INFO << "[ResourceLoader] Loading resource " << p.first << " at " << actual << " [" << type
+			               << ']';
 
 			auto found = ResTypes_.find(type);
 			DCORE_ASSERT(found != ResTypes_.end(), "Bad Resource Type");
 			// LoaderMap_[type](id, actual, res);
 			ResourceManager::Instance()->GetRootPath();
-			ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second.idx,
-			                                     found->second.allocSize);
+			ResourceManager::Instance()->LoadRaw(p.first, p.second, found->second.idx, found->second.allocSize);
 		}
 	}
 

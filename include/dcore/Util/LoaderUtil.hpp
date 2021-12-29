@@ -29,8 +29,7 @@ namespace dcore::util
 
 		/** Loads a mesh using the format for storing vertices. (p - position, n - normal, t -
 		 * texcoords) */
-		static bool LoadMesh(MeshData &d, const std::string &path,
-		                     const std::string &format = "pnt");
+		static bool LoadMesh(MeshData &d, const std::string &path, const std::string &format = "pnt");
 
 		/** Loads a file into a string. */
 		static bool LoadFile(std::string &out, const std::string &path);

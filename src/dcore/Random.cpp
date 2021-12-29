@@ -13,9 +13,8 @@ namespace dcore::random
 	static std::uniform_int_distribution<int> rdst32__ {std::numeric_limits<int>::min(),
 	                                                    std::numeric_limits<int>::max()};
 
-	static std::uniform_int_distribution<unsigned long long> rdst64__ {
-	    std::numeric_limits<unsigned long long>::min(),
-	    std::numeric_limits<unsigned long long>::max()};
+	static std::uniform_int_distribution<unsigned long long> rdst64__ {std::numeric_limits<unsigned long long>::min(),
+	                                                                   std::numeric_limits<unsigned long long>::max()};
 
 	static std::uniform_real_distribution<> rdstfl__ {-1.0f, 1.0f};
 

@@ -21,8 +21,7 @@ namespace dcore
 	}
 } // namespace dcore
 
-#define DCORE_ASSERT(expr, message) \
-	((void)((expr) || dcore::internal_AssertExit((message), #expr, __FILE__, __LINE__)))
+#define DCORE_ASSERT(expr, message) ((void)((expr) || dcore::internal_AssertExit((message), #expr, __FILE__, __LINE__)))
 #define DCORE_ASSERT_RETURN(expr, message)                            \
 	if(!(expr))                                                       \
 	{                                                                 \

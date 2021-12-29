@@ -32,10 +32,7 @@ namespace dcore::resource
 		return resMngrInstance;
 	}
 
-	void ResourceManager::SetInstance(ResourceManager *newInstance)
-	{
-		resMngrInstance = newInstance;
-	}
+	void ResourceManager::SetInstance(ResourceManager *newInstance) { resMngrInstance = newInstance; }
 
 	ResourceManager::ResourceManager(const std::string &root) : Resources(root) {}
 
@@ -46,8 +43,7 @@ namespace dcore::resource
 
 		for(auto &m : Resources_)
 		{
-			DCORE_LOG_INFO << "[ResourceManager] Removing ["
-			               << util::Debug::Demangle(m.first.name()) << ']';
+			DCORE_LOG_INFO << "[ResourceManager] Removing [" << util::Debug::Demangle(m.first.name()) << ']';
 			for(auto &p : m.second)
 			{
 				DeConstructors_[p.second.GetType()](p.second.Data_);
@@ -58,8 +54,7 @@ namespace dcore::resource
 
 	void ResourceManager::UnLoadRaw(const std::string &id, std::type_index type)
 	{
-		DCORE_LOG_INFO << "[ResourceManager] Removing Resource [" << type.name() << "] '" << id
-		               << '\'';
+		DCORE_LOG_INFO << "[ResourceManager] Removing Resource [" << type.name() << "] '" << id << '\'';
 		// DCORE_ASSERT_RETURN(type >= 0 && type < RT_RESOURCE_COUNT,
 		// "ResourceManager::RemoveResource: Incorrect Resource Type!");
 		if(Resources_[type].find(id) == Resources_[type].end())
@@ -77,13 +72,13 @@ namespace dcore::resource
 		r.Data_ = nullptr;
 	}
 
-	const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location,
-	                                            std::type_index idx, size_t allocSize)
+	const RawResource &ResourceManager::LoadRaw(const std::string &id, const std::string &location, std::type_index idx,
+	                                            size_t allocSize)
 	{
 		// DCORE_ASSERT_RETURN(res.GetType() < RT_RESOURCE_COUNT, "ResourceManager::AddResource:
 		// Incorrect Resource Type!");
-		DCORE_LOG_INFO << "Adding resource of type [" << dcore::util::Debug::Demangle(idx.name())
-		               << "] '" << id << '\'';
+		DCORE_LOG_INFO << "Adding resource of type [" << dcore::util::Debug::Demangle(idx.name()) << "] '" << id
+		               << '\'';
 
 		void *bytes = new char[allocSize];
 		Constructors_[idx](FullPath(location), bytes);
@@ -111,13 +106,11 @@ namespace dcore::resource
 		return Resources_[type][id];
 	}
 
-	void ResourceManager::RegisterConstructor(const std::type_index &type,
-	                                          ResourceConstructorFunc func)
+	void ResourceManager::RegisterConstructor(const std::type_index &type, ResourceConstructorFunc func)
 	{
 		Constructors_[type] = func;
 	}
-	void ResourceManager::RegisterDeConstructor(const std::type_index &type,
-	                                            ResourceDeConstructorFunc func)
+	void ResourceManager::RegisterDeConstructor(const std::type_index &type, ResourceDeConstructorFunc func)
 	{
 		DeConstructors_[type] = func;
 	}

@@ -6,7 +6,7 @@ namespace dstd
 	using Int8   = signed char;
 	using UInt8  = unsigned char;
 	using Int16  = signed short;
-	using UIn16  = unsigned short;
+	using UInt16 = unsigned short;
 	using Int32  = signed int;
 	using UInt32 = unsigned int;
 	using Int64  = signed long;

@@ -4,8 +4,7 @@
 
 namespace dcore::graphics::impl
 {
-	void opengl::Vao::Load(const std::vector<uint32_t> &indices,
-	                       const std::vector<byte> &vertexData, size_t stride)
+	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride)
 	{
 		IndexCount_ = indices.size();
 
@@ -17,8 +16,7 @@ namespace dcore::graphics::impl
 		Gl::SetBufferData(ArrayBuffer, vertexData.size(), &vertexData[0], BufferUsageStaticDraw);
 
 		Gl::BindBuffer(ElementArrayBuffer, EBO_);
-		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), &indices[0],
-		                  BufferUsageStaticDraw);
+		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), &indices[0], BufferUsageStaticDraw);
 
 		LastOffset_ = 0;
 		LastIndex_  = 0;
