@@ -76,13 +76,13 @@ namespace dcore::terrain
 		// indices.push_back(2);
 
 		// generating vertices
-		int vertexCount = 0;
-		auto regionSize = Region_.GetSize() + glm::ivec2(1, 1);
+		dstd::UInt32 vertexCount = 0;
+		auto regionSize = Region_.GetSize(); // + glm::uvec2(1, 1);
 		// DCORE_LOG_INFO << "Region Size: " << regionSize;
-		for(int y = 0; y < regionSize.y; ++y)
-			for(int x = 0; x < regionSize.x; ++x)
+		for(dstd::UInt32 y = 0; y < regionSize.y; ++y)
+			for(dstd::UInt32 x = 0; x < regionSize.x; ++x)
 			{
-				float h = Region_.Get(glm::ivec2(x, y)) * Terrain::GetCHeight();
+				float h = Region_.Get(glm::uvec2(x, y)) * Terrain::GetCHeight();
 				pushVec3(glm::vec3((x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
 				                   (y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))); // position
 				pushVec3(glm::vec3(0, 0, 0));                                                           // normal
@@ -91,7 +91,7 @@ namespace dcore::terrain
 			}
 
 		// generating indices
-		DCORE_LOG_INFO << "regionSize " << regionSize << ", Index Count: " << regionSize.x * regionSize.y * 6;
+		// DCORE_LOG_INFO << "regionSize " << regionSize << ", Index Count: " << regionSize.x * regionSize.y * 6;
 		indices.reserve(regionSize.x * (regionSize.y - 1) * 6);
 		// using Vertex = graphics::RenderResourceManage;
 		struct Vertex
@@ -111,10 +111,10 @@ namespace dcore::terrain
 			v3->norm += n;
 		};
 
-		int vert = 0;
-		for(int y = 0; y < regionSize.y - 1; ++y)
+		dstd::UInt32 vert = 0;
+		for(dstd::UInt32 y = 0; y < regionSize.y - 1; ++y)
 		{
-			for(int x = 0; x < regionSize.x; ++x)
+			for(dstd::UInt32 x = 0; x < regionSize.x; ++x)
 			{
 				if(x == regionSize.x - 1)
 				{
@@ -172,12 +172,12 @@ namespace dcore::terrain
 	// TODO: Generate mesh which is smaller than the chunk region by 1 on each axis.
 	float Chunk::GetHeightAtLocal(const glm::vec2 &v) const
 	{
-		glm::ivec2 grid = v / (float)Terrain::GetCUnitsPerPixel();
+		glm::uvec2 grid = v / (float)Terrain::GetCUnitsPerPixel();
 		FrameLog::SLogF("ch: grid pos: %d, %d", grid.x, grid.y);
 
-		glm::ivec2 d(1, 1);
-		if(grid.x >= Region_.GetSize().x - 1 || grid.x < 0) d.x = 0;
-		if(grid.y >= Region_.GetSize().y - 1 || grid.y < 0) d.y = 0;
+		glm::uvec2 d(1, 1);
+		if(grid.x >= Region_.GetSize().x - 1) d.x = 0;
+		if(grid.y >= Region_.GetSize().y - 1) d.y = 0;
 
 		float p00 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + 0)),
 		      p01 = Region_.Get(glm::ivec2(grid.x + 0, grid.y + d.y)),
@@ -186,7 +186,7 @@ namespace dcore::terrain
 
 		FrameLog::SLogF("00 - %.2f, 01 - %.2f, 10 - %.2f, 11 - %.2f", p00, p01, p10, p11);
 
-		glm::vec2 pos = glm::vec2(fmod(v.x, Terrain::GetCChunkSize()), fmod(v.x, Terrain::GetCChunkSize())) /
+		glm::vec2 pos = glm::vec2(std::fmod(v.x, Terrain::GetCChunkSize()), std::fmod(v.x, Terrain::GetCChunkSize())) /
 		                (float)Terrain::GetCChunkSize();
 
 		return (p00 * (1 - pos.x) * (1 - pos.y) + p10 * (0 + pos.x) * (1 - pos.y) + p01 * (1 - pos.x) * (0 + pos.y) +
