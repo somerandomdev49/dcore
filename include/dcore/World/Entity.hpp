@@ -83,7 +83,7 @@ namespace dcore::world
 		public:
 			AllEntityIterator &operator++()
 			{
-				constexpr EntityHandle mask = 1 << ((sizeof(EntityHandle) * 8) - 1);
+				constexpr EntityHandle mask = (EntityHandle)1 << ((sizeof(EntityHandle) * 8) - 1);
 				Index_ += 1;
 				while(Bound_->AllEntities_[Index_] & mask) ++Index_;
 				return *this;
