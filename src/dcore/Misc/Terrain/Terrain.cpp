@@ -32,8 +32,10 @@ namespace dcore::terrain
 			for(dstd::UInt32 x = 0; x < chunkCount.x; ++x)
 			{
 				glm::uvec2 pos {x, y};
+				// DCORE_LOG_INFO << "Generating chunk at " << pos << ", pixel locs: 0 = " << (pos * ChunkSize_)
+				// 	<< ", 1 = " << (pos * ChunkSize_ + glm::uvec2(ChunkSize_));
 				Chunks_.push_back(
-				    Chunk(HeightmapRegion(Heightmap_.Get(), pos * ChunkSize_, pos + glm::ivec2(ChunkSize_)), pos));
+				    Chunk(HeightmapRegion(Heightmap_.Get(), pos * ChunkSize_, pos * ChunkSize_ + glm::uvec2(ChunkSize_)), pos));
 				Chunks_[Chunks_.size() - 1].Initialize();
 				Chunks_[Chunks_.size() - 1].SetTexture(0, texture);
 			}
@@ -77,7 +79,7 @@ namespace dcore::terrain
 
 	const Chunk &Terrain::GetChunkAtGlobal(const glm::vec3 &position) const
 	{
-		auto chunkCount    = Heightmap_.Get()->GetSize() / glm::ivec2(ChunkSize_);
+		auto chunkCount    = Heightmap_.Get()->GetSize() / glm::uvec2(ChunkSize_);
 		glm::ivec2 gridPos = glm::vec2(position.x, position.z) / UnitSize_ / glm::vec2(chunkCount);
 		return Chunks_[gridPos.x + gridPos.y * chunkCount.x];
 	}

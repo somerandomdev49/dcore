@@ -102,20 +102,22 @@ namespace dcore::world
 	void World::Update()
 	{
 		// TODO: Handle UI clicks and other events.
-		for(const auto &entity : *ECSInstance())
+		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
-			const auto &systems = ECSInstance()->GetSystems(entity);
-			for(const auto &system : systems) system->UpdateFunction(entity);
+			const auto &systems = ECSInstance()->GetSystems(*it);
+			for(const auto &system : systems) system->UpdateFunction(*it);
 		}
 	}
 
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		for(const auto &entity : *ECSInstance())
+		fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(), ECSInstance()->end().CurrentIndex());
+		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
-			const auto &systems = ECSInstance()->GetSystems(entity);
-			for(const auto &system : systems) system->StartFunction(entity);
+			// fprintf(stderr, "it: %d\n", it.CurrentIndex());
+			const auto &systems = ECSInstance()->GetSystems(*it);
+			for(const auto &system : systems) system->StartFunction(*it);
 		}
 
 		cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>("DCore.Mesh.Cube");
@@ -132,7 +134,7 @@ namespace dcore::world
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-		Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
+		// Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 
 		const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 		for(const auto &entity : entities)
@@ -146,8 +148,8 @@ namespace dcore::world
 			render->RenderStaticMesh(&staticMesh.Mesh);
 		}
 
-		auto &chunks = Terrain_.GetChunks();
-		for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+		// auto &chunks = Terrain_.GetChunks();
+		// for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 

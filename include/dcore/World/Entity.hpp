@@ -98,6 +98,8 @@ namespace dcore::world
 
 			const EntityHandle &operator*() { return Bound_->AllEntities_[Index_]; }
 
+			dstd::USize CurrentIndex() const { return Index_; }
+
 		private:
 			friend class ECS;
 			AllEntityIterator(ECS *bound, dstd::USize index) : Index_(index), Bound_(bound) {}
