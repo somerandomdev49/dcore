@@ -22,4 +22,7 @@ namespace dcore::graphics::impl::opengl
 		void Link();
 		void Delete();
 	};
+
+	class Uniform
+	
 } // namespace dcore::graphics::impl::opengl

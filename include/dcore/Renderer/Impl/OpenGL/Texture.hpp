@@ -24,4 +24,12 @@ namespace dcore::graphics::impl::opengl
 		void GenMipmaps();
 		void Delete();
 	};
+
+	struct Texture
+	{
+		TextureBuffer Buffer;
+		glm::ivec2 Size;
+		TextureFormat Format;
+	};
+
 } // namespace dcore::graphics::impl::opengl

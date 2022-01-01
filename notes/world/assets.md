@@ -36,15 +36,15 @@ Each mesh is inside of it's own folder:
    |
    +- AssetName.obj -- Exported .obj file
    |
-   +- AssetName.refs -- References file
+   +- AssetName.refs -- References/Suggestions file
    |
-   +- AssetName.srefs -- Suggestions file (optional)
+   +- AssetName.info -- Automatically generated, do not edit.
 ```
 
-#### Exporting .obj files:
+#### [DEPRECATED, IGNORE] Exporting .obj files
 
 The resulting Wavefront OBJ file should only have triangles, no materials, normals, UVs and no curves.
-Preferably under 1k vertices.
+Preferably under 1k vertices. 
 
 - Blender:
   - Expand `Geometry` on the right panel
@@ -55,10 +55,13 @@ Preferably under 1k vertices.
   - Make sure `Include UVs` is checked
 - TODO: Add more software, if needed.
 
+#### Exporting .gltf files
+
+TODO
+
 #### References/Suggestions file:
 
-A reference file contains the ids of assets that are used in the model,
-for example a texture, another mesh (e.g. a door), a sound (maybe).
+A reference file contains the ids of assets that are useful for the model.
 
 ##### The file's format:
 
@@ -72,21 +75,11 @@ ReferenceName1: TargetId1
 
 ##### References file:
 ```yaml
-# Only this door is fit for this building
 Door: DCore.Mesh.Main.Building.Inside.Door.Door01
-```
-
-##### Suggestions file:
-```yaml
-# This file can be modified through the editor by placing assets inside of the house.
 DoorOpenSoundPack: DCore.SoundPack.Main.Building.Inside.DoorOpen.Wooden
 DoorCloseSoundPack: DCore.SoundPack.Main.Building.Inside.DoorClose.Wooden
 Table0: DCore.Sound.Main.Building.Inside.Table.DiningTable.02
 Table1: DCore.Sound.Main.Building.Inside.Table.DiningTable.14
-Stool0: DCore.Sound.Main.Building.Inside.Stool.64
-Stool1: DCore.Sound.Main.Building.Inside.Stool.02
-Stool2: DCore.Sound.Main.Building.Inside.Stool.38
-Chair0: DCore.Sound.Main.Building.Inside.Chair.Simple.03
 ```
 
 ## World

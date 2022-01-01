@@ -1,23 +1,10 @@
 #pragma once
-#include <dcore/Renderer/RStaticMesh.hpp>
-#include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
-#include <dcore/Renderer/Impl/OpenGL.hpp>
 #include <dcore/Renderer/Config.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 
 namespace dcore::graphics
 {
-	class Renderer;
-
-	namespace impl::opengl
-	{
-		struct SkeletalMesh
-		{
-			Vao Vao_;
-		};
-	}; // namespace impl::opengl
-
 	class RJoint
 	{
 	private:
@@ -33,6 +20,7 @@ namespace dcore::graphics
 		int JointCount_;
 
 		friend class Renderer;
-		impl::DCORE_GRAPHICS_IMPL::SkeletalMesh Data_;
+		friend class RenderResourceManager;
+		void *Data_;
 	};
 } // namespace dcore::graphics

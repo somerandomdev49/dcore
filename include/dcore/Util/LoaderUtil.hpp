@@ -21,6 +21,12 @@ namespace dcore::util
 		size_t stride;
 	};
 
+	struct ModelData
+	{
+		std::vector<std::string> TexturePaths;
+		std::vector<MeshData> Meshes;
+	};
+
 	class LoaderUtil
 	{
 	public:

@@ -55,7 +55,8 @@ namespace dcore::graphics
 
 		/**
 		 * @brief Renders a mesh without passing data to the shader.
-		 * */
+		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
+		 */
 		void Render(RFastVertexBuffer *buf);
 
 		/**
