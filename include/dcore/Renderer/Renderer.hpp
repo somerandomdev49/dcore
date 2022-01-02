@@ -92,6 +92,9 @@ namespace dcore::graphics
 		void Initialize();
 		void DeInitialize();
 
+		static void RModel_Constructor(const std::string &path, void *placement);
+		static void RModel_DeConstructor(void *placement);
+
 		static void RTexture_Constructor(const std::string &path, void *placement);
 		static void RTexture_DeConstructor(void *placement);
 

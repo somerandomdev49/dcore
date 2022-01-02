@@ -23,6 +23,9 @@ namespace dcore::graphics::impl::opengl
 		void Delete();
 	};
 
-	class Uniform
+	struct Uniform
+	{
+		UInt Location;
+	};
 	
 } // namespace dcore::graphics::impl::opengl

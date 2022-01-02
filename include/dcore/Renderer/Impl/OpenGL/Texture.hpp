@@ -13,7 +13,7 @@ namespace dcore::graphics::impl::opengl
 {
 	class TextureBuffer
 	{
-		TextureType Type_;
+		TextureType Type_; // TODO: move to Texture?
 		UInt Id_;
 		friend class dcore::graphics::Renderer;
 
