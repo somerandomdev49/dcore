@@ -12,10 +12,63 @@ namespace dcore::util
 {
 	namespace
 	{
+		enum AccessorComponentType
+		{
+			ACCESSOR_SIGNED_BYTE = 5120,
+			ACCESSOR_UNSIGNED_BYTE = 5121,
+			ACCESSOR_SIGNED_SHORT = 5122,
+			ACCESSOR_UNSIGNED_SHORT = 5123,
+			ACCESSOR_UNSIGNED_INT = 5125,
+			ACCESSOR_FLOAT = 5126,
+		};
+
+		enum AccessorType
+		{
+			ACCESSOR_SCALAR,
+			ACCESSOR_VEC2,
+			ACCESSOR_VEC3,
+			ACCESSOR_VEC4,
+			ACCESSOR_MAT2,
+			ACCESSOR_MAT3,
+			ACCESSOR_MAT4,
+		};
+
 		struct BufferFile
 		{
 			dstd::USize Size;
 			std::string Path;
+		};
+
+		struct Buffer
+		{
+			BufferFile *File;
+			bool Allocated;
+			void *Data;
+		};
+
+		struct BufferView
+		{
+			Buffer *buffer;
+			dstd::USize ByteOffset;
+			dstd::USize ByteLength;
+		};
+
+		struct Accessor
+		{
+			BufferView *View;
+			AccessorComponentType ComponentType;
+			AccessorType Type;
+			dstd::USize Count;
+			dstd::USize ByteOffset;
+		};
+
+		struct Primitive
+		{
+			Accessor *Position;
+			Accessor *Normal;
+			Accessor *TexCoord;
+			Accessor *Indices;
+			dstd::Int8 Material;
 		};
 	} // namespace
 
@@ -37,5 +90,7 @@ namespace dcore::util
 		}
 
 		// Overall, we ignore scenes, nodes and meshes and only include "primitives" in output.
+
+		std::vector<
 	}
 } // namespace dcore::util
