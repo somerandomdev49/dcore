@@ -27,5 +27,5 @@ namespace dcore::graphics::impl::opengl
 	{
 		UInt Location;
 	};
-	
+
 } // namespace dcore::graphics::impl::opengl

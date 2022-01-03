@@ -45,8 +45,8 @@ namespace dcore::terrain
 		std::vector<dstd::UInt32> ActiveChunks_;
 		resource::Resource<Heightmap> Heightmap_;
 		static dstd::UInt32 ChunkSize_; // Chunk size in vertices
-		static float UnitSize_;        // Size of a single pixel in units
-		static float HeightMult_;      // Y multiplier
+		static float UnitSize_;         // Size of a single pixel in units
+		static float HeightMult_;       // Y multiplier
 	};
 
 	class TerrainResourceManager

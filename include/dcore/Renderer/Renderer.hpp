@@ -4,10 +4,11 @@
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
+#include <dcore/Renderer/RModel.hpp>
 #include <dcore/Renderer/RFastVertexBuffer.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
-#include <dcore/Uni.hpp>
+#include <dcore/Core/Type.hpp>
 
 namespace dcore::platform
 {
@@ -108,6 +109,34 @@ namespace dcore::graphics
 		glm::vec4 ClearColor_;
 	};
 
+	/**
+	 * @brief Contains vertices, indices and stride
+	 */
+	struct MeshData
+	{
+		std::vector<uint32_t> Indices;
+		std::vector<byte> VertexData;
+		size_t Stride;
+	};
+
+	/**
+	 * @brief Mesh data + texture index
+	 */
+	struct ModelMeshData
+	{
+		MeshData Mesh;
+		dstd::USize TextureIndex;
+	};
+
+	/**
+	 * @brief Contains the meshes and textures
+	 */
+	struct ModelData
+	{
+		;
+		std::vector<RTexture *> TextureIds;
+	};
+
 	/** Class responsible for initializing/deinitializing render resources */
 	class RenderResourceManager
 	{
@@ -161,6 +190,16 @@ namespace dcore::graphics
 		 * Creates a fast vertex buffer with the specified index count.
 		 * */
 		static void CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount);
+
+		/**
+		 * @brief Creates a model with the specified meshes and texture references.
+		 *
+		 * @param model (Output) the model to create.
+		 * @param meshes The model meshes to include.
+		 * @param textureSlots All the textures used in this model.
+		 */
+		static void CreateModel(Model *model, const std::vector<ModelMeshData> &meshes,
+		                        const std::vector<TextureSlot> &textureSlots);
 
 		/**
 		 * Deletes a fast vertex buffer.

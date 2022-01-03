@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
+#include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Uni.hpp>
 #include <glm/glm.hpp>
 #include <string>
@@ -23,7 +23,8 @@ namespace dcore::util
 
 	struct ModelData
 	{
-		std::vector<std::string> TexturePaths;
+		/** pair<Name, Path> */
+		std::vector<std::pair<std::string, std::string>> Textures;
 		std::vector<MeshData> Meshes;
 	};
 
@@ -33,11 +34,23 @@ namespace dcore::util
 		/** Loads an image. */
 		static bool LoadImage(ImageData &d, const std::string &path);
 
-		/** Loads a mesh using the format for storing vertices. (p - position, n - normal, t -
-		 * texcoords) */
+		/** Loads a mesh using the format for storing vertices.
+		 * (p - position, n - normal, t - texcoords) */
 		static bool LoadMesh(MeshData &d, const std::string &path, const std::string &format = "pnt");
 
 		/** Loads a file into a string. */
 		static bool LoadFile(std::string &out, const std::string &path);
+
+		/**
+		 * @brief Loads a model from a folder.
+		 *
+		 * The folder must contain a .gltf and a .bin file.
+		 *
+		 * @param d (Output) Data.
+		 * @param folder Absolute path to the folder which contains the .gltf and the .bin file.
+		 * @param gltfPath Relative (to the @c folder) path to the .gltf file.
+		 * @return true if the loading was successfull, false otherwise.
+		 */
+		static bool LoadModel(ModelData &d, const std::string &folder, const std::string &gltfPath);
 	};
 } // namespace dcore::util

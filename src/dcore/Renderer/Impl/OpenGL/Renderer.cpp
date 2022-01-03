@@ -59,29 +59,65 @@ namespace dcore::graphics
 		Gl::DrawArrays(ElementTriangleStrip, buf->Data_.Vao_.IndexCount_);
 	}
 
-	void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v) { Gl::SetUniform(((Uniform*)u.Data_)->Location, v); }
+	void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(((Uniform *)u.Data_)->Location, v); }
+	void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(((Uniform *)u.Data_)->Location, v); }
+	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
+	{
+		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+	}
 
 	RUniform Renderer::GetUniform(RShader *shader, const char *name)
 	{
 		RUniform u;
-		((Uniform*)u.Data_)->Location = Gl::GetUniformLocation(((ShaderProgram*)shader->Data_)->Id_, name);
+		((Uniform *)u.Data_)->Location = Gl::GetUniformLocation(((ShaderProgram *)shader->Data_)->Id_, name);
 		return u;
 	}
 
-	void Renderer::UseShader(RShader *shader) { Gl::UseProgram(((ShaderProgram*)shader->Data_)->Id_); }
+	void Renderer::UseShader(RShader *shader) { Gl::UseProgram(((ShaderProgram *)shader->Data_)->Id_); }
 
 	void Renderer::SetWireframeMode(bool newIsWireframeMode)
 	{
@@ -127,11 +163,7 @@ namespace dcore::graphics
 		mesh->Data_.Vao_.CreateFloatAttribute(2); // TexCoord
 	}
 
-	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
-	{
-		
-		mesh->Data_.Vao_.Delete();
-	}
+	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh) { mesh->Data_.Vao_.Delete(); }
 
 	// TODO: DeleteTexture
 	void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format,
@@ -151,10 +183,10 @@ namespace dcore::graphics
 		static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
 		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
 
-		tex->Data_ = new gl::Texture();
-		gl::Texture *t = (gl::Texture*)tex->Data_;
-		t->Format = gl::TextureFormatRgba;
-		t->Size = size;
+		tex->Data_     = new gl::Texture();
+		gl::Texture *t = (gl::Texture *)tex->Data_;
+		t->Format      = gl::TextureFormatRgba;
+		t->Size        = size;
 
 		t->Buffer.Generate(gl::Texture2D);
 
@@ -171,7 +203,7 @@ namespace dcore::graphics
 
 	void RenderResourceManager::DeleteTexture(RTexture *t)
 	{
-		auto data = (impl::opengl::Texture*)t->Data_;
+		auto data = (impl::opengl::Texture *)t->Data_;
 		data->Buffer.Delete();
 		delete data;
 	}
@@ -179,7 +211,7 @@ namespace dcore::graphics
 	void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
 	{
 		buf->Data_ = new impl::opengl::FastVao;
-		auto data = (impl::opengl::FastVao *)buf->Data_;
+		auto data  = (impl::opengl::FastVao *)buf->Data_;
 		data->Load(indexCount);
 	}
 

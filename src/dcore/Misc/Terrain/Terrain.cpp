@@ -13,8 +13,8 @@ namespace glm
 namespace dcore::terrain
 {
 	dstd::UInt32 Terrain::ChunkSize_ = 16;
-	float Terrain::UnitSize_        = 5;
-	float Terrain::HeightMult_      = 100;
+	float Terrain::UnitSize_         = 5;
+	float Terrain::HeightMult_       = 100;
 
 	void Terrain::Initialize(const resource::Resource<Heightmap> &heightmap)
 	{
@@ -34,8 +34,9 @@ namespace dcore::terrain
 				glm::uvec2 pos {x, y};
 				// DCORE_LOG_INFO << "Generating chunk at " << pos << ", pixel locs: 0 = " << (pos * ChunkSize_)
 				// 	<< ", 1 = " << (pos * ChunkSize_ + glm::uvec2(ChunkSize_));
-				Chunks_.push_back(
-				    Chunk(HeightmapRegion(Heightmap_.Get(), pos * ChunkSize_, pos * ChunkSize_ + glm::uvec2(ChunkSize_)), pos));
+				Chunks_.push_back(Chunk(
+				    HeightmapRegion(Heightmap_.Get(), pos * ChunkSize_, pos * ChunkSize_ + glm::uvec2(ChunkSize_)),
+				    pos));
 				Chunks_[Chunks_.size() - 1].Initialize();
 				Chunks_[Chunks_.size() - 1].SetTexture(0, texture);
 			}

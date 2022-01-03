@@ -22,7 +22,7 @@ namespace dcore::graphics
 	{
 		RStaticMesh *mesh = new(placement) RStaticMesh();
 		util::MeshData d;
-		
+
 		RenderResourceManager::CreateStaticMesh(mesh, d.indices, d.vertexData);
 	}
 
@@ -35,16 +35,20 @@ namespace dcore::graphics
 
 	void Renderer::RModel_Constructor(const std::string &path, void *placement)
 	{
-		RModel *model = new(placement) RModel();
+		Model *model = new(placement) Model();
 		util::ModelData data;
-		util::LoaderUtil::LoadModel(data, path);
+
+		std::string modelName = path.substr(path.find_last_of('/') + 1);
+		std::string gltfFile  = modelName + ".gltf";
+
+		util::LoaderUtil::LoadModel(data, path, gltfFile);
 		RenderResourceManager::CreateModel(data.Meshes, data.TexturePaths);
 	}
 
 	void Renderer::RModel_DeConstructor(void *placement)
 	{
 		RModel *model = reinterpret_cast<RModel *>(placement);
-		
+
 		delete model;
 	}
 

@@ -7,11 +7,17 @@
 
 namespace dcore::graphics
 {
-	class RModel
+	struct TextureSlot
 	{
-		std::vector<RStaticMesh*> Meshes_;
-		std::vector<RTexture*> Textures_;
-	public:
-		
+		std::string Name;
+		RTexture *Texture;
 	};
-}
+
+	class Model
+	{
+		std::vector<RStaticMesh *> Meshes_;
+		std::vector<TextureSlot> TextureSlots_;
+
+	public:
+	};
+} // namespace dcore::graphics

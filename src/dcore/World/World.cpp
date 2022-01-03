@@ -112,7 +112,8 @@ namespace dcore::world
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(), ECSInstance()->end().CurrentIndex());
+		fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
+		        ECSInstance()->end().CurrentIndex());
 		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
 			// fprintf(stderr, "it: %d\n", it.CurrentIndex());
