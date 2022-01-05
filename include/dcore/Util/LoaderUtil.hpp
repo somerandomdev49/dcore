@@ -14,19 +14,20 @@ namespace dcore::util
 		glm::ivec2 size;
 	};
 
-	struct MeshData
-	{
-		std::vector<uint32_t> indices;
-		std::vector<byte> vertexData;
-		size_t stride;
-	};
+	// struct MeshData
+	// {
+	// 	std::vector<dstd::UInt32> indices;
+	// 	std::vector<byte> vertexData;
+	// 	size_t stride;
+	// };
 
-	struct ModelData
-	{
-		/** pair<Name, Path> */
-		std::vector<std::pair<std::string, std::string>> Textures;
-		std::vector<MeshData> Meshes;
-	};
+	// struct ModelData
+	// {
+	// 	/** pair<Name, Path> */
+	// 	std::vector<std::pair<std::string, std::string>> Textures;
+	// 	/** pair<Name, Path> */
+	// 	std::vector<MeshData> Meshes;
+	// };
 
 	class LoaderUtil
 	{
@@ -36,7 +37,7 @@ namespace dcore::util
 
 		/** Loads a mesh using the format for storing vertices.
 		 * (p - position, n - normal, t - texcoords) */
-		static bool LoadMesh(MeshData &d, const std::string &path, const std::string &format = "pnt");
+		static bool LoadMesh(graphics::MeshData &d, const std::string &path, const std::string &format = "pnt");
 
 		/** Loads a file into a string. */
 		static bool LoadFile(std::string &out, const std::string &path);
@@ -51,6 +52,6 @@ namespace dcore::util
 		 * @param gltfPath Relative (to the @c folder) path to the .gltf file.
 		 * @return true if the loading was successfull, false otherwise.
 		 */
-		static bool LoadModel(ModelData &d, const std::string &folder, const std::string &gltfPath);
+		static bool LoadModel(graphics::ModelData &d, const std::string &folder, const std::string &gltfPath);
 	};
 } // namespace dcore::util

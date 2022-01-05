@@ -18,12 +18,21 @@ namespace dcore::graphics
 
 	bool Renderer::IsWireframeMode() const { return IsWireframeMode_; }
 
+	void Renderer::Render(Model *model, int textureUnit /* = 0 */)
+	{
+		for(const auto &mesh : model->Meshes_)
+		{
+			UseTexture(textureUnit, model->TextureSlots_[mesh.TextureIndex].Texture);
+			Render(mesh.Mesh);
+		}
+	}
+
 	void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 	{
 		RStaticMesh *mesh = new(placement) RStaticMesh();
-		util::MeshData d;
+		MeshData d;
 
-		RenderResourceManager::CreateStaticMesh(mesh, d.indices, d.vertexData);
+		RenderResourceManager::CreateStaticMesh(mesh, d.Indices, d.VertexData);
 	}
 
 	void Renderer::RStaticMesh_DeConstructor(void *placement)
@@ -36,19 +45,18 @@ namespace dcore::graphics
 	void Renderer::RModel_Constructor(const std::string &path, void *placement)
 	{
 		Model *model = new(placement) Model();
-		util::ModelData data;
+		ModelData data;
 
 		std::string modelName = path.substr(path.find_last_of('/') + 1);
 		std::string gltfFile  = modelName + ".gltf";
 
 		util::LoaderUtil::LoadModel(data, path, gltfFile);
-		RenderResourceManager::CreateModel(data.Meshes, data.TexturePaths);
+		RenderResourceManager::CreateModel(model, data);
 	}
 
 	void Renderer::RModel_DeConstructor(void *placement)
 	{
-		RModel *model = reinterpret_cast<RModel *>(placement);
-
+		Model *model = reinterpret_cast<Model *>(placement);
 		delete model;
 	}
 
@@ -99,9 +107,9 @@ namespace dcore::graphics
 		resource::ResourceManager::Instance()->RegisterConstructor<RStaticMesh>(&Renderer::RStaticMesh_Constructor);
 		resource::ResourceManager::Instance()->RegisterDeConstructor<RStaticMesh>(&Renderer::RStaticMesh_DeConstructor);
 
-		rl->RegisterResourceType<RModel>("Model");
-		resource::ResourceManager::Instance()->RegisterConstructor<RModel>(&Renderer::RModel_Constructor);
-		resource::ResourceManager::Instance()->RegisterDeConstructor<RModel>(&Renderer::RModel_DeConstructor);
+		rl->RegisterResourceType<Model>("Model");
+		resource::ResourceManager::Instance()->RegisterConstructor<Model>(&Renderer::RModel_Constructor);
+		resource::ResourceManager::Instance()->RegisterDeConstructor<Model>(&Renderer::RModel_DeConstructor);
 	}
 
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
@@ -118,4 +126,21 @@ namespace dcore::graphics
 
 		CreateStaticMesh(mesh, indices, vertexData);
 	}
+
+	void RenderResourceManager::CreateModel(Model *model, const ModelData &data)
+	{
+		for(const auto &mesh : data.Meshes)
+		{
+			RStaticMesh *sm = new RStaticMesh();
+			CreateStaticMesh(sm, mesh.Mesh.Indices, mesh.Mesh.VertexData);
+			model->Meshes_.push_back(ModelMesh {sm, mesh.TextureIndex});
+		}
+
+		for(const auto &texture : data.Textures)
+		{
+			model->TextureSlots_.push_back(
+			    TextureSlot {texture.Name, resource::ResourceManager::Instance()->Get<RTexture>(texture.Id).Get()});
+		}
+	}
+
 } // namespace dcore::graphics

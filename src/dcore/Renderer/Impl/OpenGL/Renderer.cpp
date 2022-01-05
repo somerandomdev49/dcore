@@ -40,23 +40,27 @@ namespace dcore::graphics
 	void Renderer::UseTexture(int unit, RTexture *texture)
 	{
 		if(!texture) return;
+		auto data = (impl::opengl::TextureBuffer *)texture->Data_;
 		Gl::SetActiveTexture(TextureUnit0 + unit);
-		Gl::BindTexture(texture->Data_.Texture_.Type_, texture->Data_.Texture_.Id_);
+		Gl::BindTexture(data->Type_, data->Id_);
 	}
 
 	void Renderer::Render(RStaticMesh *mesh)
 	{
 		// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more
-		// complicated, but will decrease memory usage. printf("%u indices, %u vao\n",
-		// mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
-		Gl::BindVertexArray(mesh->Data_.Vao_.VAO_);
-		Gl::DrawElements(ElementTriangles, mesh->Data_.Vao_.IndexCount_, TypeUnsignedInt);
+		// complicated, but will decrease memory usage.
+
+		// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
+		auto vao = (impl::opengl::Vao *)mesh->Data_;
+		Gl::BindVertexArray(vao->VAO_);
+		Gl::DrawElements(ElementTriangles, vao->IndexCount_, TypeUnsignedInt);
 	}
 
 	void Renderer::Render(RFastVertexBuffer *buf)
 	{
-		Gl::BindVertexArray(buf->Data_.Vao_.VAO_);
-		Gl::DrawArrays(ElementTriangleStrip, buf->Data_.Vao_.IndexCount_);
+		auto vao = (impl::opengl::FastVao *)buf->Data_;
+		Gl::BindVertexArray(vao->VAO_);
+		Gl::DrawArrays(ElementTriangleStrip, vao->IndexCount_);
 	}
 
 	void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(((Uniform *)u.Data_)->Location, v); }
@@ -140,16 +144,18 @@ namespace dcore::graphics
 			return;
 		}
 
-		shader->Data_.Program_.Create();
-		shader->Data_.Program_.AttachShader(impl::opengl::VertexShader, vertexSource);
-		shader->Data_.Program_.AttachShader(impl::opengl::FragmentShader, fragmentSource);
-		shader->Data_.Program_.Link();
+		auto program = (impl::opengl::ShaderProgram *)shader->Data_;
+		program->Create();
+		program->AttachShader(impl::opengl::VertexShader, vertexSource);
+		program->AttachShader(impl::opengl::FragmentShader, fragmentSource);
+		program->Link();
 	}
 
 	void Renderer::RShader_DeConstructor(void *placement)
 	{
 		RShader *shader = reinterpret_cast<RShader *>(placement);
-		shader->Data_.Program_.Delete();
+		auto program    = (impl::opengl::ShaderProgram *)shader->Data_;
+		program->Delete();
 		delete shader;
 	}
 
@@ -157,15 +163,22 @@ namespace dcore::graphics
 	                                             const std::vector<byte> &vertexData)
 	{
 		if(!mesh) return;
-		mesh->Data_.Vao_.Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
-		mesh->Data_.Vao_.CreateFloatAttribute(3); // Position
-		mesh->Data_.Vao_.CreateFloatAttribute(3); // Normal
-		mesh->Data_.Vao_.CreateFloatAttribute(2); // TexCoord
+		mesh->Data_ = new impl::opengl::Vao();
+		auto vao    = (impl::opengl::Vao *)mesh->Data_;
+		vao->Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
+		vao->CreateFloatAttribute(3); // Position
+		vao->CreateFloatAttribute(3); // Normal
+		vao->CreateFloatAttribute(2); // TexCoord
 	}
 
-	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh) { mesh->Data_.Vao_.Delete(); }
+	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
+	{
+		if(!mesh) return;
+		auto vao = (impl::opengl::Vao *)mesh->Data_;
+		vao->Delete();
+		delete vao; // Important: Leave as vao and not mesh->Data_ (because the latter is void*)
+	}
 
-	// TODO: DeleteTexture
 	void RenderResourceManager::CreateTexture(RTexture *tex, byte *data, const glm::ivec2 &size, TextureFormat format,
 	                                          TextureScaling scaling, int alignment)
 	{

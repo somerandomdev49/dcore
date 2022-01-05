@@ -49,7 +49,8 @@ namespace dcore::graphics
 		void UseTexture(int unit, RTexture *texture);
 
 		/**
-		 * @brief Renders a mesh
+		 * @brief Renders a mesh.
+		 * @note The shader must be bound!
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
 		void Render(RStaticMesh *mesh);
@@ -59,6 +60,15 @@ namespace dcore::graphics
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
 		void Render(RFastVertexBuffer *buf);
+
+		/**
+		 * @brief Renders a model.
+		 * @note The shader must be bound!
+		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
+		 * 
+		 * @param textureUnit The texture unit bount when selecting textures.
+		 */
+		void Render(Model *model, int textureUnit = 0);
 
 		/**
 		 * @brief Renders a skeletal mesh with a specified texture
@@ -114,9 +124,15 @@ namespace dcore::graphics
 	 */
 	struct MeshData
 	{
-		std::vector<uint32_t> Indices;
+		std::vector<dstd::UInt32> Indices;
 		std::vector<byte> VertexData;
 		size_t Stride;
+	};
+
+	struct TextureIdSlot
+	{
+		std::string Name;
+		std::string Id;
 	};
 
 	/**
@@ -133,8 +149,8 @@ namespace dcore::graphics
 	 */
 	struct ModelData
 	{
-		;
-		std::vector<RTexture *> TextureIds;
+		std::vector<ModelMeshData> Meshes;
+		std::vector<TextureIdSlot> Textures;
 	};
 
 	/** Class responsible for initializing/deinitializing render resources */
@@ -198,8 +214,7 @@ namespace dcore::graphics
 		 * @param meshes The model meshes to include.
 		 * @param textureSlots All the textures used in this model.
 		 */
-		static void CreateModel(Model *model, const std::vector<ModelMeshData> &meshes,
-		                        const std::vector<TextureSlot> &textureSlots);
+		static void CreateModel(Model *model, const ModelData &data);
 
 		/**
 		 * Deletes a fast vertex buffer.

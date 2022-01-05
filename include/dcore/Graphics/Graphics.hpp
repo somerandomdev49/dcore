@@ -7,6 +7,7 @@
 #include <dcore/Graphics/Camera.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Misc/Terrain/Chunk.hpp>
+#include <dcore/Renderer/RModel.hpp>
 
 namespace dcore::platform
 {
@@ -22,6 +23,7 @@ namespace dcore::graphics
 		Renderer *GetRenderer() const;
 		// void RenderCharacter(Character *character);
 		void RenderStaticMesh(const StaticMesh DCORE_REF *staticMesh);
+		void RenderModel(const Model DCORE_REF *model);
 		void RenderChunk(const terrain::Chunk *chunk);
 		void RenderDebugLine(const glm::vec3 &from, const glm::vec3 &to, float width = 1.f);
 
