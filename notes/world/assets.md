@@ -2,7 +2,11 @@
 
 ## Resource Map
 
-File at `data/ResourceMap.ini` maps the file path to it's id. When you add a new asset, add the id to it.
+File at `data/ResourceMap.ini` maps the file path to it's id. When you add a new
+asset, add the id to it. The id should be the path with `/`s replaced with `.`s
+When exporting a `.gltf` asset, the path should be to the folder containing the
+`.gltf` and `.bin` files. All other assets' paths must be to the files themselves
+and not to the folders. This may change in the future.
 
 ## Format
 
@@ -34,12 +38,31 @@ Each mesh is inside of it's own folder:
    |
    +- AssetName.(blend/3ds/...) -- Source file
    |
-   +- AssetName.obj -- Exported .obj file
+   +- AssetName.gltf -- Exported .gltf file
    |
    +- AssetName.refs -- References/Suggestions file
    |
-   +- AssetName.info -- Automatically generated, do not edit.
+   +- AssetName.info -- Automatically generated after first editor run, do not edit. (not implemented yet)
 ```
+
+#### Exporting .gltf files
+
+When exporting to .gltf in Blender:
+- Model:
+  - Use the `Triangulate` modifier, play with the settings for better results
+  - Have different materials for different textures
+  - *Note: the materials themselves are ignored, only the names are saved*
+- In export settings on the right pane:
+  - For `Format`, select `glTF Separate (.gltf + .bin + textures)`
+  - Expand `Transform`, check `+Y Up`
+  - Expand `Geometry`, check
+    - `Apply Modifiers`
+    - `UVs`
+    - `Normals`
+    - **NOT** `Tangents`
+    - **NOT** `Vertex Colors`
+    - `Materials`
+  - *[Optional]* You may also check `Remember export settings` for blender to remember the settings.
 
 #### [DEPRECATED, IGNORE] Exporting .obj files
 
@@ -54,10 +77,6 @@ Preferably under 1k vertices.
   - Make sure `Write Normals` is checked
   - Make sure `Include UVs` is checked
 - TODO: Add more software, if needed.
-
-#### Exporting .gltf files
-
-TODO
 
 #### References/Suggestions file:
 
@@ -81,6 +100,24 @@ DoorCloseSoundPack: DCore.SoundPack.Main.Building.Inside.DoorClose.Wooden
 Table0: DCore.Sound.Main.Building.Inside.Table.DiningTable.02
 Table1: DCore.Sound.Main.Building.Inside.Table.DiningTable.14
 ```
+
+#### ResourceMap file:
+
+```ini
+...
+DCore.Texture.Main.Grass = dcore/main/texture/grass.png
+DCore.Texture.Main.Dirt = dcore/main/texture/dirt.png
+DCore.Texture.Main.Stone = dcore/main/texture/stone.png
+...
+DCore.Mesh.Main.Building.House.Outside.Inn.01 = dcore/main/mesh/building/house/outside/Inn01
+...
+DCore.Shader.FontShader = dcore/main/shader/font.glsl
+DCore.Heightmap.World1 = dcore/main/maps/terrain/world1.jpg
+DCore.Font.Debug = dcore/main/fonts/courbd.ttf:32
+...
+```
+
+Note that the path is just to the folder that contains the `.bin` and the `.gltf` files
 
 ## World
 

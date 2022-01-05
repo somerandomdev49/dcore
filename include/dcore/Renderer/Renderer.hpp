@@ -65,7 +65,7 @@ namespace dcore::graphics
 		 * @brief Renders a model.
 		 * @note The shader must be bound!
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
-		 * 
+		 *
 		 * @param textureUnit The texture unit bount when selecting textures.
 		 */
 		void Render(Model *model, int textureUnit = 0);
