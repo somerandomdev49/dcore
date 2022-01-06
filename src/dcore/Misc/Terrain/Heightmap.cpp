@@ -19,7 +19,7 @@ namespace dcore::terrain
 		h->ComponentCount_ = data.channels;
 		std::memcpy(h->Data_, data.data, h->Size_.x * h->Size_.y * data.channels);
 		std::free(data.data);
-		LOG_F(INFO, "Component Count: %d, size: %d, %d\n", h->ComponentCount_, data.size.x, data.size.y);
+		LOG_F(INFO, "Component Count: %d, size: %d, %d", h->ComponentCount_, data.size.x, data.size.y);
 	}
 
 	void Heightmap::Heightmap_DeConstructor(void *placement)

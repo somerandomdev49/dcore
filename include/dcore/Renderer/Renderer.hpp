@@ -68,7 +68,7 @@ namespace dcore::graphics
 		 *
 		 * @param textureUnit The texture unit bount when selecting textures.
 		 */
-		void Render(Model *model, int textureUnit = 0);
+		void Render(const Model *model, int textureUnit = 0);
 
 		/**
 		 * @brief Renders a skeletal mesh with a specified texture

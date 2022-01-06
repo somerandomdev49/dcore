@@ -25,16 +25,3 @@ def gendll(executable: str, outdir: str):
 
 if __name__ == "__main__":
 	_gendll_impl(sys.stdin.readlines());
-
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13
-# 13

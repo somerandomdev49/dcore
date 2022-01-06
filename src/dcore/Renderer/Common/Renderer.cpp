@@ -18,7 +18,7 @@ namespace dcore::graphics
 
 	bool Renderer::IsWireframeMode() const { return IsWireframeMode_; }
 
-	void Renderer::Render(Model *model, int textureUnit /* = 0 */)
+	void Renderer::Render(const Model *model, int textureUnit /* = 0 */)
 	{
 		for(const auto &mesh : model->Meshes_)
 		{

@@ -1,38 +1,30 @@
 # Assets
 
-## Resource Map
-
-File at `data/ResourceMap.ini` maps the file path to it's id. When you add a new
-asset, add the id to it. The id should be the path with `/`s replaced with `.`s
-When exporting a `.gltf` asset, the path should be to the folder containing the
-`.gltf` and `.bin` files. All other assets' paths must be to the files themselves
-and not to the folders. This may change in the future.
-
 ## Format
 
 ### Asset location:
 - Path to asset: `data/dcore/main/<TYPE>/<CATEGORY>/<SUB-CATEGORY>/.../<ASSET>`. 
-- `<TYPE>`: `mesh`, `texture`, etc.
+- `<TYPE>`: `model`, `texture`, etc.
 - `<CATEGORY>`:
-  - For `mesh`: `building`, `details`, `characters`, ...
-  - For `texture`: `terrain`, `mesh`, `other`
+  - For `model`: `building`, `details`, `characters`, ...
+  - For `texture`: `terrain`, `model`, `other`
 - `<SUB-CATEGORY>`:
-  - For `mesh`:
+  - For `model`:
     - `buidling` category: `house`, `church`, `castle`, `inside` ...
     - `details` category: `path`, `city`, ...
   - For `texture`:
     - `terrain` category: `plains`, other zones/biomes (todo)
-    - `mesh` category: path to mesh the texture is for
+    - `model` category: path to model the texture is for
 - `<SUB-SUB-CATEGORY>`:
-  - For `mesh`:
+  - For `model`:
     - `castle` sub-category: `wall`, `tower`, `other`, ...
     - `house` sub-category: `outside`, `inside`, `other`
     - `inside` sub-category: `door`, `bench`, `table`, `stool`, `chair`, ...
     
 
-### Mesh asset format:
+### Model asset format:
 
-Each mesh is inside of it's own folder:
+Each model is inside of it's own folder:
 ```haskell
 +- AssetName -- Asset folder
    |
@@ -51,7 +43,11 @@ When exporting to .gltf in Blender:
 - Model:
   - Use the `Triangulate` modifier, play with the settings for better results
   - Have different materials for different textures
+  - Make sure that **ALL** objects have a material (Will be fixed!)
   - *Note: the materials themselves are ignored, only the names are saved*
+  - Apply all of the transforms. (May change in the future.)
+    - This can be done by `Ctrl+A > All Transforms` or `Object > Apply > All Transforms`
+    - This can be reversed by using `Object > Set Origin > Origin To Geometry` for each object
 - In export settings on the right pane:
   - For `Format`, select `glTF Separate (.gltf + .bin + textures)`
   - Expand `Transform`, check `+Y Up`
@@ -94,14 +90,35 @@ ReferenceName1: TargetId1
 
 ##### References file:
 ```yaml
-Door: DCore.Mesh.Main.Building.Inside.Door.Door01
+Door: DCore.Model.Main.Building.Inside.Door.Door01
 DoorOpenSoundPack: DCore.SoundPack.Main.Building.Inside.DoorOpen.Wooden
 DoorCloseSoundPack: DCore.SoundPack.Main.Building.Inside.DoorClose.Wooden
 Table0: DCore.Sound.Main.Building.Inside.Table.DiningTable.02
 Table1: DCore.Sound.Main.Building.Inside.Table.DiningTable.14
 ```
 
-#### ResourceMap file:
+## Resource Map
+
+File at `data/ResourceMap.ini` maps the file path to it's id. When you add a new
+asset, add the id to it. The id should be of the following format:
+
+```haskell
+DCore."TYPE".Main."CATEGORY"."SUB-CATEGORY"."..."."ASSET"."SPECIFIC"
+```
+
+Note that the type/category/everything should be in PascalCase. The `."SPECIFIC"`
+is not needed when there is only one such asset, otherwise it is the name of the
+asset or it's number. For example, we could have 10 doors, their `SPECIFIC` would
+be `00, 01, 02, ..., 10` and the folders that contain the models would be
+`Door00, Door01, Door02, ..., Door10`. Or for example, you have the model for the
+Goldhills castle, which means that the castle's model `SPECIFIC` is `Goldhills` and
+the folder which contains the castle would be `WallGoldhills`, `TowerGoldhills`, etc. 
+
+When exporting a `.gltf` asset, the path should be to
+the folder containing the `.gltf` and `.bin` files. All other assets' paths must
+be to the files themselves and not to the folders. This may change in the future.
+
+### ResourceMap file:
 
 ```ini
 ...
@@ -109,7 +126,7 @@ DCore.Texture.Main.Grass = dcore/main/texture/grass.png
 DCore.Texture.Main.Dirt = dcore/main/texture/dirt.png
 DCore.Texture.Main.Stone = dcore/main/texture/stone.png
 ...
-DCore.Mesh.Main.Building.House.Outside.Inn.01 = dcore/main/mesh/building/house/outside/Inn01
+DCore.Model.Main.Building.House.Outside.Inn.01 = dcore/main/model/building/house/outside/Inn01
 ...
 DCore.Shader.FontShader = dcore/main/shader/font.glsl
 DCore.Heightmap.World1 = dcore/main/maps/terrain/world1.jpg
@@ -118,6 +135,54 @@ DCore.Font.Debug = dcore/main/fonts/courbd.ttf:32
 ```
 
 Note that the path is just to the folder that contains the `.bin` and the `.gltf` files
+
+## Manifest
+
+This specifes what assets are loaded at the start of the program.
+
+In general, the manifest already has everything needed, but in case it doesn't, the
+format is the following:
+
+```bash
+# Comment
+TYPE$ID
+```
+
+If the `ID` contains a `*`, it works like [glob](https://google.com/search?q=glob+unix).
+
+**For example:**
+
+If the resource map has the following ids:
+1. `A.B.C.D.E`
+2. `A.B.C.F.E`
+3. `A.B.C.F.C`
+4. `A.X.C.F.C`
+
+Then:
+- `A.B.*` matches: `1`, `2`, `3`
+- `A.*.C` matches: `1`, `2`, `3`, `4`
+- `*.C` matches: `1`, `2`, `3`, `4`
+- `A.*.C.F.C` matches: `3`, `4`
+- `A.*.C.F.*` matches: `2`, `3`, `4`
+
+> Note: a `*` at the end always works, but `*`s in the middle aren't tested!
+
+### Example
+
+```bash
+
+Texture$DCore.Texture.Main.*
+# Texture$DCore.Texture.Gui.*
+Audio$DCore.Audio.Main.*
+# Mesh$DCore.Mesh.Main.*
+Mesh$DCore.Mesh.*
+Model$DCore.Model.*
+Shader$DCore.Shader.*
+Heightmap$DCore.Heightmap.World1
+
+Font$DCore.Font.Debug
+
+```
 
 ## World
 

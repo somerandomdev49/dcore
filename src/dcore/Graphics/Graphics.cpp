@@ -216,4 +216,12 @@ namespace dcore::graphics
 
 		Renderer_->Render(chunk->GetMesh());
 	}
+	
+	void RendererInterface::RenderModel(const Model DCORE_REF *model, const glm::mat4 &transform)
+	{
+		// TODO: Do not set the shader each time we render something, it's expensive!
+		Renderer_->UseShader(ObjectShader_->Get());
+		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * transform);
+		Renderer_->Render(model);
+	}
 } // namespace dcore::graphics

@@ -28,7 +28,7 @@ namespace dg
 		// 	auto e = world->CreateEntity();
 		// 	e.AddComponent(dcore::world::TransformComponent());
 		// 	e.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
-		// 		dcore::resource::ResourceManager::Instance()->Get<dcore::graphics::RStaticMesh>("DCore.Mesh.Main.Building.House.Outside.Inn.01"),
+		// 		dcore::resource::ResourceManager::Instance()->Get<dcore::graphics::RStaticMesh>("DCore.Model.Main.Building.House.Outside.Inn.01"),
 		// 		dcore::resource::ResourceManager::Instance()->Get<dcore::graphics::RTexture>("DCore.Texture.Main.Stone")
 		// 	)));
 		// 	e.GetComponent<dcore::world::TransformComponent>().SetPosition(glm::vec3(10, 0, 10));

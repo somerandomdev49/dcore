@@ -23,7 +23,7 @@ namespace dcore::graphics
 		Renderer *GetRenderer() const;
 		// void RenderCharacter(Character *character);
 		void RenderStaticMesh(const StaticMesh DCORE_REF *staticMesh);
-		void RenderModel(const Model DCORE_REF *model);
+		void RenderModel(const Model DCORE_REF *model, const glm::mat4 &transform);
 		void RenderChunk(const terrain::Chunk *chunk);
 		void RenderDebugLine(const glm::vec3 &from, const glm::vec3 &to, float width = 1.f);
 

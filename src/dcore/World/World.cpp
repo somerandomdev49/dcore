@@ -12,6 +12,7 @@ namespace dcore::world
 {
 	DCORE_COMPONENT_REGISTER(TransformComponent);
 	DCORE_COMPONENT_REGISTER(StaticMeshComponent);
+	DCORE_COMPONENT_REGISTER(ModelComponent);
 	DCORE_COMPONENT_REGISTER(DynamicComponent);
 
 	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
@@ -34,6 +35,14 @@ namespace dcore::world
 		    {"position", util::JsonConverters::Glm(this->Position_)},
 		    {"rotation", util::JsonConverters::Glm(this->Rotation_)},
 		    {"scale", util::JsonConverters::Glm(this->Scale_)},
+		});
+	}
+
+	void ModelComponent::Save(const EntityHandle &self, data::Json &output)
+	{
+		(void)self;
+		output = data::Json::object({
+			{"model", Model.GetName()}
 		});
 	}
 
@@ -112,8 +121,8 @@ namespace dcore::world
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
-		        ECSInstance()->end().CurrentIndex());
+		// fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
+		//         ECSInstance()->end().CurrentIndex());
 		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
 			// fprintf(stderr, "it: %d\n", it.CurrentIndex());
@@ -135,18 +144,34 @@ namespace dcore::world
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-		// Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
-
-		const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
-		for(const auto &entity : entities)
+		Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
+		
 		{
-			auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
-			auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
+			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
+			for(const auto &entity : entities)
+			{
+				fprintf(stderr, "bryh\n");
+				auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
+				auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
 
-			// if(transform.IsDirty()) transform.ReCalculateMatrix();
-			staticMesh.Mesh.SetTransform(transform.GetMatrix());
+				// if(transform.IsDirty()) transform.ReCalculateMatrix();
+				staticMesh.Mesh.SetTransform(transform.GetMatrix());
 
-			render->RenderStaticMesh(&staticMesh.Mesh);
+				render->RenderStaticMesh(&staticMesh.Mesh);
+			}
+		}
+
+		{
+			const auto &entities = ECSInstance()->GetEntities<ModelComponent>();
+			for(const auto &entity : entities)
+			{
+				auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
+				auto &model = ECSInstance()->GetComponent<ModelComponent>(entity);
+
+				// if(transform.IsDirty()) transform.ReCalculateMatrix();
+				
+				render->RenderModel(model.Model.Get(), transform.GetMatrix());
+			}
 		}
 
 		// auto &chunks = Terrain_.GetChunks();

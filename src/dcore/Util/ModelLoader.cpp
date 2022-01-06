@@ -141,12 +141,13 @@ namespace dcore::util
 		T convertBytesAt(Accessor *a, dstd::USize offset)
 		{
 			T value   = {};
-			auto size = std::min(getAccessorComponentTypeSize(a->ComponentType), sizeof(T));
+			byte *bytes = reinterpret_cast<byte*>(&value);
+			auto size = std::min(getAccessorComponentTypeSize(a->ComponentType), (dstd::USize)sizeof(T));
 
 			// Copying the integer bytes manually because size is known only at runtime
 			// Maybe should make ifs for all known sizes for it to be faster, idk, just
 			// need it to be done for now.
-			for(byte j = 0; j < size; ++j) value |= a->View->Buffer->Data[offset + j] << (j * 8);
+			for(byte j = 0; j < size; ++j) bytes[j] = a->View->Buffer->Data[offset + j] << (j * 8);
 
 			return value;
 		}
@@ -155,16 +156,19 @@ namespace dcore::util
 		glm::vec<C, T> convertElementAt(Accessor *a, dstd::USize offset, T defaultValue = T {})
 		{
 			glm::vec<C, T> value(defaultValue);
-			auto size = std::min(getAccessorTypeSize(a->Type), C);
+			auto size = std::min(getAccessorTypeSize(a->Type), (dstd::USize)C);
 
-			for(int i = 0; i < size; ++i)
-				value[i] = convertBytesAt<T>(offset + getAccessorComponentTypeSize(a->ComponentType) * i);
+			for(byte i = 0; i < size; ++i)
+				value[i] = convertBytesAt<T>(a, offset + getAccessorComponentTypeSize(a->ComponentType) * i);
+			
 			return value;
 		}
 	} // namespace
 
 	bool LoaderUtil::LoadModel(graphics::ModelData &d, const std::string &folder, const std::string &gltfPath)
 	{
+		static bool shouldLog = true;
+#define DLOG(MSG) if(shouldLog) DCORE_LOG_INFO << MSG
 		// NOTE, TODO: Becasue of how Blender exports glTFs, we assume that there is not byteStride and each component
 		//             has its own accessor/bufferView
 
@@ -177,15 +181,16 @@ namespace dcore::util
 		std::vector<BufferFile> bufferFiles;
 		bufferFiles.reserve(gltf["buffers"].size());
 
+		DLOG("reading buffers");
 		for(const auto &buffer : gltf["buffers"])
 		{
 			bufferFiles.push_back(
 			    BufferFile {buffer["byteLength"].get<dstd::USize>(), folder + "/" + buffer["uri"].get<std::string>()});
 		}
 
+
 		// Overall, we ignore scenes, nodes and meshes and only include "primitives" in output.
 
-		std::vector<BufferFile> bufferFiles;
 		std::vector<Buffer> buffers;
 		std::vector<BufferView> bufferViews;
 		std::vector<Accessor> accessors;
@@ -197,19 +202,19 @@ namespace dcore::util
 		std::set<int> usedAccessors;
 
 		std::vector<dstd::USize> nodes;
+		DLOG("reading scenes");
 		for(const auto &scene : gltf["scenes"])
 		{
+			DLOG("  reading nodes");
 			for(const auto &node : scene["nodes"]) nodes.push_back(node.get<dstd::USize>());
 		}
 
-		for(const auto &buf : gltf["buffers"])
+		for(auto &buffile : bufferFiles)
 		{
-			auto byteLength = buf["byteLength"].get<dstd::USize>();
-			auto uri        = buf["uri"].get<std::string>();
-			bufferFiles.push_back(BufferFile {byteLength, uri});
-			buffers.push_back(Buffer {&bufferFiles.back(), false, nullptr});
+			buffers.push_back(Buffer {&buffile, false, nullptr});
 		}
 
+		DLOG("reading buffer views");
 		for(const auto &view : gltf["bufferViews"])
 		{
 			auto buffer     = view["buffer"].get<dstd::USize>();
@@ -219,6 +224,7 @@ namespace dcore::util
 			bufferViews.push_back(BufferView {&buffers[buffer], byteOffset, byteLength});
 		}
 
+		DLOG("reading accessors");
 		for(const auto &acc : gltf["accessors"])
 		{
 			auto bufferView    = acc["bufferView"].get<dstd::USize>();
@@ -230,6 +236,7 @@ namespace dcore::util
 			accessors.push_back(Accessor {&bufferViews[bufferView], componentType, type, count, byteOffset});
 		}
 
+		DLOG("reading materials");
 		for(const auto &mat : gltf["materials"])
 		{
 			auto name = mat["name"].get<std::string>();
@@ -237,17 +244,27 @@ namespace dcore::util
 			materials.push_back(Material {name});
 		}
 
+		DLOG("reading nodes");
 		for(auto nodeIndex : nodes)
 		{
+			DLOG("  reading node #" << nodeIndex);
 			auto &node       = gltf["nodes"][nodeIndex];
 			auto meshIndex   = node["mesh"].get<dstd::USize>();
 			const auto &mesh = gltf["meshes"][meshIndex];
+			DLOG("    reading primitives");
 			for(const auto &prim : mesh["primitives"])
 			{
+				DLOG("      reading attributes");
+				DLOG("        reading POSITION");
 				auto position = prim["attributes"]["POSITION"].get<dstd::USize>();
+				DLOG("        reading NORMAL");
 				auto normal   = prim["attributes"]["NORMAL"].get<dstd::USize>();
-				auto texcoord = prim["attributes"]["TEXCOORD0"].get<dstd::USize>();
+				DLOG("        reading TEXCOORD_0");
+				auto texcoord = prim["attributes"]["TEXCOORD_0"].get<dstd::USize>();
+
+				DLOG("      reading indices");
 				auto indices  = prim["indices"].get<dstd::USize>();
+				DLOG("      reading material");
 				auto material = prim["material"].get<dstd::USize>();
 
 				usedAccessors.insert(position);
@@ -269,6 +286,7 @@ namespace dcore::util
 		for(auto v : usedBufferViews) usedBuffers.insert(v->Buffer);
 		for(auto buffer : usedBuffers)
 		{
+			DLOG("Used buffer '" << buffer->File->Path << "'");
 			buffer->Data      = new byte[buffer->File->Size];
 			buffer->Allocated = true;
 			fillBuffer(buffer);
@@ -277,6 +295,7 @@ namespace dcore::util
 		d.Meshes.reserve(primitives.size());
 		for(const auto &prim : primitives)
 		{
+			DLOG("Loading primitive " << d.Meshes.size());
 			graphics::ModelMeshData md {};
 			md.Mesh.Stride = sizeof(float) * (3 + 3 + 2);
 			md.Mesh.Indices.reserve(prim.Indices->Count);
@@ -343,7 +362,12 @@ namespace dcore::util
 			d.Meshes.push_back(md);
 		}
 
+		DLOG("Deallocating buffers");
 		for(auto buffer : usedBuffers)
 			if(buffer->Allocated) delete buffer->Data; // no need to call the destructors, can delete void*
+		
+		DLOG("Done!");
+		// TODO: Errors!
+		return true;
 	}
 } // namespace dcore::util

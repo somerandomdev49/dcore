@@ -3,3 +3,4 @@ tiny_obj_loader.h
 stb_image.h
 stb_truetype.h
 picojson.hpp
+stduuid.h

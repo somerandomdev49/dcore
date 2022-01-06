@@ -4,6 +4,7 @@
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Renderer/RTexture.hpp>
+#include <glm/glm.hpp>
 
 namespace dcore::graphics::gui
 {

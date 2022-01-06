@@ -3,6 +3,7 @@
 #include <dcore/Graphics/GUI/GraphicsData.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+#include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>

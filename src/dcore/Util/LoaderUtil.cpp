@@ -17,19 +17,19 @@ namespace dcore::util
 		return d.data != nullptr;
 	}
 
-	bool LoaderUtil::LoadMesh(MeshData &d, const std::string &path, const std::string &format)
+	bool LoaderUtil::LoadMesh(graphics::MeshData &d, const std::string &path, const std::string &format)
 	{
-		d.vertexData.clear();
-		d.indices.clear();
-		d.stride = 0;
+		d.VertexData.clear();
+		d.Indices.clear();
+		d.Stride = 0;
 
 		for(char c : format)
 		{
 			switch(c)
 			{
-			case 'p': d.stride += sizeof(float) * 3; break;
-			case 'n': d.stride += sizeof(float) * 3; break;
-			case 't': d.stride += sizeof(float) * 2; break;
+			case 'p': d.Stride += sizeof(float) * 3; break;
+			case 'n': d.Stride += sizeof(float) * 3; break;
+			case 't': d.Stride += sizeof(float) * 2; break;
 			}
 		}
 
@@ -55,10 +55,10 @@ namespace dcore::util
 		const auto pushFloat = [&](float f)
 		{
 			byte *bytes = reinterpret_cast<byte *>(&f);
-			d.vertexData.push_back(bytes[0]);
-			d.vertexData.push_back(bytes[1]);
-			d.vertexData.push_back(bytes[2]);
-			d.vertexData.push_back(bytes[3]);
+			d.VertexData.push_back(bytes[0]);
+			d.VertexData.push_back(bytes[1]);
+			d.VertexData.push_back(bytes[2]);
+			d.VertexData.push_back(bytes[3]);
 		};
 
 		for(size_t s = 0; s < shapes.size(); s++)
@@ -110,7 +110,7 @@ namespace dcore::util
 						}
 						}
 					}
-					d.indices.push_back(d.indices.size());
+					d.Indices.push_back(d.Indices.size());
 				}
 				index_offset += 3;
 			}

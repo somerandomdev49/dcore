@@ -66,6 +66,17 @@ namespace dcore::world
 		void Save(const EntityHandle &entity, data::Json &output);
 	};
 
+	/**
+	 * @brief Component that includes a static mesh for rendering.
+	 */
+	struct ModelComponent : ComponentBase<ModelComponent>
+	{
+		ModelComponent(const resource::Resource<graphics::Model> &model) : Model(model) {}
+		resource::Resource<graphics::Model> Model;
+
+		void Save(const EntityHandle &entity, data::Json &output);
+	};
+
 	class World;
 
 	/**

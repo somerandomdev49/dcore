@@ -63,61 +63,84 @@ namespace dcore::graphics
 		Gl::DrawArrays(ElementTriangleStrip, vao->IndexCount_);
 	}
 
-	void Renderer::SetUniform(const RUniform &u, float v) { Gl::SetUniform(((Uniform *)u.Data_)->Location, v); }
-	void Renderer::SetUniform(const RUniform &u, int v) { Gl::SetUniform(((Uniform *)u.Data_)->Location, v); }
+	void Renderer::SetUniform(const RUniform &u, float v)
+	{
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
+	}
+	void Renderer::SetUniform(const RUniform &u, int v)
+	{
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
+	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
 	{
-		Gl::SetUniform(((Uniform *)u.Data_)->Location, v);
+		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		Gl::SetUniform(*uloc, v);
 	}
 
 	RUniform Renderer::GetUniform(RShader *shader, const char *name)
 	{
 		RUniform u;
-		((Uniform *)u.Data_)->Location = Gl::GetUniformLocation(((ShaderProgram *)shader->Data_)->Id_, name);
+		// Hack, requires that sizeof(void*) <= sizeof(impl::opengl::UInt), which is true on normal platforms
+		impl::opengl::UInt *uloc = reinterpret_cast<impl::opengl::UInt *>(&u.Data_);
+
+		*uloc = Gl::GetUniformLocation(((ShaderProgram *)shader->Data_)->Id_, name);
 		return u;
 	}
 
@@ -144,6 +167,7 @@ namespace dcore::graphics
 			return;
 		}
 
+		shader->Data_ = new impl::opengl::ShaderProgram();
 		auto program = (impl::opengl::ShaderProgram *)shader->Data_;
 		program->Create();
 		program->AttachShader(impl::opengl::VertexShader, vertexSource);
@@ -156,6 +180,7 @@ namespace dcore::graphics
 		RShader *shader = reinterpret_cast<RShader *>(placement);
 		auto program    = (impl::opengl::ShaderProgram *)shader->Data_;
 		program->Delete();
+		delete program;
 		delete shader;
 	}
 

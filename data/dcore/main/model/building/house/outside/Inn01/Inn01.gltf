@@ -496,7 +496,8 @@
                         "NORMAL" : 76,
                         "TEXCOORD_0" : 77
                     },
-                    "indices" : 78
+                    "indices" : 78,
+                    "material" : 0
                 }
             ]
         },
@@ -509,7 +510,8 @@
                         "NORMAL" : 80,
                         "TEXCOORD_0" : 81
                     },
-                    "indices" : 82
+                    "indices" : 82,
+                    "material" : 0
                 }
             ]
         }

@@ -2,8 +2,10 @@
 #include <dcore/Renderer/RStaticMesh.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/Config.hpp>
+#include <dcore/Core/Type.hpp>
 
 #include <vector>
+#include <string>
 
 namespace dcore::graphics
 {

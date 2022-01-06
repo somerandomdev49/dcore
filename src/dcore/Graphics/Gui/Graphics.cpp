@@ -1,7 +1,8 @@
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
-#include <glm/gtx/matrix_transform_2d.hpp>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 #include <dcore/Core/Preferences.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
