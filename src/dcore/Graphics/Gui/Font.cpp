@@ -78,6 +78,7 @@ namespace dcore::graphics::gui
 	{
 		FT_Face fc = F_INF_(FontInfo__);
 		// printf("Font info: 0x%zx\n", fi);
+		static int charGap = 4; // hack
 
 		Bitmap bitmap = {nullptr, 0, 0};
 		CodePointTable_.reserve(ATLAS_END_CHAR_ASCII - ATLAS_BEGIN_CHAR_ASCII);
@@ -88,7 +89,7 @@ namespace dcore::graphics::gui
 				DCORE_LOG_ERROR << "Failed to load character '" << (char)c << "' from font face.";
 				continue;
 			}
-			bitmap.width += fc->glyph->bitmap.width;
+			bitmap.width += fc->glyph->bitmap.width + charGap;
 			bitmap.height = std::max(fc->glyph->bitmap.rows, bitmap.height);
 			CodePointTable_.push_back(CodePoint());
 		}
@@ -130,7 +131,7 @@ namespace dcore::graphics::gui
 			//        c, cp->AdvanceWidth, cp->AtlasOffset.x, cp->AtlasOffset.y, cp->AtlasSize.x,
 			//        cp->AtlasSize.y, cp->Bearing.x, cp->Bearing.y, cp->UVOffset.x, cp->UVOffset.y,
 			//        cp->UVSize.x, cp->UVSize.y);
-			currentX += fc->glyph->bitmap.width;
+			currentX += fc->glyph->bitmap.width + charGap;
 		}
 
 		// int currentX = 0;
@@ -179,6 +180,23 @@ namespace dcore::graphics::gui
 		delete tb.data;
 	}
 
+	int Font::GetPixelHeight() const { return PixelHeight_; }
+	int Font::GetLineGap() const { return F_INF_(FontInfo__)->size->metrics.height >> 6; }
+
+	float Font::GetTextWidth(const char *string, float scale) const
+	{
+		// TODO: Expose ATLAS_[BEGIN/END]_CHAR_ASCII to GuiGraphics.
+		
+		float width = 0;
+		for(int i = 0; string[i]; ++i)
+		{
+			auto &cp = CodePointTable_[string[i] - ATLAS_BEGIN_CHAR_ASCII];
+			width += (cp.AdvanceWidth >> 6) * scale;
+		}
+
+		return width;
+	}
+
 	dcore::graphics::RTexture *Font::GetAtlasTexture() const { return Atlas_; }
 
 	void Font::Constructor_Font(const std::string &path, void *placement)
@@ -207,6 +225,7 @@ namespace dcore::graphics::gui
 	{
 		Font *f = reinterpret_cast<Font *>(placement);
 		f->DeInitialize();
+		delete f;
 	}
 
 	void FontResourceManager::Register(resource::ResourceLoader *rl)

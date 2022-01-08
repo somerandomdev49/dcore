@@ -11,6 +11,36 @@
 
 // TODO: Separate these into different files
 
+namespace
+{
+	// https://stackoverflow.com/a/49824672/9110517
+	glm::quat safeQuatLookAt(
+		glm::vec3 const& lookFrom,
+		glm::vec3 const& lookTo,
+		glm::vec3 const& up,
+		glm::vec3 const& alternativeUp)
+	{
+		glm::vec3  direction       = lookTo - lookFrom;
+		float      directionLength = glm::length(direction);
+
+		// Check if the direction is valid; Also deals with NaN
+		if(!(directionLength > 0.0001))
+			return glm::quat(1, 0, 0, 0); // Just return identity
+
+		// Normalize direction
+		direction /= directionLength;
+
+		// Is the normal up (nearly) parallel to direction?
+		if(glm::abs(glm::dot(direction, up)) > .9999f) {
+			// Use alternative up
+			return glm::quatLookAt(direction, alternativeUp);
+		}
+		else {
+			return glm::quatLookAt(direction, up);
+		}
+	}
+}
+
 namespace dcore::graphics
 {
 	/**************************** CommonShader ****************************/
@@ -155,6 +185,11 @@ namespace dcore::graphics
 	{
 		ProjMatrix_ = glm::perspective(Fov_, Aspect_, NearZ_, FarZ_);
 		DirtyProj_  = false;
+	}
+
+	void Camera::LookAt(const glm::vec3 &position)
+	{
+		Rotation_ = safeQuatLookAt(Position_, position, glm::vec3(0, 1, 0), glm::vec3(1, 0, 0));
 	}
 
 	/**************************** RendererInterface ****************************/

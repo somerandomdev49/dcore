@@ -24,9 +24,9 @@ namespace dg::entity
 		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
 			movementVector.y = -1.0f;
 		/**/ if(inputMngr->IsKeyPressed(dcore::event::K_D))
-			movementVector.x = +1.0f;
-		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
 			movementVector.x = -1.0f;
+		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
+			movementVector.x = +1.0f;
 
 		// movementVector = glm::normalize(movementVector);
 		glm::vec3 v = glm::vec3(movementVector.x, 0, movementVector.y);

@@ -132,7 +132,7 @@ namespace dcore::graphics::gui
 	// TODO: inline?
 	void GuiGraphics::RenderQuad(const Quad &quad) { RenderQuad_(quad, GuiShader_); }
 
-	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, int size, float scale)
+	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, float size, float scale, const glm::vec4 &color)
 	{
 		if(!text) return;
 		float pixelScale = 1.0f;
@@ -161,15 +161,17 @@ namespace dcore::graphics::gui
 				cursor.x += (cp.AdvanceWidth >> 6) * pixelScale;
 
 				Quad q;
-				q.Color    = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+				q.Color    = color;
 				q.Position = pos;
 				q.Scale    = glm::vec2(cp.AtlasSize) * pixelScale;
 				q.Rotation = 0.0f;
 				q.Texture  = font->GetAtlasTexture(); // can be nullptr? (tmp: bind is false so
 				                                      // doesnt matter)
 
-				FontShader_->SetTexCoords(glm::vec4(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize),
-				                          glm::vec4(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0)));
+				glm::vec4 texCoord1(cp.UVOffset + glm::vec2(0, cp.UVSize.y), cp.UVOffset + cp.UVSize);
+				glm::vec4 texCoord2(cp.UVOffset, cp.UVOffset + glm::vec2(cp.UVSize.x, 0));
+
+				FontShader_->SetTexCoords(texCoord1, texCoord2);
 
 				RenderQuad_(q, FontShader_, true); // shader already bound
 			};

@@ -37,6 +37,8 @@ namespace dcore::graphics
 		void RecalcViewMatrix();
 		void RecalcProjMatrix();
 
+		void LookAt(const glm::vec3 &position);
+
 	private:
 		glm::vec3 Position_;
 		glm::quat Rotation_;

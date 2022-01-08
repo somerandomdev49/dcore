@@ -77,7 +77,7 @@ namespace dcore::terrain
 
 		// generating vertices
 		dstd::UInt32 vertexCount = 0;
-		auto regionSize          = Region_.GetSize(); // + glm::uvec2(1, 1);
+		auto regionSize          = Region_.GetSize() + glm::uvec2(1, 1);
 		// DCORE_LOG_INFO << "Region Size: " << regionSize;
 		for(dstd::UInt32 y = 0; y < regionSize.y; ++y)
 			for(dstd::UInt32 x = 0; x < regionSize.x; ++x)

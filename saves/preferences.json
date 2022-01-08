@@ -6,7 +6,7 @@
 			"fullscreen": false
 		},
 		"graphics": {
-			"render-distance": 100
+			"render-distance": 400
 		}
 	}
 }

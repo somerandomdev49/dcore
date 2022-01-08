@@ -150,7 +150,7 @@ namespace dcore::world
 			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 			for(const auto &entity : entities)
 			{
-				fprintf(stderr, "bryh\n");
+				// fprintf(stderr, "bryh\n");
 				auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
 				auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
 
@@ -174,8 +174,8 @@ namespace dcore::world
 			}
 		}
 
-		// auto &chunks = Terrain_.GetChunks();
-		// for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+		auto &chunks = Terrain_.GetChunks();
+		for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 

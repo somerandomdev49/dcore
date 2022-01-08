@@ -48,6 +48,8 @@ namespace dcore::graphics::gui
 		float GetScale() const;
 		RTexture *GetAtlasTexture() const;
 
+		float GetTextWidth(const char *string, float scale = 1.0f) const;
+
 	private:
 		float Scale_, ScaleEm_;
 		int PixelHeight_;
