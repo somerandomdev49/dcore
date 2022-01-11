@@ -57,7 +57,14 @@ namespace dcore::graphics::gui
 
 	int Font::GetAscent() const { return F_INF_(FontInfo__)->ascender >> 6; }
 
-	void Font::DeInitialize() { FT_Done_Face(F_INF_(FontInfo__)); }
+	void Font::DeInitialize()
+	{
+		DCORE_LOG_INFO << "Font::DeInitialize()";
+		LOG_F(INFO, "FontInfo: %p", FontInfo__);
+		FT_Done_Face(F_INF_(FontInfo__));
+		DCORE_LOG_INFO << "Done";
+		FontInfo__ = nullptr;
+	}
 
 	int Font::GetKerning(int a, int b) const
 	{
@@ -223,6 +230,7 @@ namespace dcore::graphics::gui
 
 	void Font::DeConstructor_Font(void *placement)
 	{
+		DCORE_LOG_INFO << __func__ << '.';
 		Font *f = reinterpret_cast<Font *>(placement);
 		f->DeInitialize();
 		delete f;

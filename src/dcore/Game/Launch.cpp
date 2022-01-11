@@ -122,13 +122,16 @@ namespace dcore::launch
 			fileOutput.Write();
 		}
 
-		resourceManager.DeInitialize();
 		inputManager.DeInitialize();
+		DCORE_LOG_INFO << "input manager deinitialized!";
 		timeManager.DeInitialize();
+		DCORE_LOG_INFO << "time manager deinitialized!";
 		graphics::gui::Font::FontLibDeInitialize();
 		guiManager.DeInitialize();
 		guiGraphics.DeInitialize();
 		world.DeInitialize();
+		resourceManager.DeInitialize();
+		DCORE_LOG_INFO << "Resource Manager deinitialized!";
 		context.DeInitialize();
 	}
 } // namespace dcore::launch

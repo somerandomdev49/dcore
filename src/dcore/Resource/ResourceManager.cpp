@@ -46,8 +46,11 @@ namespace dcore::resource
 			DCORE_LOG_INFO << "[ResourceManager] Removing [" << util::Debug::Demangle(m.first.name()) << ']';
 			for(auto &p : m.second)
 			{
+				LOG_F(INFO, "p: %s -> %p", p.first.c_str(), p.second.Data_);
+				LOG_F(INFO, "Calling deconstructor");
 				DeConstructors_[p.second.GetType()](p.second.Data_);
 				p.second.Data_ = nullptr;
+				LOG_F(INFO, "Done");
 			}
 		}
 	}
