@@ -13,8 +13,8 @@ namespace dstd
 	template<typename Allocator>
 	Byte *GenericAllocBuffer(USize size)
 	{
-		return Allocator::AllocN<Byte>(size);
+		return Allocator::template AllocN<Byte>(size);
 	}
-	Byte *AllocBuffer(USize size) { return GenericAllocBuffer<CommonAllocator>(size); }
+	Byte *AllocBuffer(USize size);
 
 } // namespace dstd

@@ -8,6 +8,7 @@
 #include <typeinfo>
 #include <dcore/Resource/Resources.hpp>
 #include <dcore/Launch.hpp>
+#include <dcore/Core/Memory.hpp>
 #include <iostream>
 
 namespace dcore::resource
@@ -39,19 +40,28 @@ namespace dcore::resource
 	class Resource
 	{
 	public:
-		Resource(const std::string &name = "UNKNOWN") : Data_(nullptr), Name_(name) {}
+		Resource() : Data_(nullptr), Name_(nullptr)
+		{
+			if(Name_ != nullptr) delete Name_;
+			Name_ = nullptr;
+		}
+
 
 		T *Get() const { return Data_; };
-		const std::string &GetName() const { return Name_; }
+		const char *GetName() const { return Name_; }
 
 	private:
 		friend class ResourceManager;
-		Resource(const std::string &name, T *data) : Data_(data), Name_(name)
+		Resource(const std::string &name, T *data) : Data_(data)
 		{
-			// std::cout << "Creating Resource, name: " << Name_ << std::endl;
+			Name_ = new char[name.size() + 1];
+			dstd::CopyBuffer(name.size(), Name_, name.data());
+			Name_[name.size()] = '\0';
+			std::cout << "Creating Resource, name: " << Name_ << std::endl;
 		}
+
 		T DCORE_REF *Data_;
-		std::string Name_;
+		char *Name_;
 	};
 
 	// TODO: Add Lazy loading?
