@@ -41,9 +41,7 @@ namespace dcore::world
 	void ModelComponent::Save(const EntityHandle &self, data::Json &output)
 	{
 		(void)self;
-		output = data::Json::object({
-			{"model", Model.GetName()}
-		});
+		output = data::Json::object({{"model", Model.GetName()}});
 	}
 
 	void TransformComponent::ReCalculateMatrix()
@@ -145,7 +143,7 @@ namespace dcore::world
 	void World::Render(graphics::RendererInterface *render)
 	{
 		Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
-		
+
 		{
 			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 			for(const auto &entity : entities)
@@ -165,11 +163,11 @@ namespace dcore::world
 			const auto &entities = ECSInstance()->GetEntities<ModelComponent>();
 			for(const auto &entity : entities)
 			{
-				auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
-				auto &model = ECSInstance()->GetComponent<ModelComponent>(entity);
+				auto &transform = ECSInstance()->GetComponent<TransformComponent>(entity);
+				auto &model     = ECSInstance()->GetComponent<ModelComponent>(entity);
 
 				// if(transform.IsDirty()) transform.ReCalculateMatrix();
-				
+
 				render->RenderModel(model.Model.Get(), transform.GetMatrix());
 			}
 		}

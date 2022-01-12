@@ -35,9 +35,9 @@ namespace dcore::graphics::gui::common
 		// time += event::TimeManager::Instance()->GetDeltaTime();
 
 		static float fontSize = 14;
-		static float padding = 10;
-		float scale = fontSize / Font_->GetPixelHeight();
-		auto lineGap = Font_->GetLineGap() * scale;
+		static float padding  = 10;
+		float scale           = fontSize / Font_->GetPixelHeight();
+		auto lineGap          = Font_->GetLineGap() * scale;
 
 		glm::vec2 cur(padding, lineGap);
 

@@ -21,6 +21,8 @@ namespace dcore::graphics::gui
 
 	void GuiManager::Render(GuiGraphics *g) { RootWidget_->DoRender_(g); }
 
+	Widget *GuiManager::GetRoot() const { return RootWidget_; }
+
 	static GuiManager *guimngrInstance = nullptr;
 	GuiManager *GuiManager::Instance()
 	{

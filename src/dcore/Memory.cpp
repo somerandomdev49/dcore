@@ -2,8 +2,5 @@
 
 namespace dstd
 {
-	Byte *AllocBuffer(USize size)
-	{
-		return GenericAllocBuffer<CommonAllocator>(size);
-	}
-} 
+	Byte *AllocBuffer(USize size) { return GenericAllocBuffer<CommonAllocator>(size); }
+} // namespace dstd

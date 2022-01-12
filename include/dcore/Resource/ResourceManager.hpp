@@ -46,7 +46,6 @@ namespace dcore::resource
 			Name_ = nullptr;
 		}
 
-
 		T *Get() const { return Data_; };
 		const char *GetName() const { return Name_; }
 

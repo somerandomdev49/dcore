@@ -10,4 +10,4 @@ namespace dg
 		void Initialize();
 		void DeInitialize();
 	};
-}
+} // namespace dg

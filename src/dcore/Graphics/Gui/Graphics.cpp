@@ -132,7 +132,8 @@ namespace dcore::graphics::gui
 	// TODO: inline?
 	void GuiGraphics::RenderQuad(const Quad &quad) { RenderQuad_(quad, GuiShader_); }
 
-	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, float size, float scale, const glm::vec4 &color)
+	void GuiGraphics::RenderText(Font *font, const char *text, const glm::vec2 &origin, float size, float scale,
+	                             const glm::vec4 &color)
 	{
 		if(!text) return;
 		float pixelScale = 1.0f;

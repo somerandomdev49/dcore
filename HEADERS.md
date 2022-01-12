@@ -32,3 +32,11 @@
       - `CopyBuffer(USize n, T *dst, const U *src)` - copies `n` `U`'s from `src` to `dst`
       - TODO
 
+- `dcore/Core/Log.hpp`: logging functions
+  - Provides:
+    - macro `DCORE_LOG_INFO` - used like `std::cout` but without the newline
+    - macro `DCORE_LOG_ERROR` - used like `std::cout` but without the newline
+    - macro `DCORE_LOG_WARNING` - used like `std::cout` but without the newline
+  - Includes:
+    - `loguru.hpp`
+

@@ -13,7 +13,8 @@ namespace dg
 	public:
 		dstd::USize GetId() const;
 		virtual void Cast(ActorComponent *caster, ActorComponent *target) = 0;
+
 	private:
 		dstd::USize Id_;
 	};
-}
+} // namespace dg

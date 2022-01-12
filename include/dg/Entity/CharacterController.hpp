@@ -9,11 +9,12 @@ namespace dg::entity
 	public:
 		void Start(const dcore::world::EntityHandle &self);
 		void Update(const dcore::world::EntityHandle &self);
+
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
 
-		float Speed_ = 20.0f;
-		float Gravity_ = 10.0f;
+		float Speed_        = 20.0f;
+		float Gravity_      = 10.0f;
 		glm::vec3 Velocity_ = glm::vec3(0, 0, 0);
 	};
-}
+} // namespace dg::entity

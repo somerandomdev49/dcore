@@ -168,7 +168,7 @@ namespace dcore::graphics
 		}
 
 		shader->Data_ = new impl::opengl::ShaderProgram();
-		auto program = (impl::opengl::ShaderProgram *)shader->Data_;
+		auto program  = (impl::opengl::ShaderProgram *)shader->Data_;
 		program->Create();
 		program->AttachShader(impl::opengl::VertexShader, vertexSource);
 		program->AttachShader(impl::opengl::FragmentShader, fragmentSource);

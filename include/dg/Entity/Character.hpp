@@ -23,7 +23,7 @@ namespace dg::entity
 		const std::vector<Quest *> &GetAssignedQuests() const;
 
 	private:
-		std::vector<Spell*> Spells_;
+		std::vector<Spell *> Spells_;
 		std::vector<Inventory> Bags_;
 		std::vector<Quest *> AssignedQuests_;
 	};

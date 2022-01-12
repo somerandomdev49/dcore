@@ -5,15 +5,12 @@ DCORE_COMPONENT_REGISTER(dg::entity::CameraFollowComponent);
 
 namespace dg::entity
 {
-	CameraFollowComponent::CameraFollowComponent(dcore::graphics::Camera *camera)
-		: Camera_(camera)
-	{
-	}
+	CameraFollowComponent::CameraFollowComponent(dcore::graphics::Camera *camera) : Camera_(camera) {}
 
 	void CameraFollowComponent::Start(const dcore::world::EntityHandle &self)
 	{
 		TransformComponent_ = &dcore::world::Entity(self, dcore::platform::Context::Instance()->GetWorld())
-			.GetComponent<dcore::world::TransformComponent>();
+		                           .GetComponent<dcore::world::TransformComponent>();
 	}
 
 	void CameraFollowComponent::Update(const dcore::world::EntityHandle &self)
@@ -23,4 +20,4 @@ namespace dg::entity
 		Camera_->SetPosition(TransformComponent_->GetPosition() + offset);
 		Camera_->LookAt(TransformComponent_->GetPosition());
 	}
-}
+} // namespace dg::entity

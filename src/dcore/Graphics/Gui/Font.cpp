@@ -193,7 +193,7 @@ namespace dcore::graphics::gui
 	float Font::GetTextWidth(const char *string, float scale) const
 	{
 		// TODO: Expose ATLAS_[BEGIN/END]_CHAR_ASCII to GuiGraphics.
-		
+
 		float width = 0;
 		for(int i = 0; string[i]; ++i)
 		{

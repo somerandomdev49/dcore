@@ -11,8 +11,9 @@ namespace dg::entity
 
 		void Start(const dcore::world::EntityHandle &self);
 		void Update(const dcore::world::EntityHandle &self);
+
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
-		dcore::graphics::Camera *Camera_ = nullptr;
+		dcore::graphics::Camera *Camera_                      = nullptr;
 	};
-}
+} // namespace dg::entity

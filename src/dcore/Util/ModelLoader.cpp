@@ -140,9 +140,9 @@ namespace dcore::util
 		template<typename T>
 		T convertBytesAt(Accessor *a, dstd::USize offset)
 		{
-			T value   = {};
-			byte *bytes = reinterpret_cast<byte*>(&value);
-			auto size = std::min(getAccessorComponentTypeSize(a->ComponentType), (dstd::USize)sizeof(T));
+			T value     = {};
+			byte *bytes = reinterpret_cast<byte *>(&value);
+			auto size   = std::min(getAccessorComponentTypeSize(a->ComponentType), (dstd::USize)sizeof(T));
 
 			// Copying the integer bytes manually because size is known only at runtime
 			// Maybe should make ifs for all known sizes for it to be faster, idk, just
@@ -160,7 +160,7 @@ namespace dcore::util
 
 			for(byte i = 0; i < size; ++i)
 				value[i] = convertBytesAt<T>(a, offset + getAccessorComponentTypeSize(a->ComponentType) * i);
-			
+
 			return value;
 		}
 	} // namespace
@@ -168,7 +168,8 @@ namespace dcore::util
 	bool LoaderUtil::LoadModel(graphics::ModelData &d, const std::string &folder, const std::string &gltfPath)
 	{
 		static bool shouldLog = true;
-#define DLOG(MSG) if(shouldLog) DCORE_LOG_INFO << MSG
+#define DLOG(MSG) \
+	if(shouldLog) DCORE_LOG_INFO << MSG
 		// NOTE, TODO: Becasue of how Blender exports glTFs, we assume that there is not byteStride and each component
 		//             has its own accessor/bufferView
 
@@ -187,7 +188,6 @@ namespace dcore::util
 			bufferFiles.push_back(
 			    BufferFile {buffer["byteLength"].get<dstd::USize>(), folder + "/" + buffer["uri"].get<std::string>()});
 		}
-
 
 		// Overall, we ignore scenes, nodes and meshes and only include "primitives" in output.
 
@@ -258,12 +258,12 @@ namespace dcore::util
 				DLOG("        reading POSITION");
 				auto position = prim["attributes"]["POSITION"].get<dstd::USize>();
 				DLOG("        reading NORMAL");
-				auto normal   = prim["attributes"]["NORMAL"].get<dstd::USize>();
+				auto normal = prim["attributes"]["NORMAL"].get<dstd::USize>();
 				DLOG("        reading TEXCOORD_0");
 				auto texcoord = prim["attributes"]["TEXCOORD_0"].get<dstd::USize>();
 
 				DLOG("      reading indices");
-				auto indices  = prim["indices"].get<dstd::USize>();
+				auto indices = prim["indices"].get<dstd::USize>();
 				DLOG("      reading material");
 				auto material = prim["material"].get<dstd::USize>();
 
@@ -365,7 +365,7 @@ namespace dcore::util
 		DLOG("Deallocating buffers");
 		for(auto buffer : usedBuffers)
 			if(buffer->Allocated) delete buffer->Data; // no need to call the destructors, can delete void*
-		
+
 		DLOG("Done!");
 		// TODO: Errors!
 		return true;
