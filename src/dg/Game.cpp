@@ -12,11 +12,11 @@ namespace
 {
 	std::vector<std::string> gTitles_ {
 	    "DragonCore Game",
-	    "LEAD PROGRAMMER: Miek",
-	    "LEAD DESIGNER: Yakoyagus",
-	    "PROGRAMMER: IDKARN",
-	    "MUSIC: MOLODENKIY",
-	    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+	    "Lead Programmer: Mike RedkO",
+	    "Lead Designer: Yaromir Konishev",
+	    "Programmer: Kirril Ivanov",
+	    "Music: Molod Enkiy",
+	    "Cool Text: asheesh",
 	    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
 	    "FILLER TEXT FILLER TEXT",
 	    "TEXT FILLER FILLER TEXT",

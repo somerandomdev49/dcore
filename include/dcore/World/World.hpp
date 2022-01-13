@@ -77,6 +77,20 @@ namespace dcore::world
 		void Save(const EntityHandle &entity, data::Json &output);
 	};
 
+	class TerrainComponent : ComponentBase<TerrainComponent>
+	{
+	public:
+		TerrainComponent(const resource::Resource<terrain::Heightmap> &heightmap);
+
+		terrain::Terrain &GetTerrain();
+		const terrain::Terrain &GetTerrain() const;
+
+		void Update(const EntityHandle &self);
+
+	private:
+		terrain::Terrain Terrain_;
+	};
+
 	class World;
 
 	/**
@@ -133,7 +147,8 @@ namespace dcore::world
 		// template<typename ComponentType, typename FunctionType>
 		// void Each(FunctionType func);
 
-		const terrain::Terrain &GetTerrain() const;
+		terrain::Terrain *GetTerrain() const;
+		void SetTerrain(terrain::Terrain *terrain);
 
 		float GetRenderDistance() const;
 		void SetRenderDistance(float newRenderDistance);
@@ -151,8 +166,9 @@ namespace dcore::world
 		void Update();
 		void Render(graphics::RendererInterface *render);
 		void End();
+
 		std::vector<void (*)(World *)> Updates_;
-		terrain::Terrain Terrain_;
+		terrain::Terrain *Terrain_;
 		float RenderDistance_ = 32.0f;
 	};
 } // namespace dcore::world

@@ -10,10 +10,11 @@ namespace dcore::graphics::gui::common
 	class ScrollingText : public Widget
 	{
 	public:
-		ScrollingText(const std::vector<std::string> &lines, const glm::vec3 &color);
+		ScrollingText(const std::vector<std::string> &lines, const glm::vec3 &color, float speed = 40.0f);
 		ScrollingText(const std::vector<std::string> &lines,
 		              const dcore::resource::Resource<dcore::graphics::RTexture> &backgroundTexture,
-		              const glm::vec3 &tint = glm::vec3(1));
+		              const glm::vec3 &tint = glm::vec3(1),
+					  float speed = 40.0f);
 
 		virtual void Initialize() override;
 		virtual void DeInitialize() override;
@@ -29,6 +30,7 @@ namespace dcore::graphics::gui::common
 
 		std::vector<std::string> Lines_;
 		float CurrentOffset_;
+		float Speed_;
 
 		void Construct_();
 	};

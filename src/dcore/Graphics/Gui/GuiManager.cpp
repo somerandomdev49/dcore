@@ -8,6 +8,9 @@ namespace dcore::graphics::gui
 	{
 		Focused_    = nullptr;
 		RootWidget_ = new common::Screen(glm::vec2(800, 600));
+	}
+
+	void GuiManager::InitializeRoot_() {
 		RootWidget_->DoInitialize_();
 	}
 

@@ -71,7 +71,7 @@ namespace dcore::graphics::gui
 		if(!FT_HAS_KERNING(F_INF_(FontInfo__))) return 0;
 		FT_Vector kern;
 		FT_Get_Kerning(F_INF_(FontInfo__), a, b, FT_KERNING_DEFAULT, &kern);
-		return kern.x;
+		return kern.x >> 6;
 	}
 
 // TODO! Dynamic language.

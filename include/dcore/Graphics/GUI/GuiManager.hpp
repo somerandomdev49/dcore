@@ -9,6 +9,11 @@ namespace dcore::platform
 	class Context;
 }
 
+namespace dcore::world
+{
+	class World;
+}
+
 namespace dcore::graphics::gui
 {
 	class GuiManager
@@ -31,7 +36,10 @@ namespace dcore::graphics::gui
 	private:
 		friend class launch::Launch;
 		friend class platform::Context;
+		friend class world::World;
 		static void SetInstance(GuiManager *manager);
+
+		void InitializeRoot_();
 
 		Widget *RootWidget_;
 		Widget *Focused_;

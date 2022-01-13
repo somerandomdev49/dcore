@@ -103,6 +103,13 @@ namespace dcore::launch
 		platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
 
+		// TODO(monomere):
+		// Create a class WorldLoader that selects and loads a specific world
+		// Load the "Menu" world here, the "Game" world has a terrain entity and
+		// all others don't because fuck you :)
+		// take an L
+		// Shit yourself - Patsanchik
+
 		dg::Game game;
 		// dg::Game::SetInstance(&game);
 		game.Initialize();

@@ -35,7 +35,7 @@ namespace dg::entity
 		auto position = TransformComponent_->GetPosition();
 
 		const dcore::terrain::Chunk &currentChunk =
-		    dcore::platform::Context::Instance()->GetWorld()->GetTerrain().GetChunkAtGlobal(position);
+		    dcore::platform::Context::Instance()->GetWorld()->GetTerrain()->GetChunkAtGlobal(position);
 
 		position += v * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
 		// position += Velocity_ * dcore::event::TimeManager::Instance()->GetDeltaTime();

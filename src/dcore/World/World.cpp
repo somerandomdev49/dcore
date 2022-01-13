@@ -95,14 +95,23 @@ namespace dcore::world
 		Dirty_ = true;
 	}
 
-	void World::Initialize()
+	TerrainComponent::TerrainComponent(const resource::Resource<terrain::Heightmap> &heightmap)
 	{
 		Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
 		Terrain_.ActivateAllChunks();
-		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
+		platform::Context::Instance()->GetWorld()->SetTerrain(&Terrain_);
 	}
 
-	const terrain::Terrain &World::GetTerrain() const { return Terrain_; }
+	void TerrainComponent::Update(const EntityHandle &self)
+	{
+		Terrain_.ReactivateChunks(platform::Context::Instance()->GetRendererInterface()->GetCamera()->GetPosition(),
+		                          platform::Context::Instance()->GetWorld()->GetRenderDistance());
+	}
+
+	void World::Initialize() { RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance; }
+
+	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
+	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
 
 	void World::DeInitialize() {}
 
@@ -129,6 +138,7 @@ namespace dcore::world
 		}
 
 		cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>("DCore.Mesh.Cube");
+		graphics::gui::GuiManager::Instance()->InitializeRoot_();
 	}
 
 	void World::End()
@@ -142,7 +152,6 @@ namespace dcore::world
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-		Terrain_.ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 
 		{
 			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
@@ -172,8 +181,15 @@ namespace dcore::world
 			}
 		}
 
-		auto &chunks = Terrain_.GetChunks();
-		for(auto ci : Terrain_.GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+		{
+			const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
+			for(const auto &entity : entities)
+			{
+				auto &terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
+				auto &chunks  = terrain.GetTerrain().GetChunks();
+				for(auto ci : terrain.GetTerrain().GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+			}
+		}
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 
