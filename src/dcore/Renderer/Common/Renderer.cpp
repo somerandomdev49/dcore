@@ -139,7 +139,7 @@ namespace dcore::graphics
 		for(const auto &texture : data.Textures)
 		{
 			model->TextureSlots_.push_back(
-			    TextureSlot {texture.Name, resource::ResourceManager::Instance()->Get<RTexture>(texture.Id).Get()});
+			    TextureSlot {texture.Name, resource::GetResource<RTexture>(texture.Id).Get()});
 		}
 	}
 

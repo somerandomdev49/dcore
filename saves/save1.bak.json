@@ -1,1 +1,42 @@
-{"entities":[{"components":[{"@type":"StaticMeshComponent","mesh":{"mesh":"DCore.Mesh.Cube","texture":"DCore.Main.Dirt"}},{"@type":"TransformComponent","position":[0.0,-0.39745858311653137,0.0],"rotation":[0.0,0.0,0.0,1.0],"scale":[1.0,1.0,1.0]},{"@type":"MovementComponent"},{"@type":"MyComponent"}],"id":0}],"version":"0.01"}
+{
+	"entities": [
+		{
+			"components": [
+				{
+					"@type": "dcore::world::TransformComponent",
+					"position": [
+						0.0,
+						1.0,
+						0.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0,
+						1.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				{
+					"@type": "dcore::world::StaticMeshComponent",
+					"mesh": {
+						"mesh": "DCore.Mesh.Cube",
+						"texture": "DCore.Texture.Main.Stone"
+					}
+				},
+				{
+					"@type": "dg::entity::CameraFollowComponent"
+				},
+				{
+					"@type": "dg::entity::CharacterControllerComponent"
+				}
+			],
+			"id": 0
+		}
+	],
+	"version": "0.01"
+}

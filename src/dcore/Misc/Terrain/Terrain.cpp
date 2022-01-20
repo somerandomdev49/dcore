@@ -26,7 +26,7 @@ namespace dcore::terrain
 		Chunks_.reserve(chunkCount.x * chunkCount.y);
 		DCORE_LOG_INFO << "Reserved " << chunkCount.x * chunkCount.y << " chunks";
 
-		auto texture = resource::ResourceManager::Instance()->Get<graphics::RTexture>("DCore.Texture.Main.Grass");
+		auto texture = resource::GetResource<graphics::RTexture>("DCore.Texture.Main.Grass");
 
 		for(dstd::UInt32 y = 0; y < chunkCount.y; ++y)
 			for(dstd::UInt32 x = 0; x < chunkCount.x; ++x)

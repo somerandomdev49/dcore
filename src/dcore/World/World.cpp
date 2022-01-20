@@ -97,7 +97,7 @@ namespace dcore::world
 
 	TerrainComponent::TerrainComponent(const resource::Resource<terrain::Heightmap> &heightmap)
 	{
-		Terrain_.Initialize(resource::ResourceManager::Instance()->Get<terrain::Heightmap>("DCore.Heightmap.World1"));
+		Terrain_.Initialize(resource::GetResource<terrain::Heightmap>("DCore.Heightmap.World1"));
 		Terrain_.ActivateAllChunks();
 		platform::Context::Instance()->GetWorld()->SetTerrain(&Terrain_);
 	}
@@ -109,6 +109,8 @@ namespace dcore::world
 	}
 
 	void World::Initialize() { RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance; }
+
+	terrain::Terrain &TerrainComponent::GetTerrain() { return Terrain_; }
 
 	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
 	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
@@ -128,16 +130,17 @@ namespace dcore::world
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		// fprintf(stderr, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
+		// LOG_F(ERROR, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
 		//         ECSInstance()->end().CurrentIndex());
 		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
-			// fprintf(stderr, "it: %d\n", it.CurrentIndex());
+			// LOG_F(ERROR, "it: %ld\n", it.CurrentIndex());
 			const auto &systems = ECSInstance()->GetSystems(*it);
 			for(const auto &system : systems) system->StartFunction(*it);
+			break;
 		}
 
-		cubeMesh__ = dcore::resource::ResourceManager::Instance()->Get<graphics::RStaticMesh>("DCore.Mesh.Cube");
+		cubeMesh__ = dcore::resource::GetResource<graphics::RStaticMesh>("DCore.Mesh.Cube");
 		graphics::gui::GuiManager::Instance()->InitializeRoot_();
 	}
 
@@ -231,7 +234,7 @@ namespace dcore::world
 		}
 	}
 
-	void World::Load(data::FileInput &input)
+	void World::Load(const data::FileInput &input)
 	{
 		if(input.Get()["version"] != "0.01")
 		{

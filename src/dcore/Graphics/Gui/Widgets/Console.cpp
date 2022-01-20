@@ -16,7 +16,7 @@ namespace dcore::graphics::gui::common
 	void Console::Initialize()
 	{
 		fputs("Console::Initialize()\n", stderr);
-		Font_ = resource::ResourceManager::Instance()->Get<Font>("DCore.Font.Debug").Get();
+		Font_ = resource::GetResource<Font>("DCore.Font.Debug").Get();
 	}
 
 	void Console::DeInitialize() {}

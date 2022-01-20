@@ -57,8 +57,8 @@ namespace dcore::platform
 		World_->End();
 	}
 
+	// TODO: Inline into the header
 	Frame *Context::GetFrame() const { return Frame_; }
-	dcore::world::World *Context::GetWorld() const { return World_; }
 
 	void Context::CloseWindow() {}
 

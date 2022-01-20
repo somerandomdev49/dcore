@@ -147,4 +147,14 @@ namespace dcore::resource
 	{
 		RegisterDeConstructor(std::type_index(typeid(T)), func);
 	}
+
+	/**
+	 * @brief Retreive a resource from the ResourceManager instance.
+	 * 
+	 * @tparam T the type of the resource to get.
+	 * @param id The resource identifier.
+	 * @return The resource found by the identifier.
+	 */
+	template<typename T>
+	Resource<T> GetResource(const std::string &id) { return ResourceManager::Instance()->Get<T>(id); }
 } // namespace dcore::resource

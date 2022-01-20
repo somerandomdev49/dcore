@@ -154,10 +154,9 @@ namespace dcore::world
 		void SetRenderDistance(float newRenderDistance);
 
 		void Save(data::FileOutput &output);
-		void Load(data::FileInput &input);
+		void Load(const data::FileInput &input);
 
 	private:
-		friend class WorldUpdateInfo;
 		friend class platform::Context;
 		friend class launch::Launch;
 		void Initialize();

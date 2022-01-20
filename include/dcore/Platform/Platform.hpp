@@ -33,11 +33,25 @@ namespace dcore::platform
 		Frame *GetFrame() const;
 		static Context *Instance();
 
-		world::World *GetWorld() const;
+		/**
+		 * @brief Returns the current world instance.
+		 * 
+		 * @return The current world instance.
+		 */
+		world::World *GetWorld() const { return World_; }
+
+		/**
+		 * @brief Sets the current world instance
+		 * @note Preferably used only by the world loader.
+		 * 
+		 * @param world The new world instance
+		 */
+		void SetWorld(world::World *newWorld) { World_ = newWorld; };
 
 	private:
 		friend class event::InputManager;
 		friend class launch::Launch;
+
 		bool IsKeyPressed(event::KeyCode key);
 		bool IsMousePressed(int button);
 

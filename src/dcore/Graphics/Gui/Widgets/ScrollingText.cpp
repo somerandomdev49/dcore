@@ -39,7 +39,8 @@ namespace dcore::graphics::gui::common
 
 	void ScrollingText::Initialize()
 	{
-		Font_          = resource::ResourceManager::Instance()->Get<Font>("DCore.Font.Normal").Get();
+		fprintf(stderr, "Initialize\n");
+		Font_          = resource::GetResource<Font>("DCore.Font.Normal").Get();
 		CurrentOffset_ = GetSize().y;
 	}
 
@@ -47,6 +48,7 @@ namespace dcore::graphics::gui::common
 
 	void ScrollingText::Render(GuiGraphics *g)
 	{
+		fprintf(stderr, "Render\n");
 		g->RenderQuad(GetQuad());
 		float fontSize  = 40.0f;
 		float fontScale = fontSize / Font_->GetPixelHeight();

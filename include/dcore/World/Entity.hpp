@@ -91,7 +91,7 @@ namespace dcore::world
 
 			bool operator==(const AllEntityIterator &other)
 			{
-				return other.Index_ == this->Index_ && other.Bound_ == this->Bound_;
+				return other.Index_ == this->Index_;
 			}
 
 			bool operator!=(const AllEntityIterator &other) { return !(*this == other); }
@@ -110,7 +110,7 @@ namespace dcore::world
 		AllEntityIterator begin() { return AllEntityIterator(this, 0); }
 		AllEntityIterator end() { return AllEntityIterator(this, AllEntities_.size()); }
 
-		/** Note: expensive method? */
+		/** Note: expensive method? TODO: Convert to an iterator. */
 		std::vector<const System *> GetSystems(const EntityHandle &entity);
 
 		/**
