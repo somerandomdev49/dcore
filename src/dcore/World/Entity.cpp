@@ -40,7 +40,7 @@ namespace dcore::world
 
 	EntityHandle ECS::CreateEntity()
 	{
-		constexpr EntityHandle mask = ~(1 << ((sizeof(EntityHandle) * 8) - 1));
+		constexpr EntityHandle mask = ~((EntityHandle)1 << ((sizeof(EntityHandle) * 8) - 1));
 
 		// All entities list is full!
 		if(NextAvailable_ == AllEntities_.size())
