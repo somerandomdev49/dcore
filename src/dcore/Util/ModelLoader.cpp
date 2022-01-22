@@ -62,7 +62,7 @@ namespace dcore::util
 
 		struct BufferView
 		{
-			Buffer *Buffer         = nullptr;
+			Buffer *Buffer_         = nullptr;
 			dstd::USize ByteOffset = 0;
 			dstd::USize ByteLength = 0;
 		};
@@ -87,7 +87,7 @@ namespace dcore::util
 			Accessor *Normal   = nullptr;
 			Accessor *TexCoord = nullptr;
 			Accessor *Indices  = nullptr;
-			Material *Material = nullptr;
+			Material *Material_ = nullptr;
 		};
 
 		void fillBuffer(Buffer *buffer)
@@ -147,7 +147,7 @@ namespace dcore::util
 			// Copying the integer bytes manually because size is known only at runtime
 			// Maybe should make ifs for all known sizes for it to be faster, idk, just
 			// need it to be done for now.
-			for(byte j = 0; j < size; ++j) bytes[j] = a->View->Buffer->Data[offset + j] << (j * 8);
+			for(byte j = 0; j < size; ++j) bytes[j] = a->View->Buffer_->Data[offset + j] << (j * 8);
 
 			return value;
 		}
@@ -283,7 +283,7 @@ namespace dcore::util
 		}
 
 		for(auto a : usedAccessors) usedBufferViews.insert(accessors[a].View);
-		for(auto v : usedBufferViews) usedBuffers.insert(v->Buffer);
+		for(auto v : usedBufferViews) usedBuffers.insert(v->Buffer_);
 		for(auto buffer : usedBuffers)
 		{
 			DLOG("Used buffer '" << buffer->File->Path << "'");
@@ -357,7 +357,7 @@ namespace dcore::util
 				pushVec2(texcoord);
 			}
 
-			d.Textures.push_back(graphics::TextureIdSlot {prim.Material->Name, "DCore.Texture.Unknown"});
+			d.Textures.push_back(graphics::TextureIdSlot {prim.Material_->Name, "DCore.Texture.Unknown"});
 
 			d.Meshes.push_back(md);
 		}
