@@ -11,7 +11,7 @@
 
 namespace dg::loaders
 {
-	MainWorldLoader::MainWorldLoader(const std::string &name) : Name_(name) { }
+	MainWorldLoader::MainWorldLoader(const std::string &name) : Name_(name) {}
 
 	void MainWorldLoader::Load(dcore::world::World *world)
 	{
@@ -20,23 +20,20 @@ namespace dg::loaders
 		dcore::data::adapters::JsonInputAdapter jsonAdapter;
 		input.SetAdapter(&jsonAdapter);
 		input.Read();
-		
+
 		// Add all of the necessary entities to the world
 		PopulateWorld_(input, world);
 	}
 
-	void MainWorldLoader::UnLoad(dcore::world::World *world)
-	{
-
-	}
+	void MainWorldLoader::UnLoad(dcore::world::World *world) {}
 
 	void MainWorldLoader::PopulateWorld_(const dcore::data::FileInput &input, dcore::world::World *world)
 	{
 		// Create the terrain entity (holds the TerrainComponent)
 		auto terrainEntity = world->CreateEntity();
 		terrainEntity.AddComponent(dcore::world::TerrainComponent(
-			dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_)));
-		
+		    dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_)));
+
 		// Load the rest of the entities (saved)
 		world->Load(input);
 
@@ -53,4 +50,4 @@ namespace dg::loaders
 		this->ConstructEntities_(entityData);
 #endif
 	}
-}
+} // namespace dg::loaders

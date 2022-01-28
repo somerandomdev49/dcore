@@ -29,13 +29,31 @@ namespace dcore::world
 
 	void ECS::AddEntityToSystem(dstd::USize index, const EntityHandle &enyity)
 	{
-		// TODO: Stub
+		if(index >= this->AllSystems_.size())
+		{
+			LOG_F(WARNING, "Tried adding entity to system with an invalid id: %lu", index);
+			return;
+		}
+
+		this->ComponentPools_[std::type_index(this->AllSystems_[index].Type)].Set_.Set()
 	}
 
 	dstd::USize ECS::GetSystemByName(const std::string &name) const
 	{
-		// TODO: Stub
-		return 0;
+		// TODO: Instead of doing a linear search, make a map of systems with their names,
+		//       essentialy caching this thing:
+
+		dstd::USize idx = 0;
+		for(const auto &system : this->AllSystems_)
+		{
+			if(name == system.Name)
+			{
+				return idx;
+			}
+			++idx;
+		}
+
+		return (dstd::USize)(-1);
 	}
 
 	EntityHandle ECS::CreateEntity()

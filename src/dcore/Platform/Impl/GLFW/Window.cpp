@@ -15,12 +15,15 @@ namespace dcore::platform::impl
 		Size_ = size; // TODO: Title
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+
+		// TODO: Check if using OpenGL.
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		// #ifdef __darwin__ // FIXME: correct name
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		// #endif
 
 		Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", NULL, NULL);
+
 		if(!Window_)
 		{
 			DCORE_LOG_ERROR << "Failed to create window! Reason: " << glfw::GetError();
@@ -28,6 +31,7 @@ namespace dcore::platform::impl
 			return;
 		}
 
+		glfwHideWindow(Window_);
 		glfwMakeContextCurrent(Window_);
 	}
 
@@ -38,6 +42,9 @@ namespace dcore::platform::impl
 	}
 
 	bool glfw::Frame::ShouldEnd() { return glfwWindowShouldClose(Window_); }
+
+	void glfw::Frame::OnBegin() { glfwShowWindow(Window_); }
+
 	void glfw::Frame::OnBeginFrame() {}
 	void glfw::Frame::OnEndFrame()
 	{

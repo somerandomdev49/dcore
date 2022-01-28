@@ -17,7 +17,8 @@ namespace dcore::graphics::gui::common
 	}
 
 	ScrollingText::ScrollingText(const std::vector<std::string> &lines,
-	                             const dcore::resource::Resource<dcore::graphics::RTexture> &bg, const glm::vec3 &tint, float speed)
+	                             const dcore::resource::Resource<dcore::graphics::RTexture> &bg, const glm::vec3 &tint,
+	                             float speed)
 	{
 		HasBackground_  = true;
 		Background_     = bg;
@@ -54,13 +55,13 @@ namespace dcore::graphics::gui::common
 		float fontScale = fontSize / Font_->GetPixelHeight();
 		float offset    = Font_->GetLineGap() * fontScale;
 
-
 		for(const auto &line : Lines_)
 		{
 			float width = Font_->GetTextWidth(line.c_str(), fontScale);
 			float pos   = (GetQuad().Scale.x - width) / 2.0f;
 
-			g->RenderText(Font_, line.c_str(), glm::vec2(pos, CurrentOffset_ + offset), -1.0f, fontScale, glm::vec4(DCORE_COLOR_GOLDEN, 1));
+			g->RenderText(Font_, line.c_str(), glm::vec2(pos, CurrentOffset_ + offset), -1.0f, fontScale,
+			              glm::vec4(DCORE_COLOR_GOLDEN, 1));
 			offset += Font_->GetLineGap() * fontScale;
 		}
 

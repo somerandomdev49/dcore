@@ -110,7 +110,6 @@ namespace dcore::launch
 		// take an L
 		// Shit yourself - Patsanchik
 
-
 		dg::Game game;
 		// dg::Game::SetInstance(&game);
 		game.Initialize();

@@ -10,6 +10,7 @@ namespace dcore::platform
 	public:
 		virtual ~Frame();
 		virtual void Initialize(const glm::ivec2 &size) = 0;
+		virtual void OnBegin()                          = 0;
 		virtual bool ShouldEnd()                        = 0;
 		virtual void OnBeginFrame()                     = 0;
 		virtual void OnEndFrame()                       = 0;

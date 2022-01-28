@@ -62,7 +62,7 @@ namespace dcore::util
 
 		struct BufferView
 		{
-			Buffer *Buffer_         = nullptr;
+			Buffer *Buffer_        = nullptr;
 			dstd::USize ByteOffset = 0;
 			dstd::USize ByteLength = 0;
 		};
@@ -83,10 +83,10 @@ namespace dcore::util
 
 		struct Primitive
 		{
-			Accessor *Position = nullptr;
-			Accessor *Normal   = nullptr;
-			Accessor *TexCoord = nullptr;
-			Accessor *Indices  = nullptr;
+			Accessor *Position  = nullptr;
+			Accessor *Normal    = nullptr;
+			Accessor *TexCoord  = nullptr;
+			Accessor *Indices   = nullptr;
 			Material *Material_ = nullptr;
 		};
 

@@ -11,8 +11,8 @@ namespace dcore::world
 	void WorldLoaderRegistry::LoadWorld(const std::string &name)
 	{
 		auto loader = this->Loaders_[name];
-		auto world = new World();
+		auto world  = new World();
 		platform::Context::Instance()->SetWorld(world);
 		loader->Load(world);
 	}
-}
+} // namespace dcore::world

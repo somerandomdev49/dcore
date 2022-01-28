@@ -10,9 +10,7 @@ namespace dcore::graphics::gui
 		RootWidget_ = new common::Screen(glm::vec2(800, 600));
 	}
 
-	void GuiManager::InitializeRoot_() {
-		RootWidget_->DoInitialize_();
-	}
+	void GuiManager::InitializeRoot_() { RootWidget_->DoInitialize_(); }
 
 	void GuiManager::DeInitialize()
 	{

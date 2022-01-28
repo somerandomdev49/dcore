@@ -10,8 +10,8 @@ namespace dg::entity
 {
 	void CharacterControllerComponent::Start(const dcore::world::EntityHandle &self)
 	{
-		TransformComponent_ = &dcore::world::Entity(self, dcore::platform::Context::Instance()->GetWorld())
-		                           .GetComponent<dcore::world::TransformComponent>();
+		TransformComponent_ = dcore::world::Entity(self, dcore::platform::Context::Instance()->GetWorld())
+		                          .GetComponent<dcore::world::TransformComponent>();
 	}
 
 	void CharacterControllerComponent::Update(const dcore::world::EntityHandle &self)

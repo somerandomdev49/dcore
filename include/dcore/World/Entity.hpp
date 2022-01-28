@@ -55,12 +55,11 @@ namespace dcore::world
 		EntityHandle CreateEntity();
 
 		/**
-		 * @brief Create an entity with an already existing id.
-		 * @note Used for world loading, use @c CreateEntity for everything else.
+		 * @brief Create an entity with a specified uuid instead of a random one.
 		 *
-		 * @param id The id of the entity
+		 * @param uuid The UUID of the entity
 		 */
-		void CreateEntityWithId(const EntityHandle &id);
+		void CreateEntityWithUUId(const std::string &uuid);
 
 		/**
 		 * @brief Get every registered system
@@ -89,10 +88,7 @@ namespace dcore::world
 				return *this;
 			}
 
-			bool operator==(const AllEntityIterator &other)
-			{
-				return other.Index_ == this->Index_;
-			}
+			bool operator==(const AllEntityIterator &other) { return other.Index_ == this->Index_; }
 
 			bool operator!=(const AllEntityIterator &other) { return !(*this == other); }
 
@@ -131,10 +127,10 @@ namespace dcore::world
 		const System *GetSystemByIndex(dstd::USize index) const;
 
 		template<typename ComponentType>
-		ComponentType &GetComponent(const EntityHandle &entity);
+		ComponentType *GetComponent(const EntityHandle &entity);
 
 		template<typename ComponentType>
-		ComponentType &AddComponent(const EntityHandle &entity, const ComponentType &comp);
+		ComponentType *AddComponent(const EntityHandle &entity, const ComponentType &comp);
 
 		template<typename ComponentType>
 		std::vector<EntityHandle> GetEntities() const;
@@ -149,18 +145,17 @@ namespace dcore::world
 		void AddEntityToSystem(dstd::USize index, const EntityHandle &entity);
 
 	private:
-		using ComponentHandle = void *;
-
 		struct ComponentPool
 		{
-			SparseDataSet<ComponentHandle> Set_;
+			DynamicSparseDataSet Set_;
 			size_t SystemIndex_;
 		};
 
 		std::unordered_map<std::type_index, ComponentPool> ComponentPools_;
+		std::unordered_map<EntityHandle, std::string> UUIDMap_;
 		std::vector<System> AllSystems_;
 		std::vector<EntityHandle> AllEntities_;
-		std::vector<ComponentHandle> AllComponents_;
+		std::vector<void *> AllComponents_;
 		size_t NextAvailable_  = 0;
 		size_t AvailableCount_ = 0;
 	};
@@ -194,56 +189,69 @@ namespace dcore::world
 		{
 			// Do not run if the Component type doesn't implement Start.
 			if constexpr(!detail::has_Start<T>()) return;
-			T &comp = ECSInstance()->GetComponent<T>(self);
-			comp.Start(self);
+			T *comp = ECSInstance()->GetComponent<T>(self);
+			// No need for NULL checking here, if this is called, the component exists.
+			comp->Start(self);
 		}
 
 		static void Update(const EntityHandle &self)
 		{
 			if constexpr(!detail::has_Update<T>()) return;
-			T &comp = ECSInstance()->GetComponent<T>(self);
-			comp.Update(self);
+			T *comp = ECSInstance()->GetComponent<T>(self);
+			comp->Update(self);
 		}
 
 		static void End(const EntityHandle &self)
 		{
 			if constexpr(!detail::has_End<T>()) return;
-			T &comp = ECSInstance()->GetComponent<T>(self);
-			comp.End(self);
+			T *comp = ECSInstance()->GetComponent<T>(self);
+			comp->End(self);
 		}
 
 		static void Save(const EntityHandle &self, data::Json &output)
 		{
 			if constexpr(!detail::has_Save<T>()) return;
-			T &comp = ECSInstance()->GetComponent<T>(self);
-			comp.Save(self, output);
+			T *comp = ECSInstance()->GetComponent<T>(self);
+			comp->Save(self, output);
 		}
 
 		static void Load(const EntityHandle &self, const data::Json &input)
 		{
 			if constexpr(!detail::has_Load<T>()) return;
-			T &comp = ECSInstance()->GetComponent<T>(self);
-			comp.Load(self, input);
+			T *comp = ECSInstance()->GetComponent<T>(self);
+			comp->Load(self, input);
 		}
 	};
 
 	template<typename ComponentType>
-	ComponentType &ECS::GetComponent(const EntityHandle &entity)
+	ComponentType *ECS::GetComponent(const EntityHandle &entity)
 	{
-		return *(ComponentType *)this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_[entity];
+		LOG_F(INFO, "Get component %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+		LOG_F(INFO, "... <- %lu", entity);
+
+		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+			return nullptr;
+
+		auto &set = this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_;
+		if(!set.Contains(entity)) return nullptr;
+
+		return (ComponentType *)set[entity];
 	}
 
 	template<typename ComponentType>
-	ComponentType &ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
+	ComponentType *ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
 	{
 		auto c = new byte[sizeof(ComponentType)];
 		std::memcpy(c, &comp, sizeof(ComponentType));
 		this->AllComponents_.push_back(c);
+		// LOG_F(INFO, "Adding entity to component pool for type %s",
+		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
 		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
 		printf("Component pool for type %s has %zu entities.\n",
 		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
 		       this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
-		return *(ComponentType *)c;
+
+		return (ComponentType *)c;
 	}
 
 	template<typename ComponentType>

@@ -115,7 +115,7 @@ namespace dcore::world
 		void AddComponent(const T &c);
 
 		template<typename T>
-		T &GetComponent() const;
+		T *GetComponent() const;
 
 		/** Returns the entity's id. */
 		EntityHandle GetId() const;
@@ -136,7 +136,7 @@ namespace dcore::world
 		using SaveFunction = void (*)(data::FileOutput &, void *);
 
 		template<typename T>
-		T &GetComponent(const Entity *entity);
+		T *GetComponent(const Entity *entity);
 
 		template<typename T>
 		void AddComponent(Entity *entity, const T &c);
@@ -173,7 +173,7 @@ namespace dcore::world
 } // namespace dcore::world
 
 template<typename T>
-T &dcore::world::Entity::GetComponent() const
+T *dcore::world::Entity::GetComponent() const
 {
 	return World_->GetComponent<T>(this);
 }
@@ -185,7 +185,7 @@ void dcore::world::Entity::AddComponent(const T &c)
 }
 
 template<typename T>
-T &dcore::world::World::GetComponent(const Entity *entity)
+T *dcore::world::World::GetComponent(const Entity *entity)
 {
 	return ECSInstance()->GetComponent<T>(entity->Id_);
 }

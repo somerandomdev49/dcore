@@ -12,6 +12,8 @@ namespace dcore::platform::impl::glfw
 
 		void Initialize(const glm::ivec2 &size) override;
 		bool ShouldEnd() override;
+
+		void OnBegin() override;
 		void OnBeginFrame() override;
 		float GetCurrentTime() override;
 		void OnEndFrame() override;

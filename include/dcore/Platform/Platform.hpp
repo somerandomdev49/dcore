@@ -35,7 +35,7 @@ namespace dcore::platform
 
 		/**
 		 * @brief Returns the current world instance.
-		 * 
+		 *
 		 * @return The current world instance.
 		 */
 		world::World *GetWorld() const { return World_; }
@@ -43,7 +43,7 @@ namespace dcore::platform
 		/**
 		 * @brief Sets the current world instance
 		 * @note Preferably used only by the world loader.
-		 * 
+		 *
 		 * @param world The new world instance
 		 */
 		void SetWorld(world::World *newWorld) { World_ = newWorld; };

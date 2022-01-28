@@ -11,7 +11,7 @@ namespace dg::loaders
 	{
 	public:
 		MainWorldLoader(const std::string &name);
-		
+
 		void Load(dcore::world::World *world) override;
 		void UnLoad(dcore::world::World *world) override;
 
@@ -21,4 +21,4 @@ namespace dg::loaders
 
 		std::string Name_;
 	};
-}
+} // namespace dg::loaders

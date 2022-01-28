@@ -161,13 +161,13 @@ namespace dcore::world
 			for(const auto &entity : entities)
 			{
 				// fprintf(stderr, "bryh\n");
-				auto &transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
-				auto &staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
+				auto transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
+				auto staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
 
 				// if(transform.IsDirty()) transform.ReCalculateMatrix();
-				staticMesh.Mesh.SetTransform(transform.GetMatrix());
+				staticMesh->Mesh.SetTransform(transform->GetMatrix());
 
-				render->RenderStaticMesh(&staticMesh.Mesh);
+				render->RenderStaticMesh(&staticMesh->Mesh);
 			}
 		}
 
@@ -175,12 +175,12 @@ namespace dcore::world
 			const auto &entities = ECSInstance()->GetEntities<ModelComponent>();
 			for(const auto &entity : entities)
 			{
-				auto &transform = ECSInstance()->GetComponent<TransformComponent>(entity);
-				auto &model     = ECSInstance()->GetComponent<ModelComponent>(entity);
+				auto transform = ECSInstance()->GetComponent<TransformComponent>(entity);
+				auto model     = ECSInstance()->GetComponent<ModelComponent>(entity);
 
 				// if(transform.IsDirty()) transform.ReCalculateMatrix();
 
-				render->RenderModel(model.Model.Get(), transform.GetMatrix());
+				render->RenderModel(model->Model.Get(), transform->GetMatrix());
 			}
 		}
 
@@ -188,9 +188,9 @@ namespace dcore::world
 			const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
 			for(const auto &entity : entities)
 			{
-				auto &terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
-				auto &chunks  = terrain.GetTerrain().GetChunks();
-				for(auto ci : terrain.GetTerrain().GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+				auto terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
+				auto &chunks = terrain->GetTerrain().GetChunks();
+				for(auto ci : terrain->GetTerrain().GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 			}
 		}
 
@@ -245,8 +245,8 @@ namespace dcore::world
 		const auto &entities = input.Get()["entities"];
 		for(const auto &ej : entities)
 		{
-			EntityHandle id = ej["id"].get<std::decay_t<EntityHandle>>();
-			ECSInstance()->CreateEntityWithId(id);
+			auto uuid       = ej["uuid"].get<std::string>();
+			EntityHandle id = ECSInstance()->CreateEntityWithUUID(uuid);
 
 			for(const auto &comp : ej["components"])
 			{

@@ -13,8 +13,8 @@ namespace dg::loaders
 
 		void Load(dcore::world::World *world) override;
 		void UnLoad(dcore::world::World *world) override;
-	
+
 	private:
 		std::string Name_;
 	};
-}
+} // namespace dg::loaders

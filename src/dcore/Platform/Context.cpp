@@ -35,6 +35,7 @@ namespace dcore::platform
 	{
 		float lastTime = Frame_->GetCurrentTime();
 		World_->Start();
+		Frame_->OnBegin();
 		while(!Frame_->ShouldEnd())
 		{
 			float thisTime = Frame_->GetCurrentTime();

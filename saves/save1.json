@@ -35,7 +35,7 @@
 					"@type": "dg::entity::CharacterControllerComponent"
 				}
 			],
-			"id": 0
+			"uuid": "b693be9b-a4c0-4e2f-ae70-3005145c983c"
 		}
 	],
 	"version": "0.01"
