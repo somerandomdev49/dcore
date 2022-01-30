@@ -32,9 +32,10 @@ namespace dcore
 	void FrameLog::LogFV(const char *format, va_list va)
 	{
 		auto size = std::vsnprintf(nullptr, 0, format, va);
-		std::string output(size + 1, '\0');
-		std::vsprintf(&output[0], format, va);
-		Log(output);
+		// puts("done sz_Sprint_f[3]");
+		std::vector<char> output(size + 1);
+		std::vsnprintf(&output[0], size, format, va);
+		Log(std::string(output.begin(), output.end()));
 	}
 
 	void FrameLog::Log(const std::string &message) { Queue_.push_back(message); }

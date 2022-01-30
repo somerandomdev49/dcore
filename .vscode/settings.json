@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"temp": "asm-intel-x86-generic",
 		"*.ge": "plaintext",
 		"typeindex": "cpp",
 		"type_traits": "cpp",
@@ -18,7 +19,19 @@
 		"ctime": "cpp",
 		"cwchar": "cpp",
 		"cwctype": "cpp",
-		"memory_resource": "cpp"
+		"memory_resource": "cpp",
+		"span": "cpp",
+		"deque": "cpp",
+		"string": "cpp",
+		"vector": "cpp",
+		"array": "cpp",
+		"hashtable": "cpp",
+		"forward_list": "cpp",
+		"unordered_map": "cpp",
+		"string_view": "cpp",
+		"initializer_list": "cpp",
+		"ranges": "cpp",
+		"regex": "cpp"
 	},
 	"C_Cpp.dimInactiveRegions": false
 }

@@ -33,24 +33,24 @@ namespace dcore
 		void *RawGet(dstd::USize index) const;
 
 		/**
-		 * @brief Set an element at an index
+		 * @brief Add an element to the vector
 		 * 
 		 * @tparam T 
 		 * @param index 
 		 * @param value 
 		 */
 		template<typename T>
-		void Set(dstd::USize index, const T &value);
+		void Add(dstd::USize index, const T &value);
 
 		/**
-		 * @brief Set an element at an index (void pointer)
+		 * @brief Add an element to the vector (void pointer)
 		 * 
 		 * @tparam T 
 		 * @param index 
 		 * @param value 
 		 */
 		template<typename T>
-		void RawSet(dstd::USize index, void *value);
+		void RawAdd(dstd::USize index, void *value);
 
 
 		/**

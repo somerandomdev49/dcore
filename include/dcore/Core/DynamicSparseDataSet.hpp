@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/Core/Type.hpp>
 #include <dcore/Core/DynamicVector.hpp>
+#include <dcore/Core/Memory.hpp>
 
 #include <unordered_map>
 #include <type_traits>
@@ -36,8 +37,8 @@ namespace dcore
 		template<typename T>
 		void Set(dstd::USize index, const T &value)
 		{
-			Sparse_[index] = Packed_.size();
-			Packed_.Add(CreateElement_(index, sizeof(T), &value));
+			Sparse_[index] = Packed_.GetSize();
+			Packed_.RawAdd(CreateElement_(index, sizeof(T), &value));
 		}
 
 		/**
@@ -82,5 +83,14 @@ namespace dcore
 		 * @return The packed array.
 		 */
 		const DynamicVector &GetPacked() const { return Packed_; }
+	
+	private:
+		
+		template<typename T>
+		Element *CreateElement_(dstd::USize index, dstd::USize valueSize, const T &value)
+		{
+			dstd::Byte *bytes = dstd::AllocBuffer(sizeof(Element) + valueSize);
+			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), &value);
+		}
 	};
 } // namespace dcore

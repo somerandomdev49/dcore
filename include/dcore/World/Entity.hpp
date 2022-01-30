@@ -1,4 +1,5 @@
 #pragma once
+#include <dcore/Core/DynamicSparseDataSet.hpp>
 #include <dcore/Util/TypeTraits.hpp>
 #include <dcore/Data/FileOutput.hpp>
 #include <dcore/Core/SparseSet.hpp>
@@ -235,7 +236,7 @@ namespace dcore::world
 		auto &set = this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_;
 		if(!set.Contains(entity)) return nullptr;
 
-		return (ComponentType *)set[entity];
+		return set.Get<ComponentType>(entity);
 	}
 
 	template<typename ComponentType>
@@ -246,10 +247,11 @@ namespace dcore::world
 		this->AllComponents_.push_back(c);
 		// LOG_F(INFO, "Adding entity to component pool for type %s",
 		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-		this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.Set(entity, ComponentHandle {c});
+		auto &set = this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_;
+		set.Set(entity, c);
 		printf("Component pool for type %s has %zu entities.\n",
 		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
-		       this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_.GetPacked().size());
+		       set.GetPacked().GetSize());
 
 		return (ComponentType *)c;
 	}

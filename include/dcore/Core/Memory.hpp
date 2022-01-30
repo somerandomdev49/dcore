@@ -1,6 +1,6 @@
 #pragma once
-#include <dcore/Core/Type.hpp>
 #include <dcore/Core/Allocators/Common.hpp>
+#include <dcore/Core/Type.hpp>
 
 namespace dstd
 {
@@ -15,6 +15,7 @@ namespace dstd
 	{
 		return Allocator::template AllocN<Byte>(size);
 	}
+
 	Byte *AllocBuffer(USize size);
 
 } // namespace dstd

@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdlib>
+#include <dcore/Core/Type.hpp>
 
 namespace dstd
 {

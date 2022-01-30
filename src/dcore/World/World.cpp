@@ -134,7 +134,9 @@ namespace dcore::world
 		//         ECSInstance()->end().CurrentIndex());
 		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
-			// LOG_F(ERROR, "it: %ld\n", it.CurrentIndex());
+			// FUUUCK we have a giant leak somewhere
+			if(it.CurrentIndex() > ECSInstance()->end().CurrentIndex()) break;
+			fprintf(stderr, "it: %zu, end: %zu\n", it.CurrentIndex(), ECSInstance()->end().CurrentIndex());
 			const auto &systems = ECSInstance()->GetSystems(*it);
 			for(const auto &system : systems) system->StartFunction(*it);
 			break;
