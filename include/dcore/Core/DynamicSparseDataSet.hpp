@@ -32,13 +32,15 @@ namespace dcore
 		 * @brief Set a value at an index inside of the sparse list.
 		 *
 		 * @param index index in the sparse set.
-		 * @param value value to insert
+		 * @param value pointer to value to insert
 		 */
 		template<typename T>
-		void Set(dstd::USize index, const T &value)
+		void Set(dstd::USize index, const T *value)
 		{
 			Sparse_[index] = Packed_.GetSize();
-			Packed_.RawAdd(CreateElement_(index, sizeof(T), &value));
+			auto elem      = CreateElement_(index, sizeof(T), value);
+			Packed_.RawAdd(elem);
+			delete elem; // RawAdd copies.
 		}
 
 		/**
@@ -60,9 +62,9 @@ namespace dcore
 		 * @return the value found.
 		 */
 		template<typename T>
-		const T &Get(dstd::USize index) const
+		const T *Get(dstd::USize index) const
 		{
-			return *(T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
+			return (T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
 		}
 
 		/**
@@ -72,9 +74,9 @@ namespace dcore
 		 * @return the value found.
 		 */
 		template<typename T>
-		T &Get(dstd::USize index)
+		T *Get(dstd::USize index)
 		{
-			return *(T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
+			return (T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
 		}
 
 		/**
@@ -83,14 +85,14 @@ namespace dcore
 		 * @return The packed array.
 		 */
 		const DynamicVector &GetPacked() const { return Packed_; }
-	
+
 	private:
-		
 		template<typename T>
-		Element *CreateElement_(dstd::USize index, dstd::USize valueSize, const T &value)
+		Element *CreateElement_(dstd::USize index, dstd::USize valueSize, const T *value)
 		{
 			dstd::Byte *bytes = dstd::AllocBuffer(sizeof(Element) + valueSize);
-			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), &value);
+			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), (dstd::Byte*)value);
+			return reinterpret_cast<Element *>(bytes);
 		}
 	};
 } // namespace dcore

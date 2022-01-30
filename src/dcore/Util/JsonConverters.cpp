@@ -1,4 +1,5 @@
 #include <dcore/Util/JsonConverters.hpp>
+#include <dcore/Core/UUID.hpp>
 
 namespace dcore::util
 {
@@ -31,5 +32,4 @@ namespace dcore::util
 		    v[3][3],
 		});
 	}
-
 } // namespace dcore::util

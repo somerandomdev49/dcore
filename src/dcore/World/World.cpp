@@ -136,7 +136,7 @@ namespace dcore::world
 		{
 			// FUUUCK we have a giant leak somewhere
 			if(it.CurrentIndex() > ECSInstance()->end().CurrentIndex()) break;
-			fprintf(stderr, "it: %zu, end: %zu\n", it.CurrentIndex(), ECSInstance()->end().CurrentIndex());
+			fprintf(stderr, "it: %lu, end: %lu\n", it.CurrentIndex(), ECSInstance()->end().CurrentIndex());
 			const auto &systems = ECSInstance()->GetSystems(*it);
 			for(const auto &system : systems) system->StartFunction(*it);
 			break;
@@ -244,11 +244,23 @@ namespace dcore::world
 			// TODO: Create backup here.
 		}
 
-		const auto &entities = input.Get()["entities"];
+		const auto &entities  = input.Get()["entities"];
+		unsigned int entityNo = 0;
 		for(const auto &ej : entities)
 		{
-			auto uuid       = ej["uuid"].get<std::string>();
-			EntityHandle id = ECSInstance()->CreateEntityWithUUID(uuid);
+			EntityHandle id = ECSInstance()->CreateEntity();
+
+			if(!ej.contains("uuid"))
+			{
+				LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
+			}
+			else
+			{
+				auto uuidJson = ej["uuid"].get<std::string>();
+				dstd::UUID uuid;
+				dstd::UUID::Parse(uuid, uuidJson);
+				ECSInstance()->AddComponent(id, UUIDComponent(std::move(uuid)));
+			}
 
 			for(const auto &comp : ej["components"])
 			{
@@ -256,20 +268,7 @@ namespace dcore::world
 				ECSInstance()->AddEntityToSystem(system, id);
 			}
 
-			// data::Json comps = data::Json::array();
-
-			// const auto &systems = ECSInstance()->GetSystems(entity);
-			// for(const auto &system : systems)
-			// {
-			// 	data::Json out = data::Json::object();
-			// 	system->SaveFunction(entity, out);
-
-			// 	out["@type"] = system->Name;
-			// 	comps.push_back(out);
-			// }
-
-			// output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components",
-			// comps}});
+			entityNo += 1;
 		}
 	}
 } // namespace dcore::world

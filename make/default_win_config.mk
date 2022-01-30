@@ -1,6 +1,6 @@
 #### PROJECT SETTINGS FOR WINDOWS (MinGW32-w64) ####
 BIN_NAME := dcore
-CXX = g++
+CXX = g++ -fdiagnostics-color
 SRC_EXT = cpp
 SRC_PATH = src
 LIBS = freetype2 nlohmann_json

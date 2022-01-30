@@ -4,6 +4,7 @@
 #include <dcore/Data/FileOutput.hpp>
 #include <dcore/Core/SparseSet.hpp>
 #include <dcore/Util/Debug.hpp>
+#include <dcore/Core/UUID.hpp>
 #include <dcore/Core/Type.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dcore/Uni.hpp>
@@ -54,13 +55,6 @@ namespace dcore::world
 		void RegisterSystem(System &&system);
 
 		EntityHandle CreateEntity();
-
-		/**
-		 * @brief Create an entity with a specified uuid instead of a random one.
-		 *
-		 * @param uuid The UUID of the entity
-		 */
-		void CreateEntityWithUUId(const std::string &uuid);
 
 		/**
 		 * @brief Get every registered system
@@ -233,7 +227,7 @@ namespace dcore::world
 		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
 			return nullptr;
 
-		auto &set = this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_;
+		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
 		if(!set.Contains(entity)) return nullptr;
 
 		return set.Get<ComponentType>(entity);
@@ -243,15 +237,16 @@ namespace dcore::world
 	ComponentType *ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
 	{
 		auto c = new byte[sizeof(ComponentType)];
-		std::memcpy(c, &comp, sizeof(ComponentType));
+		dstd::CopyBuffer(sizeof(ComponentType), c, (dstd::Byte*)&comp);
 		this->AllComponents_.push_back(c);
 		// LOG_F(INFO, "Adding entity to component pool for type %s",
 		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-		auto &set = this->ComponentPools_[std::type_index(typeid(ComponentType))].Set_;
-		set.Set(entity, c);
-		printf("Component pool for type %s has %zu entities.\n",
-		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(),
-		       set.GetPacked().GetSize());
+		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
+
+		set.Set<ComponentType>(entity, (ComponentType*)c);
+
+		printf("Component pool for type %s has %lu entities.\n",
+		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(), set.GetPacked().GetSize());
 
 		return (ComponentType *)c;
 	}
@@ -261,7 +256,10 @@ namespace dcore::world
 	{
 		std::vector<EntityHandle> entities;
 		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
-		for(const auto &p : packed) entities.push_back(p.first);
+		for(dstd::USize idx = 0; idx < packed.GetSize(); ++idx) entities.push_back(*packed.Get<dstd::USize>(idx));
+		// Due to how DynamicVector works, we can simply
+		// get a pointer to the first element of the structure
+		// (in this case, dstd::USize).
 		return entities;
 	}
 
@@ -269,8 +267,15 @@ namespace dcore::world
 	void ECS::RegisterSystem(System &&system)
 	{
 		printf("ECS::RegisterSystem()\n");
-		ComponentPools_[std::type_index(typeid(ComponentType))].SystemIndex_ = AllSystems_.size();
+		ComponentPools_.at(std::type_index(typeid(ComponentType))).SystemIndex_ = AllSystems_.size();
 		printf("New system index: %zu\n", AllSystems_.size());
 		AllSystems_.push_back(std::move(system));
 	}
+
+	struct UUIDComponent : ComponentBase<UUIDComponent>
+	{
+		dstd::UUID Value;
+
+		UUIDComponent(dstd::UUID &&uuid) : Value(std::move(uuid)) {}
+	};
 }; // namespace dcore::world

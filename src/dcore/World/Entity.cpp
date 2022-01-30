@@ -22,12 +22,7 @@ namespace dcore::world
 		return systems;
 	}
 
-	void ECS::CreateEntityWithId(const EntityHandle &entity)
-	{
-		// TODO: Stub
-	}
-
-	void ECS::AddEntityToSystem(dstd::USize index, const EntityHandle &enyity)
+	void ECS::AddEntityToSystem(dstd::USize index, const EntityHandle &entity)
 	{
 		if(index >= this->AllSystems_.size())
 		{
@@ -35,7 +30,8 @@ namespace dcore::world
 			return;
 		}
 
-		this->ComponentPools_[std::type_index(this->AllSystems_[index].Type)].Set_.Set()
+		// TODO: IMPLEMENT THIS!
+		// this->ComponentPools_.at(std::type_index(this->AllSystems_[index].Type)).Set_.Set()
 	}
 
 	dstd::USize ECS::GetSystemByName(const std::string &name) const
