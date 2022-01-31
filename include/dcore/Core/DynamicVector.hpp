@@ -75,4 +75,4 @@ namespace dstd
 		void *Data_;
 		dstd::USize ItemSize_, Size_;
 	};
-} // namespace dcore
+} // namespace dstd

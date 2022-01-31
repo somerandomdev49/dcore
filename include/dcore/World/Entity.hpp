@@ -237,13 +237,13 @@ namespace dcore::world
 	ComponentType *ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
 	{
 		auto c = new byte[sizeof(ComponentType)];
-		dstd::CopyBuffer(sizeof(ComponentType), c, (dstd::Byte*)&comp);
+		dstd::CopyBuffer(sizeof(ComponentType), c, (dstd::Byte *)&comp);
 		this->AllComponents_.push_back(c);
 		// LOG_F(INFO, "Adding entity to component pool for type %s",
 		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
 		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
 
-		set.Set<ComponentType>(entity, (ComponentType*)c);
+		set.Set<ComponentType>(entity, (ComponentType *)c);
 
 		printf("Component pool for type %s has %lu entities.\n",
 		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(), set.GetPacked().GetSize());

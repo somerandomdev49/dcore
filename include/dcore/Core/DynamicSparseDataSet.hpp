@@ -91,8 +91,8 @@ namespace dstd
 		Element *CreateElement_(dstd::USize index, dstd::USize valueSize, const T *value)
 		{
 			dstd::Byte *bytes = dstd::AllocBuffer(sizeof(Element) + valueSize);
-			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), (dstd::Byte*)value);
+			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), (dstd::Byte *)value);
 			return reinterpret_cast<Element *>(bytes);
 		}
 	};
-} // namespace dcore
+} // namespace dstd
