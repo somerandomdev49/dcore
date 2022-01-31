@@ -1,7 +1,7 @@
 #pragma once
 #include <dcore/Core/Type.hpp>
 
-namespace dcore
+namespace dstd
 {
 	class DynamicVector
 	{
@@ -43,7 +43,10 @@ namespace dcore
 		 * @param value
 		 */
 		template<typename T>
-		void Add(const T &value);
+		void Add(const T &value)
+		{
+			RawAdd(&value);
+		}
 
 		/**
 		 * @brief Add an element to the vector (void pointer)
@@ -52,7 +55,7 @@ namespace dcore
 		 * @param index
 		 * @param value
 		 */
-		void RawAdd(void *value);
+		void RawAdd(const void *value);
 
 		/**
 		 * @brief Get the amount of elements contained in the vector.

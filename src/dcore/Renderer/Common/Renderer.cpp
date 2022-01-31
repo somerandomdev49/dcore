@@ -20,11 +20,13 @@ namespace dcore::graphics
 
 	void Renderer::Render(const Model *model, int textureUnit /* = 0 */)
 	{
+		fprintf(stderr, "SHEEEEEEEEEEEEEEEEEEEEEESH\n");
 		for(const auto &mesh : model->Meshes_)
 		{
 			UseTexture(textureUnit, model->TextureSlots_[mesh.TextureIndex].Texture);
 			Render(mesh.Mesh);
 		}
+		fprintf(stderr, "YO MAMA\n");
 	}
 
 	void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)

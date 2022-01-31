@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-namespace dcore
+namespace dstd
 {
 	class DynamicSparseDataSet
 	{

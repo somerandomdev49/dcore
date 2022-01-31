@@ -142,7 +142,7 @@ namespace dcore::world
 	private:
 		struct ComponentPool
 		{
-			DynamicSparseDataSet Set_;
+			dstd::DynamicSparseDataSet Set_;
 			size_t SystemIndex_;
 		};
 

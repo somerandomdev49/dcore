@@ -31,6 +31,7 @@ namespace dg
 {
 	void Game::Initialize()
 	{
+		DCORE_LOG_INFO << "Game::Initialize()";
 		// auto world    = dcore::platform::Context::Instance()->GetWorld();
 		// auto renderer = dcore::platform::Context::Instance()->GetRendererInterface();
 		// {
@@ -64,6 +65,7 @@ namespace dg
 		dg::loaders::MainWorldLoader mainWorldLoader("World1");
 		reg.AddWorldLoader("Main1", &mainWorldLoader);
 
+		DCORE_LOG_INFO << "LoadWorld(Main1)";
 		reg.LoadWorld("Main1");
 		DCORE_LOG_INFO << "Done";
 	}
