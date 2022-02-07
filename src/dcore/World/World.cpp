@@ -14,6 +14,7 @@ namespace dcore::world
 	DCORE_COMPONENT_REGISTER(StaticMeshComponent);
 	DCORE_COMPONENT_REGISTER(ModelComponent);
 	DCORE_COMPONENT_REGISTER(DynamicComponent);
+	DCORE_COMPONENT_REGISTER(TerrainComponent);
 
 	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
 	{
@@ -158,6 +159,7 @@ namespace dcore::world
 	void World::Render(graphics::RendererInterface *render)
 	{
 
+		// Render StaticMeshComponent entities.
 		{
 			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 			for(const auto &entity : entities)
@@ -171,8 +173,10 @@ namespace dcore::world
 
 				render->RenderStaticMesh(&staticMesh->Mesh);
 			}
+
 		}
 
+		// Render ModelComponent entities.
 		{
 			const auto &entities = ECSInstance()->GetEntities<ModelComponent>();
 			for(const auto &entity : entities)
@@ -186,14 +190,20 @@ namespace dcore::world
 			}
 		}
 
+		// Render Terrain if it exists.
+		if(Terrain_)
 		{
-			const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
-			for(const auto &entity : entities)
-			{
-				auto terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
-				auto &chunks = terrain->GetTerrain().GetChunks();
-				for(auto ci : terrain->GetTerrain().GetActiveChunks()) render->RenderChunk(&chunks[ci]);
-			}
+			auto& chunks = Terrain_->GetChunks();
+			for(auto ci : Terrain_->GetActiveChunks())
+				render->RenderChunk(&chunks[ci]);
+
+			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
+			// for(const auto &entity : entities)
+			// {
+			// 	auto terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
+			// 	if(terrain == nullptr) return; // FIXME: Temporary
+			// 	auto &chunks = terrain->GetTerrain().GetChunks();
+			// }
 		}
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();

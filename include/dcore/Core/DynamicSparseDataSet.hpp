@@ -26,7 +26,7 @@ namespace dstd
 		};
 
 	public:
-		DynamicSparseDataSet(dstd::USize elementSize);
+		DynamicSparseDataSet(dstd::USize elementSize) : Packed_(sizeof(Element) + elementSize) {}
 
 		/**
 		 * @brief Set a value at an index inside of the sparse list.

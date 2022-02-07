@@ -77,7 +77,7 @@ namespace dcore::world
 		void Save(const EntityHandle &entity, data::Json &output);
 	};
 
-	class TerrainComponent : ComponentBase<TerrainComponent>
+	class TerrainComponent : public ComponentBase<TerrainComponent>
 	{
 	public:
 		TerrainComponent(const resource::Resource<terrain::Heightmap> &heightmap);

@@ -225,10 +225,15 @@ namespace dcore::world
 		LOG_F(INFO, "... <- %lu", entity);
 
 		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+		{
+			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
 			return nullptr;
+		}
 
 		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
 		if(!set.Contains(entity)) return nullptr;
+
+		LOG_F(INFO, "Found!");
 
 		return set.Get<ComponentType>(entity);
 	}
@@ -241,6 +246,13 @@ namespace dcore::world
 		this->AllComponents_.push_back(c);
 		// LOG_F(INFO, "Adding entity to component pool for type %s",
 		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+		
+		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+		{
+			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+			return nullptr;
+		}
+
 		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
 
 		set.Set<ComponentType>(entity, (ComponentType *)c);
@@ -255,6 +267,13 @@ namespace dcore::world
 	std::vector<EntityHandle> ECS::GetEntities() const
 	{
 		std::vector<EntityHandle> entities;
+		
+		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+		{
+			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+			return std::vector<EntityHandle>();
+		}
+
 		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
 		for(dstd::USize idx = 0; idx < packed.GetSize(); ++idx) entities.push_back(*packed.Get<dstd::USize>(idx));
 		// Due to how DynamicVector works, we can simply
@@ -266,7 +285,11 @@ namespace dcore::world
 	template<typename ComponentType>
 	void ECS::RegisterSystem(System &&system)
 	{
-		printf("ECS::RegisterSystem()\n");
+		printf("ECS::RegisterSystem<%s>()\n", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+		ComponentPools_.insert(decltype(ComponentPools_)::value_type(
+			std::type_index(typeid(ComponentType)),
+			ComponentPool { dstd::DynamicSparseDataSet(sizeof(ComponentType)), ComponentPools_.size() }
+		));
 		ComponentPools_.at(std::type_index(typeid(ComponentType))).SystemIndex_ = AllSystems_.size();
 		printf("New system index: %zu\n", AllSystems_.size());
 		AllSystems_.push_back(std::move(system));

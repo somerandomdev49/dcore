@@ -1,6 +1,7 @@
 //:=================------------ Engine Entry ------------=================://
 #include <dcore/Launch.hpp>
 #include <iostream>
+#include <cstdio>
 
 int main(int argc, char *argv[])
 {

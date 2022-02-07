@@ -12,7 +12,9 @@ namespace dstd
 		 * @param itemSize the size of a single element in the vector
 		 * @see GetItemSize
 		 */
-		DynamicVector(dstd::USize itemSize);
+		DynamicVector(dstd::USize itemSize) : Data_(nullptr), ItemSize_(itemSize), Size_(0) {}
+
+		~DynamicVector();
 
 		/**
 		 * @brief Retreive an element casted to a type.
