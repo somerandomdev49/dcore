@@ -1,0 +1,24 @@
+CompileFlags:
+	Add: [
+    -std=c++17,
+    -Wall,
+    -Wno-unused-variables,
+    -DDCORE_STD_64BIT,
+    -I=include,
+    -I=3rd-party/include,
+    "-I=C:/msys64/mingw64/include",
+    "-I=C:/msys64/mingw64/include/freetype2"
+  ]
+  Compiler: "C:/msys64/mingw64/bin/g++.exe"
+
+
+Style:
+  FullyQualifiedNamespaces: Yes
+
+
+Diagnostics:
+  ClangTidy:
+    Add: [performance*, modernize*, readability*]
+    Remove: [modernize-use-trailing-return-type]
+    CheckOptions:
+        readability-identifier-naming.VariableCase: CamelCase

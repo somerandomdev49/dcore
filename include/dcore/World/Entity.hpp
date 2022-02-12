@@ -235,7 +235,10 @@ namespace dcore::world
 
 		LOG_F(INFO, "Found!");
 
-		return set.Get<ComponentType>(entity);
+		auto component = set.Get<ComponentType>(entity);
+
+		LOG_F(INFO, "Component: %p\n", component);
+		return component;
 	}
 
 	template<typename ComponentType>
