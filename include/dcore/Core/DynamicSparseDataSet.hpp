@@ -10,7 +10,7 @@
 
 namespace dstd
 {
-	class DynamicSparseDataSet
+	class DynamicSparseSet
 	{
 		// Note: (for now) this is a map because we can set any index.
 		/** The sparse list contains indices into the packed list. */
@@ -21,12 +21,12 @@ namespace dstd
 
 		struct Element
 		{
-			dstd::USize index;
-			// DO NOT UNCOMMENT! dstd::Byte data[];
+			dstd::USize Index;
+			// + Data
 		};
 
 	public:
-		DynamicSparseDataSet(dstd::USize elementSize) : Packed_(sizeof(Element) + elementSize) {}
+		DynamicSparseSet(dstd::USize elementSize) : Packed_(sizeof(Element) + elementSize) {}
 
 		/**
 		 * @brief Set a value at an index inside of the sparse list.
@@ -56,15 +56,13 @@ namespace dstd
 		}
 
 		/**
-		 * @brief Retreive the value at an index inside of the sparse list.
-		 *
-		 * @param index index of the value to get in the sparse list.
-		 * @return the value found.
+		 * @brief Retreive the value from the packed set by the index from the sparse set.
+		 * @return The value found.
 		 */
 		template<typename T>
 		const T *Get(dstd::USize index) const
 		{
-			return (T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
+			return (const T *)RawGet(index);
 		}
 
 		/**
@@ -76,8 +74,11 @@ namespace dstd
 		template<typename T>
 		T *Get(dstd::USize index)
 		{
-			return (T *)(Packed_.Get<Element>(Sparse_.at(index)) + sizeof(Element));
+			return (T *)RawGet(index);
 		}
+
+		void *RawGet(dstd::USize index);
+		const void *RawGet(dstd::USize index) const;
 
 		/**
 		 * @brief Get the internal packed array.

@@ -116,15 +116,25 @@ namespace dcore::world
 	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
 	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
 
-	void World::DeInitialize() {}
+	void World::DeInitialize() { ECSInstance()->DeInitialize(); }
 
 	void World::Update()
 	{
 		// TODO: Handle UI clicks and other events.
-		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
+		// for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
+		// {
+		// 	const auto &systems = ECSInstance()->GetSystems(*it);
+		// 	for(const auto &system : systems) system->UpdateFunction(*it);
+		// }
+
+		for(const auto &system : ECSInstance()->GetAllSystems())
 		{
-			const auto &systems = ECSInstance()->GetSystems(*it);
-			for(const auto &system : systems) system->UpdateFunction(*it);
+			LOG_F(INFO, "%s <- register", util::Debug::Demangle(system.Type.name()).c_str());
+			auto entities = ECSInstance()->GetEntities(system.Type);
+			for(const auto &entity : entities)
+			{
+				system.UpdateFunction(*entity);
+			}
 		}
 	}
 
@@ -135,7 +145,7 @@ namespace dcore::world
 		//         ECSInstance()->end().CurrentIndex());
 		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
 		{
-			// FUUUCK we have a giant leak somewhere
+			// FUUUCK we have a giant leak somewhere?
 			if(it.CurrentIndex() > ECSInstance()->end().CurrentIndex()) break;
 			fprintf(stderr, "it: %lu, end: %lu\n", it.CurrentIndex(), ECSInstance()->end().CurrentIndex());
 			const auto &systems = ECSInstance()->GetSystems(*it);
@@ -161,28 +171,27 @@ namespace dcore::world
 
 		// Render StaticMeshComponent entities.
 		{
-			const auto &entities = ECSInstance()->GetEntities<StaticMeshComponent>();
+			auto entities = ECSInstance()->GetEntities<StaticMeshComponent>();
 			for(const auto &entity : entities)
 			{
 				// fprintf(stderr, "bryh\n");
-				auto transform  = ECSInstance()->GetComponent<TransformComponent>(entity);
-				auto staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(entity);
+				auto transform  = ECSInstance()->GetComponent<TransformComponent>(*entity);
+				auto staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(*entity);
 
 				// if(transform.IsDirty()) transform.ReCalculateMatrix();
 				staticMesh->Mesh.SetTransform(transform->GetMatrix());
 
 				render->RenderStaticMesh(&staticMesh->Mesh);
 			}
-
 		}
 
 		// Render ModelComponent entities.
 		{
-			const auto &entities = ECSInstance()->GetEntities<ModelComponent>();
+			auto entities = ECSInstance()->GetEntities<ModelComponent>();
 			for(const auto &entity : entities)
 			{
-				auto transform = ECSInstance()->GetComponent<TransformComponent>(entity);
-				auto model     = ECSInstance()->GetComponent<ModelComponent>(entity);
+				auto transform = ECSInstance()->GetComponent<TransformComponent>(*entity);
+				auto model     = ECSInstance()->GetComponent<ModelComponent>(*entity);
 
 				// if(transform.IsDirty()) transform.ReCalculateMatrix();
 
@@ -191,11 +200,12 @@ namespace dcore::world
 		}
 
 		// Render Terrain if it exists.
+		LOG_F(INFO, "Maybe will render terrain");
 		if(Terrain_)
 		{
-			auto& chunks = Terrain_->GetChunks();
-			for(auto ci : Terrain_->GetActiveChunks())
-				render->RenderChunk(&chunks[ci]);
+			LOG_F(INFO, "Rendering terrain:");
+			auto &chunks = Terrain_->GetChunks();
+			for(auto ci : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
 			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
 			// for(const auto &entity : entities)
@@ -205,6 +215,7 @@ namespace dcore::world
 			// 	auto &chunks = terrain->GetTerrain().GetChunks();
 			// }
 		}
+		LOG_F(INFO, "Done rendering");
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 

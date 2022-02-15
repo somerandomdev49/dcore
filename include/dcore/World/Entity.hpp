@@ -42,117 +42,225 @@ namespace dcore::world
 		DCORE_HAS_MEMBER(Load);
 	} // namespace detail
 
-	template<class S>
+	template<class S, class U>
 	System GetSystem()
 	{
-		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(S)};
+		return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(U)};
 	}
+
+	// class ECS
+	// {
+	// public:
+	// 	template<typename ComponentType>
+	// 	void RegisterSystem(System &&system);
+
+	// 	EntityHandle CreateEntity();
+
+	// 	/**
+	// 	 * @brief Get every registered system
+	// 	 *
+	// 	 * @return Vector of every registered system
+	// 	 */
+	// 	const std::vector<System> &GetAllSystems() const;
+
+	// 	/**
+	// 	 * @brief Get all of entities in the ECS (including dead ones).
+	// 	 * @warning This includes the dead entities (msb is 1)!
+	// 	 * @deprecated Use iterators (e.g. for(... : *ECSInstance()) { ... })
+	// 	 *
+	// 	 * @return Vector of every entity (including dead ones)
+	// 	 */
+	// 	const std::vector<EntityHandle> &GetAllEntities() const;
+
+	// 	class AllEntityIterator
+	// 	{
+	// 	public:
+	// 		AllEntityIterator &operator++()
+	// 		{
+	// 			constexpr EntityHandle mask = (EntityHandle)1 << ((sizeof(EntityHandle) * 8) - 1);
+	// 			Index_ += 1;
+	// 			while(Bound_->AllEntities_[Index_] & mask) ++Index_;
+	// 			return *this;
+	// 		}
+
+	// 		bool operator==(const AllEntityIterator &other) { return other.Index_ == this->Index_; }
+
+	// 		bool operator!=(const AllEntityIterator &other) { return !(*this == other); }
+
+	// 		const EntityHandle &operator*() { return Bound_->AllEntities_[Index_]; }
+
+	// 		dstd::USize CurrentIndex() const { return Index_; }
+
+	// 	private:
+	// 		friend class ECS;
+	// 		AllEntityIterator(ECS *bound, dstd::USize index) : Index_(index), Bound_(bound) {}
+	// 		dstd::USize Index_;
+	// 		ECS *Bound_;
+	// 	};
+
+	// 	AllEntityIterator begin() { return AllEntityIterator(this, 0); }
+	// 	AllEntityIterator end() { return AllEntityIterator(this, AllEntities_.size()); }
+
+	// 	/** Note: expensive method? TODO: Convert to an iterator. */
+	// 	std::vector<const System *> GetSystems(const EntityHandle &entity);
+
+	// 	/**
+	// 	 * @brief Gets the index of a system with a specific name
+	// 	 *
+	// 	 * @param name The name of the system to get
+	// 	 * @return The index to a system (meaningless to user).
+	// 	 */
+	// 	dstd::USize GetSystemByName(const std::string &name) const;
+
+	// 	/**
+	// 	 * @brief Gets the pointer to a system at an index.
+	// 	 * @see GetSystemByName
+	// 	 *
+	// 	 * @param index The index of a system (returned by @c GetSystemByName)
+	// 	 * @return A const pointer to the system
+	// 	 */
+	// 	const System *GetSystemByIndex(dstd::USize index) const;
+
+	// 	template<typename ComponentType>
+	// 	ComponentType *GetComponent(const EntityHandle &entity);
+
+	// 	template<typename ComponentType>
+	// 	ComponentType *AddComponent(const EntityHandle &entity, const ComponentType &comp);
+
+	// 	/**
+	// 	 * @brief Holds the begin/end methods for the GetEntities() function.
+	// 	 */
+	// 	class EntityIterators
+	// 	{
+	// 		const dstd::DynamicVector &Vector_;
+	// 		EntityIterators(const dstd::DynamicVector &vector) : Vector_(vector) {}
+
+	// 		friend class ECS;
+	// 	public:
+	// 		class Iter
+	// 		{
+	// 			EntityIterators &Bound_;
+	// 			dstd::USize Index_;
+	// 			Iter(EntityIterators &bound, dstd::USize index) : Bound_(bound), Index_(index) {}
+
+	// 			friend class EntityIterators;
+	// 		public:
+	// 			Iter &operator++() { return Index_++, *this; }
+	// 			bool operator==(const Iter &other) { return other.Index_ == this->Index_; }
+	// 			bool operator!=(const Iter &other) { return !(*this == other); }
+	// 			const EntityHandle *operator*()
+	// 			{
+	// 				// Because the Vector_ contains structures like the following:
+	// 				// struct { dstd::USize Index; ComponentType component; }
+	// 				// we can simply get a pointer to the first element: Index_.
+	// 				// TODO: investigate: should dstd::USize here be EntityHandle?
+	// 				return Bound_.Vector_.Get<dstd::USize>(Index_);
+	// 			}
+	// 			dstd::USize CurrentIndex() const { return Index_; }
+	// 		};
+
+	// 		Iter begin() { return Iter(*this, 0); }
+	// 		Iter end() { return Iter(*this, Vector_.GetSize()); }
+	// 	};
+
+	// 	template<typename ComponentType>
+	// 	EntityIterators GetEntities() const;
+
+	// 	EntityIterators GetEntities(const std::type_info &info) const;
+
+	// 	/**
+	// 	 * @brief Similar to add component but takes the system index.
+	// 	 * @see GetSystemByName
+	// 	 *
+	// 	 * @param index The index of the system
+	// 	 * @param entity The entity handle that will be added to the system
+	// 	 */
+	// 	void AddEntityToSystem(dstd::USize index, const EntityHandle &entity);
+
+	// private:
+	// 	struct ComponentPool
+	// 	{
+	// 		dstd::DynamicSparseDataSet Set_;
+	// 		size_t SystemIndex_;
+	// 	};
+
+	// 	void Initialize();
+	// 	void DeInitialize();
+	// 	friend class World;
+
+	// 	std::unordered_map<std::type_index, ComponentPool> ComponentPools_;
+	// 	std::unordered_map<EntityHandle, std::string> UUIDMap_;
+	// 	std::vector<System> AllSystems_;
+	// 	std::vector<EntityHandle> AllEntities_;
+	// 	std::vector<void *> AllComponents_;
+	// 	size_t NextAvailable_  = 0;
+	// 	size_t AvailableCount_ = 0;
+	// };
 
 	class ECS
 	{
-	public:
-		template<typename ComponentType>
-		void RegisterSystem(System &&system);
-
-		EntityHandle CreateEntity();
-
 		/**
-		 * @brief Get every registered system
-		 *
-		 * @return Vector of every registered system
+		 * @brief Returns the component of the specified type of an entity.
+		 * 
+		 * @tparam T The type of the component.
+		 * @param entity The entity the the component is attached to.
+		 * @return The pointer to the component.
 		 */
-		const std::vector<System> &GetAllSystems() const;
-
-		/**
-		 * @brief Get all of entities in the ECS (including dead ones).
-		 * @warning This includes the dead entities (msb is 1)!
-		 * @deprecated Use iterators (e.g. for(... : *ECSInstance()) { ... })
-		 *
-		 * @return Vector of every entity (including dead ones)
-		 */
-		const std::vector<EntityHandle> &GetAllEntities() const;
-
-		class AllEntityIterator
+		template<typename T>
+		T *GetComponent(EntityHandle entity)
 		{
-		public:
-			AllEntityIterator &operator++()
+			auto typeIndex = std::type_index(typeid(ComponentType));
+			auto &found = ComponentPools_.find(typeIndex);
+
+			if(found == ComponentPools_.end())
 			{
-				constexpr EntityHandle mask = (EntityHandle)1 << ((sizeof(EntityHandle) * 8) - 1);
-				Index_ += 1;
-				while(Bound_->AllEntities_[Index_] & mask) ++Index_;
-				return *this;
+				LOG_F(ERROR, "No component pool for type %s",
+				      util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+				return nullptr;
 			}
 
-			bool operator==(const AllEntityIterator &other) { return other.Index_ == this->Index_; }
-
-			bool operator!=(const AllEntityIterator &other) { return !(*this == other); }
-
-			const EntityHandle &operator*() { return Bound_->AllEntities_[Index_]; }
-
-			dstd::USize CurrentIndex() const { return Index_; }
-
-		private:
-			friend class ECS;
-			AllEntityIterator(ECS *bound, dstd::USize index) : Index_(index), Bound_(bound) {}
-			dstd::USize Index_;
-			ECS *Bound_;
-		};
-
-		AllEntityIterator begin() { return AllEntityIterator(this, 0); }
-		AllEntityIterator end() { return AllEntityIterator(this, AllEntities_.size()); }
-
-		/** Note: expensive method? TODO: Convert to an iterator. */
-		std::vector<const System *> GetSystems(const EntityHandle &entity);
+			return (T*)found->second.GetComponent(entity);
+		}
 
 		/**
-		 * @brief Gets the index of a system with a specific name
-		 *
-		 * @param name The name of the system to get
-		 * @return The index to a system (meaningless to user).
+		 * @brief Adds a component to an entity. The component is constructed in-place.
+		 * 
+		 * @tparam T The type of the component
+		 * @tparam Args Arguments that are passed to the constructor of the component.
+		 * @param entity The entity that the component will be attached to.
+		 * @param args Arguments that are passed to the constructor of the component.
+		 * @return The pointer to the attached component.
 		 */
-		dstd::USize GetSystemByName(const std::string &name) const;
+		template<typename T, typename ...Args>
+		T *AddComponent(EntityHandle entity, Args &&...args)
+		{
+			auto typeIndex = std::type_index(typeid(ComponentType));
+			auto &found = ComponentPools_.find(typeIndex);
 
-		/**
-		 * @brief Gets the pointer to a system at an index.
-		 * @see GetSystemByName
-		 *
-		 * @param index The index of a system (returned by @c GetSystemByName)
-		 * @return A const pointer to the system
-		 */
-		const System *GetSystemByIndex(dstd::USize index) const;
+			if(found == ComponentPools_.end())
+			{
+				LOG_F(ERROR, "No component pool for type %s",
+				      util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+				return nullptr;
+			}
 
-		template<typename ComponentType>
-		ComponentType *GetComponent(const EntityHandle &entity);
-
-		template<typename ComponentType>
-		ComponentType *AddComponent(const EntityHandle &entity, const ComponentType &comp);
-
-		template<typename ComponentType>
-		std::vector<EntityHandle> GetEntities() const;
-
-		/**
-		 * @brief Similar to add component but takes the system index.
-		 * @see GetSystemByName
-		 *
-		 * @param index The index of the system
-		 * @param entity The entity handle that will be added to the system
-		 */
-		void AddEntityToSystem(dstd::USize index, const EntityHandle &entity);
+			return nullptr; // TODO!
+			// return (T*)found->second.AddComponent(entity);
+		}
 
 	private:
 		struct ComponentPool
 		{
-			dstd::DynamicSparseDataSet Set_;
-			size_t SystemIndex_;
+			dstd::DynamicSparseSet Set_;
+
+			void *GetComponent(EntityHandle entity)
+			{
+				if(!Set_.Contains(entity)) return nullptr;
+				return Set_.RawGet((dstd::USize)entity);
+			}
 		};
 
 		std::unordered_map<std::type_index, ComponentPool> ComponentPools_;
-		std::unordered_map<EntityHandle, std::string> UUIDMap_;
-		std::vector<System> AllSystems_;
-		std::vector<EntityHandle> AllEntities_;
-		std::vector<void *> AllComponents_;
-		size_t NextAvailable_  = 0;
-		size_t AvailableCount_ = 0;
 	};
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);
@@ -169,7 +277,7 @@ namespace dcore::world
 	protected:
 		static const struct Reg
 		{
-			Reg() { ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>>()); }
+			Reg() { ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>, T>()); }
 		} RegStatic_;
 
 	public:
@@ -218,85 +326,65 @@ namespace dcore::world
 		}
 	};
 
-	template<typename ComponentType>
-	ComponentType *ECS::GetComponent(const EntityHandle &entity)
-	{
-		LOG_F(INFO, "Get component %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-		LOG_F(INFO, "... <- %lu", entity);
+	// template<typename ComponentType>
+	// ComponentType *ECS::GetComponent(const EntityHandle &entity)
+	// {
+	// 	LOG_F(INFO, "Get component %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+	// 	LOG_F(INFO, "... <- %lu", entity);
 
-		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
-		{
-			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-			return nullptr;
-		}
+	// }
 
-		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
-		if(!set.Contains(entity)) return nullptr;
+	// template<typename ComponentType>
+	// ComponentType *ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
+	// {
+	// 	auto c = new byte[sizeof(ComponentType)];
+	// 	dstd::CopyBuffer(sizeof(ComponentType), c, (dstd::Byte *)&comp);
+	// 	this->AllComponents_.push_back(c);
+	// 	// LOG_F(INFO, "Adding entity to component pool for type %s",
+	// 	// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
 
-		LOG_F(INFO, "Found!");
+	// 	if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+	// 	{
+	// 		LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+	// 		return nullptr;
+	// 	}
 
-		auto component = set.Get<ComponentType>(entity);
+	// 	auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
 
-		LOG_F(INFO, "Component: %p\n", component);
-		return component;
-	}
+	// 	set.Set<ComponentType>(entity, (ComponentType *)c);
 
-	template<typename ComponentType>
-	ComponentType *ECS::AddComponent(const EntityHandle &entity, const ComponentType &comp)
-	{
-		auto c = new byte[sizeof(ComponentType)];
-		dstd::CopyBuffer(sizeof(ComponentType), c, (dstd::Byte *)&comp);
-		this->AllComponents_.push_back(c);
-		// LOG_F(INFO, "Adding entity to component pool for type %s",
-		// util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-		
-		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
-		{
-			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-			return nullptr;
-		}
+	// 	printf("Component pool for type %s has %lu entities.\n",
+	// 	       util::Debug::Demangle(typeid(ComponentType).name()).c_str(), set.GetPacked().GetSize());
 
-		auto &set = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_;
+	// 	return (ComponentType *)c;
+	// }
 
-		set.Set<ComponentType>(entity, (ComponentType *)c);
+	// template<typename ComponentType>
+	// ECS::EntityIterators ECS::GetEntities() const
+	// {
+	// 	static dstd::DynamicVector emptyDynamicVector(0);
 
-		printf("Component pool for type %s has %lu entities.\n",
-		       util::Debug::Demangle(typeid(ComponentType).name()).c_str(), set.GetPacked().GetSize());
+	// 	if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
+	// 	{
+	// 		LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+	// 		return ECS::EntityIterators {emptyDynamicVector};
+	// 	}
 
-		return (ComponentType *)c;
-	}
+	// 	const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
+	// 	return ECS::EntityIterators {packed};
+	// }
 
-	template<typename ComponentType>
-	std::vector<EntityHandle> ECS::GetEntities() const
-	{
-		std::vector<EntityHandle> entities;
-		
-		if(this->ComponentPools_.find(std::type_index(typeid(ComponentType))) == this->ComponentPools_.end())
-		{
-			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-			return std::vector<EntityHandle>();
-		}
-
-		const auto &packed = this->ComponentPools_.at(std::type_index(typeid(ComponentType))).Set_.GetPacked();
-		for(dstd::USize idx = 0; idx < packed.GetSize(); ++idx) entities.push_back(*packed.Get<dstd::USize>(idx));
-		// Due to how DynamicVector works, we can simply
-		// get a pointer to the first element of the structure
-		// (in this case, dstd::USize).
-		return entities;
-	}
-
-	template<typename ComponentType>
-	void ECS::RegisterSystem(System &&system)
-	{
-		printf("ECS::RegisterSystem<%s>()\n", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-		ComponentPools_.insert(decltype(ComponentPools_)::value_type(
-			std::type_index(typeid(ComponentType)),
-			ComponentPool { dstd::DynamicSparseDataSet(sizeof(ComponentType)), ComponentPools_.size() }
-		));
-		ComponentPools_.at(std::type_index(typeid(ComponentType))).SystemIndex_ = AllSystems_.size();
-		printf("New system index: %zu\n", AllSystems_.size());
-		AllSystems_.push_back(std::move(system));
-	}
+	// template<typename ComponentType>
+	// void ECS::RegisterSystem(System &&system)
+	// {
+	// 	printf("ECS::RegisterSystem<%s>()\n", util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+	// 	ComponentPools_.insert(decltype(ComponentPools_)::value_type(
+	// 	    std::type_index(typeid(ComponentType)),
+	// 	    ComponentPool {dstd::DynamicSparseDataSet(sizeof(ComponentType)), ComponentPools_.size()}));
+	// 	ComponentPools_.at(std::type_index(typeid(ComponentType))).SystemIndex_ = AllSystems_.size();
+	// 	printf("New system index: %zu\n", AllSystems_.size());
+	// 	AllSystems_.push_back(std::move(system));
+	// }
 
 	struct UUIDComponent : ComponentBase<UUIDComponent>
 	{

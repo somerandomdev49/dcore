@@ -71,4 +71,18 @@ namespace dcore::world
 		}
 	}
 
+	ECS::EntityIterators ECS::GetEntities(const std::type_info &type) const
+	{
+		static dstd::DynamicVector emptyDynamicVector(0);
+
+		if(this->ComponentPools_.find(std::type_index(type)) == this->ComponentPools_.end())
+		{
+			LOG_F(ERROR, "No component pool for type %s", util::Debug::Demangle(type.name()).c_str());
+			return ECS::EntityIterators {emptyDynamicVector};
+		}
+
+		const auto &packed = this->ComponentPools_.at(std::type_index(type)).Set_.GetPacked();
+		return ECS::EntityIterators {packed};
+	}
+
 } // namespace dcore::world
