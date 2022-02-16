@@ -1,0 +1,10 @@
+
+# Ignore some files
+include/loguru.hpp -linguist-vendored
+include/tiny_obj_loader.h -linguist-vendored
+include/stb_image.h -linguist-vendored
+include/stb_truetype.h -linguist-vendored
+include/picojson.hpp -linguist-vendored
+include/stduuid.h -linguist-vendored
+src/loguru.cpp -linguist-vendored
+src/gl3w.cpp -linguist-vendored
