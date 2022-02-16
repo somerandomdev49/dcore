@@ -51,6 +51,22 @@ namespace dstd
 		}
 
 		/**
+		 * @brief Allocate space for a new item, returning a pointer to it.
+		 * @return A pointer to the newly allocated item.
+		 */
+		template<typename T>
+		T *AllocAdd()
+		{
+			return (T *)RawAllocAdd();
+		}
+
+		/**
+		 * @brief Allocate space for a new item, returning a pointer to it.
+		 * @return A pointer to the newly allocated item.
+		 */
+		void *RawAllocAdd();
+
+		/**
 		 * @brief Add an element to the vector (void pointer)
 		 *
 		 * @tparam T

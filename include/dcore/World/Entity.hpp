@@ -127,42 +127,6 @@ namespace dcore::world
 	// 	template<typename ComponentType>
 	// 	ComponentType *AddComponent(const EntityHandle &entity, const ComponentType &comp);
 
-	// 	/**
-	// 	 * @brief Holds the begin/end methods for the GetEntities() function.
-	// 	 */
-	// 	class EntityIterators
-	// 	{
-	// 		const dstd::DynamicVector &Vector_;
-	// 		EntityIterators(const dstd::DynamicVector &vector) : Vector_(vector) {}
-
-	// 		friend class ECS;
-	// 	public:
-	// 		class Iter
-	// 		{
-	// 			EntityIterators &Bound_;
-	// 			dstd::USize Index_;
-	// 			Iter(EntityIterators &bound, dstd::USize index) : Bound_(bound), Index_(index) {}
-
-	// 			friend class EntityIterators;
-	// 		public:
-	// 			Iter &operator++() { return Index_++, *this; }
-	// 			bool operator==(const Iter &other) { return other.Index_ == this->Index_; }
-	// 			bool operator!=(const Iter &other) { return !(*this == other); }
-	// 			const EntityHandle *operator*()
-	// 			{
-	// 				// Because the Vector_ contains structures like the following:
-	// 				// struct { dstd::USize Index; ComponentType component; }
-	// 				// we can simply get a pointer to the first element: Index_.
-	// 				// TODO: investigate: should dstd::USize here be EntityHandle?
-	// 				return Bound_.Vector_.Get<dstd::USize>(Index_);
-	// 			}
-	// 			dstd::USize CurrentIndex() const { return Index_; }
-	// 		};
-
-	// 		Iter begin() { return Iter(*this, 0); }
-	// 		Iter end() { return Iter(*this, Vector_.GetSize()); }
-	// 	};
-
 	// 	template<typename ComponentType>
 	// 	EntityIterators GetEntities() const;
 
@@ -199,9 +163,22 @@ namespace dcore::world
 
 	class ECS
 	{
+		struct ComponentPool
+		{
+			dstd::DynamicSparseSet Set_;
+
+			void *AddComponent(EntityHandle entity, void *component);
+			void *GetComponent(EntityHandle entity);
+			EntityHandle GetEntity(dstd::USize index);
+		};
+
+	public:
+		void Initialize();
+		void DeInitialize();
+
 		/**
 		 * @brief Returns the component of the specified type of an entity.
-		 * 
+		 *
 		 * @tparam T The type of the component.
 		 * @param entity The entity the the component is attached to.
 		 * @return The pointer to the component.
@@ -210,7 +187,7 @@ namespace dcore::world
 		T *GetComponent(EntityHandle entity)
 		{
 			auto typeIndex = std::type_index(typeid(ComponentType));
-			auto &found = ComponentPools_.find(typeIndex);
+			auto &found    = ComponentPools_.find(typeIndex);
 
 			if(found == ComponentPools_.end())
 			{
@@ -219,23 +196,24 @@ namespace dcore::world
 				return nullptr;
 			}
 
-			return (T*)found->second.GetComponent(entity);
+			return (T *)AllComponentPools_[found->second].GetComponent(entity);
 		}
 
 		/**
 		 * @brief Adds a component to an entity. The component is constructed in-place.
-		 * 
+		 * @note The destructor is called during this method.
+		 *
 		 * @tparam T The type of the component
 		 * @tparam Args Arguments that are passed to the constructor of the component.
 		 * @param entity The entity that the component will be attached to.
 		 * @param args Arguments that are passed to the constructor of the component.
 		 * @return The pointer to the attached component.
 		 */
-		template<typename T, typename ...Args>
+		template<typename T, typename... Args>
 		T *AddComponent(EntityHandle entity, Args &&...args)
 		{
 			auto typeIndex = std::type_index(typeid(ComponentType));
-			auto &found = ComponentPools_.find(typeIndex);
+			auto &found    = ComponentPools_.find(typeIndex);
 
 			if(found == ComponentPools_.end())
 			{
@@ -244,23 +222,80 @@ namespace dcore::world
 				return nullptr;
 			}
 
-			return nullptr; // TODO!
-			// return (T*)found->second.AddComponent(entity);
+			T obj = T(std::forward<Args>(args)...);
+			return (T *)AllComponentPools_[found->second].AddComponent(entity, &obj);
 		}
 
-	private:
-		struct ComponentPool
+		class ComponentPoolWrapper
 		{
-			dstd::DynamicSparseSet Set_;
+			ComponentPool &ComponentPool_;
+			friend class EntityIterator;
+			friend class ECS;
 
-			void *GetComponent(EntityHandle entity)
+			ComponentPoolWrapper(ComponentPool &componentPool) : ComponentPool_(componentPool) {}
+		public:
+			class EntityIterator
 			{
-				if(!Set_.Contains(entity)) return nullptr;
-				return Set_.RawGet((dstd::USize)entity);
-			}
+				ComponentPoolWrapper &Bound_;
+				dstd::USize Index_;
+
+				friend class ComponentPoolWrapper;
+
+			public:
+				EntityIterator &operator++() { return Index_++, *this; }
+				bool operator==(const EntityIterator &other) { return other.Index_ == this->Index_; }
+				bool operator!=(const EntityIterator &other) { return !(*this == other); }
+				EntityHandle operator*() { return Bound_.ComponentPool_.GetEntity(Index_); }
+				dstd::USize CurrentIndex() const { return Index_; }
+			};
+
+			EntityIterator begin();
+			EntityIterator end();
 		};
 
-		std::unordered_map<std::type_index, ComponentPool> ComponentPools_;
+		ComponentPoolWrapper GetComponentPool(dstd::USize index)
+		{
+			return ComponentPoolWrapper(AllComponentPools_[index]);
+		}
+
+		dstd::USize GetComponentPoolCount() const { return AllComponentPools_.size(); }
+
+		/**
+		 * @brief Holds the begin/end methods for the GetEntities() function.
+		 */
+		class ComponentPoolIterators
+		{
+			ECS &ECS_;
+			ComponentPoolIterators(ECS &ecs) : ECS_(ecs) {}
+
+			friend class ECS;
+
+		public:
+			class ComponentPoolIterator
+			{
+				ComponentPoolIterators &Bound_;
+				dstd::USize Index_;
+				ComponentPoolIterator(ComponentPoolIterators &bound, dstd::USize index) : Bound_(bound), Index_(index)
+				{
+				}
+
+				friend class ComponentPoolIterators;
+
+			public:
+				ComponentPoolIterator &operator++() { return Index_++, *this; }
+				bool operator==(const ComponentPoolIterator &other) { return other.Index_ == this->Index_; }
+				bool operator!=(const ComponentPoolIterator &other) { return !(*this == other); }
+				ComponentPoolWrapper operator*() { return Bound_.ECS_.GetComponentPool(Index_); }
+				dstd::USize CurrentIndex() const { return Index_; }
+			};
+
+			ComponentPoolIterator begin() { return ComponentPoolIterator(*this, 0); }
+			ComponentPoolIterator end() { return ComponentPoolIterator(*this, ECS_.GetComponentPoolCount()); }
+		};
+
+	private:
+		std::vector<ComponentPool> AllComponentPools_;
+		std::unordered_map<std::type_index, dstd::USize> ComponentPools_;
 	};
 
 	ECS *ECSInstance(bool set = false, ECS *newECS = nullptr);

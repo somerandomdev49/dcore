@@ -14,19 +14,19 @@ namespace dstd
 	{
 		// Note: (for now) this is a map because we can set any index.
 		/** The sparse list contains indices into the packed list. */
-		std::unordered_map<dstd::USize, dstd::USize> Sparse_;
+		std::unordered_map<USize, USize> Sparse_;
 
 		/** The packed list contains indices into the sparse list and data. */
 		DynamicVector Packed_;
 
 		struct Element
 		{
-			dstd::USize Index;
+			USize Index;
 			// + Data
 		};
 
 	public:
-		DynamicSparseSet(dstd::USize elementSize) : Packed_(sizeof(Element) + elementSize) {}
+		DynamicSparseSet(USize elementSize) : Packed_(sizeof(Element) + elementSize) {}
 
 		/**
 		 * @brief Set a value at an index inside of the sparse list.
@@ -35,12 +35,9 @@ namespace dstd
 		 * @param value pointer to value to insert
 		 */
 		template<typename T>
-		void Set(dstd::USize index, const T *value)
+		T *Set(USize index, const T *value)
 		{
-			Sparse_[index] = Packed_.GetSize();
-			auto elem      = CreateElement_(index, sizeof(T), value);
-			Packed_.RawAdd(elem);
-			delete elem; // RawAdd copies.
+			return (T *)RawSet(elem);
 		}
 
 		/**
@@ -49,18 +46,14 @@ namespace dstd
 		 * @param index The index to check.
 		 * @return Whether the sparse set contains an index.
 		 */
-		bool Contains(dstd::USize index) const
-		{
-			auto found = Sparse_.find(index);
-			return found != Sparse_.end() && found->first < Packed_.GetSize();
-		}
+		bool Contains(USize index) const;
 
 		/**
 		 * @brief Retreive the value from the packed set by the index from the sparse set.
 		 * @return The value found.
 		 */
 		template<typename T>
-		const T *Get(dstd::USize index) const
+		const T *Get(USize index) const
 		{
 			return (const T *)RawGet(index);
 		}
@@ -72,13 +65,22 @@ namespace dstd
 		 * @return the value found.
 		 */
 		template<typename T>
-		T *Get(dstd::USize index)
+		T *Get(USize index)
 		{
 			return (T *)RawGet(index);
 		}
 
-		void *RawGet(dstd::USize index);
-		const void *RawGet(dstd::USize index) const;
+		void *RawGet(USize index);
+		const void *RawGet(USize index) const;
+
+		/**
+		 * @brief Sets an item
+		 *
+		 * @param index
+		 * @param value
+		 * @returns The pointer to the newly created item.
+		 */
+		void *RawSet(USize index, const void *value);
 
 		/**
 		 * @brief Get the internal packed array.
@@ -89,10 +91,10 @@ namespace dstd
 
 	private:
 		template<typename T>
-		Element *CreateElement_(dstd::USize index, dstd::USize valueSize, const T *value)
+		Element *CreateElement_(USize index, USize valueSize, const T *value)
 		{
-			dstd::Byte *bytes = dstd::AllocBuffer(sizeof(Element) + valueSize);
-			dstd::CopyBuffer(valueSize, bytes + sizeof(Element), (dstd::Byte *)value);
+			Byte *bytes = AllocBuffer(sizeof(Element) + valueSize);
+			CopyBuffer(valueSize, bytes + sizeof(Element), (Byte *)value);
 			return reinterpret_cast<Element *>(bytes);
 		}
 	};
