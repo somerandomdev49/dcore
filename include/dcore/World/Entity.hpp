@@ -166,6 +166,7 @@ namespace dcore::world
 		struct ComponentPool
 		{
 			dstd::DynamicSparseSet Set_;
+			ComponentPool(dstd::USize componentSize);
 
 			void *AddComponent(EntityHandle entity, void *component);
 			void *GetComponent(EntityHandle entity);
@@ -226,6 +227,12 @@ namespace dcore::world
 			return (T *)AllComponentPools_[found->second].AddComponent(entity, &obj);
 		}
 
+		template<typename T>
+		void AddComponentPool()
+		{
+			AllComponentPools_.push_back(ComponentPool(sizeof(T)));
+		}
+
 		class ComponentPoolWrapper
 		{
 			ComponentPool &ComponentPool_;
@@ -233,6 +240,7 @@ namespace dcore::world
 			friend class ECS;
 
 			ComponentPoolWrapper(ComponentPool &componentPool) : ComponentPool_(componentPool) {}
+
 		public:
 			class EntityIterator
 			{

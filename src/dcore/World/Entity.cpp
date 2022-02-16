@@ -85,6 +85,8 @@ namespace dcore::world
 	// 	return ECS::EntityIterators {packed};
 	// }
 
+	ECS::ComponentPool::ComponentPool(dstd::USize componentSize) : Set_(componentSize) {}
+
 	void *ECS::ComponentPool::AddComponent(EntityHandle entity, void *component)
 	{
 		// formatting
@@ -97,19 +99,10 @@ namespace dcore::world
 		return Set_.RawGet((dstd::USize)entity);
 	}
 
-	EntityHandle ECS::ComponentPool::GetEntity(dstd::USize index)
-	{
-		return *Set_.Get<EntityHandle>(index);
-	}
+	EntityHandle ECS::ComponentPool::GetEntity(dstd::USize index) { return *Set_.Get<EntityHandle>(index); }
 
-	void ECS::Initialize()
-	{
+	void ECS::Initialize() {}
 
-	}
-
-	void ECS::DeInitialize()
-	{
-		
-	}
+	void ECS::DeInitialize() {}
 
 } // namespace dcore::world
