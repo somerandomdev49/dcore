@@ -1,5 +1,5 @@
 #pragma once
-#include <dcore/World/Entity.hpp>
+#include <dcore/World/World.hpp>
 #include <dcore/Uni.hpp>
 
 #include <dg/Entity/Inventory.hpp>

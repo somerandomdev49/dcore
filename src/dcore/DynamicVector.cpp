@@ -28,6 +28,6 @@ namespace dstd
 	void *DynamicVector::RawAllocAdd()
 	{
 		Data_ = CommonAllocator::ReAllocN((Byte *)Data_, (Size_ + 1) * ItemSize_);
-		return Data_ + (Size_++) * ItemSize_;
+		return (dstd::Byte*)Data_ + (Size_++) * ItemSize_;
 	}
 } // namespace dstd

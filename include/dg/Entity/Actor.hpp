@@ -1,6 +1,5 @@
 #pragma once
-#include <dcore/World/Entity.hpp>
-
+#include <dcore/World/World.hpp>
 #include <dg/Entity/Effect.hpp>
 
 #include <vector>

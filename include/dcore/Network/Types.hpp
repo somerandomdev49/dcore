@@ -4,13 +4,22 @@
 namespace dcore::net
 {
 	template<typename T>
-	struct Vector2 { T X, Y; };
+	struct Vector2
+	{
+		T X, Y;
+	};
 
 	template<typename T>
-	struct Vector3 { T X, Y, Z; };
-	
+	struct Vector3
+	{
+		T X, Y, Z;
+	};
+
 	template<typename T>
-	struct Vector4 { T X, Y, Z, W; };
+	struct Vector4
+	{
+		T X, Y, Z, W;
+	};
 
 	using Vector2f   = Vector2<float>;
 	using Vector3f   = Vector3<float>;
@@ -27,4 +36,4 @@ namespace dcore::net
 	using Vector2u8  = Vector2<dstd::UInt8>;
 	using Vector3u8  = Vector3<dstd::UInt8>;
 	using Vector4u8  = Vector4<dstd::UInt8>;
-}
+} // namespace dcore::net

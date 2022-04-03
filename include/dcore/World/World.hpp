@@ -20,6 +20,132 @@ namespace dcore::world
 {
 	class Entity; // forward declaration.
 
+	enum class CommonMessages : dstd::USize
+	{
+		StartMessage,
+		EndMessage,
+		UpdateMessage,
+		RenderMessage,
+		PreRenderMessage,
+		PostRenderMessage,
+		SaveMessage,
+		LoadMessage,
+	};
+
+	/**
+	 * @brief Wrapper for @ref dcore::world::ECS and terrain
+	 */
+	class World
+	{
+	public:
+		/** void SaveFunction(data::FileOutput &out, ); */
+		/** @deprecated Save externally */
+		using SaveFunction = void (*)(data::FileOutput &, void *);
+
+		template<typename T>
+		T *GetComponent(const Entity *entity);
+
+		template<typename T>
+		void AddComponent(Entity *entity, const T &c);
+
+		Entity CreateEntity();
+		void RegisterUpdate(void (*f)(World *));
+
+		// template<typename ComponentType, typename FunctionType>
+		// void Each(FunctionType func);
+
+		terrain::Terrain *GetTerrain() const;
+		void SetTerrain(terrain::Terrain *terrain);
+
+		float GetRenderDistance() const;
+		void SetRenderDistance(float newRenderDistance);
+
+		/** @deprecated Save externally if needed */
+		void Save(data::FileOutput &output);
+		/** @deprecated Load externally if needed (see WorldLoader) */
+		void Load(const data::FileInput &input);
+
+	private:
+		friend class platform::Context;
+		friend class launch::Launch;
+		void Initialize();
+		void DeInitialize();
+		void Start();
+		void Update();
+		void Render(graphics::RendererInterface *render);
+		void End();
+
+		void DispatchMessage_(CommonMessages message, void *data = nullptr);
+
+		std::vector<void (*)(World *)> Updates_;
+		terrain::Terrain *Terrain_;
+		ECS *ECSInstance_;
+
+		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
+		float RenderDistance_                          = RENDER_DISTANCE_DEFAULT;
+	};
+
+#define DCORE_COMPONENT_REGISTER(T)                                \
+	template<>                                                     \
+	const T::ComponentBase<T>::Reg T::ComponentBase<T>::RegStatic_ \
+	{                                                              \
+	}
+
+	template<typename T>
+	class ComponentBase
+	{
+	protected:
+		static const struct Reg
+		{
+			Reg() { ECSComponentPoolProvider::Instance()->AddComponentPool<T>(); }
+		} RegStatic_;
+
+	public:
+		/**
+		 * @brief Returns the name of the component class for the current template instance
+		 *
+		 * @return The name of the component class if specialized, otherwise the typeinfo name.
+		 */
+		static std::string ThisComponentName() { return util::Debug::Demangle(typeid(T).name()); }
+
+		// static void Start(const EntityHandle &self)
+		// {
+		// 	// Do not run if the Component type doesn't implement Start.
+		// 	if constexpr(!detail::has_Start<T>()) return;
+		// 	T *comp = ECSInstance()->GetComponent<T>(self);
+		// 	// No need for NULL checking here, if this is called, the component exists.
+		// 	comp->Start(self);
+		// }
+
+		// static void Update(const EntityHandle &self)
+		// {
+		// 	if constexpr(!detail::has_Update<T>()) return;
+		// 	T *comp = ECSInstance()->GetComponent<T>(self);
+		// 	comp->Update(self);
+		// }
+
+		// static void End(const EntityHandle &self)
+		// {
+		// 	if constexpr(!detail::has_End<T>()) return;
+		// 	T *comp = ECSInstance()->GetComponent<T>(self);
+		// 	comp->End(self);
+		// }
+
+		// static void Save(const EntityHandle &self, data::Json &output)
+		// {
+		// 	if constexpr(!detail::has_Save<T>()) return;
+		// 	T *comp = ECSInstance()->GetComponent<T>(self);
+		// 	comp->Save(self, output);
+		// }
+
+		// static void Load(const EntityHandle &self, const data::Json &input)
+		// {
+		// 	if constexpr(!detail::has_Load<T>()) return;
+		// 	T *comp = ECSInstance()->GetComponent<T>(self);
+		// 	comp->Load(self, input);
+		// }
+	};
+
 	/**
 	 * @brief A component that contains positional and hierarchical data for an entity.
 	 */
@@ -111,13 +237,10 @@ namespace dcore::world
 		template<typename T>
 		void Dispatch(dstd::USize message, const T &payload)
 		{
-			Dispatch(message, (void*)&payload);
+			Dispatch(message, (void *)&payload);
 		}
 
-		void Dispatch(dstd::USize message)
-		{
-			Dispatch(message, nullptr);
-		}
+		void Dispatch(dstd::USize message) { Dispatch(message, nullptr); }
 
 		void Dispatch(dstd::USize message, void *payload);
 	};
@@ -145,69 +268,11 @@ namespace dcore::world
 		World *World_;
 	};
 
-	enum class CommonMessages : dstd::USize
+	struct UUIDComponent : ComponentBase<UUIDComponent>
 	{
-		StartMessage,
-		EndMessage,
-		UpdateMessage,
-		RenderMessage,
-		PreRenderMessage,
-		PostRenderMessage,
-		SaveMessage,
-		LoadMessage,
-	};
+		dstd::UUID Value;
 
-	/**
-	 * @brief Wrapper for @ref dcore::world::ECS and terrain
-	 */
-	class World
-	{
-	public:
-		/** void SaveFunction(data::FileOutput &out, ); */
-		/** @deprecated Save externally */
-		using SaveFunction = void (*)(data::FileOutput &, void *);
-
-		template<typename T>
-		T *GetComponent(const Entity *entity);
-
-		template<typename T>
-		void AddComponent(Entity *entity, const T &c);
-
-		Entity CreateEntity();
-		void RegisterUpdate(void (*f)(World *));
-
-		// template<typename ComponentType, typename FunctionType>
-		// void Each(FunctionType func);
-
-		terrain::Terrain *GetTerrain() const;
-		void SetTerrain(terrain::Terrain *terrain);
-
-		float GetRenderDistance() const;
-		void SetRenderDistance(float newRenderDistance);
-
-		/** @deprecated Save externally if needed */
-		void Save(data::FileOutput &output);
-		/** @deprecated Load externally if needed (see WorldLoader) */
-		void Load(const data::FileInput &input);
-
-	private:
-		friend class platform::Context;
-		friend class launch::Launch;
-		void Initialize();
-		void DeInitialize();
-		void Start();
-		void Update();
-		void Render(graphics::RendererInterface *render);
-		void End();
-
-		void DispatchMessage_(CommonMessages message, void *data = nullptr);
-
-		std::vector<void (*)(World *)> Updates_;
-		terrain::Terrain *Terrain_;
-		ECS *ECSInstance_;
-
-		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
-		float RenderDistance_ = RENDER_DISTANCE_DEFAULT;
+		UUIDComponent(dstd::UUID uuid) : Value(uuid) {}
 	};
 } // namespace dcore::world
 
@@ -226,13 +291,13 @@ void dcore::world::Entity::AddComponent(const T &c)
 template<typename T>
 T *dcore::world::World::GetComponent(const Entity *entity)
 {
-	return ECSInstance()->GetComponent<T>(entity->Id_);
+	return ECSInstance_->GetComponent<T>(entity->Id_);
 }
 
 template<typename T>
 void dcore::world::World::AddComponent(Entity *entity, const T &c)
 {
-	ECSInstance()->AddComponent<T>(entity->Id_, c);
+	ECSInstance_->AddComponent<T>(entity->Id_, c);
 }
 
 // template<typename ComponentType, typename FunctionType>

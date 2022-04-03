@@ -1,14 +1,11 @@
 #include <dcore/World/Entity.hpp>
 #include <dcore/Util/Debug.hpp>
+#include <dcore/Core/Assert.hpp>
 
 namespace dcore::world
 {
-	ECS *ECSInstance(bool set, ECS *newEcs)
-	{
-		static ECS *i = new ECS();
-		if(set) i = newEcs;
-		return i;
-	}
+	ECSComponentPoolProvider ComponentPoolProviderInstance;
+	ECSComponentPoolProvider *ECSComponentPoolProvider::Instance() { return &ComponentPoolProviderInstance; }
 
 	// const std::vector<System> &ECS::GetAllSystems() const { return AllSystems_; }
 
@@ -101,8 +98,29 @@ namespace dcore::world
 
 	EntityHandle ECS::ComponentPool::GetEntity(dstd::USize index) { return *Set_.Get<EntityHandle>(index); }
 
-	void ECS::Initialize() {}
+	EntityHandle ECS::Create()
+	{
+		if(NextAvailable_ == AllEntities_.size())
+		{
+			AllEntities_.push_back(NextAvailable_++);
+			return AllEntities_.back();
+		}
+
+		DCORE_ASSERT(NextAvailable_ < AllEntities_.size(), "Invalid dcore::world::ECS::NextAvailable_");
+
+		EntityHandle oldNextAvailable = NextAvailable_;
+		NextAvailable_                = AllEntities_[NextAvailable_];
+		return oldNextAvailable;
+	}
+
+	void ECS::Initialize()
+	{
+		NextAvailable_ = 0;
+		for(const auto &pool : ECSComponentPoolProvider::Instance()->AllComponentPools_)
+		{
+			AllComponentPools_.push_back(ComponentPool(pool.Size));
+		}
+	}
 
 	void ECS::DeInitialize() {}
-
 } // namespace dcore::world

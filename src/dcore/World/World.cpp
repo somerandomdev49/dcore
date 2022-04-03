@@ -141,10 +141,7 @@ namespace dcore::world
 		graphics::gui::GuiManager::Instance()->InitializeRoot_();
 	}
 
-	void World::End()
-	{
-		DispatchMessage_(CommonMessages::EndMessage);
-	}
+	void World::End() { DispatchMessage_(CommonMessages::EndMessage); }
 
 	void World::Render(graphics::RendererInterface *render)
 	{
@@ -179,7 +176,7 @@ namespace dcore::world
 	EntityHandle Entity::GetId() const { return Id_; }
 	Entity::Entity(EntityHandle id, World *world) : Id_(id), World_(world) {}
 
-	Entity World::CreateEntity() { return Entity(ECSInstance()->CreateEntity(), this); }
+	Entity World::CreateEntity() { return {ECSInstance_->Create(), this}; }
 
 	void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
 

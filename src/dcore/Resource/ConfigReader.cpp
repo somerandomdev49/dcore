@@ -59,7 +59,7 @@ namespace dcore::resource
 				// [tag]
 				if(line[end] != ']')
 				{
-					LOG_F(ERROR, "Expected ']' in %s:%d (column %zu)", s.c_str(), lineno, end);
+					LOG_F(ERROR, "Expected ']' in %s:%d (column %llu)", s.c_str(), lineno, end);
 					return false;
 				}
 				name = line.substr(start + 1, end);
@@ -67,8 +67,8 @@ namespace dcore::resource
 			else
 			{
 				// key = value
-				auto equalsLoc = line.find("=");
-				if(equalsLoc == line.npos)
+				auto equalsLoc = line.find('=');
+				if(equalsLoc == std::string::npos)
 				{
 					LOG_F(ERROR, "No '=' in %s:%d", s.c_str(), lineno);
 					return false;
