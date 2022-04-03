@@ -42,7 +42,7 @@ namespace dcore::world
 		/** Recalculates the transform matrix. */
 		void ReCalculateMatrix();
 
-		void Save(const EntityHandle &entity, data::Json &output);
+		void Save(const EntityHandle &entity, data::Json &output) const;
 
 	private:
 		glm::mat4 GetNewMatrix() const;
@@ -63,7 +63,7 @@ namespace dcore::world
 		StaticMeshComponent(const graphics::StaticMesh &mesh) : Mesh(mesh) {}
 		graphics::StaticMesh Mesh;
 
-		void Save(const EntityHandle &entity, data::Json &output);
+		void Save(const EntityHandle &self, data::Json &output) const;
 	};
 
 	/**
@@ -74,7 +74,7 @@ namespace dcore::world
 		ModelComponent(const resource::Resource<graphics::Model> &model) : Model(model) {}
 		resource::Resource<graphics::Model> Model;
 
-		void Save(const EntityHandle &entity, data::Json &output);
+		void Save(const EntityHandle &self, data::Json &output) const;
 	};
 
 	class TerrainComponent : public ComponentBase<TerrainComponent>
@@ -104,6 +104,25 @@ namespace dcore::world
 	};
 
 	/**
+	 * @brief Component that dispatches any message/event to listeners.
+	 */
+	struct ComponentDispatcher : ComponentBase<ComponentDispatcher>
+	{
+		template<typename T>
+		void Dispatch(dstd::USize message, const T &payload)
+		{
+			Dispatch(message, (void*)&payload);
+		}
+
+		void Dispatch(dstd::USize message)
+		{
+			Dispatch(message, nullptr);
+		}
+
+		void Dispatch(dstd::USize message, void *payload);
+	};
+
+	/**
 	 * @brief Wrapper for @ref dcore::world::EntityHandle
 	 */
 	class Entity
@@ -126,6 +145,18 @@ namespace dcore::world
 		World *World_;
 	};
 
+	enum class CommonMessages : dstd::USize
+	{
+		StartMessage,
+		EndMessage,
+		UpdateMessage,
+		RenderMessage,
+		PreRenderMessage,
+		PostRenderMessage,
+		SaveMessage,
+		LoadMessage,
+	};
+
 	/**
 	 * @brief Wrapper for @ref dcore::world::ECS and terrain
 	 */
@@ -133,6 +164,7 @@ namespace dcore::world
 	{
 	public:
 		/** void SaveFunction(data::FileOutput &out, ); */
+		/** @deprecated Save externally */
 		using SaveFunction = void (*)(data::FileOutput &, void *);
 
 		template<typename T>
@@ -153,7 +185,9 @@ namespace dcore::world
 		float GetRenderDistance() const;
 		void SetRenderDistance(float newRenderDistance);
 
+		/** @deprecated Save externally if needed */
 		void Save(data::FileOutput &output);
+		/** @deprecated Load externally if needed (see WorldLoader) */
 		void Load(const data::FileInput &input);
 
 	private:
@@ -166,9 +200,14 @@ namespace dcore::world
 		void Render(graphics::RendererInterface *render);
 		void End();
 
+		void DispatchMessage_(CommonMessages message, void *data = nullptr);
+
 		std::vector<void (*)(World *)> Updates_;
 		terrain::Terrain *Terrain_;
-		float RenderDistance_ = 32.0f;
+		ECS *ECSInstance_;
+
+		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
+		float RenderDistance_ = RENDER_DISTANCE_DEFAULT;
 	};
 } // namespace dcore::world
 

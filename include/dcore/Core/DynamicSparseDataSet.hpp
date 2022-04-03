@@ -37,7 +37,7 @@ namespace dstd
 		template<typename T>
 		T *Set(USize index, const T *value)
 		{
-			return (T *)RawSet(elem);
+			return (T *)RawSet(value);
 		}
 
 		/**

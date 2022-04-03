@@ -1,16 +1,5 @@
-CompileFlags:
-	Add: [
-    -std=c++17,
-    -Wall,
-    -Wno-unused-variables,
-    -DDCORE_STD_64BIT,
-    -I=include,
-    -I=3rd-party/include,
-    "-I=C:/msys64/mingw64/include",
-    "-I=C:/msys64/mingw64/include/freetype2"
-  ]
-  Compiler: "C:/msys64/mingw64/bin/g++.exe"
-
+# CompileFlags:
+#   Compiler: "C:/msys64/mingw64/bin/clang.exe"
 
 Style:
   FullyQualifiedNamespaces: Yes
@@ -19,6 +8,11 @@ Style:
 Diagnostics:
   ClangTidy:
     Add: [performance*, modernize*, readability*]
-    Remove: [modernize-use-trailing-return-type]
+    Remove: [
+      modernize-use-trailing-return-type,
+      modernize-use-nodiscard,
+      readability-braces-around-statements,
+      readability-uppercase-literal-suffix
+    ]
     CheckOptions:
-        readability-identifier-naming.VariableCase: CamelCase
+        readability-identifier-naming.VariableCase: CamelBack

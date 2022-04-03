@@ -16,7 +16,7 @@ namespace dcore::world
 	DCORE_COMPONENT_REGISTER(DynamicComponent);
 	DCORE_COMPONENT_REGISTER(TerrainComponent);
 
-	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output)
+	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output) const
 	{
 		(void)self;
 		std::string name = Mesh.GetTexture().GetName();
@@ -29,9 +29,9 @@ namespace dcore::world
 		output = data::Json {{"mesh", meshInfo}};
 	}
 
-	void TransformComponent::Save(const EntityHandle &self, data::Json &output)
+	void TransformComponent::Save(const EntityHandle &entity, data::Json &output) const
 	{
-		(void)self;
+		(void)entity;
 		output = data::Json::object({
 		    {"position", util::JsonConverters::Glm(this->Position_)},
 		    {"rotation", util::JsonConverters::Glm(this->Rotation_)},
@@ -39,7 +39,7 @@ namespace dcore::world
 		});
 	}
 
-	void ModelComponent::Save(const EntityHandle &self, data::Json &output)
+	void ModelComponent::Save(const EntityHandle &self, data::Json &output) const
 	{
 		(void)self;
 		output = data::Json::object({{"model", Model.GetName()}});
@@ -116,95 +116,46 @@ namespace dcore::world
 	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
 	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
 
-	void World::DeInitialize() { ECSInstance()->DeInitialize(); }
+	void World::DeInitialize() { ECSInstance_->DeInitialize(); }
+
+	void World::DispatchMessage_(CommonMessages message, void *data)
+	{
+		for(const auto &entity : ECSInstance_->GetComponentPool<ComponentDispatcher>())
+		{
+			auto *c = ECSInstance_->GetComponent<ComponentDispatcher>(entity);
+			if(c != nullptr) c->Dispatch((dstd::USize)message, data);
+		}
+	}
 
 	void World::Update()
 	{
 		// TODO: Handle UI clicks and other events.
-		// for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
-		// {
-		// 	const auto &systems = ECSInstance()->GetSystems(*it);
-		// 	for(const auto &system : systems) system->UpdateFunction(*it);
-		// }
-
-		for(const auto &system : ECSInstance()->GetAllSystems())
-		{
-			LOG_F(INFO, "%s <- register", util::Debug::Demangle(system.Type.name()).c_str());
-			auto entities = ECSInstance()->GetEntities(system.Type);
-			for(const auto &entity : entities)
-			{
-				system.UpdateFunction(*entity);
-			}
-		}
+		DispatchMessage_(CommonMessages::UpdateMessage);
 	}
 
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
 	void World::Start()
 	{
-		// LOG_F(ERROR, "begin: %ld, end: %ld", ECSInstance()->begin().CurrentIndex(),
-		//         ECSInstance()->end().CurrentIndex());
-		for(auto it = ECSInstance()->begin(); it != ECSInstance()->end(); ++it)
-		{
-			// FUUUCK we have a giant leak somewhere?
-			if(it.CurrentIndex() > ECSInstance()->end().CurrentIndex()) break;
-			fprintf(stderr, "it: %lu, end: %lu\n", it.CurrentIndex(), ECSInstance()->end().CurrentIndex());
-			const auto &systems = ECSInstance()->GetSystems(*it);
-			for(const auto &system : systems) system->StartFunction(*it);
-			break;
-		}
-
+		DispatchMessage_(CommonMessages::StartMessage);
 		cubeMesh__ = dcore::resource::GetResource<graphics::RStaticMesh>("DCore.Mesh.Cube");
 		graphics::gui::GuiManager::Instance()->InitializeRoot_();
 	}
 
 	void World::End()
 	{
-		for(const auto &entity : *ECSInstance())
-		{
-			const auto &systems = ECSInstance()->GetSystems(entity);
-			for(const auto &system : systems) system->EndFunction(entity);
-		}
+		DispatchMessage_(CommonMessages::EndMessage);
 	}
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-
-		// Render StaticMeshComponent entities.
-		{
-			auto entities = ECSInstance()->GetEntities<StaticMeshComponent>();
-			for(const auto &entity : entities)
-			{
-				// fprintf(stderr, "bryh\n");
-				auto transform  = ECSInstance()->GetComponent<TransformComponent>(*entity);
-				auto staticMesh = ECSInstance()->GetComponent<StaticMeshComponent>(*entity);
-
-				// if(transform.IsDirty()) transform.ReCalculateMatrix();
-				staticMesh->Mesh.SetTransform(transform->GetMatrix());
-
-				render->RenderStaticMesh(&staticMesh->Mesh);
-			}
-		}
-
-		// Render ModelComponent entities.
-		{
-			auto entities = ECSInstance()->GetEntities<ModelComponent>();
-			for(const auto &entity : entities)
-			{
-				auto transform = ECSInstance()->GetComponent<TransformComponent>(*entity);
-				auto model     = ECSInstance()->GetComponent<ModelComponent>(*entity);
-
-				// if(transform.IsDirty()) transform.ReCalculateMatrix();
-
-				render->RenderModel(model->Model.Get(), transform->GetMatrix());
-			}
-		}
+		DispatchMessage_(CommonMessages::RenderMessage, render);
 
 		// Render Terrain if it exists.
 		LOG_F(INFO, "Maybe will render terrain");
-		if(Terrain_)
+		if(Terrain_ != nullptr)
 		{
 			LOG_F(INFO, "Rendering terrain:");
-			auto &chunks = Terrain_->GetChunks();
+			const auto &chunks = Terrain_->GetChunks();
 			for(auto ci : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[ci]);
 
 			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
@@ -225,8 +176,8 @@ namespace dcore::world
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->EnableDepthCheck();
 	}
 
-	dcore::world::EntityHandle Entity::GetId() const { return Id_; }
-	Entity::Entity(dcore::world::EntityHandle e, World *world) : Id_(e), World_(world) {}
+	EntityHandle Entity::GetId() const { return Id_; }
+	Entity::Entity(EntityHandle id, World *world) : Id_(id), World_(world) {}
 
 	Entity World::CreateEntity() { return Entity(ECSInstance()->CreateEntity(), this); }
 
@@ -237,59 +188,67 @@ namespace dcore::world
 
 	void World::Save(data::FileOutput &output)
 	{
-		output.Get() = data::Json {{"version", "0.01"}, {"entities", data::Json::array()}};
+		// output.Get() = data::Json {{"version", "0.01"}, {"entities", data::Json::array()}};
 
-		for(const auto &entity : *ECSInstance())
-		{
-			data::Json comps = data::Json::array();
+		// for(const auto &entity : ECSInstance_->GetComponentPool<ComponentDispatcher>())
+		// {
+		// 	auto *c = ECSInstance_->GetComponent<ComponentDispatcher>(entity);
+		// 	if(c == nullptr) continue;
 
-			const auto &systems = ECSInstance()->GetSystems(entity);
-			for(const auto &system : systems)
-			{
-				data::Json out = data::Json::object();
-				system->SaveFunction(entity, out);
+		// 	data::Json out = data::Json::object();
+		// 	c->Dispatch((dstd::USize)CommonMessages::SaveMessage, &out);
+		// 	output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
+		// }
 
-				out["@type"] = system->Name;
-				comps.push_back(out);
-			}
+		// for(const auto &entity : ECSInstance_)
+		// {
+		// 	data::Json comps = data::Json::array();
 
-			output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
-		}
+		// 	const auto &systems = ECSInstance()->GetSystems(entity);
+		// 	for(const auto &system : systems)
+		// 	{
+		// 		system->SaveFunction(entity, out);
+
+		// 		comps.push_back(out);
+		// 	}
+
+		// 	output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
+		// }
 	}
 
 	void World::Load(const data::FileInput &input)
 	{
-		if(input.Get()["version"] != "0.01")
-		{
-			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
-			// TODO: Create backup here.
-		}
+		// if(input.Get()["version"] != "0.01")
+		// {
+		// 	DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
+		// 	// TODO: Create backup here.
+		// }
 
-		const auto &entities  = input.Get()["entities"];
-		unsigned int entityNo = 0;
-		for(const auto &ej : entities)
-		{
-			EntityHandle id = ECSInstance()->CreateEntity();
+		// const auto &entities  = input.Get()["entities"];
+		// unsigned int entityNo = 0;
+		// for(const auto &ej : entities)
+		// {
+		// 	EntityHandle id = ECSInstance()->CreateEntity();
 
-			if(!ej.contains("uuid"))
-			{
-				LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
-			}
-			else
-			{
-				auto uuidJson = ej["uuid"].get<std::string>();
-				dstd::UUID uuid;
-				dstd::UUID::Parse(uuid, uuidJson);
-				ECSInstance()->AddComponent(id, UUIDComponent(std::move(uuid)));
-			}
+		// 	if(!ej.contains("uuid"))
+		// 	{
+		// 		LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
+		// 	}
+		// 	else
+		// 	{
+		// 		auto uuidJson = ej["uuid"].get<std::string>();
+		// 		dstd::UUID uuid;
+		// 		dstd::UUID::Parse(uuid, uuidJson);
+		// 		ECSInstance()->AddComponent(id, UUIDComponent(std::move(uuid)));
+		// 	}
 
-			for(const auto &comp : ej["components"])
-			{
-				const auto &system = ECSInstance()->GetSystemByName(comp["@type"]);
-				ECSInstance()->AddEntityToSystem(system, id);
-			}
+		// 	for(const auto &comp : ej["components"])
+		// 	{
+		// 		const auto &system = ECSInstance()->GetSystemByName(comp["@type"]);
+		// 		ECSInstance()->AddEntityToSystem(system, id);
+		// 	}
 
-			entityNo += 1;
-		}
+		// 	entityNo += 1;
+		// }
 	}
 } // namespace dcore::world

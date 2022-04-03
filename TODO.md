@@ -1,5 +1,9 @@
 # [TODO]
 
+- no Convert to Ninja
+  - Either custom ninja wrapper (e.g. ninjax++)
+  - CMake (ew, gross)
+
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
 - [x] ~~InputManager~~

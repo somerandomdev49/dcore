@@ -64,3 +64,18 @@ class ActorEntityAttachment: EntityAttachmentBase<ActorEntityAttachment>
 	}
 }
 ```
+
+```csharp
+Entity CreateActor(World world, /* ... */)
+{
+	Entity e = world.CreateEntity();
+
+	...
+
+	world.AttachToEntity(entity, new ActorEntityAttachment());
+
+	...
+
+	return e;
+}
+```

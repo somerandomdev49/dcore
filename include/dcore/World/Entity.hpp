@@ -187,13 +187,13 @@ namespace dcore::world
 		template<typename T>
 		T *GetComponent(EntityHandle entity)
 		{
-			auto typeIndex = std::type_index(typeid(ComponentType));
-			auto &found    = ComponentPools_.find(typeIndex);
+			auto typeIndex = std::type_index(typeid(T));
+			const auto &found = ComponentPools_.find(typeIndex);
 
 			if(found == ComponentPools_.end())
 			{
 				LOG_F(ERROR, "No component pool for type %s",
-				      util::Debug::Demangle(typeid(ComponentType).name()).c_str());
+				      util::Debug::Demangle(typeid(T).name()).c_str());
 				return nullptr;
 			}
 
@@ -213,18 +213,8 @@ namespace dcore::world
 		template<typename T, typename... Args>
 		T *AddComponent(EntityHandle entity, Args &&...args)
 		{
-			auto typeIndex = std::type_index(typeid(ComponentType));
-			auto &found    = ComponentPools_.find(typeIndex);
-
-			if(found == ComponentPools_.end())
-			{
-				LOG_F(ERROR, "No component pool for type %s",
-				      util::Debug::Demangle(typeid(ComponentType).name()).c_str());
-				return nullptr;
-			}
-
 			T obj = T(std::forward<Args>(args)...);
-			return (T *)AllComponentPools_[found->second].AddComponent(entity, &obj);
+			return (T *)GetComponentPool<T>().AddComponent(entity, &obj);
 		}
 
 		template<typename T>
@@ -235,24 +225,25 @@ namespace dcore::world
 
 		class ComponentPoolWrapper
 		{
-			ComponentPool &ComponentPool_;
+			ComponentPool *ComponentPool_;
 			friend class EntityIterator;
 			friend class ECS;
 
-			ComponentPoolWrapper(ComponentPool &componentPool) : ComponentPool_(componentPool) {}
+			ComponentPoolWrapper(ComponentPool *componentPool) : ComponentPool_(componentPool) {}
 
 		public:
-			class EntityIterator
+			struct EntityIterator
 			{
+				friend class ComponentPoolWrapper;
 				ComponentPoolWrapper &Bound_;
 				dstd::USize Index_;
-
-				friend class ComponentPoolWrapper;
-
+				
+				EntityIterator(ComponentPoolWrapper &bound, dstd::USize index)
+					: Bound_(bound), Index_(index) {}
 			public:
 				EntityIterator &operator++() { return Index_++, *this; }
-				bool operator==(const EntityIterator &other) { return other.Index_ == this->Index_; }
-				bool operator!=(const EntityIterator &other) { return !(*this == other); }
+				bool operator==(const EntityIterator &other) const { return other.Index_ == this->Index_; }
+				bool operator!=(const EntityIterator &other) const { return !(*this == other); }
 				EntityHandle operator*() { return Bound_.ComponentPool_.GetEntity(Index_); }
 				dstd::USize CurrentIndex() const { return Index_; }
 			};
@@ -263,7 +254,23 @@ namespace dcore::world
 
 		ComponentPoolWrapper GetComponentPool(dstd::USize index)
 		{
-			return ComponentPoolWrapper(AllComponentPools_[index]);
+			return { &AllComponentPools_[index] };
+		}
+
+		template<typename T>
+		ComponentPoolWrapper GetComponentPool()
+		{
+			auto typeIndex = std::type_index(typeid(T));
+			const auto &found = ComponentPools_.find(typeIndex);
+
+			if(found == ComponentPools_.end())
+			{
+				LOG_F(ERROR, "No component pool for type %s",
+				      util::Debug::Demangle(typeid(T).name()).c_str());
+				return { nullptr };
+			}
+
+			return GetComponentPool(found->second);
 		}
 
 		dstd::USize GetComponentPoolCount() const { return AllComponentPools_.size(); }
@@ -291,14 +298,14 @@ namespace dcore::world
 
 			public:
 				ComponentPoolIterator &operator++() { return Index_++, *this; }
-				bool operator==(const ComponentPoolIterator &other) { return other.Index_ == this->Index_; }
-				bool operator!=(const ComponentPoolIterator &other) { return !(*this == other); }
+				bool operator==(const ComponentPoolIterator &other) const { return other.Index_ == this->Index_; }
+				bool operator!=(const ComponentPoolIterator &other) const { return !(*this == other); }
 				ComponentPoolWrapper operator*() { return Bound_.ECS_.GetComponentPool(Index_); }
 				dstd::USize CurrentIndex() const { return Index_; }
 			};
 
-			ComponentPoolIterator begin() { return ComponentPoolIterator(*this, 0); }
-			ComponentPoolIterator end() { return ComponentPoolIterator(*this, ECS_.GetComponentPoolCount()); }
+			ComponentPoolIterator begin() { return { *this, 0 }; }
+			ComponentPoolIterator end() { return { *this, ECS_.GetComponentPoolCount() }; }
 		};
 
 	private:
@@ -320,7 +327,7 @@ namespace dcore::world
 	protected:
 		static const struct Reg
 		{
-			Reg() { ECSInstance()->RegisterSystem<T>(GetSystem<ComponentBase<T>, T>()); }
+			Reg() { ECSInstance()->AddComponentPool<T>(GetSystem<ComponentBase<T>, T>()); }
 		} RegStatic_;
 
 	public:
@@ -433,6 +440,6 @@ namespace dcore::world
 	{
 		dstd::UUID Value;
 
-		UUIDComponent(dstd::UUID &&uuid) : Value(std::move(uuid)) {}
+		UUIDComponent(dstd::UUID uuid) : Value(uuid) {}
 	};
 }; // namespace dcore::world
