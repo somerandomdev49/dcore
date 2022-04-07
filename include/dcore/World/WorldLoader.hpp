@@ -47,7 +47,12 @@ namespace dcore::world
 		 */
 		void LoadWorld(const std::string &name);
 
+		void UnLoadWorld(const std::string &name);
+
+		void UnLoadAllWorlds();
 	private:
+		std::string Loaded_;
+		std::unordered_map<std::string, World *> Worlds_;
 		std::unordered_map<std::string, WorldLoader *> Loaders_;
 	};
 } // namespace dcore::world

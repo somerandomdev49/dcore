@@ -13,17 +13,11 @@
 namespace
 {
 	std::vector<std::string> gTitles_ {
-	    "DragonCore Game",
-	    "Lead Programmer: Mike RedkO",
+	    "DragonCore",
+	    "Lead Programmer: Mike Redko",
 	    "Lead Designer: Yaromir Konishev",
 	    "Programmer: Kirril Ivanov",
 	    "Music: Molod Enkiy",
-	    "Cool Text: asheesh",
-	    "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-	    "FILLER TEXT FILLER TEXT",
-	    "TEXT FILLER FILLER TEXT",
-	    "TEXT FILLER TEXT FILLER",
-	    "FILLER TEXT TEXT FILLER",
 	};
 }
 
@@ -60,15 +54,16 @@ namespace dg
 		//     ->GetRoot()
 		//     ->CreateChild<dcore::graphics::gui::common::ScrollingText>(gTitles_, glm::vec3(0, 0, 0));
 
-		dcore::world::WorldLoaderRegistry reg;
 
 		dg::loaders::MainWorldLoader mainWorldLoader("World1");
-		reg.AddWorldLoader("Main1", &mainWorldLoader);
-
+		Registry_.AddWorldLoader("Main1", &mainWorldLoader);
 		DCORE_LOG_INFO << "LoadWorld(Main1)";
-		reg.LoadWorld("Main1");
+		Registry_.LoadWorld("Main1");
 		DCORE_LOG_INFO << "Done";
 	}
 
-	void Game::DeInitialize() {}
+	void Game::DeInitialize()
+	{
+		Registry_.UnLoadAllWorlds();
+	}
 } // namespace dg

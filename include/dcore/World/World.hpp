@@ -46,10 +46,10 @@ namespace dcore::world
 		T *GetComponent(const Entity *entity);
 
 		template<typename T>
-		void AddComponent(Entity *entity, const T &c);
+		void AddComponent(Entity *entity, const T &comp);
 
 		Entity CreateEntity();
-		void RegisterUpdate(void (*f)(World *));
+		void RegisterUpdate(void (*func)(World *));
 
 		// template<typename ComponentType, typename FunctionType>
 		// void Each(FunctionType func);
@@ -68,6 +68,7 @@ namespace dcore::world
 	private:
 		friend class platform::Context;
 		friend class launch::Launch;
+		friend class WorldLoaderRegistry;
 		void Initialize();
 		void DeInitialize();
 		void Start();
@@ -230,31 +231,15 @@ namespace dcore::world
 	};
 
 	/**
-	 * @brief Component that dispatches any message/event to listeners.
-	 */
-	struct ComponentDispatcher : ComponentBase<ComponentDispatcher>
-	{
-		template<typename T>
-		void Dispatch(dstd::USize message, const T &payload)
-		{
-			Dispatch(message, (void *)&payload);
-		}
-
-		void Dispatch(dstd::USize message) { Dispatch(message, nullptr); }
-
-		void Dispatch(dstd::USize message, void *payload);
-	};
-
-	/**
 	 * @brief Wrapper for @ref dcore::world::EntityHandle
 	 */
 	class Entity
 	{
 	public:
-		Entity(EntityHandle id, World *world);
+		Entity(EntityHandle handle, World *world);
 
 		template<typename T>
-		void AddComponent(const T &c);
+		void AddComponent(const T &comp);
 
 		template<typename T>
 		T *GetComponent() const;
@@ -283,9 +268,9 @@ T *dcore::world::Entity::GetComponent() const
 }
 
 template<typename T>
-void dcore::world::Entity::AddComponent(const T &c)
+void dcore::world::Entity::AddComponent(const T &comp)
 {
-	return World_->AddComponent<T>(this, c);
+	return World_->AddComponent<T>(this, comp);
 }
 
 template<typename T>
@@ -295,9 +280,9 @@ T *dcore::world::World::GetComponent(const Entity *entity)
 }
 
 template<typename T>
-void dcore::world::World::AddComponent(Entity *entity, const T &c)
+void dcore::world::World::AddComponent(Entity *entity, const T &comp)
 {
-	ECSInstance_->AddComponent<T>(entity->Id_, c);
+	ECSInstance_->AddComponent<T>(entity->Id_, comp);
 }
 
 // template<typename ComponentType, typename FunctionType>

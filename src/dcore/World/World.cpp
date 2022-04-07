@@ -109,22 +109,29 @@ namespace dcore::world
 		                          platform::Context::Instance()->GetWorld()->GetRenderDistance());
 	}
 
-	void World::Initialize() { RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance; }
+	void World::Initialize()
+	{
+		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
+		ECSInstance_ = new ECS();
+		ECSInstance_->Initialize();
+
+		LOG_F(WARNING, "World::Initialize??");
+	}
+
+	void World::DeInitialize()
+	{
+		ECSInstance_->DeInitialize();
+		delete ECSInstance_;
+	}
 
 	terrain::Terrain &TerrainComponent::GetTerrain() { return Terrain_; }
 
 	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
 	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
 
-	void World::DeInitialize() { ECSInstance_->DeInitialize(); }
-
 	void World::DispatchMessage_(CommonMessages message, void *data)
 	{
-		for(const auto &entity : ECSInstance_->GetComponentPool<ComponentDispatcher>())
-		{
-			auto *c = ECSInstance_->GetComponent<ComponentDispatcher>(entity);
-			if(c != nullptr) c->Dispatch((dstd::USize)message, data);
-		}
+		ECSInstance_->Broadcast({ (dstd::USize)message, data });
 	}
 
 	void World::Update()
@@ -153,7 +160,8 @@ namespace dcore::world
 		{
 			LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
-			for(auto ci : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[ci]);
+			for(auto chunkIndex : Terrain_->GetActiveChunks())
+				render->RenderChunk(&chunks[chunkIndex]);
 
 			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
 			// for(const auto &entity : entities)
@@ -174,11 +182,11 @@ namespace dcore::world
 	}
 
 	EntityHandle Entity::GetId() const { return Id_; }
-	Entity::Entity(EntityHandle id, World *world) : Id_(id), World_(world) {}
+	Entity::Entity(EntityHandle handle, World *world) : Id_(handle), World_(world) {}
 
 	Entity World::CreateEntity() { return {ECSInstance_->Create(), this}; }
 
-	void World::RegisterUpdate(void (*f)(World *)) { Updates_.push_back(f); }
+	void World::RegisterUpdate(void (*func)(World *)) { Updates_.push_back(func); }
 
 	float World::GetRenderDistance() const { return RenderDistance_; }
 	void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }

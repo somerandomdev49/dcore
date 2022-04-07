@@ -7,7 +7,6 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/GuiManager.hpp>
-#include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/Core/Preferences.hpp>
@@ -19,13 +18,15 @@
 
 namespace dcore::launch
 {
-	void Launch::Run(int argc, char *argv[])
+	void Launch::Run(int argc, char **argv)
 	{
 		loguru::g_stderr_verbosity = 1;
 		loguru::g_preamble_date    = false;
 		loguru::g_preamble_time    = false;
 		loguru::g_preamble_thread  = false;
 		loguru::init(argc, argv);
+
+		printf("huh?\n");
 
 		static const char *prefPath = "preferences.json";
 
@@ -39,36 +40,36 @@ namespace dcore::launch
 			pref->Read(fileInput);
 		};
 
-		static const auto InitContext = [](platform::Context *ctx, world::World *world, graphics::Renderer *rend)
+		static const auto InitContext = [](platform::Context *ctx, graphics::Renderer *rend)
 		{
-			platform::PlatformSpecific ps;
-			(void)ps;
+			platform::PlatformSpecific specific;
+			(void)specific;
 			ctx->Rend_  = rend;
-			ctx->World_ = world;
+			ctx->World_ = nullptr;
 			ctx->Initialize();
 			platform::Context::SetInstance(ctx);
 		};
 
-		static const auto InitEventManagers = [](event::InputManager *im, event::TimeManager *tm)
+		static const auto InitEventManagers = [](event::InputManager *imngr, event::TimeManager *tmngr)
 		{
-			event::InputManager::SetInstance(im);
-			event::TimeManager::SetInstance(tm);
-			im->Initialize();
-			tm->Initialize();
+			event::InputManager::SetInstance(imngr);
+			event::TimeManager::SetInstance(tmngr);
+			imngr->Initialize();
+			tmngr->Initialize();
 		};
 
-		static const auto InitResources = [](resource::ResourceManager *rm, resource::ResourceLoader *rl)
+		static const auto InitResources = [](resource::ResourceManager *rmngr, resource::ResourceLoader *rloader)
 		{
 			// Create the default config reader.
 			resource::ConfigReader cfg("data");
 			resource::ConfigReader::SetDefaultReader(&cfg);
-			resource::ResourceManager::SetInstance(rm);
-			rm->Initialize();
-			graphics::RenderResourceManager::Register(rl);
-			terrain::TerrainResourceManager::Register(rl);
-			graphics::gui::FontResourceManager::Register(rl);
-			rl->LoadMappings("ResourceMap.ini");
-			rl->LoadFromManifest("Manifest.cfg");
+			resource::ResourceManager::SetInstance(rmngr);
+			rmngr->Initialize();
+			graphics::RenderResourceManager::Register(rloader);
+			terrain::TerrainResourceManager::Register(rloader);
+			graphics::gui::FontResourceManager::Register(rloader);
+			rloader->LoadMappings("ResourceMap.ini");
+			rloader->LoadFromManifest("Manifest.cfg");
 		};
 
 		static const auto InitGUI = [](graphics::gui::GuiGraphics *guig, graphics::gui::GuiManager *guimngr)
@@ -81,7 +82,7 @@ namespace dcore::launch
 
 		Preferences prefs;
 		platform::Context context;
-		world::World world;
+		// world::World world;
 		graphics::Renderer renderer;
 		resource::ResourceManager resourceManager("data");
 		resource::ResourceLoader resourceLoader("data");
@@ -95,21 +96,14 @@ namespace dcore::launch
 		graphics::gui::Font::FontLibInitialize();
 
 		LoadPrefs(&prefs);
-		InitContext(&context, &world, &renderer);
+		InitContext(&context, &renderer);
 		InitEventManagers(&inputManager, &timeManager);
 		InitResources(&resourceManager, &resourceLoader);
 		InitGUI(&guiGraphics, &guiManager);
 
-		platform::Context::Instance()->GetWorld()->Initialize();
+		// platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
-
-		// TODO(monomere):
-		// Create a class WorldLoader that selects and loads a specific world
-		// Load the "Menu" world here, the "Game" world has a terrain entity and
-		// all others don't because fuck you :)
-		// take an L
-		// Shit yourself - Patsanchik
-
+		
 		dg::Game game;
 		// dg::Game::SetInstance(&game);
 		game.Initialize();
@@ -136,7 +130,6 @@ namespace dcore::launch
 		graphics::gui::Font::FontLibDeInitialize();
 		guiManager.DeInitialize();
 		guiGraphics.DeInitialize();
-		world.DeInitialize();
 		resourceManager.DeInitialize();
 		DCORE_LOG_INFO << "Resource Manager deinitialized!";
 		context.DeInitialize();

@@ -11,7 +11,7 @@
 
 namespace dg::loaders
 {
-	MainWorldLoader::MainWorldLoader(const std::string &name) : Name_(name) {}
+	MainWorldLoader::MainWorldLoader(std::string name) : Name_(std::move(name)) {}
 
 	void MainWorldLoader::Load(dcore::world::World *world)
 	{

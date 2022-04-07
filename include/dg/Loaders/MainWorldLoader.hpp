@@ -10,7 +10,7 @@ namespace dg::loaders
 	class MainWorldLoader : public dcore::world::WorldLoader
 	{
 	public:
-		MainWorldLoader(const std::string &name);
+		MainWorldLoader(std::string name);
 
 		void Load(dcore::world::World *world) override;
 		void UnLoad(dcore::world::World *world) override;

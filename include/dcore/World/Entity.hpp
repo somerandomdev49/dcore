@@ -87,6 +87,51 @@ namespace dcore::world
 		void DeInitialize();
 
 		EntityHandle Create();
+		
+		struct Message
+		{
+			dstd::USize Type;
+			void *Payload;
+		};
+		
+		using MessageHandlerFunc = void(*)(Message message, void *user);
+		struct MessageHandler
+		{
+			MessageHandlerFunc Func;
+			void *User;
+
+			inline void operator()(Message message) const
+			{
+				Func(message, User);
+			}
+		};
+
+		/**
+		 * @brief Sends a message `message` to `receiver`.
+		 * 
+		 * @param message The message to send.
+		 */
+		inline void Send(EntityHandle receiver, Message message)
+		{
+			Handlers_[receiver](message);
+		}
+
+		/**
+		 * @brief Broadcasts (i.e. sends to everyone) `message`.
+		 * 
+		 * @param message The message to broadcast.
+		 */
+		inline void Broadcast(Message message)
+		{
+			for(EntityHandle handle : UsedEntities_.GetPacked())
+				Send(handle, message);
+		}
+		
+		/** Adds a message handler. */
+		void AddHandler(MessageHandler &&handler);
+
+		/** Removes a message handler */
+		void RemoveHandler(MessageHandler &&handler);
 
 		/**
 		 * @brief Returns the component of the specified type of an entity.
@@ -227,6 +272,8 @@ namespace dcore::world
 		std::vector<ComponentPool> AllComponentPools_;
 		std::unordered_map<std::type_index, dstd::USize> ComponentPools_;
 		std::vector<EntityHandle> AllEntities_;
+		dstd::SparseIntegerSet<EntityHandle> UsedEntities_;
+		std::vector<MessageHandler> Handlers_;
 		EntityHandle NextAvailable_;
 	};
 
