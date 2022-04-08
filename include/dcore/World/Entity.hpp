@@ -268,8 +268,31 @@ namespace dcore::world
 			ComponentPoolIterator end() { return {*this, ECS_.GetComponentPoolCount()}; }
 		};
 
+		/**
+		 * @brief Get the Component Pool By Name object
+		 * 
+		 * @return dstd::USize 
+		 */
+		dstd::USize GetComponentPoolByName(const std::string &name) const;
+
+		/**
+		 * @brief Adds a component to an entity. The component is constructed in-place.
+		 * @note The destructor is called during this method.
+		 *
+		 * @tparam Args Arguments that are passed to the constructor of the component.
+		 * @param entity The entity that the component will be attached to.
+		 * @param args Arguments that are passed to the constructor of the component.
+		 * @return The pointer to the attached component.
+		 */
+		template<typename... Args>
+		void AddComponent(EntityHandle entity, dstd::USize pool, Args &&...args)
+		{
+			// T obj = T(std::forward<Args>(args)...);
+			// AllComponentPools_[pool].AddComponent(entity, &obj);
+		}
 	private:
 		std::vector<ComponentPool> AllComponentPools_;
+		std::unordered_map<std::string, dstd::USize> ComponentPoolsByName_;
 		std::unordered_map<std::type_index, dstd::USize> ComponentPools_;
 		std::vector<EntityHandle> AllEntities_;
 		dstd::SparseIntegerSet<EntityHandle> UsedEntities_;

@@ -209,7 +209,7 @@ namespace dcore::world
 		// {
 		// 	data::Json comps = data::Json::array();
 
-		// 	const auto &systems = ECSInstance()->GetSystems(entity);
+		// 	const auto &systems = ECSInstance_->GetSystems(entity);
 		// 	for(const auto &system : systems)
 		// 	{
 		// 		system->SaveFunction(entity, out);
@@ -223,37 +223,43 @@ namespace dcore::world
 
 	void World::Load(const data::FileInput &input)
 	{
-		// if(input.Get()["version"] != "0.01")
-		// {
-		// 	DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
-		// 	// TODO: Create backup here.
-		// }
+		if(input.Get()["version"] != "0.01")
+		{
+			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
+			// TODO: Create backup here.
+		}
 
-		// const auto &entities  = input.Get()["entities"];
-		// unsigned int entityNo = 0;
-		// for(const auto &ej : entities)
-		// {
-		// 	EntityHandle id = ECSInstance()->CreateEntity();
+		const auto &entities  = input.Get()["entities"];
+		unsigned int entityNo = 0;
+		for(const auto &entityJson : entities)
+		{
+			EntityHandle handle = ECSInstance_->Create();
 
-		// 	if(!ej.contains("uuid"))
-		// 	{
-		// 		LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
-		// 	}
-		// 	else
-		// 	{
-		// 		auto uuidJson = ej["uuid"].get<std::string>();
-		// 		dstd::UUID uuid;
-		// 		dstd::UUID::Parse(uuid, uuidJson);
-		// 		ECSInstance()->AddComponent(id, UUIDComponent(std::move(uuid)));
-		// 	}
+			if(!entityJson.contains("uuid"))
+			{
+				LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
+			}
+			else
+			{
+				auto uuidJson = entityJson["uuid"].get<std::string>();
+				dstd::UUID uuid;
+				dstd::UUID::Parse(uuid, uuidJson);
+				ECSInstance_->AddComponent<UUIDComponent>(handle, uuid);
+			}
 
-		// 	for(const auto &comp : ej["components"])
-		// 	{
-		// 		const auto &system = ECSInstance()->GetSystemByName(comp["@type"]);
-		// 		ECSInstance()->AddEntityToSystem(system, id);
-		// 	}
+			for(const auto &comp : entityJson["components"])
+			{
+				// TODO: Find out why there is no loading of the actual component
+				// TODO: in the old code I didn't call the loading method of the componentbase
+				// TODO: maybe it's loaded somewhere else? probably move this stuff to
+				// TODO:   WorldLoaders etc. because I don't feel like world file format
+				// TODO:   and stuff belongs to the world class.
+				auto pool = ECSInstance_->GetComponentPoolByName(comp["@type"]);
+				(void)pool;
+				// ECSInstance_->AddEntityToSystem(handle, pool);
+			}
 
-		// 	entityNo += 1;
-		// }
+			entityNo += 1;
+		}
 	}
 } // namespace dcore::world
