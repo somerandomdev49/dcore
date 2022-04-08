@@ -155,10 +155,10 @@ namespace dcore::world
 		DispatchMessage_(CommonMessages::RenderMessage, render);
 
 		// Render Terrain if it exists.
-		LOG_F(INFO, "Maybe will render terrain");
+		// LOG_F(INFO, "Maybe will render terrain");
 		if(Terrain_ != nullptr)
 		{
-			LOG_F(INFO, "Rendering terrain:");
+			// LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
 			for(auto chunkIndex : Terrain_->GetActiveChunks())
 				render->RenderChunk(&chunks[chunkIndex]);
@@ -171,7 +171,7 @@ namespace dcore::world
 			// 	auto &chunks = terrain->GetTerrain().GetChunks();
 			// }
 		}
-		LOG_F(INFO, "Done rendering");
+		// LOG_F(INFO, "Done rendering");
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 

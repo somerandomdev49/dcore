@@ -34,12 +34,16 @@ namespace dg::loaders
 		terrainEntity.AddComponent(dcore::world::TerrainComponent(
 		    dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_)));
 
+		world->SetTerrain(
+			&terrainEntity.GetComponent<dcore::world::TerrainComponent>()
+				->GetTerrain());
+
 		// Load the rest of the entities (saved)
 		world->Load(input);
 
 		// TODO: Have a separate method for loading static entities.
 
-#if 0 // Future API
+#if 0 // Future API?
 		auto server = dg::net::ServerInterface::Instance();
 
 		dstd::UInt32 entityCount = 0;
