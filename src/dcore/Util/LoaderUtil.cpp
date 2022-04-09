@@ -17,19 +17,19 @@ namespace dcore::util
 		return d.data != nullptr;
 	}
 
-	bool LoaderUtil::LoadMesh(graphics::MeshData &d, const std::string &path, const std::string &format)
+	bool LoaderUtil::LoadMesh(graphics::MeshData &data, const std::string &path, const std::string &format)
 	{
-		d.VertexData.clear();
-		d.Indices.clear();
-		d.Stride = 0;
+		data.VertexData.clear();
+		data.Indices.clear();
+		data.Stride = 0;
 
 		for(char c : format)
 		{
 			switch(c)
 			{
-			case 'p': d.Stride += sizeof(float) * 3; break;
-			case 'n': d.Stride += sizeof(float) * 3; break;
-			case 't': d.Stride += sizeof(float) * 2; break;
+			case 'p': data.Stride += sizeof(float) * 3; break;
+			case 'n': data.Stride += sizeof(float) * 3; break;
+			case 't': data.Stride += sizeof(float) * 2; break;
 			}
 		}
 
@@ -49,34 +49,34 @@ namespace dcore::util
 			DCORE_LOG_WARNING << "[tinyobjloader] warning: " << reader.Warning();
 		}
 
-		auto &attrib = reader.GetAttrib();
-		auto &shapes = reader.GetShapes();
+		const auto &attrib = reader.GetAttrib();
+		const auto &shapes = reader.GetShapes();
 
-		const auto pushFloat = [&](float f)
+		const auto pushFloat = [&](float value)
 		{
-			byte *bytes = reinterpret_cast<byte *>(&f);
-			d.VertexData.push_back(bytes[0]);
-			d.VertexData.push_back(bytes[1]);
-			d.VertexData.push_back(bytes[2]);
-			d.VertexData.push_back(bytes[3]);
+			byte *bytes = reinterpret_cast<byte *>(&value);
+			data.VertexData.push_back(bytes[0]);
+			data.VertexData.push_back(bytes[1]);
+			data.VertexData.push_back(bytes[2]);
+			data.VertexData.push_back(bytes[3]);
 		};
 
-		for(size_t s = 0; s < shapes.size(); s++)
+		for(const auto & shape : shapes)
 		{
 
 			size_t index_offset = 0;
 			// vertices.shrink_to_fit();
 			// d.vertexData.reserve(vertices.size() + shapes[s].mesh.num_face_vertices.size() * 3);
-			for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
+			for(size_t face = 0; face < shape.mesh.num_face_vertices.size(); face++)
 			{
-				for(size_t v = 0; v < 3; v++)
+				for(size_t vertex = 0; vertex < 3; vertex++)
 				{
 					// access to vertex
-					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+					tinyobj::index_t idx = shape.mesh.indices[index_offset + vertex];
 
-					for(char c : format)
+					for(char type : format)
 					{
-						switch(c)
+						switch(type)
 						{
 						case 'p':
 						{
@@ -110,7 +110,7 @@ namespace dcore::util
 						}
 						}
 					}
-					d.Indices.push_back(d.Indices.size());
+					data.Indices.push_back(data.Indices.size());
 				}
 				index_offset += 3;
 			}
@@ -127,7 +127,7 @@ namespace dcore::util
 		stream.exceptions(std::ios_base::badbit);
 
 		auto buf = std::string(read_size, '\0');
-		while(stream.read(&buf[0], read_size)) out.append(buf, 0, stream.gcount());
+		while(stream.read(buf.data(), read_size)) out.append(buf, 0, stream.gcount());
 		out.append(buf, 0, stream.gcount());
 
 		stream.close();

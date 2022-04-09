@@ -6,6 +6,7 @@
 
 #include <dcore/Data/FileInput.hpp>
 #include <dcore/Data/Adapters/JsonAdapter.hpp>
+#include <dcore/Util/JsonConverters.hpp>
 
 #include <vector>
 
@@ -39,7 +40,7 @@ namespace dg::loaders
 				->GetTerrain());
 
 		// Load the rest of the entities (saved)
-		world->Load(input);
+		LoadStaticEntities_({ input.Get(), world });
 
 		// TODO: Have a separate method for loading static entities.
 
@@ -53,5 +54,82 @@ namespace dg::loaders
 
 		this->ConstructEntities_(entityData);
 #endif
+	}
+
+	void MainWorldLoader::LoadStaticEntities_(LoadInfo info)
+	{
+		(void)Name_;
+
+		const auto &objsJson = info.Json["statics"];
+		for(const auto &obj : objsJson)
+		{
+			auto entity = info.World->CreateEntity();
+			
+			dstd::UUID uuid;
+			dstd::UUID::Parse(uuid, obj["uuid"]);
+			entity.AddComponent(dcore::world::UUIDComponent(uuid));
+
+			if(obj["type"] == "Model") LoadStaticEntity_Model_(entity, { obj, info.World });
+			if(obj["type"] == "NPC") LoadStaticEntity_NPC_(entity, { obj, info.World });
+			if(obj["type"] == "Interactable") LoadStaticEntity_Interactable_(entity, { obj, info.World });
+		}
+	}
+
+	void MainWorldLoader::LoadStaticEntity_Transform_(dcore::world::Entity &entity, LoadInfo info)
+	{
+		(void)Name_;
+		
+		glm::vec3 position =
+		{
+			info.Json["position"][0].get<float>(),
+			info.Json["position"][1].get<float>(),
+			info.Json["position"][2].get<float>(),
+		};
+		
+		glm::quat rotation =
+		{
+			info.Json["rotation"][3].get<float>(),
+			info.Json["rotation"][0].get<float>(),
+			info.Json["rotation"][1].get<float>(),
+			info.Json["rotation"][2].get<float>(),
+		};
+
+		glm::vec3 scale =
+		{
+			info.Json["scale"][0].get<float>(),
+			info.Json["scale"][1].get<float>(),
+			info.Json["scale"][2].get<float>(),
+		};
+
+		dcore::world::TransformComponent transform;
+		transform.SetPosition(position);
+		transform.SetRotation(rotation);
+		transform.SetScale(scale);
+		transform.ReCalculateMatrix(); // faster
+		
+		entity.AddComponent(transform);
+	}
+	
+	void MainWorldLoader::LoadStaticEntity_Model_(dcore::world::Entity &entity, LoadInfo info)
+	{
+		(void)Name_;
+		LoadStaticEntity_Transform_(entity, info);
+		
+		auto modelId = info.Json["model"].get<const std::string>();
+		
+		auto model = dcore::resource::ResourceManager::Instance()
+			->Get<dcore::graphics::Model>(modelId);
+		
+		entity.AddComponent(dcore::world::ModelComponent(model));
+	}
+	
+	void MainWorldLoader::LoadStaticEntity_NPC_(dcore::world::Entity &entity, LoadInfo info)
+	{
+		(void)Name_;
+	}
+	
+	void MainWorldLoader::LoadStaticEntity_Interactable_(dcore::world::Entity &entity, LoadInfo info)
+	{
+		(void)Name_;
 	}
 } // namespace dg::loaders

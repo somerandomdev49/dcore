@@ -1,11 +1,17 @@
 #include <dcore/World/Entity.hpp>
 #include <dcore/Util/Debug.hpp>
 #include <dcore/Core/Assert.hpp>
+#include <typeindex>
 
 namespace dcore::world
 {
-	ECSComponentPoolProvider ComponentPoolProviderInstance;
-	ECSComponentPoolProvider *ECSComponentPoolProvider::Instance() { return &ComponentPoolProviderInstance; }
+	ECSComponentPoolProvider *ComponentPoolProviderInstance = nullptr;
+	ECSComponentPoolProvider *ECSComponentPoolProvider::Instance()
+	{
+		if(ComponentPoolProviderInstance == nullptr)
+			ComponentPoolProviderInstance = new ECSComponentPoolProvider();
+		return ComponentPoolProviderInstance;
+	}
 
 	auto ECS::ComponentPoolWrapper::begin() -> ECS::ComponentPoolWrapper::EntityIterator
 	{
@@ -52,9 +58,15 @@ namespace dcore::world
 
 	void ECS::Initialize()
 	{
+		LOG_F(INFO, "ECS::Initialize");
 		NextAvailable_ = 0;
+		LOG_F(INFO, "ComponentPoolProvider = %p, count = %lld", (void*)ECSComponentPoolProvider::Instance(),
+			ECSComponentPoolProvider::Instance()->AllComponentPools_.size());
 		for(const auto &pool : ECSComponentPoolProvider::Instance()->AllComponentPools_)
 		{
+			LOG_F(INFO, "Moving component pool %s into ECS!", util::Debug::Demangle(pool.Type.name()).c_str());
+			
+			ComponentPools_[std::type_index(pool.Type)] = AllComponentPools_.size();
 			AllComponentPools_.emplace_back(pool.Size);
 		}
 	}

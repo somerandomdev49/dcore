@@ -38,5 +38,15 @@
 			"id": 0
 		}
 	],
-	"version": "0.01"
+	"statics": [
+		{
+			"type": "Model",
+			"uuid": "50a61a39-29c3-4c20-895c-8cc4f049188f",
+			"position": [0.0, 1.0, 0.0],
+			"rotation": [0.0, 0.0, 0.0, 1.0],
+			"scale": [1.0, 1.0, 1.0],
+			"model": "DCore.Model.Main.Building.House.Outside.Inn.01"
+		}
+	],
+	"version": "0.02"
 }

@@ -16,8 +16,20 @@ namespace dg::loaders
 		void UnLoad(dcore::world::World *world) override;
 
 	private:
+		struct LoadInfo
+		{
+			const dcore::data::Json &Json;
+			dcore::world::World *World;
+		};
+	
 		void PopulateWorld_(const dcore::data::FileInput &input, dcore::world::World *world);
-		void PopulateWorldV1_(const dcore::data::Json &json, dcore::world::World *world);
+		void PopulateWorldV1_(LoadInfo info);
+		void LoadStaticEntities_(LoadInfo info);
+
+		void LoadStaticEntity_Transform_(dcore::world::Entity &entity, LoadInfo info);
+		void LoadStaticEntity_Model_(dcore::world::Entity &entity, LoadInfo info);
+		void LoadStaticEntity_NPC_(dcore::world::Entity &entity, LoadInfo info);
+		void LoadStaticEntity_Interactable_(dcore::world::Entity &entity, LoadInfo info);
 
 		std::string Name_;
 	};

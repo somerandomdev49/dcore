@@ -115,6 +115,14 @@ namespace dcore::world
 		ECSInstance_ = new ECS();
 		ECSInstance_->Initialize();
 
+		ECSInstance_->SetMessageHandler({
+			this,
+			[](void *self, EntityHandle handle, ECS::Message message)
+			{
+				((World*)self)->MessageHandler_(handle, message);
+			}
+		});
+
 		LOG_F(WARNING, "World::Initialize??");
 	}
 
@@ -223,43 +231,5 @@ namespace dcore::world
 
 	void World::Load(const data::FileInput &input)
 	{
-		if(input.Get()["version"] != "0.01")
-		{
-			DCORE_LOG_ERROR << "Incorrect savefile version: '" << input.Get()["version"] << "', errors may occur.";
-			// TODO: Create backup here.
-		}
-
-		const auto &entities  = input.Get()["entities"];
-		unsigned int entityNo = 0;
-		for(const auto &entityJson : entities)
-		{
-			EntityHandle handle = ECSInstance_->Create();
-
-			if(!entityJson.contains("uuid"))
-			{
-				LOG_F(WARNING, "Loading entity without a UUID! (Entity #%u)", entityNo);
-			}
-			else
-			{
-				auto uuidJson = entityJson["uuid"].get<std::string>();
-				dstd::UUID uuid;
-				dstd::UUID::Parse(uuid, uuidJson);
-				ECSInstance_->AddComponent<UUIDComponent>(handle, uuid);
-			}
-
-			for(const auto &comp : entityJson["components"])
-			{
-				// TODO: Find out why there is no loading of the actual component
-				// TODO: in the old code I didn't call the loading method of the componentbase
-				// TODO: maybe it's loaded somewhere else? probably move this stuff to
-				// TODO:   WorldLoaders etc. because I don't feel like world file format
-				// TODO:   and stuff belongs to the world class.
-				auto pool = ECSInstance_->GetComponentPoolByName(comp["@type"]);
-				(void)pool;
-				// ECSInstance_->AddEntityToSystem(handle, pool);
-			}
-
-			entityNo += 1;
-		}
 	}
 } // namespace dcore::world

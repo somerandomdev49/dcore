@@ -62,6 +62,8 @@ namespace dcore::world
 		template<typename T>
 		void AddComponentPool()
 		{
+			fprintf(stderr, "Add component pool %s, this = %p, count = %lld\n",
+				util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
 			AllComponentPools_.push_back(ComponentPool {typeid(T), sizeof(T)});
 		}
 
@@ -94,15 +96,15 @@ namespace dcore::world
 			void *Payload;
 		};
 		
-		using MessageHandlerFunc = void(*)(Message message, void *user);
+		using MessageHandlerFunc = void(*)(void *user, EntityHandle receiver, Message message);
 		struct MessageHandler
 		{
-			MessageHandlerFunc Func;
 			void *User;
+			MessageHandlerFunc Func;
 
-			inline void operator()(Message message) const
+			inline void operator()(EntityHandle receiver, Message message) const
 			{
-				Func(message, User);
+				Func(User, receiver, message);
 			}
 		};
 
@@ -113,7 +115,7 @@ namespace dcore::world
 		 */
 		inline void Send(EntityHandle receiver, Message message)
 		{
-			Handlers_[receiver](message);
+			MessageHandler_(receiver, message);
 		}
 
 		/**
@@ -290,13 +292,15 @@ namespace dcore::world
 			// T obj = T(std::forward<Args>(args)...);
 			// AllComponentPools_[pool].AddComponent(entity, &obj);
 		}
+
+		void SetMessageHandler(MessageHandler handler);
 	private:
 		std::vector<ComponentPool> AllComponentPools_;
 		std::unordered_map<std::string, dstd::USize> ComponentPoolsByName_;
 		std::unordered_map<std::type_index, dstd::USize> ComponentPools_;
 		std::vector<EntityHandle> AllEntities_;
 		dstd::SparseIntegerSet<EntityHandle> UsedEntities_;
-		std::vector<MessageHandler> Handlers_;
+		MessageHandler MessageHandler_;
 		EntityHandle NextAvailable_;
 	};
 

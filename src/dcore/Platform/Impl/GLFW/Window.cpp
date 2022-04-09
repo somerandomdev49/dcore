@@ -7,8 +7,8 @@
 namespace dcore::platform::impl
 {
 
-	glfw::Frame::Frame() {}
-	glfw::Frame::~Frame() {}
+	glfw::Frame::Frame() = default;
+	glfw::Frame::~Frame() = default;
 
 	void glfw::Frame::Initialize(const glm::ivec2 &size)
 	{
@@ -21,10 +21,11 @@ namespace dcore::platform::impl
 		// #ifdef __darwin__ // FIXME: correct name
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		// #endif
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-		Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", NULL, NULL);
+		Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", nullptr, nullptr);
 
-		if(!Window_)
+		if(Window_ == nullptr)
 		{
 			DCORE_LOG_ERROR << "Failed to create window! Reason: " << glfw::GetError();
 			Application::Info.SetError(true, "Failed to create window.", glfw::GetError());
@@ -41,7 +42,7 @@ namespace dcore::platform::impl
 		Window_ = nullptr;
 	}
 
-	bool glfw::Frame::ShouldEnd() { return glfwWindowShouldClose(Window_); }
+	bool glfw::Frame::ShouldEnd() { return glfwWindowShouldClose(Window_) != 0; }
 
 	void glfw::Frame::OnBegin() { glfwShowWindow(Window_); }
 

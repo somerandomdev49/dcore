@@ -43,10 +43,10 @@ namespace dcore::world
 		using SaveFunction = void (*)(data::FileOutput &, void *);
 
 		template<typename T>
-		T *GetComponent(const Entity *entity);
+		T *GetComponent(const Entity &entity);
 
 		template<typename T>
-		void AddComponent(Entity *entity, const T &comp);
+		void AddComponent(Entity &entity, const T &comp);
 
 		Entity CreateEntity();
 		void RegisterUpdate(void (*func)(World *));
@@ -76,6 +76,7 @@ namespace dcore::world
 		void Render(graphics::RendererInterface *render);
 		void End();
 
+		void MessageHandler_(EntityHandle handle, ECS::Message message);
 		void DispatchMessage_(CommonMessages message, void *data = nullptr);
 
 		std::vector<void (*)(World *)> Updates_;
@@ -98,10 +99,20 @@ namespace dcore::world
 	protected:
 		static const struct Reg
 		{
-			Reg() { ECSComponentPoolProvider::Instance()->AddComponentPool<T>(); }
+			Reg()
+			{
+				ECSComponentPoolProvider::Instance()->AddComponentPool<T>(&HandleMessage);
+			}
 		} RegStatic_;
 
 	public:
+		/**
+		 * @brief Called by the World when a message is sent to the component.
+		 * 
+		 * @param message Message received.
+		 */
+		static void HandleMessage(ECS::Message message);
+
 		/**
 		 * @brief Returns the name of the component class for the current template instance
 		 *
@@ -264,25 +275,25 @@ namespace dcore::world
 template<typename T>
 T *dcore::world::Entity::GetComponent() const
 {
-	return World_->GetComponent<T>(this);
+	return World_->GetComponent<T>(*this);
 }
 
 template<typename T>
 void dcore::world::Entity::AddComponent(const T &comp)
 {
-	return World_->AddComponent<T>(this, comp);
+	return World_->AddComponent<T>(*this, comp);
 }
 
 template<typename T>
-T *dcore::world::World::GetComponent(const Entity *entity)
+T *dcore::world::World::GetComponent(const Entity &entity)
 {
-	return ECSInstance_->GetComponent<T>(entity->Id_);
+	return ECSInstance_->GetComponent<T>(entity.Id_);
 }
 
 template<typename T>
-void dcore::world::World::AddComponent(Entity *entity, const T &comp)
+void dcore::world::World::AddComponent(Entity &entity, const T &comp)
 {
-	ECSInstance_->AddComponent<T>(entity->Id_, comp);
+	ECSInstance_->AddComponent<T>(entity.Id_, comp);
 }
 
 // template<typename ComponentType, typename FunctionType>
