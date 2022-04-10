@@ -1,0 +1,11 @@
+# platform-specific file for MSYS2
+
+include metabuild/platform/base.ninja
+
+compiler_cpp = g++
+compiler_c = gcc
+linker = g++
+clike_flags = -Wall -Wextra -g -mwindows -DDCORE_STD_64BIT $warnings $includes $libs_cflags
+cpp_flags = $clike_flags -std=c++17 -DLOGURU_WITH_STREAMS 
+c_flags = $clike_flags -std=c99
+ld_flags = -lglfw3 -lpthread -lole32 -std=c++17 -mwindows $libs_ldflags

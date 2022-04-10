@@ -1,10 +1,10 @@
 #### PROJECT SETTINGS FOR WINDOWS (MinGW32-w64) ####
-BIN_NAME := dcore
+BIN_NAME = dcore
 CXX = g++ -fdiagnostics-color
 SRC_EXT = cpp
 SRC_PATH = src
 LIBS = freetype2 nlohmann_json
-COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -g -mwindows -DDCORE_STD_64BIT -Wno-unused-parameter
+COMPILE_FLAGS = -std=c++17 -Wall -Wextra -DLOGURU_WITH_STREAMS -g -mwindows -DDCORE_STD_64BIT
 RCOMPILE_FLAGS = -D NDEBUG
 DCOMPILE_FLAGS = -D DEBUG -g
 INCLUDES = -Iinclude -I3rd-party/loguru -I3rd-party/include -Iinclude/gsl

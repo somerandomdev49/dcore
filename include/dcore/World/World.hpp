@@ -101,7 +101,7 @@ namespace dcore::world
 		{
 			Reg()
 			{
-				ECSComponentPoolProvider::Instance()->AddComponentPool<T>(&HandleMessage);
+				ECSComponentPoolProvider::Instance()->AddComponentPool<T>();
 			}
 		} RegStatic_;
 

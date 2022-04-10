@@ -1,0 +1,4 @@
+# platform-independent file
+
+includes = -Iinclude -I3rd-party/loguru -I3rd-party/include -Iinclude/gsl
+warnings = -Wno-unused-parameter

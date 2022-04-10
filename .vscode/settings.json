@@ -73,5 +73,6 @@
 		"utility": "cpp",
 		"*.def": "cpp"
 	},
-	"C_Cpp.dimInactiveRegions": false
+	"C_Cpp.dimInactiveRegions": false,
+	"python.analysis.extraPaths": ["./metabuild"]
 }

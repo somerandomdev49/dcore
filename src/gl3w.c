@@ -1,6 +1,3 @@
-extern "C"
-{
-
 /*
  * This file was generated with gl3w_gen.py, part of gl3w
  * (hosted at https://github.com/skaslev/gl3w)
@@ -848,6 +845,4 @@ static void load_procs(GL3WGetProcAddressProc proc)
 
 	for (i = 0; i < ARRAY_SIZE(proc_names); i++)
 		gl3wProcs.ptr[i] = proc(proc_names[i]);
-}
-
 }
