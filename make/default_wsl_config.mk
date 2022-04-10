@@ -1,5 +1,4 @@
 #### PROJECT SETTINGS FOR WSL (GCC >=9) ####
-$(info including common_unix.mk)
 include make/common_unix.mk
 
 COMPILE_FLAGS += -ggdb3

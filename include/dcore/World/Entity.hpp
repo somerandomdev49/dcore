@@ -49,28 +49,6 @@ namespace dcore::world
 	// 	return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(U)};
 	// }
 
-	class ECSComponentPoolProvider
-	{
-		struct ComponentPool
-		{
-			const std::type_info &Type;
-			dstd::USize Size;
-		};
-
-	public:
-		static ECSComponentPoolProvider *Instance();
-		template<typename T>
-		void AddComponentPool()
-		{
-			fprintf(stderr, "Add component pool %s, this = %p, count = %lld\n",
-				util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
-			AllComponentPools_.push_back(ComponentPool {typeid(T), sizeof(T)});
-		}
-
-	private:
-		friend class ECS;
-		std::vector<ComponentPool> AllComponentPools_;
-	};
 
 	class ECS
 	{
@@ -304,4 +282,27 @@ namespace dcore::world
 		EntityHandle NextAvailable_;
 	};
 
+	class ECSComponentPoolProvider
+	{
+		struct ComponentPool
+		{
+			const std::type_info &Type;
+			dstd::USize Size;
+			
+		};
+
+	public:
+		static ECSComponentPoolProvider *Instance();
+		template<typename T>
+		void AddComponentPool()
+		{
+			fprintf(stderr, "Add component pool %s, this = %p, count = %lld\n",
+				util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
+			AllComponentPools_.push_back(ComponentPool {typeid(T), sizeof(T)});
+		}
+
+	private:
+		friend class ECS;
+		std::vector<ComponentPool> AllComponentPools_;
+	};
 }; // namespace dcore::world
