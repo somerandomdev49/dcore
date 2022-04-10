@@ -1,0 +1,11 @@
+# platform-specific file for Darwin (MacOS)
+
+include metabuild/platform/base.ninja
+
+compiler_cpp = g++-10
+compiler_c = gcc-10
+linker = g++-10
+clike_flags = -Wall -Wextra -g -DDCORE_STD_64BIT $warnings $includes $libs_cflags
+cpp_flags = $clike_flags -std=c++17 -DLOGURU_WITH_STREAMS 
+c_flags = $clike_flags -std=c99
+ld_flags = -lglfw3 -std=c++17 -framework IOKit -framework Cocoa -framework OpenGL $libs_ldflags
