@@ -149,6 +149,7 @@ namespace dcore::world
 		 */
 		static void HandleMessage(World *world, EntityHandle handle, ECS::Message message)
 		{
+			if(world->GetECS()->GetComponent<T>(handle) == nullptr) return;
 			switch(message.Type)
 			{
 			case (dstd::USize)CommonMessages::UpdateMessage:

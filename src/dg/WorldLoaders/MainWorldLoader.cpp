@@ -68,6 +68,7 @@ namespace dg::loaders
 		const auto &objsJson = info.Json["statics"];
 		for(const auto &obj : objsJson)
 		{
+			LOG_F(INFO, "Creating entity");
 			auto entity = info.World->CreateEntity();
 			
 			dstd::UUID uuid;
@@ -77,6 +78,8 @@ namespace dg::loaders
 			if(obj["type"] == "Model") LoadStaticEntity_Model_(entity, { obj, info.World });
 			if(obj["type"] == "NPC") LoadStaticEntity_NPC_(entity, { obj, info.World });
 			if(obj["type"] == "Interactable") LoadStaticEntity_Interactable_(entity, { obj, info.World });
+			
+			LOG_F(INFO, "Created entity! %lu", entity.GetId());
 		}
 	}
 

@@ -43,7 +43,9 @@ namespace dcore::world
 	{
 		if(NextAvailable_ == AllEntities_.size())
 		{
-			AllEntities_.push_back(NextAvailable_++);
+			UsedEntities_.Set(NextAvailable_);
+			AllEntities_.push_back(NextAvailable_);
+			NextAvailable_ += 1;
 			return AllEntities_.back();
 		}
 

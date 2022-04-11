@@ -164,6 +164,7 @@ namespace dcore::world
 
 	void World::MessageHandler_(EntityHandle handle, ECS::Message message)
 	{
+		// LOG_F(INFO, "Received message!");
 		for(auto handler : Handlers_)
 			handler(this, handle, message);
 	}
@@ -200,7 +201,7 @@ namespace dcore::world
 		// Render Terrain if it exists.
 		// LOG_F(INFO, "Maybe will render terrain");
 		if(Terrain_ != nullptr)
-		{
+		{ 
 			// LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
 			for(auto chunkIndex : Terrain_->GetActiveChunks())

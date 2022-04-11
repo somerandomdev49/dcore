@@ -103,6 +103,7 @@ namespace dcore::world
 		 */
 		inline void Broadcast(Message message)
 		{
+			// LOG_F(INFO, "Entities count: %llu", UsedEntities_.GetPacked().size());
 			for(EntityHandle handle : UsedEntities_.GetPacked())
 				Send(handle, message);
 		}
