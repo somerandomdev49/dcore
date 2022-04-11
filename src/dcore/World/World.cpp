@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <dcore/World/World.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/GuiManager.hpp>
@@ -7,9 +8,23 @@
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Core/Preferences.hpp>
 #include <iostream>
+#include <iterator>
 
 namespace dcore::world
 {
+	WorldMessageHandlerProvider *WorldMessageHandlerProviderInstance = nullptr;
+	WorldMessageHandlerProvider *WorldMessageHandlerProvider::Instance()
+	{
+		if(WorldMessageHandlerProviderInstance == nullptr)
+			WorldMessageHandlerProviderInstance = new WorldMessageHandlerProvider();
+		return WorldMessageHandlerProviderInstance;
+	}
+
+	void WorldMessageHandlerProvider::AddHandler(World::MessageHandlerFunc func)
+	{
+		Handlers_.push_back(func);
+	}
+
 	DCORE_COMPONENT_REGISTER(TransformComponent);
 	DCORE_COMPONENT_REGISTER(StaticMeshComponent);
 	DCORE_COMPONENT_REGISTER(ModelComponent);
@@ -98,9 +113,10 @@ namespace dcore::world
 
 	TerrainComponent::TerrainComponent(const resource::Resource<terrain::Heightmap> &heightmap)
 	{
-		Terrain_.Initialize(resource::GetResource<terrain::Heightmap>("DCore.Heightmap.World1"));
+		LOG_F(WARNING, "TerrainComponent::TerrainComponent()");
+		Terrain_.Initialize(heightmap);
 		Terrain_.ActivateAllChunks();
-		platform::Context::Instance()->GetWorld()->SetTerrain(&Terrain_);
+		// platform::Context::Instance()->GetWorld()->SetTerrain(&Terrain_);
 	}
 
 	void TerrainComponent::Update(const EntityHandle &self)
@@ -123,19 +139,38 @@ namespace dcore::world
 			}
 		});
 
+		std::copy(
+			WorldMessageHandlerProvider::Instance()->Handlers_.begin(),
+			WorldMessageHandlerProvider::Instance()->Handlers_.end(),
+			std::back_inserter(Handlers_)
+		);
+
+		Terrain_ = nullptr;
+
 		LOG_F(WARNING, "World::Initialize??");
 	}
 
 	void World::DeInitialize()
 	{
+		if(Terrain_ != nullptr)
+		{
+			Terrain_->DeInitialize();
+			delete Terrain_;
+		}
+
 		ECSInstance_->DeInitialize();
 		delete ECSInstance_;
+	}
+
+	void World::MessageHandler_(EntityHandle handle, ECS::Message message)
+	{
+		for(auto handler : Handlers_)
+			handler(this, handle, message);
 	}
 
 	terrain::Terrain &TerrainComponent::GetTerrain() { return Terrain_; }
 
 	terrain::Terrain *World::GetTerrain() const { return Terrain_; }
-	void World::SetTerrain(terrain::Terrain *terrain) { Terrain_ = terrain; }
 
 	void World::DispatchMessage_(CommonMessages message, void *data)
 	{
@@ -231,5 +266,17 @@ namespace dcore::world
 
 	void World::Load(const data::FileInput &input)
 	{
+	}
+
+	void World::CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap)
+	{
+		if(Terrain_ != nullptr)
+		{
+			Terrain_->DeInitialize();
+			delete Terrain_;
+		}
+
+		Terrain_ = new terrain::Terrain;
+		Terrain_->Initialize(heightmap);
 	}
 } // namespace dcore::world

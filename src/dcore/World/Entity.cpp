@@ -72,4 +72,9 @@ namespace dcore::world
 	}
 
 	void ECS::DeInitialize() {}
+
+	void ECS::SetMessageHandler(dcore::world::ECS::MessageHandler handler)
+	{
+		MessageHandler_ = handler;
+	}
 } // namespace dcore::world

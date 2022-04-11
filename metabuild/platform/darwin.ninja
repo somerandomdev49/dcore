@@ -2,7 +2,7 @@
 
 include metabuild/platform/base.ninja
 
-compiler_cpp = g++-10
+compiler_cpp = g++-10  
 compiler_c = gcc-10
 linker = g++-10
 clike_flags = -Wall -Wextra -g -DDCORE_STD_64BIT $warnings $includes $libs_cflags

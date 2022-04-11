@@ -10,6 +10,8 @@
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <type_traits>
+#include <unordered_map>
 
 namespace dcore::platform
 {
@@ -51,24 +53,34 @@ namespace dcore::world
 		Entity CreateEntity();
 		void RegisterUpdate(void (*func)(World *));
 
-		// template<typename ComponentType, typename FunctionType>
+		// temp\late<typename ComponentType, typename FunctionType>
 		// void Each(FunctionType func);
 
 		terrain::Terrain *GetTerrain() const;
-		void SetTerrain(terrain::Terrain *terrain);
 
 		float GetRenderDistance() const;
 		void SetRenderDistance(float newRenderDistance);
 
+		ECS *GetECS() const { return ECSInstance_; }
+
 		/** @deprecated Save externally if needed */
 		void Save(data::FileOutput &output);
+
 		/** @deprecated Load externally if needed (see WorldLoader) */
 		void Load(const data::FileInput &input);
 
+		/**
+		 * @brief Creates the world terrain and destroys previous one (if exists)
+		 * 
+		 * @param heightmap Heightmap to create terrain from.
+		 */
+		void CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap);
 	private:
 		friend class platform::Context;
 		friend class launch::Launch;
 		friend class WorldLoaderRegistry;
+		friend class WorldMessageHandlerProvider;
+
 		void Initialize();
 		void DeInitialize();
 		void Start();
@@ -83,9 +95,32 @@ namespace dcore::world
 		terrain::Terrain *Terrain_;
 		ECS *ECSInstance_;
 
+		using MessageHandlerFunc = void (*)(World *world, EntityHandle handle, ECS::Message message);
+		std::vector<MessageHandlerFunc> Handlers_;
+
 		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
 		float RenderDistance_                          = RENDER_DISTANCE_DEFAULT;
 	};
+
+		
+	class WorldMessageHandlerProvider
+	{
+		friend class World;
+	public:
+		void AddHandler(World::MessageHandlerFunc func);
+		static WorldMessageHandlerProvider *Instance();
+	private:
+		std::vector<World::MessageHandlerFunc> Handlers_;
+	};
+
+	namespace detail
+	{
+		DCORE_HAS_MEMBER(Update);
+		DCORE_HAS_MEMBER(Start);
+		DCORE_HAS_MEMBER(End);
+		DCORE_HAS_MEMBER(Save);
+		DCORE_HAS_MEMBER(Load);
+	}; // namespace detail
 
 #define DCORE_COMPONENT_REGISTER(T)                                \
 	template<>                                                     \
@@ -102,6 +137,7 @@ namespace dcore::world
 			Reg()
 			{
 				ECSComponentPoolProvider::Instance()->AddComponentPool<T>();
+				WorldMessageHandlerProvider::Instance()->AddHandler(&HandleMessage);
 			}
 		} RegStatic_;
 
@@ -111,7 +147,29 @@ namespace dcore::world
 		 * 
 		 * @param message Message received.
 		 */
-		static void HandleMessage(ECS::Message message);
+		static void HandleMessage(World *world, EntityHandle handle, ECS::Message message)
+		{
+			switch(message.Type)
+			{
+			case (dstd::USize)CommonMessages::UpdateMessage:
+				Update(world, handle);
+				break;
+			case (dstd::USize)CommonMessages::StartMessage:
+				Start(world, handle);
+				break;
+			case (dstd::USize)CommonMessages::EndMessage:
+				End(world, handle);
+				break;
+			case (dstd::USize)CommonMessages::SaveMessage:
+				Save(world, handle, *(data::Json*)message.Payload);
+				break;
+			case (dstd::USize)CommonMessages::LoadMessage:
+				Load(world, handle, *(data::Json*)message.Payload);
+				break;
+			default:
+				break;
+			}
+		}
 
 		/**
 		 * @brief Returns the name of the component class for the current template instance
@@ -120,42 +178,51 @@ namespace dcore::world
 		 */
 		static std::string ThisComponentName() { return util::Debug::Demangle(typeid(T).name()); }
 
-		// static void Start(const EntityHandle &self)
-		// {
-		// 	// Do not run if the Component type doesn't implement Start.
-		// 	if constexpr(!detail::has_Start<T>()) return;
-		// 	T *comp = ECSInstance()->GetComponent<T>(self);
-		// 	// No need for NULL checking here, if this is called, the component exists.
-		// 	comp->Start(self);
-		// }
+#define HELPER_(NAME, ...)                                             \
+		template<typename Q = T>                                       \
+		static typename std::enable_if<!detail::has_##NAME<Q>()>::type \
+			NAME(__VA_ARGS__) {}                                       \
+                                                                       \
+		template<typename Q = T>                                       \
+		static typename std::enable_if<detail::has_##NAME<Q>()>::type  \
+			NAME(__VA_ARGS__)
 
-		// static void Update(const EntityHandle &self)
-		// {
-		// 	if constexpr(!detail::has_Update<T>()) return;
-		// 	T *comp = ECSInstance()->GetComponent<T>(self);
-		// 	comp->Update(self);
-		// }
 
-		// static void End(const EntityHandle &self)
-		// {
-		// 	if constexpr(!detail::has_End<T>()) return;
-		// 	T *comp = ECSInstance()->GetComponent<T>(self);
-		// 	comp->End(self);
-		// }
+		HELPER_(Start, World *world, EntityHandle self)
+		{
+			T *comp = world->GetECS()->GetComponent<T>(self);
+			comp->Start(self);
+		}
 
-		// static void Save(const EntityHandle &self, data::Json &output)
-		// {
-		// 	if constexpr(!detail::has_Save<T>()) return;
-		// 	T *comp = ECSInstance()->GetComponent<T>(self);
-		// 	comp->Save(self, output);
-		// }
+		HELPER_(Update, World *world, EntityHandle self)
+		{
+			if constexpr(!detail::has_Update<T>()) return;
+			else
+			{
+				T *comp = world->GetECS()->GetComponent<T>(self);
+				comp->Update(self);
+			}
+		}
 
-		// static void Load(const EntityHandle &self, const data::Json &input)
-		// {
-		// 	if constexpr(!detail::has_Load<T>()) return;
-		// 	T *comp = ECSInstance()->GetComponent<T>(self);
-		// 	comp->Load(self, input);
-		// }
+		HELPER_(End, World *world, EntityHandle self) {
+			T *comp = world->GetECS()->GetComponent<T>(self);
+			comp->End(self);
+		}
+
+		HELPER_(Save, World *world, EntityHandle self, data::Json &output)
+		{
+			if constexpr(!detail::has_Save<T>()) return;
+			T *comp = world->GetECS()->GetComponent<T>(self);
+			comp->Save(self, output);
+		}
+
+		HELPER_(Load, World *world, EntityHandle self, const data::Json &input)
+		{
+			if constexpr(!detail::has_Load<T>()) return;
+			T *comp = world->GetECS()->GetComponent<T>(self);
+			comp->Load(self, input);
+		}
+#undef HELPER_
 	};
 
 	/**
@@ -215,6 +282,7 @@ namespace dcore::world
 		void Save(const EntityHandle &self, data::Json &output) const;
 	};
 
+	/** @deprecated Now World has it's own terrain. */
 	class TerrainComponent : public ComponentBase<TerrainComponent>
 	{
 	public:

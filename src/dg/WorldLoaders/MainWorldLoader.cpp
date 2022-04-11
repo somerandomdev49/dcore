@@ -31,16 +31,21 @@ namespace dg::loaders
 	void MainWorldLoader::PopulateWorld_(const dcore::data::FileInput &input, dcore::world::World *world)
 	{
 		// Create the terrain entity (holds the TerrainComponent)
-		auto terrainEntity = world->CreateEntity();
-		terrainEntity.AddComponent(dcore::world::TerrainComponent(
-		    dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_)));
+		// auto terrainEntity = world->CreateEntity();
+		// terrainEntity.AddComponent(dcore::world::TerrainComponent(
+		//     ));
 
-		world->SetTerrain(
-			&terrainEntity.GetComponent<dcore::world::TerrainComponent>()
-				->GetTerrain());
+		// world->SetTerrain(
+		// 	&terrainEntity.GetComponent<dcore::world::TerrainComponent>()
+		// 		->GetTerrain());
+
+		world->CreateTerrain(dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_));
 
 		// Load the rest of the entities (saved)
 		LoadStaticEntities_({ input.Get(), world });
+
+		// LOG_F(INFO, "Terrain chunk count: %lld",
+		// 	terrainEntity.GetComponent<dcore::world::TerrainComponent>()->GetTerrain().GetChunks().size());
 
 		// TODO: Have a separate method for loading static entities.
 
