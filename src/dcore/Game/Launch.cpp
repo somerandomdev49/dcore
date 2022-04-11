@@ -103,7 +103,7 @@ namespace dcore::launch
 
 		// platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
-		
+
 		dg::Game game;
 		// dg::Game::SetInstance(&game);
 		game.Initialize();

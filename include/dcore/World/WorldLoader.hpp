@@ -50,6 +50,7 @@ namespace dcore::world
 		void UnLoadWorld(const std::string &name);
 
 		void UnLoadAllWorlds();
+
 	private:
 		std::string Loaded_;
 		std::unordered_map<std::string, World *> Worlds_;

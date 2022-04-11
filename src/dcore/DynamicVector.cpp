@@ -14,15 +14,15 @@ namespace dstd
 
 	void DynamicVector::RawAdd(const void *value)
 	{
-		LOG_F(INFO, "DynamicVector::RawAdd()");
-		auto dest = AllocAdd<Byte>();
+		// LOG_F(INFO, "DynamicVector::RawAdd()");
+		auto *dest = AllocAdd<Byte>();
 		CopyBuffer(ItemSize_, (Byte *)dest, (Byte *)value);
 	}
 
-	void *DynamicVector::RawGet(USize idx) const
+	void *DynamicVector::RawGet(USize index) const
 	{
-		LOG_F(INFO, "DynamicVector::RawGet(%ld)", idx);
-		return (Byte *)Data_ + idx * ItemSize_;
+		// LOG_F(INFO, "DynamicVector::RawGet(%ld)", idx);
+		return (Byte *)Data_ + index * ItemSize_;
 	}
 
 	void *DynamicVector::RawAllocAdd()

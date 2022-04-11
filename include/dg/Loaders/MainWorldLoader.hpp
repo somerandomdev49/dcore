@@ -21,7 +21,7 @@ namespace dg::loaders
 			const dcore::data::Json &Json;
 			dcore::world::World *World;
 		};
-	
+
 		void PopulateWorld_(const dcore::data::FileInput &input, dcore::world::World *world);
 		void PopulateWorldV1_(LoadInfo info);
 		void LoadStaticEntities_(LoadInfo info);

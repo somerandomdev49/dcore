@@ -20,10 +20,7 @@ namespace dcore::world
 		return WorldMessageHandlerProviderInstance;
 	}
 
-	void WorldMessageHandlerProvider::AddHandler(World::MessageHandlerFunc func)
-	{
-		Handlers_.push_back(func);
-	}
+	void WorldMessageHandlerProvider::AddHandler(World::MessageHandlerFunc func) { Handlers_.push_back(func); }
 
 	DCORE_COMPONENT_REGISTER(TransformComponent);
 	DCORE_COMPONENT_REGISTER(StaticMeshComponent);
@@ -31,18 +28,24 @@ namespace dcore::world
 	DCORE_COMPONENT_REGISTER(DynamicComponent);
 	DCORE_COMPONENT_REGISTER(TerrainComponent);
 
-	void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output) const
+	void StaticMeshComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
-		(void)self;
-		std::string name = Mesh.GetTexture().GetName();
-		std::cout << "Saving StaticMeshComponent, GetTexture().GetName() = " << name << std::endl;
-		auto meshInfo = data::Json {
-		    {"mesh", Mesh.GetMesh().GetName()},
-		    {"texture", Mesh.GetTexture().GetName()},
-		};
-
-		output = data::Json {{"mesh", meshInfo}};
+		auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
+		render->RenderStaticMesh(&Mesh, transform->GetMatrix());
 	}
+
+	// void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output) const
+	// {
+	// 	(void)self;
+	// 	std::string name = Mesh.GetTexture().GetName();
+	// 	std::cout << "Saving StaticMeshComponent, GetTexture().GetName() = " << name << std::endl;
+	// 	auto meshInfo = data::Json {
+	// 	    {"mesh", Mesh.GetMesh().GetName()},
+	// 	    {"texture", Mesh.GetTexture().GetName()},
+	// 	};
+
+	// 	output = data::Json {{"mesh", meshInfo}};
+	// }
 
 	void TransformComponent::Save(const EntityHandle &entity, data::Json &output) const
 	{
@@ -54,11 +57,16 @@ namespace dcore::world
 		});
 	}
 
-	void ModelComponent::Save(const EntityHandle &self, data::Json &output) const
+	void ModelComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
-		(void)self;
-		output = data::Json::object({{"model", Model.GetName()}});
+		auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
+		render->RenderModel(Model.Get(), transform->GetMatrix());
 	}
+	// void ModelComponent::Save(const EntityHandle &self, data::Json &output) const
+	// {
+	// 	(void)self;
+	// 	output = data::Json::object({{"model", Model.GetName()}});
+	// }
 
 	void TransformComponent::ReCalculateMatrix()
 	{
@@ -128,22 +136,16 @@ namespace dcore::world
 	void World::Initialize()
 	{
 		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
-		ECSInstance_ = new ECS();
+		ECSInstance_    = new ECS();
 		ECSInstance_->Initialize();
 
-		ECSInstance_->SetMessageHandler({
-			this,
-			[](void *self, EntityHandle handle, ECS::Message message)
-			{
-				((World*)self)->MessageHandler_(handle, message);
-			}
-		});
+		ECSInstance_->SetMessageHandler({this, [](void *self, EntityHandle handle, ECS::Message message)
+		                                 {
+			                                 ((World *)self)->MessageHandler_(handle, message);
+		                                 }});
 
-		std::copy(
-			WorldMessageHandlerProvider::Instance()->Handlers_.begin(),
-			WorldMessageHandlerProvider::Instance()->Handlers_.end(),
-			std::back_inserter(Handlers_)
-		);
+		std::copy(WorldMessageHandlerProvider::Instance()->Handlers_.begin(),
+		          WorldMessageHandlerProvider::Instance()->Handlers_.end(), std::back_inserter(Handlers_));
 
 		Terrain_ = nullptr;
 
@@ -165,8 +167,7 @@ namespace dcore::world
 	void World::MessageHandler_(EntityHandle handle, ECS::Message message)
 	{
 		// LOG_F(INFO, "Received message!");
-		for(auto handler : Handlers_)
-			handler(this, handle, message);
+		for(auto handler : Handlers_) handler(this, handle, message);
 	}
 
 	terrain::Terrain &TerrainComponent::GetTerrain() { return Terrain_; }
@@ -175,7 +176,7 @@ namespace dcore::world
 
 	void World::DispatchMessage_(CommonMessages message, void *data)
 	{
-		ECSInstance_->Broadcast({ (dstd::USize)message, data });
+		ECSInstance_->Broadcast({(dstd::USize)message, data});
 	}
 
 	void World::Update()
@@ -201,11 +202,10 @@ namespace dcore::world
 		// Render Terrain if it exists.
 		// LOG_F(INFO, "Maybe will render terrain");
 		if(Terrain_ != nullptr)
-		{ 
+		{
 			// LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
-			for(auto chunkIndex : Terrain_->GetActiveChunks())
-				render->RenderChunk(&chunks[chunkIndex]);
+			for(auto chunkIndex : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[chunkIndex]);
 
 			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
 			// for(const auto &entity : entities)
@@ -265,9 +265,7 @@ namespace dcore::world
 		// }
 	}
 
-	void World::Load(const data::FileInput &input)
-	{
-	}
+	void World::Load(const data::FileInput &input) {}
 
 	void World::CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap)
 	{

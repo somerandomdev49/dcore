@@ -61,7 +61,7 @@ namespace dcore::util
 			data.VertexData.push_back(bytes[3]);
 		};
 
-		for(const auto & shape : shapes)
+		for(const auto &shape : shapes)
 		{
 
 			size_t index_offset = 0;

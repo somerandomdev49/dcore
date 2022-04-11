@@ -86,7 +86,7 @@ namespace dcore::graphics
 	/**************************** Renderable ****************************/
 
 	const glm::mat4 &Renderable::GetTransform() const { return Transform_; }
-	void Renderable::SetTransform(const glm::mat4 &m) { Transform_ = m; }
+	void Renderable::SetTransform(const glm::mat4 &martrix) { Transform_ = martrix; }
 
 	/**************************** StaticMesh ****************************/
 
@@ -218,13 +218,13 @@ namespace dcore::graphics
 	Camera *RendererInterface::GetCamera() const { return Camera_; }
 	// TODO: SetCamera, make the camera DCORE_REF.
 
-	void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *sm)
+	void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *mesh, const glm::mat4 &transform)
 	{
 		// TODO: Do not set the shader each time we render something, it's expensive!
 		Renderer_->UseShader(ObjectShader_->Get());
-		Renderer_->UseTexture(0, sm->GetTexture().Get());
-		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * sm->GetTransform());
-		Renderer_->Render(sm->GetMesh().Get());
+		Renderer_->UseTexture(0, mesh->GetTexture().Get());
+		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * transform);
+		Renderer_->Render(mesh->GetMesh().Get());
 	}
 
 	void RendererInterface::RenderChunk(const terrain::Chunk *chunk)

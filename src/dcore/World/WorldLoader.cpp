@@ -12,10 +12,10 @@ namespace dcore::world
 	{
 		auto *loader = this->Loaders_[name];
 		auto *world  = new World();
-		
+
 		platform::Context::Instance()->SetWorld(world);
 		Loaded_ = name;
-		
+
 		Worlds_[name] = world;
 
 		world->Initialize();
@@ -34,8 +34,8 @@ namespace dcore::world
 	void WorldLoaderRegistry::UnLoadWorld(const std::string &name)
 	{
 		auto *loader = this->Loaders_[name];
-		auto *world = this->Worlds_[name];
-		
+		auto *world  = this->Worlds_[name];
+
 		if(name == Loaded_)
 		{
 			if(Worlds_.empty())
@@ -48,9 +48,8 @@ namespace dcore::world
 				platform::Context::Instance()->SetWorld(Worlds_.begin()->second);
 				Loaded_ = Worlds_.begin()->first;
 			}
-			
 		}
-		
+
 		loader->UnLoad(world);
 		world->DeInitialize();
 

@@ -49,7 +49,6 @@ namespace dcore::world
 	// 	return {&S::Start, &S::Update, &S::End, &S::Save, &S::Load, S::ThisComponentName(), typeid(U)};
 	// }
 
-
 	class ECS
 	{
 		struct ComponentPool
@@ -67,47 +66,44 @@ namespace dcore::world
 		void DeInitialize();
 
 		EntityHandle Create();
-		
+
 		struct Message
 		{
 			dstd::USize Type;
 			void *Payload;
 		};
-		
-		using MessageHandlerFunc = void(*)(void *user, EntityHandle receiver, Message message);
+
+		using MessageHandlerFunc = void (*)(void *user, EntityHandle receiver, Message message);
 		struct MessageHandler
 		{
 			void *User;
 			MessageHandlerFunc Func;
 
-			inline void operator()(EntityHandle receiver, Message message) const
-			{
-				Func(User, receiver, message);
-			}
+			inline void operator()(EntityHandle receiver, Message message) const { Func(User, receiver, message); }
 		};
 
 		/**
 		 * @brief Sends a message `message` to `receiver`.
-		 * 
+		 *
 		 * @param message The message to send.
 		 */
-		inline void Send(EntityHandle receiver, Message message)
-		{
-			MessageHandler_(receiver, message);
-		}
+		inline void Send(EntityHandle receiver, Message message) { MessageHandler_(receiver, message); }
 
 		/**
 		 * @brief Broadcasts (i.e. sends to everyone) `message`.
-		 * 
+		 *
 		 * @param message The message to broadcast.
 		 */
 		inline void Broadcast(Message message)
 		{
 			// LOG_F(INFO, "Entities count: %llu", UsedEntities_.GetPacked().size());
 			for(EntityHandle handle : UsedEntities_.GetPacked())
+			{
+				LOG_F(INFO, "Sending for %lu", handle);
 				Send(handle, message);
+			}
 		}
-		
+
 		/** Adds a message handler. */
 		void AddHandler(MessageHandler &&handler);
 
@@ -149,7 +145,7 @@ namespace dcore::world
 		template<typename T, typename... Args>
 		T *AddComponent(EntityHandle entity, Args &&...args)
 		{
-			T obj = T(std::forward<Args>(args)...);
+			T obj             = T(std::forward<Args>(args)...);
 			auto typeIndex    = std::type_index(typeid(T));
 			const auto &found = ComponentPools_.find(typeIndex);
 
@@ -251,8 +247,8 @@ namespace dcore::world
 
 		/**
 		 * @brief Get the Component Pool By Name object
-		 * 
-		 * @return dstd::USize 
+		 *
+		 * @return dstd::USize
 		 */
 		dstd::USize GetComponentPoolByName(const std::string &name) const;
 
@@ -273,6 +269,7 @@ namespace dcore::world
 		}
 
 		void SetMessageHandler(MessageHandler handler);
+
 	private:
 		std::vector<ComponentPool> AllComponentPools_;
 		std::unordered_map<std::string, dstd::USize> ComponentPoolsByName_;
@@ -289,7 +286,6 @@ namespace dcore::world
 		{
 			const std::type_info &Type;
 			dstd::USize Size;
-			
 		};
 
 	public:
@@ -298,7 +294,7 @@ namespace dcore::world
 		void AddComponentPool()
 		{
 			fprintf(stderr, "Add component pool %s, this = %p, count = %lld\n",
-				util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
+			        util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
 			AllComponentPools_.push_back(ComponentPool {typeid(T), sizeof(T)});
 		}
 

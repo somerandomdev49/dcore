@@ -71,10 +71,11 @@ namespace dcore::world
 
 		/**
 		 * @brief Creates the world terrain and destroys previous one (if exists)
-		 * 
+		 *
 		 * @param heightmap Heightmap to create terrain from.
 		 */
 		void CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap);
+
 	private:
 		friend class platform::Context;
 		friend class launch::Launch;
@@ -102,13 +103,14 @@ namespace dcore::world
 		float RenderDistance_                          = RENDER_DISTANCE_DEFAULT;
 	};
 
-		
 	class WorldMessageHandlerProvider
 	{
 		friend class World;
+
 	public:
 		void AddHandler(World::MessageHandlerFunc func);
 		static WorldMessageHandlerProvider *Instance();
+
 	private:
 		std::vector<World::MessageHandlerFunc> Handlers_;
 	};
@@ -144,31 +146,23 @@ namespace dcore::world
 	public:
 		/**
 		 * @brief Called by the World when a message is sent to the component.
-		 * 
+		 *
 		 * @param message Message received.
 		 */
 		static void HandleMessage(World *world, EntityHandle handle, ECS::Message message)
 		{
-			if(world->GetECS()->GetComponent<T>(handle) == nullptr) return;
+			auto comp = world->GetECS()->GetComponent<T>(handle);
+			LOG_F(INFO, "Handle Message [%s] %s", util::Debug::Demangle(typeid(T).name()).c_str(), comp == nullptr ? "Fail" : "Success");
+			if(comp == nullptr) return;
+			// LOG_F(INFO, "Handle Message:");
 			switch(message.Type)
 			{
-			case (dstd::USize)CommonMessages::UpdateMessage:
-				Update(world, handle);
-				break;
-			case (dstd::USize)CommonMessages::StartMessage:
-				Start(world, handle);
-				break;
-			case (dstd::USize)CommonMessages::EndMessage:
-				End(world, handle);
-				break;
-			case (dstd::USize)CommonMessages::SaveMessage:
-				Save(world, handle, *(data::Json*)message.Payload);
-				break;
-			case (dstd::USize)CommonMessages::LoadMessage:
-				Load(world, handle, *(data::Json*)message.Payload);
-				break;
-			default:
-				break;
+			case(dstd::USize)CommonMessages::UpdateMessage: Update(world, handle, comp); break;
+			case(dstd::USize)CommonMessages::StartMessage: Start(world, handle, comp); break;
+			case(dstd::USize)CommonMessages::EndMessage: End(world, handle, comp); break;
+			case(dstd::USize)CommonMessages::SaveMessage: Save(world, handle, *(data::Json *)message.Payload, comp); break;
+			case(dstd::USize)CommonMessages::LoadMessage: Load(world, handle, *(data::Json *)message.Payload, comp); break;
+			default: break;
 			}
 		}
 
@@ -179,48 +173,37 @@ namespace dcore::world
 		 */
 		static std::string ThisComponentName() { return util::Debug::Demangle(typeid(T).name()); }
 
-#define HELPER_(NAME, ...)                                             \
-		template<typename Q = T>                                       \
-		static typename std::enable_if<!detail::has_##NAME<Q>()>::type \
-			NAME(__VA_ARGS__) {}                                       \
-                                                                       \
-		template<typename Q = T>                                       \
-		static typename std::enable_if<detail::has_##NAME<Q>()>::type  \
-			NAME(__VA_ARGS__)
+#define HELPER_(NAME, ...)                                                           \
+	template<typename Q = T>                                                         \
+	static typename std::enable_if<!detail::has_##NAME<Q>()>::type NAME(__VA_ARGS__) \
+	{                                                                                \
+	}                                                                                \
+                                                                                     \
+	template<typename Q = T>                                                         \
+	static typename std::enable_if<detail::has_##NAME<Q>()>::type NAME(__VA_ARGS__)
 
-
-		HELPER_(Start, World *world, EntityHandle self)
+		HELPER_(Start, World *world, EntityHandle self, T *comp)
 		{
-			T *comp = world->GetECS()->GetComponent<T>(self);
 			comp->Start(self);
 		}
 
-		HELPER_(Update, World *world, EntityHandle self)
+		HELPER_(Update, World *world, EntityHandle self, T *comp)
 		{
-			if constexpr(!detail::has_Update<T>()) return;
-			else
-			{
-				T *comp = world->GetECS()->GetComponent<T>(self);
-				comp->Update(self);
-			}
+			comp->Update(self);
 		}
 
-		HELPER_(End, World *world, EntityHandle self) {
-			T *comp = world->GetECS()->GetComponent<T>(self);
+		HELPER_(End, World *world, EntityHandle self, T *comp)
+		{
 			comp->End(self);
 		}
 
-		HELPER_(Save, World *world, EntityHandle self, data::Json &output)
+		HELPER_(Save, World *world, EntityHandle self, data::Json &output, T *comp)
 		{
-			if constexpr(!detail::has_Save<T>()) return;
-			T *comp = world->GetECS()->GetComponent<T>(self);
 			comp->Save(self, output);
 		}
 
-		HELPER_(Load, World *world, EntityHandle self, const data::Json &input)
+		HELPER_(Load, World *world, EntityHandle self, const data::Json &input, T *comp)
 		{
-			if constexpr(!detail::has_Load<T>()) return;
-			T *comp = world->GetECS()->GetComponent<T>(self);
 			comp->Load(self, input);
 		}
 #undef HELPER_
@@ -269,7 +252,8 @@ namespace dcore::world
 		StaticMeshComponent(const graphics::StaticMesh &mesh) : Mesh(mesh) {}
 		graphics::StaticMesh Mesh;
 
-		void Save(const EntityHandle &self, data::Json &output) const;
+		// void Save(EntityHandle self, data::Json &output) const;
+		void Render(EntityHandle self, graphics::RendererInterface *render) const;
 	};
 
 	/**
@@ -280,7 +264,8 @@ namespace dcore::world
 		ModelComponent(const resource::Resource<graphics::Model> &model) : Model(model) {}
 		resource::Resource<graphics::Model> Model;
 
-		void Save(const EntityHandle &self, data::Json &output) const;
+		// void Save(EntityHandle self, data::Json &output) const;
+		void Render(EntityHandle self, graphics::RendererInterface *render) const;
 	};
 
 	/** @deprecated Now World has it's own terrain. */

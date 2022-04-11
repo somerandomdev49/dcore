@@ -19,6 +19,7 @@ namespace dstd
 
 		/** The packed list contains indices into the sparse list. */
 		std::vector<T> Packed_;
+
 	public:
 		/**
 		 * @brief Set a value at an index inside of the sparse list.
@@ -126,4 +127,4 @@ namespace dstd
 		 */
 		const std::vector<std::pair<dstd::USize, T>> &GetPacked() const { return Packed_; }
 	};
-} // namespace dcore
+} // namespace dstd
