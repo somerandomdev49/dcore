@@ -231,16 +231,16 @@ namespace dcore::graphics
 	{
 		Renderer_->UseShader(TerrainShader_->Get());
 
-		auto p = chunk->GetGlobalPosition();
+		auto globalPos = chunk->GetGlobalPosition();
 		// printf("pos: %f, %f\n", p.x, p.y);
-		glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, 0, p.y));
+		glm::mat4 matrix = glm::translate(glm::mat4(1.0f), glm::vec3(globalPos.x, 0, globalPos.y));
 
-		TerrainShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * m); //  *
+		TerrainShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * matrix); //  *
 
 		Renderer_->UseTexture(0, chunk->GetBlendMap().Get());
 
 		// if texs[n].Get() is nullptr, the call is skipped so we can safely use textures.
-		auto texs = chunk->GetTextures();
+		const auto *texs = chunk->GetTextures();
 		Renderer_->UseTexture(1, texs[0].Get());
 		Renderer_->UseTexture(2, texs[1].Get());
 		Renderer_->UseTexture(3, texs[2].Get());

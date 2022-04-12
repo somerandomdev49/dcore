@@ -99,7 +99,7 @@ namespace dcore::world
 			// LOG_F(INFO, "Entities count: %llu", UsedEntities_.GetPacked().size());
 			for(EntityHandle handle : UsedEntities_.GetPacked())
 			{
-				LOG_F(INFO, "Sending for %lu", handle);
+				// LOG_F(INFO, "Sending for %lu", handle);
 				Send(handle, message);
 			}
 		}
@@ -262,10 +262,9 @@ namespace dcore::world
 		 * @return The pointer to the attached component.
 		 */
 		template<typename... Args>
-		void AddComponent(EntityHandle entity, dstd::USize pool, Args &&...args)
+		void AddComponent(EntityHandle entity, dstd::USize pool, void *obj)
 		{
-			// T obj = T(std::forward<Args>(args)...);
-			// AllComponentPools_[pool].AddComponent(entity, &obj);
+			AllComponentPools_[pool].AddComponent(entity, obj);
 		}
 
 		void SetMessageHandler(MessageHandler handler);

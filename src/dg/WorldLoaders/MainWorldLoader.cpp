@@ -58,6 +58,10 @@ namespace dg::loaders
 			    dcore::resource::GetResource<dcore::graphics::RTexture>(
 			        "DCore.Texture.Main.Stone"))));
 		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
+
+		if(player.GetComponent<entity::CharacterControllerComponent>() == nullptr)
+			LOG_F(ERROR, "NOO");
+
 		renderer->GetCamera()->SetPosition(glm::vec3(0, 0, 0));
 
 		// LOG_F(INFO, "Terrain chunk count: %lld",

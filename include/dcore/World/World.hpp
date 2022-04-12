@@ -152,7 +152,7 @@ namespace dcore::world
 		static void HandleMessage(World *world, EntityHandle handle, ECS::Message message)
 		{
 			auto comp = world->GetECS()->GetComponent<T>(handle);
-			LOG_F(INFO, "Handle Message [%s] %s", util::Debug::Demangle(typeid(T).name()).c_str(), comp == nullptr ? "Fail" : "Success");
+			// LOG_F(INFO, "Handle Message [%s] %s", util::Debug::Demangle(typeid(T).name()).c_str(), comp == nullptr ? "Fail" : "Success");
 			if(comp == nullptr) return;
 			// LOG_F(INFO, "Handle Message:");
 			switch(message.Type)
