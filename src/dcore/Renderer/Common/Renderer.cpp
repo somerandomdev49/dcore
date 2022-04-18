@@ -10,7 +10,7 @@ namespace dcore::graphics
 
 	Renderer *Renderer::Instance()
 	{
-		if(!rendererInst) rendererInst = new Renderer;
+		if(rendererInst == nullptr) rendererInst = new Renderer;
 		return rendererInst;
 	}
 
@@ -20,26 +20,26 @@ namespace dcore::graphics
 
 	void Renderer::Render(const Model *model, int textureUnit /* = 0 */)
 	{
-		fprintf(stderr, "SHEEEEEEEEEEEEEEEEEEEEEESH\n");
+		// fprintf(stderr, "SHEEEEEEEEEEEEEEEEEEEEEESH\n");
 		for(const auto &mesh : model->Meshes_)
 		{
 			UseTexture(textureUnit, model->TextureSlots_[mesh.TextureIndex].Texture);
 			Render(mesh.Mesh);
 		}
-		fprintf(stderr, "YO MAMA\n");
+		// fprintf(stderr, "YO MAMA\n");
 	}
 
 	void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 	{
-		RStaticMesh *mesh = new(placement) RStaticMesh();
-		MeshData d;
+		auto *mesh = new(placement) RStaticMesh();
+		MeshData dat;
 
-		RenderResourceManager::CreateStaticMesh(mesh, d.Indices, d.VertexData);
+		RenderResourceManager::CreateStaticMesh(mesh, dat.Indices, dat.VertexData);
 	}
 
 	void Renderer::RStaticMesh_DeConstructor(void *placement)
 	{
-		RStaticMesh *mesh = reinterpret_cast<RStaticMesh *>(placement);
+		auto *mesh = reinterpret_cast<RStaticMesh *>(placement);
 		RenderResourceManager::DeleteStaticMesh(mesh);
 		delete mesh;
 	}

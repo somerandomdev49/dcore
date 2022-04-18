@@ -9,6 +9,8 @@ namespace dcore::world
 	class WorldLoader
 	{
 	public:
+		virtual ~WorldLoader() = default;
+
 		/**
 		 * @brief Initializes a world
 		 *
@@ -51,6 +53,8 @@ namespace dcore::world
 
 		void UnLoadAllWorlds();
 
+		std::unordered_map<std::string, WorldLoader *> &GetLoaders() { return Loaders_; }
+		const std::unordered_map<std::string, WorldLoader *> &GetLoaders() const { return Loaders_; }
 	private:
 		std::string Loaded_;
 		std::unordered_map<std::string, World *> Worlds_;

@@ -118,6 +118,7 @@ namespace dcore::world
 	namespace detail
 	{
 		DCORE_HAS_MEMBER(Update);
+		DCORE_HAS_MEMBER(Render);
 		DCORE_HAS_MEMBER(Start);
 		DCORE_HAS_MEMBER(End);
 		DCORE_HAS_MEMBER(Save);
@@ -157,11 +158,24 @@ namespace dcore::world
 			// LOG_F(INFO, "Handle Message:");
 			switch(message.Type)
 			{
-			case(dstd::USize)CommonMessages::UpdateMessage: Update(world, handle, comp); break;
-			case(dstd::USize)CommonMessages::StartMessage: Start(world, handle, comp); break;
-			case(dstd::USize)CommonMessages::EndMessage: End(world, handle, comp); break;
-			case(dstd::USize)CommonMessages::SaveMessage: Save(world, handle, *(data::Json *)message.Payload, comp); break;
-			case(dstd::USize)CommonMessages::LoadMessage: Load(world, handle, *(data::Json *)message.Payload, comp); break;
+			case(dstd::USize)CommonMessages::UpdateMessage:
+				Update(world, handle, comp);
+				break;
+			case(dstd::USize)CommonMessages::RenderMessage:
+				Render(world, handle, (graphics::RendererInterface *)message.Payload, comp);
+				break;
+			case(dstd::USize)CommonMessages::StartMessage:
+				Start(world, handle, comp);
+				break;
+			case(dstd::USize)CommonMessages::EndMessage:
+				End(world, handle, comp);
+				break;
+			case(dstd::USize)CommonMessages::SaveMessage:
+				Save(world, handle, *(data::Json *)message.Payload, comp);
+				break;
+			case(dstd::USize)CommonMessages::LoadMessage:
+				Load(world, handle, *(data::Json *)message.Payload, comp);
+				break;
 			default: break;
 			}
 		}
@@ -190,6 +204,11 @@ namespace dcore::world
 		HELPER_(Update, World *world, EntityHandle self, T *comp)
 		{
 			comp->Update(self);
+		}
+
+		HELPER_(Render, World *world, EntityHandle self, graphics::RendererInterface *renderer, T *comp)
+		{
+			comp->Render(self, renderer);
 		}
 
 		HELPER_(End, World *world, EntityHandle self, T *comp)

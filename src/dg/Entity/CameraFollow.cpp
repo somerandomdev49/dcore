@@ -20,7 +20,7 @@ namespace dg::entity
 
 	void CameraFollowComponent::Update(const dcore::world::EntityHandle &self)
 	{
-		LOG_F(INFO, "Camera Follow | Update");
+		// LOG_F(INFO, "Camera Follow | Update");
 		if(TransformComponent_ == nullptr) return;
 
 		glm::vec3 offset = glm::vec3(0, 10, -40); // TODO: Offset field + Getter/Setter for zooming in/out.

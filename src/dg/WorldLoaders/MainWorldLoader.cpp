@@ -99,7 +99,7 @@ namespace dg::loaders
 			if(obj["type"] == "NPC") LoadStaticEntity_NPC_(entity, {obj, info.World});
 			if(obj["type"] == "Interactable") LoadStaticEntity_Interactable_(entity, {obj, info.World});
 
-			LOG_F(INFO, "Created entity! %lu", entity.GetId());
+			LOG_F(INFO, "Created entity! %u", entity.GetId());
 		}
 	}
 
@@ -140,10 +140,11 @@ namespace dg::loaders
 		(void)Name_;
 		LoadStaticEntity_Transform_(entity, info);
 
+		LOG_F(INFO, "Creating model entity");
+
 		auto modelId = info.Json["model"].get<const std::string>();
 
 		auto model = dcore::resource::ResourceManager::Instance()->Get<dcore::graphics::Model>(modelId);
-
 		entity.AddComponent(dcore::world::ModelComponent(model));
 	}
 

@@ -55,8 +55,8 @@ namespace dg
 		//     ->CreateChild<dcore::graphics::gui::common::ScrollingText>(gTitles_, glm::vec3(0, 0, 0));
 
 
-		dg::loaders::MainWorldLoader mainWorldLoader("World1");
-		Registry_.AddWorldLoader("Main1", &mainWorldLoader);
+		auto *mainWorldLoader = new dg::loaders::MainWorldLoader("World1");
+		Registry_.AddWorldLoader("Main1", mainWorldLoader);
 		DCORE_LOG_INFO << "LoadWorld(Main1)";
 		Registry_.LoadWorld("Main1");
 		DCORE_LOG_INFO << "Done";
@@ -65,5 +65,7 @@ namespace dg
 	void Game::DeInitialize()
 	{
 		Registry_.UnLoadAllWorlds();
+		for(auto &[name, loader] : Registry_.GetLoaders())
+			delete loader;
 	}
 } // namespace dg

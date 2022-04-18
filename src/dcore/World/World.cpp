@@ -30,6 +30,7 @@ namespace dcore::world
 
 	void StaticMeshComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
+		// LOG_F(INFO, "ModelComponent | Render");
 		auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
 		render->RenderStaticMesh(&Mesh, transform->GetMatrix());
 	}
@@ -59,6 +60,7 @@ namespace dcore::world
 
 	void ModelComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
+		// LOG_F(INFO, "ModelComponent | Render");
 		auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
 		render->RenderModel(Model.Get(), transform->GetMatrix());
 	}
