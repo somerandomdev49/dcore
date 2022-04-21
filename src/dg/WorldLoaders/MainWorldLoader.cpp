@@ -51,18 +51,19 @@ namespace dg::loaders
 		auto player = world->CreateEntity();
 		auto *renderer = dcore::platform::Context::Instance()->GetRendererInterface();
 
-		player.AddComponent(dcore::world::TransformComponent());
-		player.AddComponent(entity::CharacterControllerComponent());
-		player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
-			    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
-			    dcore::resource::GetResource<dcore::graphics::RTexture>(
-			        "DCore.Texture.Main.Stone"))));
-		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
+		// player.AddComponent(dcore::world::TransformComponent());
+		// player.AddComponent(entity::CharacterControllerComponent());
+		// player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
+		// 	    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
+		// 	    dcore::resource::GetResource<dcore::graphics::RTexture>(
+		// 	        "DCore.Texture.Main.Stone"))));
+		// player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
 
-		if(player.GetComponent<entity::CharacterControllerComponent>() == nullptr)
-			LOG_F(ERROR, "NOO");
+		// if(player.GetComponent<entity::CharacterControllerComponent>() == nullptr)
+		// 	LOG_F(ERROR, "NOO");
 
-		renderer->GetCamera()->SetPosition(glm::vec3(0, 0, 0));
+		renderer->GetCamera()->SetPosition(glm::vec3(0, 2, 0));
+		renderer->GetCamera()->SetRotation(glm::quatLookAt(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0)));
 
 		// LOG_F(INFO, "Terrain chunk count: %lld",
 		// 	terrainEntity.GetComponent<dcore::world::TerrainComponent>()->GetTerrain().GetChunks().size());

@@ -199,7 +199,16 @@ namespace dcore::world
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-		DispatchMessage_(CommonMessages::RenderMessage, render);
+		// DispatchMessage_(CommonMessages::RenderMessage, render);
+		ECSInstance_->Each<ModelComponent, TransformComponent>([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
+		{
+			render->RenderModel(model.Model.Get(), transform.GetMatrix());
+		});
+		
+		ECSInstance_->Each<StaticMeshComponent, TransformComponent>([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
+		{
+			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
+		});
 
 		// Render Terrain if it exists.
 		// LOG_F(INFO, "Maybe will render terrain");

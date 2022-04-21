@@ -72,6 +72,11 @@ namespace dcore::world
 		/** Removes a message handler */
 		void RemoveHandler(MessageHandler &&handler);
 
+		template<typename ...Components>
+		void Each(auto func) {
+			Registry_.view<Components...>().each(func);
+		}
+
 		/**
 		 * @brief Returns the component of the specified type of an entity.
 		 *
