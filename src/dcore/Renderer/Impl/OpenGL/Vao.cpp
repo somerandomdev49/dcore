@@ -1,11 +1,13 @@
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
 #include <dcore/Uni.hpp>
+#include <dcore/Core/Log.hpp>
 #include <cstdio>
 
 namespace dcore::graphics::impl
 {
 	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride)
 	{
+		LOG_F(INFO, "Index count: %llu", indices.size());
 		IndexCount_ = indices.size();
 
 		VBO_ = Gl::GenerateBuffer();
@@ -13,10 +15,10 @@ namespace dcore::graphics::impl
 		VAO_ = Gl::GenerateVertexArray();
 		Gl::BindVertexArray(VAO_);
 		Gl::BindBuffer(ArrayBuffer, VBO_);
-		Gl::SetBufferData(ArrayBuffer, vertexData.size(), &vertexData[0], BufferUsageStaticDraw);
+		Gl::SetBufferData(ArrayBuffer, vertexData.size(), vertexData.data(), BufferUsageStaticDraw);
 
 		Gl::BindBuffer(ElementArrayBuffer, EBO_);
-		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), &indices[0], BufferUsageStaticDraw);
+		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), indices.data(), BufferUsageStaticDraw);
 
 		LastOffset_ = 0;
 		LastIndex_  = 0;

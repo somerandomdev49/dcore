@@ -39,8 +39,8 @@ namespace dcore::graphics
 
 	void Renderer::UseTexture(int unit, RTexture *texture)
 	{
-		if(!texture) return;
-		auto data = (impl::opengl::TextureBuffer *)texture->Data_;
+		if(texture == nullptr) return;
+		auto *data = (impl::opengl::TextureBuffer *)texture->Data_;
 		Gl::SetActiveTexture(TextureUnit0 + unit);
 		Gl::BindTexture(data->Type_, data->Id_);
 	}
@@ -50,95 +50,95 @@ namespace dcore::graphics
 		// TODO: Use GL_TRIANGLE_STRIP instead of triangles. Will make the loading process more
 		// complicated, but will decrease memory usage.
 
-		// printf("%u indices, %u vao\n", mesh->Data_.Vao_.IndexCount_, mesh->Data_.Vao_.VAO_);
-		auto vao = (impl::opengl::Vao *)mesh->Data_;
+		auto *vao = (impl::opengl::Vao *)mesh->Data_;
+		LOG_F(INFO, "%llu indices, %u vao", vao->IndexCount_, vao->VAO_);
 		Gl::BindVertexArray(vao->VAO_);
 		Gl::DrawElements(ElementTriangles, vao->IndexCount_, TypeUnsignedInt);
 	}
 
 	void Renderer::Render(RFastVertexBuffer *buf)
 	{
-		auto vao = (impl::opengl::FastVao *)buf->Data_;
+		auto *vao = (impl::opengl::FastVao *)buf->Data_;
 		Gl::BindVertexArray(vao->VAO_);
 		Gl::DrawArrays(ElementTriangleStrip, vao->IndexCount_);
 	}
 
 	void Renderer::SetUniform(const RUniform &u, float v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, int v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec2 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec3 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::vec4 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x2 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x3 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat2x4 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x2 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x3 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat3x4 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x2 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x3 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 	void Renderer::SetUniform(const RUniform &u, const glm::mat4x4 &v)
 	{
-		auto uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
+		const auto *uloc = reinterpret_cast<const impl::opengl::UInt *>(&u.Data_);
 		Gl::SetUniform(*uloc, v);
 	}
 
 	RUniform Renderer::GetUniform(RShader *shader, const char *name)
 	{
 		RUniform u;
-		// Hack, requires that sizeof(void*) <= sizeof(impl::opengl::UInt), which is true on normal platforms
-		impl::opengl::UInt *uloc = reinterpret_cast<impl::opengl::UInt *>(&u.Data_);
+		// ? Hack, requires that sizeof(void*) <= sizeof(impl::opengl::UInt), which is true on normal platforms
+		auto *uloc = reinterpret_cast<impl::opengl::UInt *>(&u.Data_);
 
 		*uloc = Gl::GetUniformLocation(((ShaderProgram *)shader->Data_)->Id_, name);
 		return u;
@@ -155,7 +155,7 @@ namespace dcore::graphics
 
 	void Renderer::RShader_Constructor(const std::string &path, void *placement)
 	{
-		RShader *shader = new(placement) RShader();
+		auto *shader = new(placement) RShader();
 
 		std::string vertexSource, fragmentSource;
 		bool success = true;
@@ -168,7 +168,7 @@ namespace dcore::graphics
 		}
 
 		shader->Data_ = new impl::opengl::ShaderProgram();
-		auto program  = (impl::opengl::ShaderProgram *)shader->Data_;
+		auto *program  = (impl::opengl::ShaderProgram *)shader->Data_;
 		program->Create();
 		program->AttachShader(impl::opengl::VertexShader, vertexSource);
 		program->AttachShader(impl::opengl::FragmentShader, fragmentSource);
@@ -177,8 +177,8 @@ namespace dcore::graphics
 
 	void Renderer::RShader_DeConstructor(void *placement)
 	{
-		RShader *shader = reinterpret_cast<RShader *>(placement);
-		auto program    = (impl::opengl::ShaderProgram *)shader->Data_;
+		auto *shader = reinterpret_cast<RShader *>(placement);
+		auto *program    = (impl::opengl::ShaderProgram *)shader->Data_;
 		program->Delete();
 		delete program;
 		delete shader;
@@ -187,9 +187,9 @@ namespace dcore::graphics
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 	                                             const std::vector<byte> &vertexData)
 	{
-		if(!mesh) return;
+		if(mesh == nullptr) return;
 		mesh->Data_ = new impl::opengl::Vao();
-		auto vao    = (impl::opengl::Vao *)mesh->Data_;
+		auto *vao = (impl::opengl::Vao *)mesh->Data_;
 		vao->Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
 		vao->CreateFloatAttribute(3); // Position
 		vao->CreateFloatAttribute(3); // Normal
@@ -198,8 +198,8 @@ namespace dcore::graphics
 
 	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
 	{
-		if(!mesh) return;
-		auto vao = (impl::opengl::Vao *)mesh->Data_;
+		if(mesh == nullptr) return;
+		auto *vao = (impl::opengl::Vao *)mesh->Data_;
 		vao->Delete();
 		delete vao; // Important: Leave as vao and not mesh->Data_ (because the latter is void*)
 	}
@@ -222,7 +222,7 @@ namespace dcore::graphics
 		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
 
 		tex->Data_     = new gl::Texture();
-		gl::Texture *t = (gl::Texture *)tex->Data_;
+		auto *t = (gl::Texture *)tex->Data_;
 		t->Format      = gl::TextureFormatRgba;
 		t->Size        = size;
 
@@ -241,7 +241,7 @@ namespace dcore::graphics
 
 	void RenderResourceManager::DeleteTexture(RTexture *t)
 	{
-		auto data = (impl::opengl::Texture *)t->Data_;
+		auto *data = (impl::opengl::Texture *)t->Data_;
 		data->Buffer.Delete();
 		delete data;
 	}
@@ -249,13 +249,13 @@ namespace dcore::graphics
 	void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)
 	{
 		buf->Data_ = new impl::opengl::FastVao;
-		auto data  = (impl::opengl::FastVao *)buf->Data_;
+		auto *data  = (impl::opengl::FastVao *)buf->Data_;
 		data->Load(indexCount);
 	}
 
 	void RenderResourceManager::DeleteFastVertexBuffer(RFastVertexBuffer *buf)
 	{
-		auto data = (impl::opengl::FastVao *)buf->Data_;
+		auto *data = (impl::opengl::FastVao *)buf->Data_;
 		data->Delete();
 	}
 } // namespace dcore::graphics

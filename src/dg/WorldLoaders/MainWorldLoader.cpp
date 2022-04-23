@@ -53,16 +53,21 @@ namespace dg::loaders
 
 		// player.AddComponent(dcore::world::TransformComponent());
 		// player.AddComponent(entity::CharacterControllerComponent());
-		// player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
-		// 	    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
-		// 	    dcore::resource::GetResource<dcore::graphics::RTexture>(
-		// 	        "DCore.Texture.Main.Stone"))));
 		// player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
 
 		// if(player.GetComponent<entity::CharacterControllerComponent>() == nullptr)
 		// 	LOG_F(ERROR, "NOO");
 
-		renderer->GetCamera()->SetPosition(glm::vec3(0, 2, 0));
+		auto cube = world->CreateEntity();
+		cube.AddComponent(dcore::world::TransformComponent());
+		cube.GetComponent<dcore::world::TransformComponent>()->SetPosition(glm::vec3(0, 0, 0));
+		cube.GetComponent<dcore::world::TransformComponent>()->SetRotation(glm::identity<glm::quat>());
+		cube.GetComponent<dcore::world::TransformComponent>()->SetScale(glm::vec3(1, 1, 1));
+		cube.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
+			    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
+			    dcore::resource::GetResource<dcore::graphics::RTexture>(
+			        "DCore.Texture.Main.Stone"))));
+		renderer->GetCamera()->SetPosition(glm::vec3(0, 0, -5));
 		renderer->GetCamera()->SetRotation(glm::quatLookAt(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0)));
 
 		// LOG_F(INFO, "Terrain chunk count: %lld",

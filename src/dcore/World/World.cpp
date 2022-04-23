@@ -31,8 +31,8 @@ namespace dcore::world
 	void StaticMeshComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
 		// LOG_F(INFO, "ModelComponent | Render");
-		auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
-		render->RenderStaticMesh(&Mesh, transform->GetMatrix());
+		// auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
+		// render->RenderStaticMesh(&Mesh, transform->GetMatrix());
 	}
 
 	// void StaticMeshComponent::Save(const EntityHandle &self, data::Json &output) const
@@ -200,13 +200,16 @@ namespace dcore::world
 	void World::Render(graphics::RendererInterface *render)
 	{
 		// DispatchMessage_(CommonMessages::RenderMessage, render);
-		ECSInstance_->Each<ModelComponent, TransformComponent>([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
+		ECSInstance_->View<ModelComponent, TransformComponent>().Each([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
 		{
-			render->RenderModel(model.Model.Get(), transform.GetMatrix());
+			// LOG_F(INFO, "Rendering model");
+			// render->RenderModel(model.Model.Get(), transform.GetMatrix());
 		});
 		
-		ECSInstance_->Each<StaticMeshComponent, TransformComponent>([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
+		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
 		{
+			LOG_F(INFO, "Rendering static mesh at %f,%f,%f",
+				transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
 			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
 		});
 

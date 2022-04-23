@@ -12,7 +12,11 @@ Diagnostics:
       modernize-use-trailing-return-type,
       modernize-use-nodiscard,
       readability-braces-around-statements,
-      readability-uppercase-literal-suffix
+      readability-uppercase-literal-suffix,
+      readability-convert-member-functions-to-static,
+      readability-identifier-length,
+      readability-isolate-declaration,
+      modernize-avoid-c-arrays
     ]
     CheckOptions:
         readability-identifier-naming.VariableCase: CamelBack
