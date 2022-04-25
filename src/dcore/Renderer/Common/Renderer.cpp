@@ -32,9 +32,9 @@ namespace dcore::graphics
 	void Renderer::RStaticMesh_Constructor(const std::string &path, void *placement)
 	{
 		auto *mesh = new(placement) RStaticMesh();
-		MeshData dat;
-
-		RenderResourceManager::CreateStaticMesh(mesh, dat.Indices, dat.VertexData);
+		MeshData data;
+		util::LoaderUtil::LoadMesh(data, path, "pnt");
+		RenderResourceManager::CreateStaticMesh(mesh, data.Indices, data.VertexData);
 	}
 
 	void Renderer::RStaticMesh_DeConstructor(void *placement)

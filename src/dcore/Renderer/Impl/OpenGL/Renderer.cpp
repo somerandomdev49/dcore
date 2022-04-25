@@ -51,7 +51,6 @@ namespace dcore::graphics
 		// complicated, but will decrease memory usage.
 
 		auto *vao = (impl::opengl::Vao *)mesh->Data_;
-		LOG_F(INFO, "%llu indices, %u vao", vao->IndexCount_, vao->VAO_);
 		Gl::BindVertexArray(vao->VAO_);
 		Gl::DrawElements(ElementTriangles, vao->IndexCount_, TypeUnsignedInt);
 	}

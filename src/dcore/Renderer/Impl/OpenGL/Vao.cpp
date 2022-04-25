@@ -7,7 +7,6 @@ namespace dcore::graphics::impl
 {
 	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride)
 	{
-		LOG_F(INFO, "Index count: %llu", indices.size());
 		IndexCount_ = indices.size();
 
 		VBO_ = Gl::GenerateBuffer();

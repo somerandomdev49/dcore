@@ -203,13 +203,13 @@ namespace dcore::world
 		ECSInstance_->View<ModelComponent, TransformComponent>().Each([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
 		{
 			// LOG_F(INFO, "Rendering model");
-			// render->RenderModel(model.Model.Get(), transform.GetMatrix());
+			render->RenderModel(model.Model.Get(), transform.GetMatrix());
 		});
 		
 		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
 		{
-			LOG_F(INFO, "Rendering static mesh at %f,%f,%f",
-				transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
+			// LOG_F(INFO, "Rendering static mesh at %f,%f,%f",
+				// transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
 			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
 		});
 
@@ -217,7 +217,7 @@ namespace dcore::world
 		// LOG_F(INFO, "Maybe will render terrain");
 		if(Terrain_ != nullptr)
 		{
-			// LOG_F(INFO, "Rendering terrain:");
+			LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
 			for(auto chunkIndex : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[chunkIndex]);
 
