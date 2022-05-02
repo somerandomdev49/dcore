@@ -9,6 +9,8 @@
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
 #include <dcore/Renderer/Impl/OpenGL/FastVao.hpp>
 #include <glm/ext.hpp>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_glfw.h>
 
 namespace dcore::graphics
 {
@@ -21,21 +23,33 @@ namespace dcore::graphics
 		// TODO: ClearColor field.
 		glClearColor(FOG_COLOR);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 	}
 
 	void Renderer::EnableDepthCheck() { glEnable(GL_DEPTH_TEST); }
 	void Renderer::DisableDepthCheck() { glDisable(GL_DEPTH_TEST); }
 
-	void Renderer::OnEndRender() {}
+	void Renderer::OnEndRender()
+	{
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 
 	void Renderer::Initialize()
 	{
 		EnableDepthCheck();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    	ImGui_ImplOpenGL3_Init("#version 330 core");
 	}
 
-	void Renderer::DeInitialize() {}
+	void Renderer::DeInitialize()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+	}
 
 	void Renderer::UseTexture(int unit, RTexture *texture)
 	{

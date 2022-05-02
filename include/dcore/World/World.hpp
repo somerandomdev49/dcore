@@ -9,6 +9,7 @@
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <memory>
 #include <type_traits>
 #include <unordered_map>
 
@@ -33,16 +34,22 @@ namespace dcore::world
 		LoadMessage,
 	};
 
+	class DebugLayer
+	{
+	public:
+		virtual ~DebugLayer();
+		virtual void OnRender(graphics::RendererInterface *renderer);
+		virtual void OnUpdate();
+		virtual void OnStart();
+		virtual void OnEnd();
+	};
+
 	/**
 	 * @brief Wrapper for @ref dcore::world::ECS and terrain
 	 */
 	class World
 	{
 	public:
-		/** void SaveFunction(data::FileOutput &out, ); */
-		/** @deprecated Save externally */
-		using SaveFunction = void (*)(data::FileOutput &, void *);
-
 		template<typename T>
 		T *GetComponent(const Entity &entity);
 
@@ -62,12 +69,6 @@ namespace dcore::world
 
 		ECS *GetECS() const { return ECSInstance_; }
 
-		/** @deprecated Save externally if needed */
-		void Save(data::FileOutput &output);
-
-		/** @deprecated Load externally if needed (see WorldLoader) */
-		void Load(const data::FileInput &input);
-
 		/**
 		 * @brief Creates the world terrain and destroys previous one (if exists)
 		 *
@@ -75,6 +76,12 @@ namespace dcore::world
 		 */
 		void CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap);
 
+		/**
+		 * @brief Adds a debug layer to the stack.
+		 * 
+		 * @param newDebugLayer layer to be added.
+		 */
+		void AddDebugLayer(DebugLayer *newDebugLayer);
 	private:
 		friend class platform::Context;
 		friend class launch::Launch;
@@ -100,6 +107,8 @@ namespace dcore::world
 
 		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
 		float RenderDistance_                          = RENDER_DISTANCE_DEFAULT;
+
+		std::vector<std::unique_ptr<DebugLayer>> DebugLayers_;
 	};
 
 	class WorldMessageHandlerProvider

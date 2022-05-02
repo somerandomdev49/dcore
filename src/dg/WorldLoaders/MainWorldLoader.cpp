@@ -8,11 +8,97 @@
 #include <dcore/Data/FileInput.hpp>
 #include <dcore/Data/Adapters/JsonAdapter.hpp>
 #include <dcore/Util/JsonConverters.hpp>
+#include <dcore/Core/FrameLog.hpp>
+#include <dcore/Core/Log.hpp>
 
 #include <dg/Entity/CharacterController.hpp>
 #include <dg/Entity/CameraFollow.hpp>
 
 #include <vector>
+#include <imgui.h>
+
+#define COMMAND_BUFFER_LENGTH 128
+namespace
+{
+	char *AllocEmptyCString(dstd::USize size)
+	{
+		char *str = new char[size];
+		std::fill(str, str + size, 0);
+		return str;
+	}
+
+	class BaseDebugLayer : public dcore::world::DebugLayer
+	{
+		bool ShowImGuiDemoWindow_ = false;
+	public:
+		void OnRender(dcore::graphics::RendererInterface *renderer) override
+		{
+			ImGui::Begin("[DEBUG] Screen Controls");
+			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
+			ImGui::End();
+			
+			if(ShowImGuiDemoWindow_) ImGui::ShowDemoWindow();
+		}
+	};
+
+	class ConsoleDebugLayer : public dcore::world::DebugLayer
+	{
+		char *CommandBuffer_;
+	public:
+		void OnStart() override
+		{
+			CommandBuffer_ = AllocEmptyCString(COMMAND_BUFFER_LENGTH);
+		}
+
+		void OnEnd() override
+		{
+			delete[] CommandBuffer_;
+		}
+
+		void OnRender(dcore::graphics::RendererInterface *renderer) override
+		{
+			(void)renderer;
+
+			ImGui::Begin("[DEBUG] Frame Log");
+			const auto &queue = dcore::FrameLog::Instance()->GetQueue();
+			for(const auto &s : queue) ImGui::Text("%s", s.c_str());
+			ImGui::End();
+
+			float spacing = ImGui::GetTextLineHeightWithSpacing()
+				+ ImGui::GetStyle().FramePadding.y
+				+ ImGui::GetStyle().ItemSpacing.y;
+
+			ImGui::Begin("[DEBUG] Console");
+			ImGui::BeginChild("##Console_ScrollRegion", ImVec2(0, -spacing), false, ImGuiWindowFlags_AlwaysHorizontalScrollbar);
+			const auto &messages = dstd::ILog()->GetMessages();
+			for(dstd::USize index = 0; index < messages.GetSize(); ++index)
+				ImGui::Text("%s", messages[index].c_str());
+			ImGui::SetScrollY(ImGui::GetScrollMaxY());
+			ImGui::EndChild();
+			ImGui::InputText("##Console_Command", CommandBuffer_, COMMAND_BUFFER_LENGTH - 1);
+			ImGui::SameLine();
+			if(ImGui::Button("Enter"))
+			{
+				bool success = true;
+				std::string_view cmd { CommandBuffer_ };
+
+				if(cmd.find("help") == 0)
+				{
+					LOG_F(INFO, "Help");
+				}
+				else
+				{
+					LOG_F(ERROR, "Unknown Command: '%s'", CommandBuffer_);
+					success = false;
+				}
+
+				if(success) std::fill(CommandBuffer_, CommandBuffer_ + COMMAND_BUFFER_LENGTH, 0);
+			}
+
+			ImGui::End();
+		}
+	};
+}
 
 namespace dg::loaders
 {
@@ -34,15 +120,6 @@ namespace dg::loaders
 
 	void MainWorldLoader::PopulateWorld_(const dcore::data::FileInput &input, dcore::world::World *world)
 	{
-		// Create the terrain entity (holds the TerrainComponent)
-		// auto terrainEntity = world->CreateEntity();
-		// terrainEntity.AddComponent(dcore::world::TerrainComponent(
-		//     ));
-
-		// world->SetTerrain(
-		// 	&terrainEntity.GetComponent<dcore::world::TerrainComponent>()
-		// 		->GetTerrain());
-
 		world->CreateTerrain(dcore::resource::GetResource<dcore::terrain::Heightmap>("DCore.Heightmap." + Name_));
 
 		// Load the rest of the entities (saved)
@@ -60,24 +137,8 @@ namespace dg::loaders
 		player.AddComponent(entity::CharacterControllerComponent());
 		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
 
-		if(player.GetComponent<entity::CharacterControllerComponent>() == nullptr)
-			LOG_F(ERROR, "NOO");
-
-		auto cube = world->CreateEntity();
-		cube.AddComponent(dcore::world::TransformComponent());
-		cube.GetComponent<dcore::world::TransformComponent>()->SetPosition(glm::vec3(0, 0, 0));
-		cube.GetComponent<dcore::world::TransformComponent>()->SetRotation(glm::identity<glm::quat>());
-		cube.GetComponent<dcore::world::TransformComponent>()->SetScale(glm::vec3(1, 1, 1));
-		cube.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
-			    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
-			    dcore::resource::GetResource<dcore::graphics::RTexture>("DCore.Texture.Main.Stone"))));
-		renderer->GetCamera()->SetPosition(glm::vec3(0, 0, -5));
-		renderer->GetCamera()->SetRotation(glm::quatLookAt(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0)));
-
-		// LOG_F(INFO, "Terrain chunk count: %lld",
-		// 	terrainEntity.GetComponent<dcore::world::TerrainComponent>()->GetTerrain().GetChunks().size());
-
-		// TODO: Have a separate method for loading static entities.
+		world->AddDebugLayer(new BaseDebugLayer());
+		world->AddDebugLayer(new ConsoleDebugLayer());
 
 #if 0 // Future API?
 		auto server = dg::net::ServerInterface::Instance();

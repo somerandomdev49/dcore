@@ -9,8 +9,8 @@ namespace dg::entity
 	public:
 		CameraFollowComponent(dcore::graphics::Camera *camera);
 
-		void Start(const dcore::world::EntityHandle &self);
-		void Update(const dcore::world::EntityHandle &self);
+		void Start(dcore::world::EntityHandle self);
+		void Update(dcore::world::EntityHandle self);
 
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;

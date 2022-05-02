@@ -1,4 +1,5 @@
 #include <dcore/Graphics/GUI/Widgets/Screen.hpp>
+#include <imgui.h>
 #include <cstdio>
 
 namespace dcore::graphics::gui::common
@@ -14,6 +15,7 @@ namespace dcore::graphics::gui::common
 		// this->TextureA_ = resource::ResourceManager::Get<RTexture>("gui.mywidget.texture.a");
 		// this->TextureB_ = resource::ResourceManager::Get<RTexture>("gui.mywidget.texture.b");
 		// GetQuad().Texture = this->TextureA_;
+
 	}
 
 	void Screen::Initialize()
@@ -32,7 +34,7 @@ namespace dcore::graphics::gui::common
 		// else GetQuad().Texture = this->NormalTexture_;
 
 		// Renders the quad (here, due to color's alpha being 0, renders nothing!)
-		g->RenderQuad(GetQuad());
+		// g->RenderQuad(GetQuad());
 	}
 
 	void Screen::HandleEvent(event::Event *ev) {}

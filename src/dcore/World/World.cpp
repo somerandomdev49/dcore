@@ -9,6 +9,7 @@
 #include <dcore/Core/Preferences.hpp>
 #include <iostream>
 #include <iterator>
+#include <memory>
 
 namespace dcore::world
 {
@@ -185,6 +186,7 @@ namespace dcore::world
 	{
 		// TODO: Handle UI clicks and other events.
 		DispatchMessage_(CommonMessages::UpdateMessage);
+		for(auto &debugLayer : DebugLayers_) debugLayer->OnUpdate();
 	}
 
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
@@ -193,49 +195,39 @@ namespace dcore::world
 		DispatchMessage_(CommonMessages::StartMessage);
 		cubeMesh__ = dcore::resource::GetResource<graphics::RStaticMesh>("DCore.Mesh.Cube");
 		graphics::gui::GuiManager::Instance()->InitializeRoot_();
+		for(auto &debugLayer : DebugLayers_) debugLayer->OnStart();
 	}
 
-	void World::End() { DispatchMessage_(CommonMessages::EndMessage); }
+	void World::End()
+	{
+		DispatchMessage_(CommonMessages::EndMessage);
+		for(auto &debugLayer : DebugLayers_) debugLayer->OnEnd();
+	}
 
 	void World::Render(graphics::RendererInterface *render)
 	{
-		// DispatchMessage_(CommonMessages::RenderMessage, render);
 		ECSInstance_->View<ModelComponent, TransformComponent>().Each([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
 		{
-			// LOG_F(INFO, "Rendering model");
 			render->RenderModel(model.Model.Get(), transform.GetMatrix());
 		});
 		
 		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
 		{
-			// LOG_F(INFO, "Rendering static mesh at %f,%f,%f",
-				// transform.GetPosition().x, transform.GetPosition().y, transform.GetPosition().z);
 			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
 		});
 
-		// Render Terrain if it exists.
-		// LOG_F(INFO, "Maybe will render terrain");
+		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
+
+		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition());
 		if(Terrain_ != nullptr)
 		{
-			LOG_F(INFO, "Rendering terrain:");
 			const auto &chunks = Terrain_->GetChunks();
-			for(auto chunkIndex : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[chunkIndex]);
-
-			// const auto &entities = ECSInstance()->GetEntities<TerrainComponent>();
-			// for(const auto &entity : entities)
-			// {
-			// 	auto terrain = ECSInstance()->GetComponent<TerrainComponent>(entity);
-			// 	if(terrain == nullptr) return; // FIXME: Temporary
-			// 	auto &chunks = terrain->GetTerrain().GetChunks();
-			// }
+			for(auto chunkIndex : Terrain_->GetActiveChunks())
+				render->RenderChunk(&chunks[chunkIndex]);
 		}
-		// LOG_F(INFO, "Done rendering");
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
-
-		// Render the UI. (Maybe this doesn't belong here...)
 		graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
-
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->EnableDepthCheck();
 	}
 
@@ -249,37 +241,10 @@ namespace dcore::world
 	float World::GetRenderDistance() const { return RenderDistance_; }
 	void World::SetRenderDistance(float newRenderDistance) { RenderDistance_ = newRenderDistance; }
 
-	void World::Save(data::FileOutput &output)
+	void World::AddDebugLayer(DebugLayer *newDebugLayer)
 	{
-		// output.Get() = data::Json {{"version", "0.01"}, {"entities", data::Json::array()}};
-
-		// for(const auto &entity : ECSInstance_->GetComponentPool<ComponentDispatcher>())
-		// {
-		// 	auto *c = ECSInstance_->GetComponent<ComponentDispatcher>(entity);
-		// 	if(c == nullptr) continue;
-
-		// 	data::Json out = data::Json::object();
-		// 	c->Dispatch((dstd::USize)CommonMessages::SaveMessage, &out);
-		// 	output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
-		// }
-
-		// for(const auto &entity : ECSInstance_)
-		// {
-		// 	data::Json comps = data::Json::array();
-
-		// 	const auto &systems = ECSInstance_->GetSystems(entity);
-		// 	for(const auto &system : systems)
-		// 	{
-		// 		system->SaveFunction(entity, out);
-
-		// 		comps.push_back(out);
-		// 	}
-
-		// 	output.Get()["entities"].push_back(data::Json {{"id", entity}, {"components", comps}});
-		// }
+		DebugLayers_.push_back(std::unique_ptr<DebugLayer>(newDebugLayer));
 	}
-
-	void World::Load(const data::FileInput &input) {}
 
 	void World::CreateTerrain(const resource::Resource<terrain::Heightmap> &heightmap)
 	{
@@ -292,4 +257,10 @@ namespace dcore::world
 		Terrain_ = new terrain::Terrain;
 		Terrain_->Initialize(heightmap);
 	}
+
+	DebugLayer::~DebugLayer() = default;
+	void DebugLayer::OnStart() {}
+	void DebugLayer::OnRender(graphics::RendererInterface *renderer) {}
+	void DebugLayer::OnUpdate() {}
+	void DebugLayer::OnEnd() {}
 } // namespace dcore::world

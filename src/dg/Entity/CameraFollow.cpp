@@ -9,7 +9,7 @@ namespace dg::entity
 {
 	CameraFollowComponent::CameraFollowComponent(dcore::graphics::Camera *camera) : Camera_(camera) {}
 
-	void CameraFollowComponent::Start(const dcore::world::EntityHandle &self)
+	void CameraFollowComponent::Start(dcore::world::EntityHandle self)
 	{
 		TransformComponent_ = dcore::world::Entity(self, dcore::platform::Context::Instance()->GetWorld())
 		                          .GetComponent<dcore::world::TransformComponent>();
@@ -18,9 +18,8 @@ namespace dg::entity
 			LOG_F(ERROR, "CameraFollowComponent's entity has to have a TransformComponent!");
 	}
 
-	void CameraFollowComponent::Update(const dcore::world::EntityHandle &self)
+	void CameraFollowComponent::Update(dcore::world::EntityHandle self)
 	{
-		// LOG_F(INFO, "Camera Follow | Update");
 		if(TransformComponent_ == nullptr) return;
 
 		glm::vec3 offset = glm::vec3(0, 10, -40); // TODO: Offset field + Getter/Setter for zooming in/out.

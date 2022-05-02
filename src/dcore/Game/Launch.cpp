@@ -16,14 +16,19 @@
 #include <dg/Game.hpp>
 #include <iostream>
 
+#define LOGGER_MESSAGE 512
+
 namespace dcore::launch
 {
 	void Launch::Run(int argc, char **argv)
 	{
+		dstd::Log logger(LOGGER_MESSAGE);
+		dstd::ILog(&logger);
 		loguru::g_stderr_verbosity = 1;
 		loguru::g_preamble_date    = false;
 		loguru::g_preamble_time    = false;
 		loguru::g_preamble_thread  = false;
+		logger.Initialize();
 		loguru::init(argc, argv);
 
 		printf("huh?\n");
@@ -116,11 +121,11 @@ namespace dcore::launch
 		game.DeInitialize();
 
 		{
-			data::FileOutput fileOutput("saves", "save1.json");
-			data::adapters::JsonOutputAdapter jsonAdapter;
-			fileOutput.SetAdapter(&jsonAdapter);
-			platform::Context::Instance()->GetWorld()->Save(fileOutput);
-			fileOutput.Write();
+			// data::FileOutput fileOutput("saves", "save1.json");
+			// data::adapters::JsonOutputAdapter jsonAdapter;
+			// fileOutput.SetAdapter(&jsonAdapter);
+			// platform::Context::Instance()->GetWorld()->Save(fileOutput);
+			// fileOutput.Write();
 		}
 
 		inputManager.DeInitialize();
@@ -133,5 +138,7 @@ namespace dcore::launch
 		resourceManager.DeInitialize();
 		DCORE_LOG_INFO << "Resource Manager deinitialized!";
 		context.DeInitialize();
+
+		logger.DeInitialize();
 	}
 } // namespace dcore::launch
