@@ -12,3 +12,6 @@ Doxyfile
 .idea
 CMakeLists.txt
 cbuild
+*/imgui*
+*/imstb*
+*/imconfig.h
