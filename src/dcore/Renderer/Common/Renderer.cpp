@@ -46,19 +46,19 @@ namespace dcore::graphics
 
 	void Renderer::RModel_Constructor(const std::string &path, void *placement)
 	{
-		Model *model = new(placement) Model();
+		auto *model = new(placement) Model();
 		ModelData data;
 
 		std::string modelName = path.substr(path.find_last_of('/') + 1);
-		std::string gltfFile  = modelName + ".gltf";
+		std::string gltf  = modelName + ".gltf";
 
-		util::LoaderUtil::LoadModel(data, path, gltfFile);
+		util::LoaderUtil::LoadModel(data, path, gltf);
 		RenderResourceManager::CreateModel(model, data);
 	}
 
 	void Renderer::RModel_DeConstructor(void *placement)
 	{
-		Model *model = reinterpret_cast<Model *>(placement);
+		auto *model = reinterpret_cast<Model *>(placement);
 		delete model;
 	}
 
@@ -70,7 +70,7 @@ namespace dcore::graphics
 		                                        RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
 
 		// This constructs a RTexture at the specified address (see "placement new")
-		RTexture *tex = new(placement) RTexture();
+		auto *tex = new(placement) RTexture();
 
 		util::ImageData d;
 		// DCORE_LOG_INFO << "loading image from " << path;
@@ -90,9 +90,14 @@ namespace dcore::graphics
 
 	void Renderer::RTexture_DeConstructor(void *placement)
 	{
-		RTexture *tex = reinterpret_cast<RTexture *>(placement);
+		auto *tex = reinterpret_cast<RTexture *>(placement);
 		RenderResourceManager::DeleteTexture(tex);
 		delete tex;
+	}
+
+	void Renderer::RenderToFramebuffer(bool set)
+	{
+		ShouldRenderToFB_ = set;
 	}
 
 	void RenderResourceManager::Register(resource::ResourceLoader *rl)
@@ -117,13 +122,13 @@ namespace dcore::graphics
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 	                                             const std::vector<Vertex> &vertices)
 	{
-		if(!mesh) return;
+		if(mesh == nullptr) return;
 		std::vector<byte> vertexData;
 
 		// Converting from std::vector<Vertex> to std::vector<byte> (`vertices` must be unusable
 		// now, somehow this works with a const vector...) I hope this doesn't allocate another
 		// vector of the same size or atleast deallocs vertices afterward.
-		vertexData.insert(vertexData.end(), std::make_move_iterator((byte *)&vertices[0]),
+		vertexData.insert(vertexData.end(), std::make_move_iterator((byte *)vertices.data()),
 		                  std::make_move_iterator((byte *)&vertices[vertices.size()]));
 
 		CreateStaticMesh(mesh, indices, vertexData);
@@ -133,7 +138,7 @@ namespace dcore::graphics
 	{
 		for(const auto &mesh : data.Meshes)
 		{
-			RStaticMesh *sm = new RStaticMesh();
+			auto *sm = new RStaticMesh();
 			CreateStaticMesh(sm, mesh.Mesh.Indices, mesh.Mesh.VertexData);
 			model->Meshes_.push_back(ModelMesh {sm, mesh.TextureIndex});
 		}
@@ -144,5 +149,4 @@ namespace dcore::graphics
 			    TextureSlot {texture.Name, resource::GetResource<RTexture>(texture.Id).Get()});
 		}
 	}
-
 } // namespace dcore::graphics

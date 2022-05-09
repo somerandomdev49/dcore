@@ -8,6 +8,8 @@
 #include <dcore/Renderer/Impl/OpenGL/ShaderProgram.hpp>
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
 #include <dcore/Renderer/Impl/OpenGL/FastVao.hpp>
+#include <dcore/Renderer/Impl/OpenGL/Framebuffer.hpp>
+#include <gl/gl.h>
 #include <glm/ext.hpp>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
@@ -15,18 +17,38 @@
 namespace dcore::graphics
 {
 	using namespace dcore::graphics::impl::opengl;
+	namespace details
+	{
+		struct Data
+		{
+			Framebuffer FB;
+		};	
+	}
 
 #define FOG_COLOR 0.23f, 0.48f, 0.74f, 1.0f
 
 	void Renderer::OnBeginRender()
 	{
-		// TODO: ClearColor field.
-		glClearColor(FOG_COLOR);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+		glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if(ShouldRenderToFB_)
+		{
+			Data_->FB.Bind();
+			glClearColor(FOG_COLOR);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glViewport(0, 0, Data_->FB.Size_.x, Data_->FB.Size_.y);
+		}
+	}
+
+	void Renderer::SetViewport(glm::vec2 size)
+	{
+		ViewportSize_ = size;
+		Data_->FB.ReSize(ViewportSize_);
 	}
 
 	void Renderer::EnableDepthCheck() { glEnable(GL_DEPTH_TEST); }
@@ -34,20 +56,27 @@ namespace dcore::graphics
 
 	void Renderer::OnEndRender()
 	{
+		Data_->FB.UnBind();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
 	void Renderer::Initialize()
 	{
+		ViewportSize_ = glm::vec2(2, 2);
 		EnableDepthCheck();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     	ImGui_ImplOpenGL3_Init("#version 330 core");
+
+		Data_ = new details::Data();
+		Data_->FB.Create(ViewportSize_);
 	}
 
 	void Renderer::DeInitialize()
 	{
+		Data_->FB.Delete();
+		delete Data_;
 		ImGui_ImplOpenGL3_Shutdown();
 	}
 
@@ -195,6 +224,11 @@ namespace dcore::graphics
 		program->Delete();
 		delete program;
 		delete shader;
+	}
+
+	void *Renderer::GetFramebufferData()
+	{
+		return &Data_->FB.Texture_;
 	}
 
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,

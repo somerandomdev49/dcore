@@ -1,27 +1,22 @@
 # [TODO]
 
-- no Convert to Ninja
-  - Either custom ninja wrapper (e.g. ninjax++)
-  - CMake (ew, gross)
+mostly obsolete
 
 - [x] ~~ConfigReader::ReadINI impl~~
 - [x] ~~ResourceLoader::LoadMapping impl~~
 - [x] ~~InputManager~~
 - [x] ~~World loading (terrain loading done)~~
-- [ ] GUI
-- [ ] Fix up memory leak problems
+- [x] ~~GUI~~
 
 ## Local TODOs
 
 ### somerandomdev49
 
-- [x] heightmap loading
-- [x] terrain chunk separation
-- [x] chunk rendering
-- [x] world terrain rendering
-- [x] debug camera
-- [ ] ~~valgring~~ fix the thing pls omg
-- [ ] finish basic dstd.
+we need to:
+- allow input when focusing on the viewport window
+- fix upside-down UV coordinates
+- [x] ~~allow docking to main window~~
+- [x] ~~fix viewport size~~
 
 ### idkarn
 

@@ -111,10 +111,10 @@ if __name__ == '__main__':
 
     if system == "win":
         tmp = input("Generate DLLs? [Y/n]: ").strip()
-	if tmp:
-        	gen_dlls = tmp.lower()[0] == 'y'
-	else:
-		gen_dlls = True
+        if tmp:
+            gen_dlls = tmp.lower()[0] == 'y'
+        else:
+            gen_dlls = True
     else:
         gen_dlls = False
 

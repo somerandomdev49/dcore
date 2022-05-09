@@ -5,10 +5,12 @@ layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec2 a_TexCoord;
 
 out vec2 s_TexCoord;
+out vec3 s_Normal;
 
 uniform mat4 u_Transform;
 
 void main() {
     s_TexCoord = a_TexCoord;
+    s_Normal = a_Normal;
     gl_Position = u_Transform * vec4(a_Position, 1);
 }

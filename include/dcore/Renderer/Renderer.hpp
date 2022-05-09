@@ -17,6 +17,7 @@ namespace dcore::platform
 
 namespace dcore::graphics
 {
+	namespace details { struct Data; };
 	/** Direct interface with OpenGL/DX/Vulkan/... */
 	class Renderer
 	{
@@ -86,8 +87,13 @@ namespace dcore::graphics
 		 */
 		void DisableDepthCheck();
 
+		void RenderToFramebuffer(bool set);
+		void *GetFramebufferData();
+
 		void SetWireframeMode(bool newIsWireframeMode);
 		bool IsWireframeMode() const;
+
+		void SetViewport(glm::vec2 size);
 
 		static Renderer *Instance();
 
@@ -116,7 +122,11 @@ namespace dcore::graphics
 		static void RShader_DeConstructor(void *placement);
 
 		bool IsWireframeMode_ = false;
+		bool ShouldRenderToFB_ = false;
 		glm::vec4 ClearColor_;
+		glm::vec2 ViewportSize_;
+
+		struct details::Data *Data_;
 	};
 
 	/**

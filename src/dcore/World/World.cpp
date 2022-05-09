@@ -186,7 +186,6 @@ namespace dcore::world
 	{
 		// TODO: Handle UI clicks and other events.
 		DispatchMessage_(CommonMessages::UpdateMessage);
-		for(auto &debugLayer : DebugLayers_) debugLayer->OnUpdate();
 	}
 
 	static dcore::resource::Resource<dcore::graphics::RStaticMesh> cubeMesh__;
@@ -206,6 +205,8 @@ namespace dcore::world
 
 	void World::Render(graphics::RendererInterface *render)
 	{
+		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
+		
 		ECSInstance_->View<ModelComponent, TransformComponent>().Each([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
 		{
 			render->RenderModel(model.Model.Get(), transform.GetMatrix());
@@ -216,9 +217,7 @@ namespace dcore::world
 			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
 		});
 
-		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
-
-		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition());
+		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 		if(Terrain_ != nullptr)
 		{
 			const auto &chunks = Terrain_->GetChunks();

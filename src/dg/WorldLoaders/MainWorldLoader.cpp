@@ -27,12 +27,40 @@ namespace
 		return str;
 	}
 
+	class FramebufferDebugLayer : public dcore::world::DebugLayer
+	{
+		glm::vec2 LastSize_ = { 0, 0 };
+	public:
+		void OnStart() override
+		{
+
+		}
+
+		void OnRender(dcore::graphics::RendererInterface *renderer) override
+		{
+			ImGui::Begin("Viewport");
+			ImVec2 contentRegionAvail2 = ImGui::GetContentRegionAvail();
+			glm::vec2 contentRegionAvail{ contentRegionAvail2.x, contentRegionAvail2.y };
+			if(LastSize_ != contentRegionAvail)
+			{
+				LastSize_ = contentRegionAvail;
+				renderer->GetRenderer()->SetViewport(LastSize_);
+			}
+
+			ImGui::Image(*(ImTextureID*)renderer->GetRenderer()->GetFramebufferData(), contentRegionAvail2, ImVec2(0, 1), ImVec2(1, 0));
+			
+			ImGui::End();
+		}
+	};
+
 	class BaseDebugLayer : public dcore::world::DebugLayer
 	{
 		bool ShowImGuiDemoWindow_ = false;
 	public:
 		void OnRender(dcore::graphics::RendererInterface *renderer) override
 		{
+			ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport());
+
 			ImGui::Begin("[DEBUG] Screen Controls");
 			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
 			ImGui::End();
@@ -112,6 +140,11 @@ namespace dg::loaders
 		input.SetAdapter(&jsonAdapter);
 		input.Read();
 
+		dcore::platform::Context::Instance()->GetRendererInterface()->GetRenderer()->RenderToFramebuffer(true);
+		world->AddDebugLayer(new BaseDebugLayer());
+		world->AddDebugLayer(new FramebufferDebugLayer());
+		world->AddDebugLayer(new ConsoleDebugLayer());
+
 		// Add all of the necessary entities to the world
 		PopulateWorld_(input, world);
 	}
@@ -136,9 +169,6 @@ namespace dg::loaders
 			    dcore::resource::GetResource<dcore::graphics::RTexture>("DCore.Texture.Main.Stone"))));
 		player.AddComponent(entity::CharacterControllerComponent());
 		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
-
-		world->AddDebugLayer(new BaseDebugLayer());
-		world->AddDebugLayer(new ConsoleDebugLayer());
 
 #if 0 // Future API?
 		auto server = dg::net::ServerInterface::Instance();

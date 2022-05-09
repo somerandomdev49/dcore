@@ -13,7 +13,7 @@ uniform sampler2D u_TexB;
 
 uniform float u_Tiling = 10.f;
 
-const vec3 SUN = normalize(vec3(1, -1, 0));
+const vec3 SUN = normalize(vec3(1, 1, 0));
 const vec4 FOG_COLOR = vec4(0.23, 0.48, 0.74, 1);
 
 const float zNear = 0.1;
@@ -76,7 +76,7 @@ vec2 rotated(in vec2 r, float a)
 void main()
 {
 	vec2 texCoord = s_TexCoord * u_Tiling;
-	float rot = voronoise(s_TexCoord);
+	// float rot = voronoise(s_TexCoord);
 
 	// vec4 mapperColor = texture(u_Tex_Mapper, s_TexCoord);
 	// vec4 colorMain = texture(u_Tex_Main, texCoord) * (1 - mapperColor.r - mapperColor.g - mapperColor.b);
@@ -85,11 +85,11 @@ void main()
 	// vec4 color2 = texture(u_Tex_2, texCoord) * mapperColor.b;
 	// o_Color = colorMain + color0 + color1 + color2;
 	
-	vec4 color = texture(u_Tex0, rotated(texCoord, rot));
+	vec4 color = texture(u_Tex0, texCoord);
 	// vec4 color = quadSample(texCoord, 1, u_Tex0);
 
 	// o_Color = vec4(0.0, 1.0, 0.25, 1.0);
-	float shadow = dot(s_Normal, SUN);
+	float shadow = clamp(dot(-s_Normal, SUN), 0.4, 1.0);
 	color *= vec4(vec3(shadow), 1.0);
 
 	float dist = length(s_Position.xyz);

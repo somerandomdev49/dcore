@@ -102,7 +102,7 @@ namespace dcore::terrain
 		};
 		const auto setNormals = [&](int a, int b, int c)
 		{
-			Vertex *vertices = reinterpret_cast<Vertex *>(&vertexData[0]);
+			auto *vertices = reinterpret_cast<Vertex *>(vertexData.data());
 			Vertex *v1 = &vertices[a], *v2 = &vertices[b], *v3 = &vertices[c];
 			auto u = v1->pos - v2->pos, v = v1->pos - v3->pos;
 			auto n = glm::normalize(glm::cross(u, v));
@@ -138,14 +138,14 @@ namespace dcore::terrain
 
 		for(uint32_t index : indices)
 		{
-			Vertex *vertices     = reinterpret_cast<Vertex *>(&vertexData[0]);
+			auto *vertices     = reinterpret_cast<Vertex *>(vertexData.data());
 			vertices[index].norm = glm::normalize(vertices[index].norm);
 		}
 
 		// DCORE_LOG_INFO << "Done generating chunk. Region Size: " << regionSize << ", Vertex
 		// Count: " << vertexCount
 		// << ", Index Count: " <<
-		indices.size();
+		// indices.size();
 
 		// size_t vertexSize = sizeof(float) * (3 + 3 + 2);
 		// DCORE_LOG_INFO << "Index Count: " << indices.size() << ", Vertex Count: " <<
