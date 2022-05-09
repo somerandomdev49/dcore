@@ -50,7 +50,7 @@ namespace dcore::util
 		struct BufferFile
 		{
 			dstd::USize Size = 0;
-			std::string Path = "";
+			std::string Path;
 		};
 
 		struct Buffer
@@ -78,7 +78,7 @@ namespace dcore::util
 
 		struct Material
 		{
-			std::string Name = "";
+			std::string Name;
 		};
 
 		struct Primitive
@@ -209,6 +209,7 @@ namespace dcore::util
 			for(const auto &node : scene["nodes"]) nodes.push_back(node.get<dstd::USize>());
 		}
 
+		buffers.reserve(bufferFiles.size());
 		for(auto &buffile : bufferFiles)
 		{
 			buffers.push_back(Buffer {&buffile, false, nullptr});
@@ -248,7 +249,7 @@ namespace dcore::util
 		for(auto nodeIndex : nodes)
 		{
 			DLOG("  reading node #" << nodeIndex);
-			auto &node       = gltf["nodes"][nodeIndex];
+			const auto &node       = gltf["nodes"][nodeIndex];
 			auto meshIndex   = node["mesh"].get<dstd::USize>();
 			const auto &mesh = gltf["meshes"][meshIndex];
 			DLOG("    reading primitives");
@@ -283,8 +284,8 @@ namespace dcore::util
 		}
 
 		for(auto a : usedAccessors) usedBufferViews.insert(accessors[a].View);
-		for(auto v : usedBufferViews) usedBuffers.insert(v->Buffer_);
-		for(auto buffer : usedBuffers)
+		for(auto *v : usedBufferViews) usedBuffers.insert(v->Buffer_);
+		for(auto *buffer : usedBuffers)
 		{
 			DLOG("Used buffer '" << buffer->File->Path << "'");
 			buffer->Data      = new byte[buffer->File->Size];
@@ -363,7 +364,7 @@ namespace dcore::util
 		}
 
 		DLOG("Deallocating buffers");
-		for(auto buffer : usedBuffers)
+		for(auto *buffer : usedBuffers)
 			if(buffer->Allocated) delete buffer->Data; // no need to call the destructors, can delete void*
 
 		DLOG("Done!");

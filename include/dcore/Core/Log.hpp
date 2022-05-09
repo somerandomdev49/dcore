@@ -22,10 +22,11 @@ namespace dstd
 		void DeInitialize();
 
 		const CircularBuffer<std::string> &GetMessages() const { return Messages_; };
+
 	private:
 		CircularBuffer<std::string> Messages_;
 	};
-	
+
 	Log *ILog();
 	Log *ILog(Log *newInstance);
-}
+} // namespace dstd

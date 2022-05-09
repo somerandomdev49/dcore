@@ -60,6 +60,11 @@ namespace dg
 		DCORE_LOG_INFO << "LoadWorld(Main1)";
 		Registry_.LoadWorld("Main1");
 		DCORE_LOG_INFO << "Done";
+		auto *ctx = dcore::platform::Context::Instance();
+		auto *rend = ctx->GetRendererInterface();
+#define FOG_COLOR 0.23f, 0.48f, 0.74f, 1.0f
+		rend->GetRenderer()->SetClearColor({ FOG_COLOR });
+		rend->GetRenderer()->SetViewport(ctx->GetFrame()->GetSize());
 	}
 
 	void Game::DeInitialize()

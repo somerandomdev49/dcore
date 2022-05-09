@@ -1,9 +1,14 @@
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/trigonometric.hpp"
 #include <dg/Entity/CameraFollow.hpp>
 
 #include <dcore/Core/FrameLog.hpp>
 #include <dcore/Platform/Platform.hpp>
 
 DCORE_COMPONENT_REGISTER(dg::entity::CameraFollowComponent);
+#define MAX_OFFSET   40.0f
+#define MIN_OFFSET   5.0f
+#define SCROLL_SPEED 1.5f // TODO: Add to preferences.
 
 namespace dg::entity
 {
@@ -22,7 +27,12 @@ namespace dg::entity
 	{
 		if(TransformComponent_ == nullptr) return;
 
-		glm::vec3 offset = glm::vec3(0, 10, -40); // TODO: Offset field + Getter/Setter for zooming in/out.
+		Offset_ = glm::clamp(Offset_ - dcore::event::InputManager::Instance()->GetScrollY() * SCROLL_SPEED, MIN_OFFSET,
+		                     MAX_OFFSET);
+
+		static constexpr float angle = glm::radians(35.0f);
+
+		glm::vec3 offset = glm::vec3(0, glm::sin(angle), -glm::cos(angle)) * Offset_;
 		// offset = glm::mat3_cast(TransformComponent_->GetRotation()) * offset;
 		Camera_->SetPosition(TransformComponent_->GetPosition() + offset);
 		Camera_->LookAt(TransformComponent_->GetPosition());

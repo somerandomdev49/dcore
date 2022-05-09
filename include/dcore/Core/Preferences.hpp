@@ -18,12 +18,13 @@ namespace dcore
 		struct GraphicsSettings
 		{
 			int RenderDistance;
+			float FOV;	
 		};
 
 		void Read(const dcore::data::FileInput &input);
 		void Save(const dcore::data::FileOutput &output);
 
-		int GetVersion();
+		int GetVersion() const;
 		const DisplaySettings &GetDisplaySettings() const;
 		const GraphicsSettings &GetGraphicsSettings() const;
 

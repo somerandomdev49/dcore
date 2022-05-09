@@ -12,8 +12,11 @@ namespace dg::entity
 		void Start(dcore::world::EntityHandle self);
 		void Update(dcore::world::EntityHandle self);
 
+		static constexpr float DefaultOffset_ = 40.0f;
+
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
 		dcore::graphics::Camera *Camera_                      = nullptr;
+		float Offset_                                         = DefaultOffset_;
 	};
 } // namespace dg::entity

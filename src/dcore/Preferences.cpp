@@ -17,6 +17,7 @@ namespace dcore
 			DisplaySettings_.Fullscreen      = display["fullscreen"].get<bool>();
 			const auto &graphics             = settings["graphics"];
 			GraphicsSettings_.RenderDistance = graphics["render-distance"].get<int>();
+			GraphicsSettings_.FOV            = graphics["fov"].get<float>();
 		}
 		break;
 		default: DCORE_LOG_ERROR << "Bad Preferences file version (" << Version_ << ")"; break;
@@ -32,7 +33,7 @@ namespace dcore
 
 	void Preferences::SetInstance(Preferences *newInstance) { prefinst_ = newInstance; }
 
-	int Preferences::GetVersion() { return Version_; }
+	int Preferences::GetVersion() const { return Version_; }
 
 	const Preferences::DisplaySettings &Preferences::GetDisplaySettings() const { return DisplaySettings_; }
 

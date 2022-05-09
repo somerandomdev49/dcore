@@ -1,3 +1,4 @@
+#include "GLFW/glfw3.h"
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Core/Log.hpp>
@@ -34,6 +35,13 @@ namespace dcore::platform::impl
 
 		glfwHideWindow(Window_);
 		glfwMakeContextCurrent(Window_);
+
+		glfwSetWindowUserPointer(Window_, this);
+
+		glfwSetScrollCallback(Window_, [](GLFWwindow *window, double x, double y)
+		{
+			event::InputManager::Instance()->SetScroll({ x, y });
+		});
 			
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -73,7 +81,11 @@ namespace dcore::platform::impl
 
 	void glfw::Frame::OnBegin() { glfwShowWindow(Window_); }
 
-	void glfw::Frame::OnBeginFrame() {}
+	void glfw::Frame::OnBeginFrame()
+	{
+		glfwPollEvents();
+	}
+	
 	void glfw::Frame::OnEndFrame()
 	{
         // Update and Render additional Platform Windows
@@ -88,7 +100,8 @@ namespace dcore::platform::impl
         }
 
 		glfwSwapBuffers(Window_);
-		glfwPollEvents();
+
+		event::InputManager::Instance()->SetScroll({ 0, 0 });
 	}
 
 	float glfw::Frame::GetCurrentTime() { return (float)glfwGetTime(); }

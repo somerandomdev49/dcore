@@ -20,8 +20,7 @@ namespace
 		glm::vec3 direction   = lookTo - lookFrom;
 		float directionLength = glm::length(direction);
 
-		// Check if the direction is valid; Also deals with NaN
-		if(!(directionLength > 0.0001)) return glm::quat(1, 0, 0, 0); // Just return identity
+		if(!(directionLength > 0.0001)) return {1, 0, 0, 0}; // Just return identity
 
 		// Normalize direction
 		direction /= directionLength;
@@ -29,13 +28,10 @@ namespace
 		// Is the normal up (nearly) parallel to direction?
 		if(glm::abs(glm::dot(direction, up)) > .9999f)
 		{
-			// Use alternative up
 			return glm::quatLookAt(direction, alternativeUp);
 		}
-		else
-		{
-			return glm::quatLookAt(direction, up);
-		}
+
+		return glm::quatLookAt(direction, up);
 	}
 } // namespace
 
@@ -181,7 +177,7 @@ namespace dcore::graphics
 
 	void Camera::RecalcProjMatrix()
 	{
-		ProjMatrix_ = glm::perspective(Fov_, Aspect_, NearZ_, FarZ_);
+		ProjMatrix_ = glm::perspective(glm::radians(Fov_), Aspect_, NearZ_, FarZ_);
 		DirtyProj_  = false;
 	}
 
@@ -194,6 +190,8 @@ namespace dcore::graphics
 
 	void RendererInterface::Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend)
 	{
+		Renderer_ = rend;
+
 		// TODO: Should not be hard-written!
 		auto sobj = rm->Get<RShader>("DCore.Shader.ObjectShader");
 		auto ster = rm->Get<RShader>("DCore.Shader.TerrainShader");
@@ -201,10 +199,9 @@ namespace dcore::graphics
 		ObjectShader_  = new CommonShader(sobj);
 		TerrainShader_ = new TerrainShader(ster);
 
-		glm::vec2 res = Preferences::Instance()->GetDisplaySettings().Resolution;
-		Camera_       = new Camera(70.0f, res.x / res.y);
-
-		Renderer_ = rend;
+		glm::vec2 res = Renderer_->GetViewport();
+		Camera_       = new Camera(Preferences::Instance()->GetGraphicsSettings().FOV, res.x / res.y);
+		DCORE_LOG_INFO << "Camera FOV: " << Camera_->GetFov();
 	}
 
 	void RendererInterface::DeInitialize()

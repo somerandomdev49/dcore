@@ -17,117 +17,6 @@
 #include <vector>
 #include <imgui.h>
 
-#define COMMAND_BUFFER_LENGTH 128
-namespace
-{
-	char *AllocEmptyCString(dstd::USize size)
-	{
-		char *str = new char[size];
-		std::fill(str, str + size, 0);
-		return str;
-	}
-
-	class FramebufferDebugLayer : public dcore::world::DebugLayer
-	{
-		glm::vec2 LastSize_ = { 0, 0 };
-	public:
-		void OnStart() override
-		{
-
-		}
-
-		void OnRender(dcore::graphics::RendererInterface *renderer) override
-		{
-			ImGui::Begin("Viewport");
-			ImVec2 contentRegionAvail2 = ImGui::GetContentRegionAvail();
-			glm::vec2 contentRegionAvail{ contentRegionAvail2.x, contentRegionAvail2.y };
-			if(LastSize_ != contentRegionAvail)
-			{
-				LastSize_ = contentRegionAvail;
-				renderer->GetRenderer()->SetViewport(LastSize_);
-			}
-
-			ImGui::Image(*(ImTextureID*)renderer->GetRenderer()->GetFramebufferData(), contentRegionAvail2, ImVec2(0, 1), ImVec2(1, 0));
-			
-			ImGui::End();
-		}
-	};
-
-	class BaseDebugLayer : public dcore::world::DebugLayer
-	{
-		bool ShowImGuiDemoWindow_ = false;
-	public:
-		void OnRender(dcore::graphics::RendererInterface *renderer) override
-		{
-			ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport());
-
-			ImGui::Begin("[DEBUG] Screen Controls");
-			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
-			ImGui::End();
-			
-			if(ShowImGuiDemoWindow_) ImGui::ShowDemoWindow();
-		}
-	};
-
-	class ConsoleDebugLayer : public dcore::world::DebugLayer
-	{
-		char *CommandBuffer_;
-	public:
-		void OnStart() override
-		{
-			CommandBuffer_ = AllocEmptyCString(COMMAND_BUFFER_LENGTH);
-		}
-
-		void OnEnd() override
-		{
-			delete[] CommandBuffer_;
-		}
-
-		void OnRender(dcore::graphics::RendererInterface *renderer) override
-		{
-			(void)renderer;
-
-			ImGui::Begin("[DEBUG] Frame Log");
-			const auto &queue = dcore::FrameLog::Instance()->GetQueue();
-			for(const auto &s : queue) ImGui::Text("%s", s.c_str());
-			ImGui::End();
-
-			float spacing = ImGui::GetTextLineHeightWithSpacing()
-				+ ImGui::GetStyle().FramePadding.y
-				+ ImGui::GetStyle().ItemSpacing.y;
-
-			ImGui::Begin("[DEBUG] Console");
-			ImGui::BeginChild("##Console_ScrollRegion", ImVec2(0, -spacing), false, ImGuiWindowFlags_AlwaysHorizontalScrollbar);
-			const auto &messages = dstd::ILog()->GetMessages();
-			for(dstd::USize index = 0; index < messages.GetSize(); ++index)
-				ImGui::Text("%s", messages[index].c_str());
-			ImGui::SetScrollY(ImGui::GetScrollMaxY());
-			ImGui::EndChild();
-			ImGui::InputText("##Console_Command", CommandBuffer_, COMMAND_BUFFER_LENGTH - 1);
-			ImGui::SameLine();
-			if(ImGui::Button("Enter"))
-			{
-				bool success = true;
-				std::string_view cmd { CommandBuffer_ };
-
-				if(cmd.find("help") == 0)
-				{
-					LOG_F(INFO, "Help");
-				}
-				else
-				{
-					LOG_F(ERROR, "Unknown Command: '%s'", CommandBuffer_);
-					success = false;
-				}
-
-				if(success) std::fill(CommandBuffer_, CommandBuffer_ + COMMAND_BUFFER_LENGTH, 0);
-			}
-
-			ImGui::End();
-		}
-	};
-}
-
 namespace dg::loaders
 {
 	MainWorldLoader::MainWorldLoader(std::string name) : Name_(std::move(name)) {}
@@ -139,11 +28,6 @@ namespace dg::loaders
 		dcore::data::adapters::JsonInputAdapter jsonAdapter;
 		input.SetAdapter(&jsonAdapter);
 		input.Read();
-
-		dcore::platform::Context::Instance()->GetRendererInterface()->GetRenderer()->RenderToFramebuffer(true);
-		world->AddDebugLayer(new BaseDebugLayer());
-		world->AddDebugLayer(new FramebufferDebugLayer());
-		world->AddDebugLayer(new ConsoleDebugLayer());
 
 		// Add all of the necessary entities to the world
 		PopulateWorld_(input, world);
@@ -158,15 +42,15 @@ namespace dg::loaders
 		// Load the rest of the entities (saved)
 		LoadStaticEntities_({input.Get(), world});
 
-		auto player = world->CreateEntity();
+		auto player    = world->CreateEntity();
 		auto *renderer = dcore::platform::Context::Instance()->GetRendererInterface();
 		player.AddComponent(dcore::world::TransformComponent());
 		player.GetComponent<dcore::world::TransformComponent>()->SetPosition(glm::vec3(0, 0, 0));
 		player.GetComponent<dcore::world::TransformComponent>()->SetRotation(glm::identity<glm::quat>());
 		player.GetComponent<dcore::world::TransformComponent>()->SetScale(glm::vec3(1, 1, 1));
 		player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
-			    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
-			    dcore::resource::GetResource<dcore::graphics::RTexture>("DCore.Texture.Main.Stone"))));
+		    dcore::resource::GetResource<dcore::graphics::RStaticMesh>("DCore.Mesh.Cube"),
+		    dcore::resource::GetResource<dcore::graphics::RTexture>("DCore.Texture.Main.Stone"))));
 		player.AddComponent(entity::CharacterControllerComponent());
 		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
 

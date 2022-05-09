@@ -78,10 +78,11 @@ namespace dcore::world
 
 		/**
 		 * @brief Adds a debug layer to the stack.
-		 * 
+		 *
 		 * @param newDebugLayer layer to be added.
 		 */
 		void AddDebugLayer(DebugLayer *newDebugLayer);
+
 	private:
 		friend class platform::Context;
 		friend class launch::Launch;
@@ -161,23 +162,18 @@ namespace dcore::world
 		static void HandleMessage(World *world, EntityHandle handle, ECS::Message message)
 		{
 			auto comp = world->GetECS()->GetComponent<T>(handle);
-			// LOG_F(INFO, "Handle Message [%s] %s", util::Debug::Demangle(typeid(T).name()).c_str(), comp == nullptr ? "Fail" : "Success");
+			// LOG_F(INFO, "Handle Message [%s] %s", util::Debug::Demangle(typeid(T).name()).c_str(), comp == nullptr ?
+			// "Fail" : "Success");
 			if(comp == nullptr) return;
 			// LOG_F(INFO, "Handle Message:");
 			switch(message.Type)
 			{
-			case(dstd::USize)CommonMessages::UpdateMessage:
-				Update(world, handle, comp);
-				break;
+			case(dstd::USize)CommonMessages::UpdateMessage: Update(world, handle, comp); break;
 			case(dstd::USize)CommonMessages::RenderMessage:
 				Render(world, handle, (graphics::RendererInterface *)message.Payload, comp);
 				break;
-			case(dstd::USize)CommonMessages::StartMessage:
-				Start(world, handle, comp);
-				break;
-			case(dstd::USize)CommonMessages::EndMessage:
-				End(world, handle, comp);
-				break;
+			case(dstd::USize)CommonMessages::StartMessage: Start(world, handle, comp); break;
+			case(dstd::USize)CommonMessages::EndMessage: End(world, handle, comp); break;
 			case(dstd::USize)CommonMessages::SaveMessage:
 				Save(world, handle, *(data::Json *)message.Payload, comp);
 				break;
@@ -204,35 +200,20 @@ namespace dcore::world
 	template<typename Q = T>                                                         \
 	static typename std::enable_if<detail::has_##NAME<Q>()>::type NAME(__VA_ARGS__)
 
-		HELPER_(Start, World *world, EntityHandle self, T *comp)
-		{
-			comp->Start(self);
-		}
+		HELPER_(Start, World *world, EntityHandle self, T *comp) { comp->Start(self); }
 
-		HELPER_(Update, World *world, EntityHandle self, T *comp)
-		{
-			comp->Update(self);
-		}
+		HELPER_(Update, World *world, EntityHandle self, T *comp) { comp->Update(self); }
 
 		HELPER_(Render, World *world, EntityHandle self, graphics::RendererInterface *renderer, T *comp)
 		{
 			comp->Render(self, renderer);
 		}
 
-		HELPER_(End, World *world, EntityHandle self, T *comp)
-		{
-			comp->End(self);
-		}
+		HELPER_(End, World *world, EntityHandle self, T *comp) { comp->End(self); }
 
-		HELPER_(Save, World *world, EntityHandle self, data::Json &output, T *comp)
-		{
-			comp->Save(self, output);
-		}
+		HELPER_(Save, World *world, EntityHandle self, data::Json &output, T *comp) { comp->Save(self, output); }
 
-		HELPER_(Load, World *world, EntityHandle self, const data::Json &input, T *comp)
-		{
-			comp->Load(self, input);
-		}
+		HELPER_(Load, World *world, EntityHandle self, const data::Json &input, T *comp) { comp->Load(self, input); }
 #undef HELPER_
 	};
 

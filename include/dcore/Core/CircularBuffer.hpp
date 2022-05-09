@@ -13,12 +13,12 @@ namespace dstd
 			Data_.reserve(count);
 			Index_ = 0;
 		}
-		
+
 		void Add(T &&value)
 		{
 			if(Data_.size() == Data_.capacity())
 			{
-				Index_ = 0;
+				Index_          = 0;
 				Data_[Index_++] = std::move(value);
 			}
 			else Data_.push_back(std::move(value));
@@ -28,8 +28,9 @@ namespace dstd
 		const T &operator[](dstd::USize index) const { return Data_[index]; }
 
 		dstd::USize GetSize() const { return Data_.size(); }
+
 	private:
 		std::vector<T> Data_;
 		dstd::USize Index_;
 	};
-}
+} // namespace dstd

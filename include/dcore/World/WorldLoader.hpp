@@ -55,6 +55,7 @@ namespace dcore::world
 
 		std::unordered_map<std::string, WorldLoader *> &GetLoaders() { return Loaders_; }
 		const std::unordered_map<std::string, WorldLoader *> &GetLoaders() const { return Loaders_; }
+
 	private:
 		std::string Loaded_;
 		std::unordered_map<std::string, World *> Worlds_;

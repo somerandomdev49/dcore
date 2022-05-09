@@ -32,7 +32,8 @@ namespace dcore::world
 	void StaticMeshComponent::Render(EntityHandle self, graphics::RendererInterface *render) const
 	{
 		// LOG_F(INFO, "ModelComponent | Render");
-		// auto *transform = platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
+		// auto *transform =
+		// platform::Context::Instance()->GetWorld()->GetECS()->GetComponent<TransformComponent>(self);
 		// render->RenderStaticMesh(&Mesh, transform->GetMatrix());
 	}
 
@@ -206,23 +207,20 @@ namespace dcore::world
 	void World::Render(graphics::RendererInterface *render)
 	{
 		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
-		
-		ECSInstance_->View<ModelComponent, TransformComponent>().Each([render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
-		{
-			render->RenderModel(model.Model.Get(), transform.GetMatrix());
-		});
-		
-		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each([render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
-		{
-			render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
-		});
+
+		ECSInstance_->View<ModelComponent, TransformComponent>().Each(
+		    [render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
+		    { render->RenderModel(model.Model.Get(), transform.GetMatrix()); });
+
+		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each(
+		    [render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
+		    { render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix()); });
 
 		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 		if(Terrain_ != nullptr)
 		{
 			const auto &chunks = Terrain_->GetChunks();
-			for(auto chunkIndex : Terrain_->GetActiveChunks())
-				render->RenderChunk(&chunks[chunkIndex]);
+			for(auto chunkIndex : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[chunkIndex]);
 		}
 
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();

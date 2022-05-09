@@ -13,8 +13,8 @@ mostly obsolete
 ### somerandomdev49
 
 we need to:
-- allow input when focusing on the viewport window
-- fix upside-down UV coordinates
+- [x] ~~*allow input when focusing on the viewport window*~~
+- [x] ~~fix upside-down UV coordinates~~
 - [x] ~~allow docking to main window~~
 - [x] ~~fix viewport size~~
 

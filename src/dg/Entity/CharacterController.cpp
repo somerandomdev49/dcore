@@ -11,23 +11,19 @@ namespace dg::entity
 	void CharacterControllerComponent::Start(const dcore::world::EntityHandle &self)
 	{
 		TransformComponent_ = dcore::world::Entity(self, dcore::platform::Context::Instance()->GetWorld())
-		    .GetComponent<dcore::world::TransformComponent>();
+		                          .GetComponent<dcore::world::TransformComponent>();
 	}
 
 	void CharacterControllerComponent::Update(const dcore::world::EntityHandle &self)
 	{
-		auto *inputMngr = dcore::event::InputManager::Instance();
+		auto *inputMngr          = dcore::event::InputManager::Instance();
 		glm::vec2 movementVector = glm::vec2(0, 0);
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_W))
-			movementVector.y = 1.0f;
-		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
-			movementVector.y = -1.0f;
-		
-		if(inputMngr->IsKeyPressed(dcore::event::K_D))
-			movementVector.x = -1.0f;
-		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
-			movementVector.x = +1.0f;
+		if(inputMngr->IsKeyPressed(dcore::event::K_W)) movementVector.y = 1.0f;
+		else if(inputMngr->IsKeyPressed(dcore::event::K_S)) movementVector.y = -1.0f;
+
+		if(inputMngr->IsKeyPressed(dcore::event::K_D)) movementVector.x = -1.0f;
+		else if(inputMngr->IsKeyPressed(dcore::event::K_A)) movementVector.x = +1.0f;
 
 		// movementVector = glm::normalize(movementVector);
 		glm::vec3 vel = glm::vec3(movementVector.x, 0, movementVector.y);

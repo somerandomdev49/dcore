@@ -25,8 +25,6 @@ namespace dcore::graphics
 		};	
 	}
 
-#define FOG_COLOR 0.23f, 0.48f, 0.74f, 1.0f
-
 	void Renderer::OnBeginRender()
 	{
         ImGui_ImplOpenGL3_NewFrame();
@@ -39,10 +37,11 @@ namespace dcore::graphics
 		if(ShouldRenderToFB_)
 		{
 			Data_->FB.Bind();
-			glClearColor(FOG_COLOR);
+			glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glViewport(0, 0, Data_->FB.Size_.x, Data_->FB.Size_.y);
 		}
+
+		glViewport(0, 0, ViewportSize_.x, ViewportSize_.y);
 	}
 
 	void Renderer::SetViewport(glm::vec2 size)

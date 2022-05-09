@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/Launch.hpp>
+#include <glm/glm.hpp>
 
 // namespace dcore::platform { class Context; }
 
@@ -137,6 +138,10 @@ namespace dcore::event
 		void DeInitialize();
 		bool IsKeyPressed(event::KeyCode key);
 		bool IsMousePressed(int button);
+		float GetScrollX() const { return Scroll_.x; }
+		float GetScrollY() const { return Scroll_.y; }
+		const glm::vec2 &GetScroll() const { return Scroll_; }
+		void SetScroll(glm::vec2 scroll) { Scroll_ = scroll; }
 
 		static InputManager *Instance();
 
@@ -144,5 +149,7 @@ namespace dcore::event
 		// friend class platform::Context;
 		friend class launch::Launch;
 		static void SetInstance(InputManager *newInstance);
+
+		glm::vec2 Scroll_;
 	};
 } // namespace dcore::event

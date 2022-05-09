@@ -72,20 +72,26 @@ namespace dcore::world
 		/** Removes a message handler */
 		void RemoveHandler(MessageHandler &&handler);
 
-		template<typename ...Components>
-		class EachFunc {
+		template<typename... Components>
+		class EachFunc
+		{
 			entt::registry &Registry_;
 			EachFunc(entt::registry &reg) : Registry_(reg) {}
 			friend class ECS;
+
 		public:
 			template<typename F>
-			void Each(F func) {
+			void Each(F func)
+			{
 				Registry_.view<Components...>().each(func);
 			}
 		};
 
-		template<typename ...Components>
-		EachFunc<Components...> View() { return EachFunc<Components...>(Registry_); }
+		template<typename... Components>
+		EachFunc<Components...> View()
+		{
+			return EachFunc<Components...>(Registry_);
+		}
 
 		/**
 		 * @brief Returns the component of the specified type of an entity.

@@ -17,7 +17,10 @@ namespace dcore::platform
 
 namespace dcore::graphics
 {
-	namespace details { struct Data; };
+	namespace details
+	{
+		struct Data;
+	};
 	/** Direct interface with OpenGL/DX/Vulkan/... */
 	class Renderer
 	{
@@ -93,6 +96,10 @@ namespace dcore::graphics
 		void SetWireframeMode(bool newIsWireframeMode);
 		bool IsWireframeMode() const;
 
+		void SetClearColor(const glm::vec4 &newColor) { ClearColor_ = newColor; }
+		const glm::vec4 &GetClearColor() const { return ClearColor_; }
+
+		const glm::vec2 &GetViewport() const { return ViewportSize_; }
 		void SetViewport(glm::vec2 size);
 
 		static Renderer *Instance();
@@ -121,7 +128,7 @@ namespace dcore::graphics
 		static void RShader_Constructor(const std::string &path, void *placement);
 		static void RShader_DeConstructor(void *placement);
 
-		bool IsWireframeMode_ = false;
+		bool IsWireframeMode_  = false;
 		bool ShouldRenderToFB_ = false;
 		glm::vec4 ClearColor_;
 		glm::vec2 ViewportSize_;

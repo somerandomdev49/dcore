@@ -46,6 +46,14 @@
 			"rotation": [0.0, 0.0, 0.0, 1.0],
 			"scale": [1.0, 1.0, 1.0],
 			"model": "DCore.Model.Main.Building.House.Outside.Inn.01"
+		},
+		{
+			"type": "Model",
+			"uuid": "bbc2756d-736b-40fc-834b-27181a7f8338",
+			"position": [1.0, 1.0, 1.0],
+			"rotation": [0.0, 0.0, 0.0, 1.0],
+			"scale": [1.0, 1.0, 1.0],
+			"model": "DCore.Model.Main.Debug.Cubes"
 		}
 	],
 	"version": "0.02"
