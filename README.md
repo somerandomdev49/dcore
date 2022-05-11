@@ -1,5 +1,13 @@
 <h1 align="center">DragonCore</h1>
-<p align="center">Dragon Core Game/Engine</p>
+<p align="center">Dragon Core Game/Engine/Editor</p>
+
+## Building
+
+```
+python3 metabuild/generate.py
+ninja
+bin/release/dcore # running
+```
 
 ## Important!
 
