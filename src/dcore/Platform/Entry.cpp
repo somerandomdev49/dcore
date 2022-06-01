@@ -1,11 +1,8 @@
 //:=================------------ Engine Entry ------------=================://
 #include <dcore/Launch.hpp>
-#include <iostream>
-#include <cstdio>
 
 int main(int argc, char *argv[])
 {
-	std::cout << "DCORE" << std::endl;
-	dcore::launch::Launch l;
-	l.Run(argc, argv);
+	dcore::launch::Launch::Run(argc, argv);
+	return 0;
 }

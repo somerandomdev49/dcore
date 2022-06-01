@@ -65,6 +65,8 @@ namespace dg
 #define FOG_COLOR 0.23f, 0.48f, 0.74f, 1.0f
 		rend->GetRenderer()->SetClearColor({ FOG_COLOR });
 		rend->GetRenderer()->SetViewport(ctx->GetFrame()->GetSize());
+		auto viewport = rend->GetRenderer()->GetViewport();
+		rend->GetCamera()->SetAspectRatio(viewport.x / viewport.y);
 	}
 
 	void Game::DeInitialize()

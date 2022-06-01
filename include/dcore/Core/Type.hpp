@@ -11,7 +11,7 @@ namespace dstd
 	using UInt32 = unsigned int;
 	using Int64  = signed long;
 	using UInt64 = unsigned long;
-	using USize  = UInt64;
+	using USize  = unsigned long long;
 
 	using Byte = UInt8;
 #else

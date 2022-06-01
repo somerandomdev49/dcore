@@ -7,7 +7,6 @@
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
 #include <dcore/Graphics/GUI/GuiManager.hpp>
-#include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Event/TimeManager.hpp>
 #include <dcore/Core/Preferences.hpp>

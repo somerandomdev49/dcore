@@ -1,7 +1,7 @@
 #pragma once
 #include <dcore/Renderer/Impl/OpenGL/GL.hpp>
+#include <dcore/Core/Type.hpp>
 #include <dcore/Uni.hpp>
-#include <cinttypes>
 #include <vector>
 
 namespace dcore::graphics
@@ -33,11 +33,11 @@ namespace dcore::graphics::impl::opengl
 		friend class dcore::graphics::Renderer;
 
 	public:
-		void Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride);
-		void Load(const std::vector<uint32_t> &indices, const byte *vertexData, size_t vertexDataSize, size_t stride);
-		void Load(const uint32_t *indices, size_t indicesSize, const std::vector<byte> &vertexData, size_t stride);
-		void Load(const uint32_t *indices, size_t indicesSize, const byte *vertexData, size_t vertexDataSize,
-		          size_t stride);
+		void Load(const std::vector<dstd::UInt32> &indices, const std::vector<byte> &vertexData, dstd::USize stride);
+		void Load(const std::vector<dstd::UInt32> &indices, const byte *vertexData, dstd::USize vertexDataSize, dstd::USize stride);
+		void Load(const dstd::UInt32 *indices, dstd::USize indicesSize, const std::vector<byte> &vertexData, dstd::USize stride);
+		void Load(const dstd::UInt32 *indices, dstd::USize indicesSize, const byte *vertexData, dstd::USize vertexDataSize,
+		          dstd::USize stride);
 		void CreateFloatAttribute(int count);
 		void CreateIntAttribute(int count);
 		void Delete();

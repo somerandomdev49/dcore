@@ -13,8 +13,8 @@ inline std::ostream &operator<<(std::ostream &os, const glm::ivec2 &v)
 
 namespace dcore::terrain
 {
-	Chunk::Chunk(HeightmapRegion &&region, const glm::ivec2 &localPosition)
-	    : Region_(std::move(region)), LocalPosition_(localPosition)
+	Chunk::Chunk(const HeightmapRegion &region, const glm::ivec2 &localPosition)
+	    : Region_(region), LocalPosition_(localPosition)
 	{
 	}
 
@@ -67,41 +67,37 @@ namespace dcore::terrain
 			pushFloat(v.z);
 		};
 
-		// pushVec3(glm::vec3(0, 1, -1)); pushVec3(glm::vec3(0, 1, 0)); pushVec2(glm::vec2(0, 0));
-		// pushVec3(glm::vec3(1, -1, -1)); pushVec3(glm::vec3(0, 1, 0)); pushVec2(glm::vec2(0, 0));
-		// pushVec3(glm::vec3(1, 1, -1)); pushVec3(glm::vec3(0, 1, 0)); pushVec2(glm::vec2(0, 0));
-
-		// indices.push_back(0);
-		// indices.push_back(1);
-		// indices.push_back(2);
-
-		// generating vertices
+		// total vertex count
 		dstd::UInt32 vertexCount = 0;
-		auto regionSize          = Region_.GetSize() + glm::uvec2(1, 1);
-		// DCORE_LOG_INFO << "Region Size: " << regionSize;
-		for(dstd::UInt32 y = 0; y < regionSize.y; ++y)
-			for(dstd::UInt32 x = 0; x < regionSize.x; ++x)
+
+		// amount of vertices generated
+		auto vertexCounts = Region_.GetSize() + glm::uvec2(1, 1) + glm::uvec2(1, 1);
+		// adding 2 because we need to generate 1 more vertex on each side for normals
+		// adding 1 because there are N+1 vertices for N pixels (1D).
+		
+		for(dstd::UInt32 y = 0; y < vertexCounts.y; ++y)
+			for(dstd::UInt32 x = 0; x < vertexCounts.x; ++x)
 			{
 				float h = Region_.Get(glm::uvec2(x, y)) * Terrain::GetCHeight();
 				pushVec3(glm::vec3((x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
 				                   (y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))); // position
 				pushVec3(glm::vec3(0, 0, 0));                                                           // normal
-				pushVec2(glm::vec2(x / (float)regionSize.x, y / (float)regionSize.y));                  // texcoord
+				pushVec2(glm::vec2(x / (float)vertexCounts.x, y / (float)vertexCounts.y));              // texcoord
 				++vertexCount;
 			}
 
-		// generating indices
-		// DCORE_LOG_INFO << "regionSize " << regionSize << ", Index Count: " << regionSize.x * regionSize.y * 6;
-		indices.reserve(regionSize.x * (regionSize.y - 1) * 6);
-		// using Vertex = graphics::RenderResourceManage;
 		struct Vertex
 		{
 			glm::vec3 pos;
 			glm::vec3 norm;
 			glm::vec2 tex;
 		};
-		const auto setNormals = [&](int a, int b, int c)
+
+		const auto addTriangle = [&](int a, int b, int c)
 		{
+			indices.push_back(a);
+			indices.push_back(b);
+			indices.push_back(c);
 			auto *vertices = reinterpret_cast<Vertex *>(vertexData.data());
 			Vertex *v1 = &vertices[a], *v2 = &vertices[b], *v3 = &vertices[c];
 			auto u = v1->pos - v2->pos, v = v1->pos - v3->pos;
@@ -111,34 +107,22 @@ namespace dcore::terrain
 			v3->norm += n;
 		};
 
-		dstd::UInt32 vert = 0;
-		for(dstd::UInt32 y = 0; y < regionSize.y - 1; ++y)
+		// generating indices
+		indices.reserve((vertexCounts.x - 1) * (vertexCounts.y - 1) * 2 * 3); // 2 tris per pixel, 3 verts per tri
+		
+		for(dstd::USize y = 0, i = 0; y < vertexCounts.y - 1; ++y, ++i)
 		{
-			for(dstd::UInt32 x = 0; x < regionSize.x; ++x)
+			for(dstd::USize x = 0; x < vertexCounts.x - 1; ++x, ++i)
 			{
-				if(x == regionSize.x - 1)
-				{
-					++vert;
-					continue;
-				}
-				indices.push_back(vert + 0);
-				indices.push_back(vert + 1);
-				indices.push_back(vert + regionSize.x);
-				setNormals(vert + 0, vert + 1, vert + regionSize.x);
-
-				indices.push_back(vert + 1);
-				indices.push_back(vert + regionSize.x + 1);
-				indices.push_back(vert + regionSize.x);
-				setNormals(vert + 1, vert + regionSize.x + 1, vert + regionSize.x);
-
-				++vert;
+ 				// for each pixel (x, y) or for each "top-left" vertex of a triangle
+				addTriangle(i, i + 1, i + vertexCounts.x);
+				addTriangle(i + 1, i + vertexCounts.x + 1, i + vertexCounts.x);
 			}
 		}
-		indices.shrink_to_fit();
 
+		auto *vertices = reinterpret_cast<Vertex *>(vertexData.data());
 		for(uint32_t index : indices)
 		{
-			auto *vertices     = reinterpret_cast<Vertex *>(vertexData.data());
 			vertices[index].norm = glm::normalize(vertices[index].norm);
 		}
 
@@ -152,7 +136,17 @@ namespace dcore::terrain
 		// (float)vertexData.size() / (float)vertexSize;
 
 		Mesh_ = new graphics::RStaticMesh();
-		graphics::RenderResourceManager::CreateStaticMesh(Mesh_, indices, vertexData);
+		graphics::RenderResourceManager::CreateStaticMesh(
+			Mesh_,
+			{
+				indices.data() + (vertexCounts.x + 1),
+				dstd::USize(vertexData.size()) - (vertexCounts.x + 1) * 2
+			},
+			{
+				vertexData.data(),
+				dstd::USize(vertexData.size())
+			}
+		);
 	}
 
 	const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }

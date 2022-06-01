@@ -230,6 +230,29 @@ namespace dcore::graphics
 		return &Data_->FB.Texture_;
 	}
 
+	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, dstd::Span<uint32_t> indices, dstd::Span<byte> vertexData)
+	{
+		if(mesh == nullptr) return;
+		mesh->Data_ = new impl::opengl::Vao();
+		auto *vao = (impl::opengl::Vao *)mesh->Data_;
+		vao->Load(indices.Data, indices.Count, vertexData.Data, vertexData.Count, sizeof(float) * (3 + 3 + 2));
+		vao->CreateFloatAttribute(3); // Position
+		vao->CreateFloatAttribute(3); // Normal
+		vao->CreateFloatAttribute(2); // TexCoord
+	}
+
+	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<byte> vertexData)
+	{
+		if(mesh == nullptr) return;
+		mesh->Data_ = new impl::opengl::Vao();
+		auto *vao = (impl::opengl::Vao *)mesh->Data_;
+		vao->Load(indices, vertexData.Data, vertexData.Count, sizeof(float) * (3 + 3 + 2));
+		vao->CreateFloatAttribute(3); // Position
+		vao->CreateFloatAttribute(3); // Normal
+		vao->CreateFloatAttribute(2); // TexCoord
+	}
+
+
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 	                                             const std::vector<byte> &vertexData)
 	{

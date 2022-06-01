@@ -50,14 +50,17 @@ namespace
 	class BaseDebugLayer : public dcore::world::DebugLayer
 	{
 		bool ShowImGuiDemoWindow_ = false;
+		bool EnableWireframe_ = false;
 
 	public:
 		void OnRender(dcore::graphics::RendererInterface *renderer) override
 		{
 			ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport());
 
-			ImGui::Begin("[DEBUG] Screen Controls");
+			ImGui::Begin("[DEBUG] Controls");
 			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
+			if(ImGui::Checkbox("Enable Wireframe", &EnableWireframe_))
+				renderer->GetRenderer()->SetWireframeMode(EnableWireframe_);
 			ImGui::End();
 
 			if(ShowImGuiDemoWindow_) ImGui::ShowDemoWindow();

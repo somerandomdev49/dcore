@@ -8,6 +8,7 @@
 #include <dcore/Renderer/RFastVertexBuffer.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
+#include <dcore/Core/Span.hpp>
 #include <dcore/Core/Type.hpp>
 
 namespace dcore::platform
@@ -205,6 +206,18 @@ namespace dcore::graphics
 		 * */
 		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
 		                             const std::vector<Vertex> &vertices);
+
+		/**
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
+		 * impl-specific stuff)
+		 * */
+		static void CreateStaticMesh(RStaticMesh *mesh, dstd::Span<uint32_t> indices, dstd::Span<byte> vertexData);
+
+		/**
+		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
+		 * impl-specific stuff)
+		 * */
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<byte> vertexData);
 
 		/**
 		 * Creates a static mesh from the provided indices and vertices. (Wrapper around

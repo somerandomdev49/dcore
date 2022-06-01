@@ -14,6 +14,7 @@
 #include <dcore/World/World.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dg/Game.hpp>
+#include <dg/Editor.hpp>
 #include <iostream>
 
 #define LOGGER_MESSAGE 512
@@ -109,7 +110,14 @@ namespace dcore::launch
 		// platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
 
-		dg::Game game;
+#define DCORE_USE_EDITOR
+#ifdef DCORE_USE_EDITOR
+		dg::Editor
+#else
+		dg::Game
+#endif
+		game;
+		
 		// dg::Game::SetInstance(&game);
 		game.Initialize();
 

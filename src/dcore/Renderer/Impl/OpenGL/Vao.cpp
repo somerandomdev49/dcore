@@ -5,23 +5,34 @@
 
 namespace dcore::graphics::impl
 {
-	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, size_t stride)
+	void opengl::Vao::Load(const uint32_t *indices, dstd::USize indicesSize, const byte *vertexData, dstd::USize vertexDataSize,
+	                       dstd::USize stride)
 	{
-		IndexCount_ = indices.size();
+		IndexCount_ = indicesSize;
 
 		VBO_ = Gl::GenerateBuffer();
 		EBO_ = Gl::GenerateBuffer();
 		VAO_ = Gl::GenerateVertexArray();
 		Gl::BindVertexArray(VAO_);
 		Gl::BindBuffer(ArrayBuffer, VBO_);
-		Gl::SetBufferData(ArrayBuffer, vertexData.size(), vertexData.data(), BufferUsageStaticDraw);
+		Gl::SetBufferData(ArrayBuffer, vertexDataSize, vertexData, BufferUsageStaticDraw);
 
 		Gl::BindBuffer(ElementArrayBuffer, EBO_);
-		Gl::SetBufferData(ElementArrayBuffer, indices.size() * sizeof(uint32_t), indices.data(), BufferUsageStaticDraw);
+		Gl::SetBufferData(ElementArrayBuffer, indicesSize * sizeof(uint32_t), indices, BufferUsageStaticDraw);
 
 		LastOffset_ = 0;
 		LastIndex_  = 0;
 		Stride_     = stride;
+	}
+
+	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const byte *vertexData, dstd::USize size, dstd::USize stride)
+	{
+		Load(indices.data(), indices.size(), vertexData, size, stride);
+	}
+
+	void opengl::Vao::Load(const std::vector<uint32_t> &indices, const std::vector<byte> &vertexData, dstd::USize stride)
+	{
+		Load(indices, vertexData.data(), vertexData.size(), stride);
 	}
 
 	void opengl::Vao::CreateFloatAttribute(int count)

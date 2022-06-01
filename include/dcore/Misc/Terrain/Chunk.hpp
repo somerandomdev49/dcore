@@ -9,7 +9,7 @@ namespace dcore::terrain
 	class Chunk
 	{
 	public:
-		Chunk(HeightmapRegion &&region, const glm::ivec2 &localPosition);
+		Chunk(const HeightmapRegion &region, const glm::ivec2 &localPosition);
 		void Initialize();
 		void DeInitialize();
 
