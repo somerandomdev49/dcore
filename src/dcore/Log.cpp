@@ -12,7 +12,6 @@ namespace dstd
 
 	void Log::DeInitialize()
 	{
-		
 	}
 
 	static Log *ilog_instance;

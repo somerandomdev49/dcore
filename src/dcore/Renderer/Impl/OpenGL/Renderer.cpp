@@ -309,9 +309,15 @@ namespace dcore::graphics
 
 	void RenderResourceManager::DeleteTexture(RTexture *t)
 	{
+		if(t->Data_ == nullptr)
+		{
+			DCORE_LOG_WARNING << "DeleteTexture t->Data_ == nullptr";
+			return;
+		}
 		auto *data = (impl::opengl::Texture *)t->Data_;
 		data->Buffer.Delete();
 		delete data;
+		// delete data;
 	}
 
 	void RenderResourceManager::CreateFastVertexBuffer(RFastVertexBuffer *buf, size_t indexCount)

@@ -1,5 +1,3 @@
-#include "dcore/Core/Type.hpp"
-#include "dcore/Uni.hpp"
 #include <dcore/Graphics/GUI/Font.hpp>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Core/Log.hpp>
@@ -8,58 +6,48 @@
 #include <fstream> // FIXME: add LoaderUntil::LoadBinary()
 #include <iterator>
 
-// #include <ft2build.h>
-// #include FT_FREETYPE_H
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb_truetype.h>
-#undef STB_TRUETYPE_IMPLEMENTATION
+// #define STB_TRUETYPE_IMPLEMENTATION
+// #include <stb_truetype.h>
+// #undef STB_TRUETYPE_IMPLEMENTATION
 
-// static const char *GetFreetypeErrorMessage(FT_Error err)
-// {
-// #undef FTERRORS_H_
-// #define FT_ERRORDEF(e, v, s) \
-// 	case e:                  \
-// 		return s;
-// #define FT_ERROR_START_LIST \
-// 	switch(err)             \
-// 	{
-// #define FT_ERROR_END_LIST }
-// #include FT_ERRORS_H
-// 	return "(Unknown error)";
-// }
+static const char *GetFreetypeErrorMessage(FT_Error err)
+{
+#undef FTERRORS_H_
+#define FT_ERRORDEF(e, v, s) \
+	case e:                  \
+		return s;
+#define FT_ERROR_START_LIST \
+	switch(err)             \
+	{
+#define FT_ERROR_END_LIST }
+#include FT_ERRORS_H
+	return "(Unknown error)";
+}
 
 namespace dcore::graphics::gui
 {
-// #define F_INF_(EXPR) ((FT_Face)(EXPR))
+#define F_INF_(EXPR) ((FT_Face)(EXPR))
 
-	// static stbtt_fontinfo libft__;
-	void Font::FontLibInitialize()
-	{
-		// DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype");
-	}
+	static FT_Library libft__;
+	void Font::FontLibInitialize() { DCORE_ASSERT(!FT_Init_FreeType(&libft__), "Could not initialize freetype"); }
 
 	void Font::FontLibDeInitialize()
 	{
-		// DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype");
+		DCORE_ASSERT(!FT_Done_FreeType(libft__), "Could not deinitialize freetype");
+		libft__ = nullptr;
 	}
 
 	void Font::Initialize(const char *name, int fontSize, int fontNo)
 	{
-		stbtt_fontinfo fc;
+		FT_Face fc;
 		PixelHeight_ = fontSize;
 		Scale_       = 1.0f;
 
-		FILE *fontFile = fopen("font/cmunrm.ttf", "rb");
-		fseek(fontFile, 0, SEEK_END);
-		dstd::USize size = ftell(fontFile);
-		fseek(fontFile, 0, SEEK_SET);
-    	byte *fontBuffer = new byte[size];
-		fread(fontBuffer, size, 1, fontFile);
-		fclose(fontFile);
-
-		// FT_Error err = FT_New_Face(libft__, name, fontNo, &fc);
-		if(!stbtt_InitFont(&fc, fontBuffer, 0))
+		FT_Error err = FT_New_Face(libft__, name, fontNo, &fc);
+		if(err)
 		{
 			DCORE_LOG_ERROR << "Could not create font face: " << GetFreetypeErrorMessage(err);
 			DCORE_ASSERT(false, "Could not create font face");
@@ -75,10 +63,10 @@ namespace dcore::graphics::gui
 
 	void Font::DeInitialize()
 	{
-		DCORE_LOG_INFO << "Font::DeInitialize()";
-		LOG_F(INFO, "FontInfo: %p", FontInfo__);
+		// DCORE_LOG_INFO << "Font::DeInitialize()";
+		// LOG_F(INFO, "FontInfo: %p, libft: %p", FontInfo__, libft__);
 		FT_Done_Face(F_INF_(FontInfo__));
-		DCORE_LOG_INFO << "Done";
+		// DCORE_LOG_INFO << "Done";
 		FontInfo__ = nullptr;
 	}
 

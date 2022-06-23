@@ -3,6 +3,7 @@
 #include <dcore/Event/InputManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
+#include <string>
 
 namespace dcore::platform
 {

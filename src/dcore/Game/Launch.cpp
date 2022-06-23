@@ -141,13 +141,14 @@ namespace dcore::launch
 		DCORE_LOG_INFO << "input manager deinitialized!";
 		timeManager.DeInitialize();
 		DCORE_LOG_INFO << "time manager deinitialized!";
-		graphics::gui::Font::FontLibDeInitialize();
 		guiManager.DeInitialize();
 		guiGraphics.DeInitialize();
 		resourceManager.DeInitialize();
+		graphics::gui::Font::FontLibDeInitialize();
 		DCORE_LOG_INFO << "Resource Manager deinitialized!";
 		context.DeInitialize();
 
 		logger.DeInitialize();
+		loguru::remove_all_callbacks();
 	}
 } // namespace dcore::launch
