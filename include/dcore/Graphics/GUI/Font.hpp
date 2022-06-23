@@ -5,6 +5,7 @@
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Renderer/RTexture.hpp>
 #include <glm/glm.hpp>
+#include <stb_truetype.h>
 
 namespace dcore::graphics::gui
 {
@@ -51,25 +52,7 @@ namespace dcore::graphics::gui
 		float GetTextWidth(const char *string, float scale = 1.0f) const;
 
 	private:
-		float Scale_, ScaleEm_;
-		int PixelHeight_;
-
-		void *FontInfo__; // Implementation specific.
-		int AtlasWidth_, AtlasHeight_;
-		RTexture *Atlas_;
-
-		std::vector<CodePoint> CodePointTable_;
-
-		struct Bitmap
-		{
-			byte *data;
-			unsigned int width, height;
-		};
-
-		Bitmap CreateAtlasBitmap_();
-		void CreateAtlasTexture_(const Bitmap &tb);
-
-		int GetKerning(int a, int b) const;
+		
 
 		friend class GuiGraphics;
 		friend class FontResourceManager;

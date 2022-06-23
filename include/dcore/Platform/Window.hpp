@@ -41,11 +41,14 @@ namespace dcore::platform
 		virtual bool CheckMouseButtonPressed(int button) = 0;
 		virtual void SetCursorState(CursorState state)   = 0;
 
+		const glm::ivec2 &GetSize() const
+		{ return Size_; }
+
 		void SetCursor(CursorState state, void *cursor)
 		{ CursorMap_[state] = cursor; }
 		
-		const glm::ivec2 &GetSize() const;
-		void SetSize(const glm::ivec2 &newSize);
+		virtual glm::ivec2 GetFramebufferSize();
+		virtual void SetSize(glm::ivec2 newSize);
 
 		static void RegisterResourceManager(resource::ResourceLoader *rl);
 	protected:

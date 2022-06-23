@@ -23,6 +23,8 @@ namespace dcore::platform::impl::glfw
 		bool CheckMouseButtonPressed(int button) override;
 
 		void SetCursorState(CursorState newState) override;
+		void SetSize(glm::ivec2 newSize) override;
+		glm::ivec2 GetFramebufferSize() override;
 	private:
 		GLFWwindow *Window_;
 	};

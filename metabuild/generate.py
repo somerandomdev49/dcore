@@ -29,7 +29,7 @@ def read_config(fname: str) -> dict[str, str]:
 		"str": str,
 		"int": int,
 		"list": lambda *args: list(args),
-		"sh": lambda *args: subprocess.run(shlex.join(args), stdout=subprocess.PIPE)
+		"sh": lambda *args: subprocess.run(args, stdout=subprocess.PIPE)
 			.stdout.decode('utf-8').strip()
 	}
 

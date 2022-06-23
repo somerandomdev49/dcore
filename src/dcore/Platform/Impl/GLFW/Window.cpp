@@ -151,4 +151,13 @@ namespace dcore::platform::impl
 	}
 
 
+	glm::ivec2 glfw::Frame::GetFramebufferSize()
+	{
+		glm::ivec2 s;
+		glfwGetFramebufferSize(Window_, &s.x, &s.y);
+		return s;
+	}
+
+	void glfw::Frame::SetSize(glm::ivec2 newSize) { Size_ = newSize; }
+
 } // namespace dcore::platform::impl

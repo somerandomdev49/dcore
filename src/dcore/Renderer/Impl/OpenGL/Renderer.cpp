@@ -9,7 +9,6 @@
 #include <dcore/Renderer/Impl/OpenGL/Vao.hpp>
 #include <dcore/Renderer/Impl/OpenGL/FastVao.hpp>
 #include <dcore/Renderer/Impl/OpenGL/Framebuffer.hpp>
-#include <gl/gl.h>
 #include <glm/ext.hpp>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>

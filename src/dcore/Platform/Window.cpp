@@ -3,9 +3,9 @@
 namespace dcore::platform
 {
 	Frame::~Frame() = default;
-
-	const glm::ivec2 &Frame::GetSize() const { return Size_; }
-	void Frame::SetSize(const glm::ivec2 &newSize) { Size_ = newSize; }
+	
+	glm::ivec2 Frame::GetFramebufferSize() { return Size_; }
+	void Frame::SetSize(glm::ivec2 newSize) { Size_ = newSize; }
 
 	void Frame::RegisterResourceManager(resource::ResourceLoader *rl)
 	{

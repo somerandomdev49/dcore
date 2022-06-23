@@ -2,7 +2,7 @@
 	"version": 1,
 	"settings": {
 		"display": {
-			"resolution": [1920, 1080],
+			"resolution": [800, 600],
 			"fullscreen": false
 		},
 		"graphics": {

@@ -1,8 +1,0 @@
--std=c++17
--Wall
--Wno-unused-variables
--D=DCORE_STD_64BIT
--Iinclude
--I3rd-party/include
--IC:/msys64/mingw64/include
--IC:/msys64/mingw64/include/freetype
