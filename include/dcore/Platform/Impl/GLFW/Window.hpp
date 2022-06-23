@@ -8,7 +8,7 @@ namespace dcore::platform::impl::glfw
 	{
 	public:
 		Frame();
-		~Frame();
+		~Frame() override;
 
 		void Initialize(const glm::ivec2 &size) override;
 		bool ShouldEnd() override;
@@ -22,6 +22,7 @@ namespace dcore::platform::impl::glfw
 		bool CheckKeyPressed(event::KeyCode key) override;
 		bool CheckMouseButtonPressed(int button) override;
 
+		void SetCursorState(CursorState newState) override;
 	private:
 		GLFWwindow *Window_;
 	};

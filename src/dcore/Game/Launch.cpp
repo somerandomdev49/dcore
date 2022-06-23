@@ -74,6 +74,7 @@ namespace dcore::launch
 			graphics::RenderResourceManager::Register(rloader);
 			terrain::TerrainResourceManager::Register(rloader);
 			graphics::gui::FontResourceManager::Register(rloader);
+			platform::Frame::RegisterResourceManager(rloader);
 			rloader->LoadMappings("ResourceMap.ini");
 			rloader->LoadFromManifest("Manifest.cfg");
 		};
@@ -110,7 +111,7 @@ namespace dcore::launch
 		// platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
 
-#define DCORE_USE_EDITOR
+// #define DCORE_USE_EDITOR
 #ifdef DCORE_USE_EDITOR
 		dg::Editor
 #else

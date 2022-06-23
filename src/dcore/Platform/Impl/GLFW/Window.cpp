@@ -3,8 +3,43 @@
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Core/Log.hpp>
 #include <dcore/Core/Application.hpp>
+#include <dcore/Event/TimeManager.hpp>
+#include <dcore/Util/LoaderUtil.hpp>
+
 #include <glm/glm.hpp>
 #include <imgui_impl_glfw.h>
+
+namespace dcore::platform
+{
+	void Frame::RCursor_Constructor(const std::string &path, void *placement)
+	{
+		auto *cursor = new(placement) RCursor();
+
+		util::ImageData d;
+		util::LoaderUtil::LoadImage(d, path);
+
+		if(d.data == nullptr)
+		{
+			DCORE_LOG_ERROR << "Failed to load cursor at '" << path << "'";
+			return;
+		}
+
+		auto *img = (GLFWimage*&)cursor->image = new GLFWimage;
+		img->width = d.size.x;
+		img->height = d.size.y;
+		img->pixels = (dstd::Byte*)d.data;
+		cursor->cursor = glfwCreateCursor(img, 0, 0);
+
+		// free(d.data); TODO: find out if glfw copies image data
+	}
+
+	void Frame::RCursor_DeConstructor(void *placement)
+	{
+		auto *cursor = (RCursor*)placement;
+		glfwDestroyCursor((GLFWcursor*)cursor->cursor);
+		free(((GLFWimage*)cursor->image)->pixels);
+	}
+}
 
 namespace dcore::platform::impl
 {
@@ -51,6 +86,7 @@ namespace dcore::platform::impl
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;        // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		//io.ConfigViewportsNoAutoMerge = true;
 		io.ConfigViewportsNoTaskBarIcon = false;
 
@@ -108,4 +144,11 @@ namespace dcore::platform::impl
 
 	bool glfw::Frame::CheckKeyPressed(event::KeyCode key) { return glfwGetKey(Window_, (int)key) == GLFW_PRESS; }
 	bool glfw::Frame::CheckMouseButtonPressed(int button) { return glfwGetMouseButton(Window_, button) == GLFW_PRESS; }
+
+	void glfw::Frame::SetCursorState(CursorState newState)
+	{
+		glfwSetCursor(Window_, (GLFWcursor*)CursorMap_[newState]);
+	}
+
+
 } // namespace dcore::platform::impl

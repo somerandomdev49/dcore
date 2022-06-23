@@ -14,6 +14,7 @@ namespace dg::loaders
 
 		void Load(dcore::world::World *world) override;
 		void UnLoad(dcore::world::World *world) override;
+		dcore::world::EntityHandle GetPlayer() const { return Player_; }
 
 	private:
 		struct LoadInfo
@@ -32,5 +33,6 @@ namespace dg::loaders
 		void LoadStaticEntity_Interactable_(dcore::world::Entity &entity, LoadInfo info);
 
 		std::string Name_;
+		dcore::world::EntityHandle Player_;
 	};
 } // namespace dg::loaders

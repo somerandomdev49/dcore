@@ -33,23 +33,61 @@ namespace dcore::platform
 
 	void Context::Start()
 	{
+		Stats_.FPS = 0;
+		Stats_.RenderTime = 0;
+		Stats_.UpdateTime = 0;
+		
 		float lastTime = Frame_->GetCurrentTime();
+		float fpsTimer = 0;
+		int fpsCounter = 0;
+		
 		World_->Start();
 		Frame_->OnBegin();
+
 		while(!Frame_->ShouldEnd())
 		{
 			float thisTime = Frame_->GetCurrentTime();
 			float dt       = thisTime - lastTime;
 			event::TimeManager::Instance()->SetDeltaTime(dt);
 
-			Frame_->OnBeginFrame();
-			World_->Update();
+			fpsTimer += dt;
+			if(fpsTimer >= 1)
+			{
+				Stats_.FPS = fpsCounter;
+				fpsCounter = 0;
+				fpsTimer = 0;
+			}
+			
+			++fpsCounter;
 
+			float timestamp = 0;
+
+			if(event::InputManager::Instance()->IsMousePressed(0))
+			{
+				Frame_->SetCursorState(Frame::CursorState_Down);
+			}
+			else
+			{
+				Frame_->SetCursorState(Frame::CursorState_Normal);
+			}
+
+			timestamp = Frame_->GetCurrentTime();
+			Frame_->OnBeginFrame();
+			Stats_.FrameBeginTime = Frame_->GetCurrentTime() - timestamp;
+			
+			timestamp = Frame_->GetCurrentTime();
+			World_->Update();
+			Stats_.UpdateTime = Frame_->GetCurrentTime() - timestamp;
+
+			timestamp = Frame_->GetCurrentTime();
 			Rend_->OnBeginRender();
 			World_->Render(RI_);
 			Rend_->OnEndRender();
+			Stats_.RenderTime = Frame_->GetCurrentTime() - timestamp;
 
+			timestamp = Frame_->GetCurrentTime();
 			Frame_->OnEndFrame();
+			Stats_.FrameEndTime = Frame_->GetCurrentTime() - timestamp;
 
 			lastTime = thisTime;
 

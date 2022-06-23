@@ -50,4 +50,6 @@ namespace dcore::terrain
 	}
 
 	float HeightmapRegion::Get(const glm::uvec2 &pos) const { return Source_->Get(Min_ + pos); }
+
+	Heightmap *HeightmapRegion::GetSource() { return Source_; }
 } // namespace dcore::terrain

@@ -74,5 +74,11 @@
 		"*.def": "cpp"
 	},
 	"C_Cpp.dimInactiveRegions": false,
-	"python.analysis.extraPaths": ["./metabuild"]
+	"python.analysis.extraPaths": [
+		"./metabuild"
+	],
+	"cSpell.words": [
+		"DCORE",
+		"dstd"
+	]
 }

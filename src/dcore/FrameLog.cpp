@@ -1,5 +1,5 @@
 #include <dcore/Core/FrameLog.hpp>
-#include <stdarg.h>
+#include <cstdarg>
 
 namespace dcore
 {
@@ -34,7 +34,7 @@ namespace dcore
 		auto size = std::vsnprintf(nullptr, 0, format, va);
 		// puts("done sz_Sprint_f[3]");
 		std::vector<char> output(size + 1);
-		std::vsnprintf(&output[0], size, format, va);
+		std::vsnprintf(output.data(), size, format, va);
 		Log(std::string(output.begin(), output.end()));
 	}
 

@@ -54,6 +54,30 @@ namespace dg
 		//     ->GetRoot()
 		//     ->CreateChild<dcore::graphics::gui::common::ScrollingText>(gTitles_, glm::vec3(0, 0, 0));
 
+		dcore::platform::Context::Instance()->GetFrame()->SetCursor(
+			dcore::platform::Frame::CursorState_Normal,
+			dcore::resource::GetResource<dcore::platform::RCursor>(
+				"DCore.Texture.Main.Gui.Cursor.Cursor0.Open").Get()->cursor
+		);
+		
+		dcore::platform::Context::Instance()->GetFrame()->SetCursor(
+			dcore::platform::Frame::CursorState_Point,
+			dcore::resource::GetResource<dcore::platform::RCursor>(
+				"DCore.Texture.Main.Gui.Cursor.Cursor0.Normal").Get()->cursor
+		);
+
+		dcore::platform::Context::Instance()->GetFrame()->SetCursor(
+			dcore::platform::Frame::CursorState_Down,
+			dcore::resource::GetResource<dcore::platform::RCursor>(
+				"DCore.Texture.Main.Gui.Cursor.Cursor0.Down").Get()->cursor
+		);
+
+		dcore::platform::Context::Instance()->GetFrame()->SetCursor(
+			dcore::platform::Frame::CursorState_Grab,
+			dcore::resource::GetResource<dcore::platform::RCursor>(
+				"DCore.Texture.Main.Gui.Cursor.Cursor0.Fist").Get()->cursor
+		);
+
 
 		auto *mainWorldLoader = new dg::loaders::MainWorldLoader("World1");
 		Registry_.AddWorldLoader("Main1", mainWorldLoader);

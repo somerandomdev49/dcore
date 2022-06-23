@@ -40,123 +40,123 @@ namespace dcore::terrain
 		delete Mesh_;
 	}
 
+	namespace {
+		glm::uvec2 GenerateVertices(HeightmapRegion &region, glm::uvec2 vertexCounts, std::vector<byte> &vertexData)
+		{
+			const auto pushFloat = [&](float f)
+			{
+				byte *bytes = reinterpret_cast<byte *>(&f);
+				vertexData.push_back(bytes[0]);
+				vertexData.push_back(bytes[1]);
+				vertexData.push_back(bytes[2]);
+				vertexData.push_back(bytes[3]);
+			};
+
+			const auto pushVec2 = [&](const glm::vec2 &v)
+			{
+				pushFloat(v.x);
+				pushFloat(v.y);
+			};
+
+			const auto pushVec3 = [&](const glm::vec3 &v)
+			{
+				pushFloat(v.x);
+				pushFloat(v.y);
+				pushFloat(v.z);
+			};
+			
+			/** Total vertex count */
+			dstd::UInt32 vertexCount = 0;
+
+	
+			auto regionMin = (glm::ivec2)region.GetMin();
+			auto regionMax = (glm::ivec2)region.GetMax();
+			auto regionSize = (glm::ivec2)region.GetSize();
+			auto *heightmap = region.GetSource();
+			
+			for(int y = 0; y < (int)vertexCounts.y; ++y)
+				for(int x = 0; x < (int)vertexCounts.x; ++x)
+				{
+					float h = region.Get(glm::uvec2(x, y)) * Terrain::GetCHeight();
+
+					// Position
+					pushVec3(
+						glm::vec3((x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
+						(y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))
+					);
+					
+					// Normal
+					float N = (y == 0 && regionMin.y == 0)
+						? 0 : heightmap->Get(regionMin + glm::ivec2 { x, y - 1 });
+					
+					float S = (y == regionSize.y - 1 && regionMax.y == heightmap->GetSize().y)
+						? 0 : heightmap->Get(regionMin + glm::ivec2 { x, y + 1 });
+					
+					float W = (x == 0 && regionMin.x == 0)
+						? 0 : heightmap->Get(regionMin + glm::ivec2 { x - 1, y });
+					
+					float E = (x == regionSize.x - 1 && regionMax.x == heightmap->GetSize().x)
+						? 0 : heightmap->Get(regionMin + glm::ivec2 { x + 1, y });
+
+					glm::vec3 normal = { 0, 1, 0 };
+					normal.z += N;
+					normal.z -= S;
+					normal.x += W;
+					normal.x -= E;
+					pushVec3(glm::normalize(normal));
+
+					// Texture Coordinate
+					pushVec2(glm::vec2(x / (float)vertexCounts.x, y / (float)vertexCounts.y));
+
+					++vertexCount;
+				}
+			
+			return vertexCounts;
+		}
+
+		void GenerateIndices(HeightmapRegion &region, glm::uvec2 vertexCount, std::vector<uint32_t> &indices)
+		{
+			// generating indices
+			indices.reserve((vertexCount.x - 1) * (vertexCount.y - 1) * 2 * 3); // 2 tris per pixel, 3 verts per tri
+
+			for(dstd::USize y = 0, i = 0; y < vertexCount.y - 1; ++y, ++i)
+			{
+				for(dstd::USize x = 0; x < vertexCount.x - 1; ++x, ++i)
+				{
+					// for each pixel (x, y) or for each "top-left" vertex of a triangle
+					indices.push_back(i);
+					indices.push_back(i + 1);
+					indices.push_back(i + vertexCount.x);
+					indices.push_back(i + 1);
+					indices.push_back(i + vertexCount.x + 1);
+					indices.push_back(i + vertexCount.x);
+
+				}
+			}
+		}
+	}
+
 	void Chunk::GenerateMesh_()
 	{
 		std::vector<uint32_t> indices;
 		std::vector<byte> vertexData;
+		auto vertexCount = Region_.GetSize() + glm::uvec2(1, 1);
 
-		const auto pushFloat = [&](float f)
-		{
-			byte *bytes = reinterpret_cast<byte *>(&f);
-			vertexData.push_back(bytes[0]);
-			vertexData.push_back(bytes[1]);
-			vertexData.push_back(bytes[2]);
-			vertexData.push_back(bytes[3]);
-		};
-
-		const auto pushVec2 = [&](const glm::vec2 &v)
-		{
-			pushFloat(v.x);
-			pushFloat(v.y);
-		};
-
-		const auto pushVec3 = [&](const glm::vec3 &v)
-		{
-			pushFloat(v.x);
-			pushFloat(v.y);
-			pushFloat(v.z);
-		};
-
-		// total vertex count
-		dstd::UInt32 vertexCount = 0;
-
-		// amount of vertices generated
-		auto vertexCounts = Region_.GetSize() + glm::uvec2(1, 1) + glm::uvec2(1, 1);
-		// adding 2 because we need to generate 1 more vertex on each side for normals
-		// adding 1 because there are N+1 vertices for N pixels (1D).
-		
-		for(dstd::UInt32 y = 0; y < vertexCounts.y; ++y)
-			for(dstd::UInt32 x = 0; x < vertexCounts.x; ++x)
-			{
-				float h = Region_.Get(glm::uvec2(x, y)) * Terrain::GetCHeight();
-				pushVec3(glm::vec3((x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
-				                   (y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))); // position
-				pushVec3(glm::vec3(0, 0, 0));                                                           // normal
-				pushVec2(glm::vec2(x / (float)vertexCounts.x, y / (float)vertexCounts.y));              // texcoord
-				++vertexCount;
-			}
-
-		struct Vertex
-		{
-			glm::vec3 pos;
-			glm::vec3 norm;
-			glm::vec2 tex;
-		};
-
-		const auto addTriangle = [&](int a, int b, int c)
-		{
-			indices.push_back(a);
-			indices.push_back(b);
-			indices.push_back(c);
-			auto *vertices = reinterpret_cast<Vertex *>(vertexData.data());
-			Vertex *v1 = &vertices[a], *v2 = &vertices[b], *v3 = &vertices[c];
-			auto u = v1->pos - v2->pos, v = v1->pos - v3->pos;
-			auto n = glm::normalize(glm::cross(u, v));
-			v1->norm += n;
-			v2->norm += n;
-			v3->norm += n;
-		};
-
-		// generating indices
-		indices.reserve((vertexCounts.x - 1) * (vertexCounts.y - 1) * 2 * 3); // 2 tris per pixel, 3 verts per tri
-		
-		for(dstd::USize y = 0, i = 0; y < vertexCounts.y - 1; ++y, ++i)
-		{
-			for(dstd::USize x = 0; x < vertexCounts.x - 1; ++x, ++i)
-			{
- 				// for each pixel (x, y) or for each "top-left" vertex of a triangle
-				addTriangle(i, i + 1, i + vertexCounts.x);
-				addTriangle(i + 1, i + vertexCounts.x + 1, i + vertexCounts.x);
-			}
-		}
-
-		auto *vertices = reinterpret_cast<Vertex *>(vertexData.data());
-		for(uint32_t index : indices)
-		{
-			vertices[index].norm = glm::normalize(vertices[index].norm);
-		}
-
-		// DCORE_LOG_INFO << "Done generating chunk. Region Size: " << regionSize << ", Vertex
-		// Count: " << vertexCount
-		// << ", Index Count: " <<
-		// indices.size();
-
-		// size_t vertexSize = sizeof(float) * (3 + 3 + 2);
-		// DCORE_LOG_INFO << "Index Count: " << indices.size() << ", Vertex Count: " <<
-		// (float)vertexData.size() / (float)vertexSize;
+		GenerateVertices(Region_, vertexCount, vertexData);
+		GenerateIndices(Region_, vertexCount, indices);
 
 		Mesh_ = new graphics::RStaticMesh();
-		graphics::RenderResourceManager::CreateStaticMesh(
-			Mesh_,
-			{
-				indices.data() + (vertexCounts.x + 1),
-				dstd::USize(vertexData.size()) - (vertexCounts.x + 1) * 2
-			},
-			{
-				vertexData.data(),
-				dstd::USize(vertexData.size())
-			}
-		);
+		graphics::RenderResourceManager::CreateStaticMesh(Mesh_, indices, vertexData);
 	}
 
-	const dcore::resource::Resource<dcore::graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }
-	const dcore::resource::Resource<dcore::graphics::RTexture> *Chunk::GetTextures() const { return &Textures_[0]; }
-	void Chunk::SetBlendMap(const dcore::resource::Resource<dcore::graphics::RTexture> &newBlendMap)
+	const resource::Resource<graphics::RTexture> &Chunk::GetBlendMap() const { return BlendMap_; }
+	const resource::Resource<graphics::RTexture> *Chunk::GetTextures() const { return &Textures_[0]; }
+	void Chunk::SetBlendMap(const resource::Resource<graphics::RTexture> &newBlendMap)
 	{
 		BlendMap_ = newBlendMap;
 	}
 
-	void Chunk::SetTexture(int index, const dcore::resource::Resource<dcore::graphics::RTexture> &newTexture)
+	void Chunk::SetTexture(int index, const resource::Resource<graphics::RTexture> &newTexture)
 	{
 		Textures_[index] = newTexture;
 	}

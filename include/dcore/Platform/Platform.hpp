@@ -48,6 +48,16 @@ namespace dcore::platform
 		 */
 		void SetWorld(world::World *newWorld) { World_ = newWorld; };
 
+		struct Stats
+		{
+			int FPS;
+			float RenderTime, FrameBeginTime, FrameEndTime;
+			float UpdateTime;
+		};
+
+		Stats &GetStats() { return Stats_; }
+		const Stats &GetStats() const { return Stats_; }
+
 	private:
 		friend class event::InputManager;
 		friend class launch::Launch;
@@ -66,6 +76,7 @@ namespace dcore::platform
 		graphics::Renderer *Rend_;
 		world::World *World_;
 		Frame *Frame_;
+		Stats Stats_;
 		dcore::graphics::RendererInterface *RI_;
 	};
 } // namespace dcore::platform

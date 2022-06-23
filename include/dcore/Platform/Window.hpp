@@ -1,13 +1,33 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <dcore/Event/InputManager.hpp>
+#include <dcore/Resource/ResourceLoader.hpp>
+#include <dcore/Resource/ResourceManager.hpp>
 
 namespace dcore::platform
 {
-	/** Virtual class representing a window. Multiple implementations can exist. */
+	/** Cursor image resource */
+	struct RCursor
+	{
+		void *cursor;
+		void *image;
+	};
+
+	// TODO: Change to a static implementation!
+
+	/** Abstract class representing a window. Multiple implementations can exist. */
 	class Frame
 	{
 	public:
+		enum CursorState
+		{
+			CursorState_Normal,
+			CursorState_Down,
+			CursorState_Grab,
+			CursorState_Point,
+			CursorState_Max_
+		};
+
 		virtual ~Frame();
 		virtual void Initialize(const glm::ivec2 &size) = 0;
 		virtual void OnBegin()                          = 0;
@@ -19,11 +39,21 @@ namespace dcore::platform
 
 		virtual bool CheckKeyPressed(event::KeyCode key) = 0;
 		virtual bool CheckMouseButtonPressed(int button) = 0;
+		virtual void SetCursorState(CursorState state)   = 0;
 
+		void SetCursor(CursorState state, void *cursor)
+		{ CursorMap_[state] = cursor; }
+		
 		const glm::ivec2 &GetSize() const;
 		void SetSize(const glm::ivec2 &newSize);
 
+		static void RegisterResourceManager(resource::ResourceLoader *rl);
 	protected:
 		glm::ivec2 Size_;
+		void *CursorMap_[CursorState_Max_];
+	
+	private:
+		static void RCursor_Constructor(const std::string &path, void *placement);
+		static void RCursor_DeConstructor(void *placement);
 	};
 } // namespace dcore::platform

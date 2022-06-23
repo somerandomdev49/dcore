@@ -41,11 +41,11 @@ namespace dg::loaders
 
 		// Load the rest of the entities (saved)
 		LoadStaticEntities_({input.Get(), world});
-
-		auto player    = world->CreateEntity();
 		auto *renderer = dcore::platform::Context::Instance()->GetRendererInterface();
+
+		auto player = world->CreateEntity();
 		player.AddComponent(dcore::world::TransformComponent());
-		player.GetComponent<dcore::world::TransformComponent>()->SetPosition(glm::vec3(0, 0, 0));
+		player.GetComponent<dcore::world::TransformComponent>()->SetPosition(glm::vec3(569*5, 0, 582*5));
 		player.GetComponent<dcore::world::TransformComponent>()->SetRotation(glm::identity<glm::quat>());
 		player.GetComponent<dcore::world::TransformComponent>()->SetScale(glm::vec3(1, 1, 1));
 		player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(
@@ -53,6 +53,7 @@ namespace dg::loaders
 		    dcore::resource::GetResource<dcore::graphics::RTexture>("DCore.Texture.Main.Stone"))));
 		player.AddComponent(entity::CharacterControllerComponent());
 		player.AddComponent(entity::CameraFollowComponent(renderer->GetCamera()));
+		Player_ = player.GetId();
 
 #if 0 // Future API?
 		auto server = dg::net::ServerInterface::Instance();
