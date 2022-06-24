@@ -9,3 +9,4 @@ clike_flags = -Wall -Wextra -g -mwindows -DDCORE_STD_64BIT $warnings $includes $
 cpp_flags = $clike_flags -std=c++17 -DLOGURU_WITH_STREAMS 
 c_flags = $clike_flags -std=c99
 ld_flags = -lglfw3 -lpthread -lole32 -std=c++17 -mwindows $libs_ldflags
+winres = windres
