@@ -81,9 +81,10 @@ namespace dg::editor
 		ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport());
 		if(ImGui::Begin("Controls"))
 		{
-			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
 			if(ImGui::Checkbox("Enable Wireframe", &EnableWireframe_))
 				renderer->GetRenderer()->SetWireframeMode(EnableWireframe_);
+			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);
+			ImGui::Checkbox("Show Style Editor", &Controls_["StyleEditor"]);
 		}
 		ImGui::End();
 
@@ -118,6 +119,7 @@ namespace dg::editor
 		ImGui::End();
 
 		if(ShowImGuiDemoWindow_) ImGui::ShowDemoWindow();
+		if(Controls_["StyleEditor"]) ImGui::ShowStyleEditor(&ImGui::GetStyle());
 
 		if(ImGui::BeginMainMenuBar())
 		{

@@ -54,11 +54,10 @@ namespace dcore::platform::impl
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-		// TODO: Check if using OpenGL.
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		// #ifdef __darwin__ // FIXME: correct name
+#ifdef __APPLE__ 
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		// #endif
+#endif
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 		Window_ = glfwCreateWindow(Size_.x, Size_.y, "DragonCore", nullptr, nullptr);
@@ -88,7 +87,6 @@ namespace dcore::platform::impl
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;        // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-		// io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		//io.ConfigViewportsNoAutoMerge = true;
 		io.ConfigViewportsNoTaskBarIcon = false;
 

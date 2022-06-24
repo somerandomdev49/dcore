@@ -1,5 +1,6 @@
 #pragma once
 #include <dcore/World/World.hpp>
+#include <unordered_map>
 
 namespace dg::editor
 {
@@ -15,6 +16,7 @@ namespace dg::editor
 	class EditorLayer : public dcore::world::DebugLayer
 	{
 		bool ShowImGuiDemoWindow_ = false;
+		std::unordered_map<std::string, bool> Controls_;
 		bool EnableWireframe_ = false;
 		
 		dcore::world::EntityHandle Player_;
