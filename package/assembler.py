@@ -27,6 +27,9 @@ def assemble(platform: Literal["win", "mac", "lin"], source_dir: str, package_di
         
     print("Copying the executable...")
     shutil.copyfile(BINARY_PATH, os.path.join(PACKAGE_DIR, BINARY_FOR[platform]))
+        
+    print("Copying the imgui.ini...")
+    shutil.copyfile(os.path.join(SOURCE_DIR, "imgui.ini"), os.path.join(PACKAGE_DIR, "imgui.ini"))
 
     if platform == "win":
         if GEN_DLLS:

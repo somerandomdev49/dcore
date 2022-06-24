@@ -16,7 +16,9 @@ namespace dg::entity
 
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
-		dcore::graphics::Camera *Camera_                      = nullptr;
-		float Offset_                                         = DefaultOffset_;
+		dcore::graphics::Camera *Camera_ = nullptr;
+		float Offset_ = DefaultOffset_;
+		glm::vec2 Last_ = {0,0}, Total_ = {0, 0};
+		glm::mat4 Rotation_ = glm::mat4(1);
 	};
 } // namespace dg::entity

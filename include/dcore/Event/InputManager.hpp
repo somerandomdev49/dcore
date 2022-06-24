@@ -2,7 +2,7 @@
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 
-// namespace dcore::platform { class Context; }
+namespace dcore::platform { class Context; }
 
 // TODO: Add actions
 namespace dcore::event
@@ -131,6 +131,7 @@ namespace dcore::event
 		K_Menu         = 348,
 	};
 
+
 	class InputManager
 	{
 	public:
@@ -140,16 +141,20 @@ namespace dcore::event
 		bool IsMousePressed(int button);
 		float GetScrollX() const { return Scroll_.x; }
 		float GetScrollY() const { return Scroll_.y; }
+
+		void SetScroll(glm::vec2 newScroll) { Scroll_ = newScroll; }
 		const glm::vec2 &GetScroll() const { return Scroll_; }
-		void SetScroll(glm::vec2 scroll) { Scroll_ = scroll; }
+
+		void SetMousePosition(glm::vec2 newPosition) { MousePosition_ = newPosition; }
+		const glm::vec2 &GetMousePosition() const { return MousePosition_; }
 
 		static InputManager *Instance();
 
 	private:
-		// friend class platform::Context;
+		friend class platform::Context;
 		friend class launch::Launch;
 		static void SetInstance(InputManager *newInstance);
-
+		glm::vec2 MousePosition_;
 		glm::vec2 Scroll_;
 	};
 } // namespace dcore::event

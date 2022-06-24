@@ -78,6 +78,11 @@ namespace dcore::platform::impl
 		{
 			event::InputManager::Instance()->SetScroll({ x, y });
 		});
+
+		glfwSetCursorPosCallback(Window_, [](GLFWwindow *window, double x, double y)
+		{
+			event::InputManager::Instance()->SetMousePosition({ x, y });
+		});
 			
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
