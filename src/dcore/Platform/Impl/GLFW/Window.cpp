@@ -1,4 +1,4 @@
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Core/Log.hpp>

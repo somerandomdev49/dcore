@@ -77,8 +77,11 @@ if __name__ == "__main__":
 					
 		f.write("\ninclude " + platform_basepath + ".ninja\n\n")
 
-				
-		sources = M.get_project_sources("src", ["cpp", "c"])
+		platform_specific = []
+		if platform == "msys2":
+			platform_specific = ["rc"]
+
+		sources = M.get_project_sources("src", ["cpp", "c"] + platform_specific)
 		env = M.Env()
 
 		env.add_rule_for_ext("",
@@ -91,5 +94,8 @@ if __name__ == "__main__":
 		env.add_rule_for_ext("c",
 			command = "$compiler_c -c $in -o $out -fdiagnostics-color $c_flags -MD -MF $out.d",
 			depfile = "$out.d")
+
+		env.add_rule_for_ext("rc",
+			command = "$winres $in -O coff -o $out")
 		
 		env.generate(f, sources, "build", "bin/release/dcore")
