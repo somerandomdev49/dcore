@@ -62,15 +62,6 @@ namespace dcore::platform
 
 			float timestamp = 0;
 
-			if(event::InputManager::Instance()->IsMousePressed(0))
-			{
-				Frame_->SetCursorState(Frame::CursorState_Down);
-			}
-			else
-			{
-				Frame_->SetCursorState(Frame::CursorState_Normal);
-			}
-
 			timestamp = Frame_->GetCurrentTime();
 			Frame_->OnBeginFrame();
 			Stats_.FrameBeginTime = Frame_->GetCurrentTime() - timestamp;

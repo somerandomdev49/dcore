@@ -1,4 +1,5 @@
 #include "GLFW/glfw3.h"
+#include <cstring>
 #include <dcore/Platform/Impl/GLFW/Window.hpp>
 #include <dcore/Platform/Impl/GLFW/GLFW.hpp>
 #include <dcore/Core/Log.hpp>
@@ -48,6 +49,7 @@ namespace dcore::platform::impl
 
 	void glfw::Frame::Initialize(const glm::ivec2 &size)
 	{
+		memset(CursorMap_, 0, sizeof(CursorState) * CursorState_Max_);
 		Size_ = size; // TODO: Title
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -86,7 +88,7 @@ namespace dcore::platform::impl
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;        // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+		// io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		//io.ConfigViewportsNoAutoMerge = true;
 		io.ConfigViewportsNoTaskBarIcon = false;
 

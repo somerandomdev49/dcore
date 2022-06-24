@@ -1,3 +1,4 @@
+#include "dcore/Platform/Window.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/trigonometric.hpp"
 #include <dg/Entity/CameraFollow.hpp>
@@ -26,6 +27,12 @@ namespace dg::entity
 	void CameraFollowComponent::Update(dcore::world::EntityHandle self)
 	{
 		if(TransformComponent_ == nullptr) return;
+
+		auto *frame = dcore::platform::Context::Instance()->GetFrame();
+		if(dcore::event::InputManager::Instance()->IsMousePressed(0))
+			frame->SetCursorState(dcore::platform::Frame::CursorState_Down);
+		else
+			frame->SetCursorState(dcore::platform::Frame::CursorState_Normal);
 
 		Offset_ = glm::clamp(Offset_ - dcore::event::InputManager::Instance()->GetScrollY() * SCROLL_SPEED, MIN_OFFSET,
 		                     MAX_OFFSET);

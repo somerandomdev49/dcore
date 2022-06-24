@@ -9,6 +9,7 @@
 #include <dcore/Platform/Platform.hpp>
 #include <dcore/Graphics/GUI/GuiManager.hpp>
 #include <dcore/Graphics/GUI/Widgets/ScrollingText.hpp>
+#include <imgui.h>
 
 namespace
 {
@@ -78,7 +79,7 @@ namespace dg
 				"DCore.Texture.Main.Gui.Cursor.Cursor0.Fist").Get()->cursor
 		);
 
-
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		auto *mainWorldLoader = new dg::loaders::MainWorldLoader("World1");
 		Registry_.AddWorldLoader("Main1", mainWorldLoader);
 		DCORE_LOG_INFO << "LoadWorld(Main1)";
