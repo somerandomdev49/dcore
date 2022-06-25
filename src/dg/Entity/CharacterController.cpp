@@ -5,6 +5,23 @@
 #include <dcore/Core/FrameLog.hpp>
 
 DCORE_COMPONENT_REGISTER(dg::entity::CharacterControllerComponent);
+namespace
+{
+	glm::quat FromEulerZYX(float pitch, float yaw, float roll)
+	{
+		// https://gamedev.stackexchange.com/questions/13436/glm-euler-angles-to-quaternion
+		float sx = sin(pitch / 2), sy = sin(yaw / 2), sz = sin(roll / 2);
+		float cx = cos(pitch / 2), cy = cos(yaw / 2), cz = cos(roll / 2);
+
+
+		return {
+			cx * cy * cz - sx * sy * sz,
+			sx * cy * cz + cx * sy * sz,
+			cx * sy * cz - sx * cy * sz,
+			cx * cy * sz + sx * sy * cz,
+		};
+	}
+}
 
 namespace dg::entity
 {
@@ -19,14 +36,23 @@ namespace dg::entity
 		auto *inputMngr          = dcore::event::InputManager::Instance();
 		glm::vec2 movementVector = glm::vec2(0, 0);
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_W)) movementVector.y = 1.0f;
-		else if(inputMngr->IsKeyPressed(dcore::event::K_S)) movementVector.y = -1.0f;
+		if(inputMngr->IsKeyPressed(dcore::event::K_W))
+			movementVector.y = 1.0f;
+		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
+			movementVector.y = -1.0f;
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_D)) movementVector.x = -1.0f;
-		else if(inputMngr->IsKeyPressed(dcore::event::K_A)) movementVector.x = +1.0f;
+		if(inputMngr->IsKeyPressed(dcore::event::K_D))
+			movementVector.x = -1.0f;
+		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
+			movementVector.x = +1.0f;
 
-		// movementVector = glm::normalize(movementVector);
-		glm::vec3 vel = glm::vec3(movementVector.x, 0, movementVector.y);
+		IsMoving_ = (movementVector != glm::vec2(0, 0));
+
+		if(movementVector.x != 0 && movementVector.y != 0)
+			movementVector = glm::normalize(movementVector);
+		glm::vec3 vel = glm::rotate(glm::mat4(1), Yaw_, {0, 1, 0})
+			* glm::vec4(movementVector.x, 0, movementVector.y, 1);
+		TransformComponent_->SetRotation(FromEulerZYX(0, Yaw_, 0));
 		// v = glm::mat3_cast(TransformComponent_->GetRotation()) * v;
 
 		// Velocity_ += glm::vec3(0, -Gravity_ * 0, 0);

@@ -80,22 +80,25 @@ namespace dcore::terrain
 					float h = region.Get(glm::uvec2(x, y)) * Terrain::GetCHeight();
 
 					// Position
-					pushVec3(
-						glm::vec3((x * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2), h,
-						(y * Terrain::GetCUnitsPerPixel() - Terrain::GetCChunkSize() / 2))
-					);
+					pushVec3(glm::vec3(
+						(x * Terrain::GetCUnitsPerPixel()
+							- (dstd::USize)(Terrain::GetCChunkSize() / 2)),
+						h,
+						(y * Terrain::GetCUnitsPerPixel()
+							- (dstd::USize)(Terrain::GetCChunkSize() / 2))
+					));
 					
 					// Normal
 					float N = (y == 0 && regionMin.y == 0)
 						? 0 : heightmap->Get(regionMin + glm::ivec2 { x, y - 1 });
 					
-					float S = (y == regionSize.y - 1 && regionMax.y == heightmap->GetSize().y)
+					float S = (y == regionSize.y - 1 && regionMax.y == (int)heightmap->GetSize().y)
 						? 0 : heightmap->Get(regionMin + glm::ivec2 { x, y + 1 });
 					
 					float W = (x == 0 && regionMin.x == 0)
 						? 0 : heightmap->Get(regionMin + glm::ivec2 { x - 1, y });
 					
-					float E = (x == regionSize.x - 1 && regionMax.x == heightmap->GetSize().x)
+					float E = (x == regionSize.x - 1 && regionMax.x == (int)heightmap->GetSize().x)
 						? 0 : heightmap->Get(regionMin + glm::ivec2 { x + 1, y });
 
 					glm::vec3 normal = { 0, 1, 0 };

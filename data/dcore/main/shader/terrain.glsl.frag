@@ -19,8 +19,8 @@ const vec4 FOG_COLOR = vec4(0.23, 0.48, 0.74, 1);
 const float zNear = 0.1;
 const float zFar = 100.0;
 
-const float zFogNear = 40.0 + 80.0;
-const float zFogFar  = 80.0 + 80.0;
+const float zFogNear = 40.0 + 180.0;
+const float zFogFar  = 80.0 + 180.0;
 
 float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
 // float linearDepth(vec4 clipSpacePos)
@@ -89,7 +89,7 @@ void main()
 	// vec4 color = quadSample(texCoord, 1, u_Tex0);
 
 	// o_Color = vec4(0.0, 1.0, 0.25, 1.0);
-	float shadow = clamp(dot(-s_Normal, SUN), 0.4, 1.0);
+	float shadow = clamp(dot(s_Normal, SUN), 0.4, 1.0);
 	color *= vec4(vec3(shadow), 1.0);
 
 	float dist = length(s_Position.xyz);

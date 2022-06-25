@@ -49,7 +49,7 @@ namespace dcore::platform::impl
 
 	void glfw::Frame::Initialize(const glm::ivec2 &size)
 	{
-		memset(CursorMap_, 0, sizeof(CursorState) * CursorState_Max_);
+		memset(CursorMap_, 0, sizeof(void*) * CursorState_Max_);
 		Size_ = size; // TODO: Title
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);

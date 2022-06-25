@@ -1,6 +1,7 @@
 #pragma once
 #include <dcore/World/Entity.hpp>
 #include <dcore/World/World.hpp>
+#include <dg/Entity/CharacterController.hpp>
 
 namespace dg::entity
 {
@@ -15,10 +16,15 @@ namespace dg::entity
 		static constexpr float DefaultOffset_ = 40.0f;
 
 	private:
-		dcore::world::TransformComponent *TransformComponent_ = nullptr;
+		void UpdateCameraRotation_(float xAngle, float yAngle);
+
+		dcore::world::TransformComponent *Transform_ = nullptr;
 		dcore::graphics::Camera *Camera_ = nullptr;
-		float Offset_ = DefaultOffset_;
-		glm::vec2 Last_ = {0,0}, Total_ = {0, 0};
+		dg::entity::CharacterControllerComponent *Character_ = nullptr;
+
+		float Offset_ = DefaultOffset_, Timer_ = 0;
+		int CameraMode_ = 0;
+		glm::vec2 LastMousePos_ = {0,0}, Total_ = {0, 0};
 		glm::mat4 Rotation_ = glm::mat4(1);
 	};
 } // namespace dg::entity
