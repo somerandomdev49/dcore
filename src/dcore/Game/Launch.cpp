@@ -111,7 +111,7 @@ namespace dcore::launch
 		// platform::Context::Instance()->GetWorld()->Initialize();
 		platform::Context::Instance()->DefaultResourceInit();
 
-#define DCORE_USE_EDITOR
+// #define DCORE_USE_EDITOR
 #ifdef DCORE_USE_EDITOR
 		dg::Editor
 #else

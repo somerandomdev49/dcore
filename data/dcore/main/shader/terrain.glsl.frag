@@ -89,7 +89,7 @@ void main()
 	// vec4 color = quadSample(texCoord, 1, u_Tex0);
 
 	// o_Color = vec4(0.0, 1.0, 0.25, 1.0);
-	float shadow = clamp(dot(s_Normal, SUN), 0.4, 1.0);
+	float shadow = clamp(dot(s_Normal / 2 + vec3(0.5), SUN), 0.4, 1.0);
 	color *= vec4(vec3(shadow), 1.0);
 
 	float dist = length(s_Position.xyz);

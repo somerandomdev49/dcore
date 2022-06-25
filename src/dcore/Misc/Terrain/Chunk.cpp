@@ -100,12 +100,13 @@ namespace dcore::terrain
 					
 					float E = (x == regionSize.x - 1 && regionMax.x == (int)heightmap->GetSize().x)
 						? 0 : heightmap->Get(regionMin + glm::ivec2 { x + 1, y });
-
-					glm::vec3 normal = { 0, 1, 0 };
-					normal.z += N;
-					normal.z -= S;
-					normal.x += W;
-					normal.x -= E;
+					// DCORE_LOG_WARNING << "N: " << N << ", S: " << S
+					// 	<< ", W: " << W << ", E:" << E;
+					glm::vec3 normal = {
+						(W - E) * Terrain::GetCHeight(),
+						2,
+						(N - S) * Terrain::GetCHeight(),
+					};
 					pushVec3(glm::normalize(normal));
 
 					// Texture Coordinate
