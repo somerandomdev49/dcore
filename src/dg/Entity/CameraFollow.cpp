@@ -60,7 +60,7 @@ namespace dg::entity
 	void CameraFollowComponent::Update(dcore::world::EntityHandle self)
 	{
 		auto *frame = dcore::platform::Context::Instance()->GetFrame();
-		if(dcore::event::InputManager::Instance()->IsMousePressed(1))
+		if(dcore::event::InputManager::Instance()->IsMousePressed(0))
 		{
 			frame->SetCursorState(dcore::platform::Frame::CursorState_Grab);
 			auto mousePos = dcore::event::InputManager::Instance()->GetMousePosition();
@@ -79,16 +79,16 @@ namespace dg::entity
 			float cosAngle = dot(Camera_->GetRotation() * glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 			if(cosAngle * glm::sign(yAngle) > EPSILON) yAngle = 0;
 
-			// Total_.x += xAngle;
-			// Total_.y += yAngle;
+			Total_.x += xAngle;
+			Total_.y -= yAngle;
 
-			Rotation_ = glm::rotate(Rotation_, xAngle, glm::vec3(0, 1, 0));
-			Rotation_ = glm::rotate(Rotation_, yAngle, glm::vec3(1, 0, 0));
+			Rotation_ = glm::rotate(glm::mat4(1), Total_.x, glm::vec3(0, 1, 0));
+			Rotation_ = glm::rotate(Rotation_, Total_.y, glm::vec3(1, 0, 0));
 			Last_ = mousePos;
 		}
 		else
 		{
-			// Last_ = dcore::event::InputManager::Instance()->GetMousePosition();
+			Last_ = dcore::event::InputManager::Instance()->GetMousePosition();
 			frame->SetCursorState(dcore::platform::Frame::CursorState_Normal);
 			// Total_ = {0,0};
 		}
