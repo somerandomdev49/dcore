@@ -5,6 +5,7 @@
 #include <dcore/Renderer/RTexture.hpp>
 #include <dcore/Renderer/RShader.hpp>
 #include <dcore/Renderer/RModel.hpp>
+#include <dcore/Renderer/RSkyBox.hpp>
 #include <dcore/Renderer/RFastVertexBuffer.hpp>
 #include <dcore/Resource/ResourceManager.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
@@ -80,6 +81,17 @@ namespace dcore::graphics
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
 		void Render(RSkeletalMesh *mesh);
+		
+		enum DepthTestFunc
+		{
+			DepthTestFuncLess,
+			DepthTestFuncLEqual
+		};
+		
+		/**
+		 * @brief Changes the depth test function
+		 */
+		void DepthTestFunction(DepthTestFunc func);
 
 		/**
 		 * @brief Enables depth testing.
@@ -208,29 +220,34 @@ namespace dcore::graphics
 		                             const std::vector<Vertex> &vertices);
 
 		/**
-		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
-		 * impl-specific stuff)
+		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
 		 * */
-		static void CreateStaticMesh(RStaticMesh *mesh, dstd::Span<uint32_t> indices, dstd::Span<byte> vertexData);
+		static void CreateStaticMesh(RStaticMesh *mesh, dstd::Span<const uint32_t> indices, dstd::Span<const byte> vertexData,
+			const std::string &format = "pnt");
 
 		/**
-		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
-		 * impl-specific stuff)
+		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
 		 * */
-		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<byte> vertexData);
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<const byte> vertexData,
+			const std::string &format = "pnt");
 
 		/**
-		 * Creates a static mesh from the provided indices and vertices. (Wrapper around
-		 * impl-specific stuff)
+		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
 		 * */
 		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
-		                             const std::vector<byte> &vertexData);
+		                             const std::vector<byte> &vertexData, const std::string &format = "pnt");
 
 		/**
 		 * Creates a texture with the specified data, size and format.
 		 * */
 		static void CreateTexture(RTexture *texture, byte *data, const glm::ivec2 &size, TextureFormat format,
 		                          TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
+
+		/**
+		 * Creates a cubemap with the specified data for +x, -x, +y, -y, +z, -z faces, size and format.
+		 * */
+		static void CreateSkyBox(RSkyBox *skybox, dstd::Span<byte*> datas, const glm::ivec2 &size, TextureFormat format,
+		                         TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.
@@ -260,5 +277,10 @@ namespace dcore::graphics
 		 * Deletes a texture.
 		 */
 		static void DeleteTexture(RTexture *texture);
+
+		/**
+		 * Deletes a skybox.
+		 */
+		static void DeleteSkyBox(RSkyBox *skybox);
 	};
 } // namespace dcore::graphics

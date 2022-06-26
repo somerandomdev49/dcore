@@ -1,3 +1,6 @@
+#include "GL/gl3w.h"
+#include "GL/glcorearb.h"
+#include "dcore/Renderer/RSkyBox.hpp"
 #include <dcore/Renderer/Impl/OpenGL/GL.hpp>
 #include <dcore/Resource/ResourceLoader.hpp>
 #include <dcore/Renderer/Renderer.hpp>
@@ -183,6 +186,12 @@ namespace dcore::graphics
 		*uloc = Gl::GetUniformLocation(((ShaderProgram *)shader->Data_)->Id_, name);
 		return u;
 	}
+	
+	void Renderer::DepthTestFunction(DepthTestFunc func)
+	{
+		static GLenum translation[] = { GL_LESS, GL_LEQUAL };
+		glDepthFunc(translation[func]);
+	}
 
 	void Renderer::UseShader(RShader *shader) { Gl::UseProgram(((ShaderProgram *)shader->Data_)->Id_); }
 
@@ -229,39 +238,43 @@ namespace dcore::graphics
 		return &Data_->FB.Texture_;
 	}
 
-	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, dstd::Span<uint32_t> indices, dstd::Span<byte> vertexData)
+	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, dstd::Span<const uint32_t> indices, dstd::Span<const byte> vertexData,
+		const std::string &format)
 	{
 		if(mesh == nullptr) return;
 		mesh->Data_ = new impl::opengl::Vao();
 		auto *vao = (impl::opengl::Vao *)mesh->Data_;
-		vao->Load(indices.Data, indices.Count, vertexData.Data, vertexData.Count, sizeof(float) * (3 + 3 + 2));
-		vao->CreateFloatAttribute(3); // Position
-		vao->CreateFloatAttribute(3); // Normal
-		vao->CreateFloatAttribute(2); // TexCoord
+		dstd::USize size = 0;
+		for(char c : format)
+			switch(c)
+			{
+			case 'p': size += 3; break;
+			case 'n': size += 3; break;
+			case 't': size += 2; break;
+			}
+		
+		vao->Load(indices.Data, indices.Count, vertexData.Data, vertexData.Count, sizeof(float) * size);
+
+		for(char c : format)
+			switch(c)
+			{
+			case 'p': vao->CreateFloatAttribute(3); break;
+			case 'n': vao->CreateFloatAttribute(3); break;
+			case 't': vao->CreateFloatAttribute(2); break;
+			}
 	}
 
-	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<byte> vertexData)
+	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<const byte> vertexData,
+		const std::string &format)
 	{
-		if(mesh == nullptr) return;
-		mesh->Data_ = new impl::opengl::Vao();
-		auto *vao = (impl::opengl::Vao *)mesh->Data_;
-		vao->Load(indices, vertexData.Data, vertexData.Count, sizeof(float) * (3 + 3 + 2));
-		vao->CreateFloatAttribute(3); // Position
-		vao->CreateFloatAttribute(3); // Normal
-		vao->CreateFloatAttribute(2); // TexCoord
+		CreateStaticMesh(mesh, { indices.data(), indices.size() }, vertexData, format);
 	}
 
 
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
-	                                             const std::vector<byte> &vertexData)
+	                                             const std::vector<byte> &vertexData, const std::string &format)
 	{
-		if(mesh == nullptr) return;
-		mesh->Data_ = new impl::opengl::Vao();
-		auto *vao = (impl::opengl::Vao *)mesh->Data_;
-		vao->Load(indices, vertexData, sizeof(float) * (3 + 3 + 2));
-		vao->CreateFloatAttribute(3); // Position
-		vao->CreateFloatAttribute(3); // Normal
-		vao->CreateFloatAttribute(2); // TexCoord
+		CreateStaticMesh(mesh, { indices.data(), indices.size() }, { vertexData.data(), vertexData.size() }, format);
 	}
 
 	void RenderResourceManager::DeleteStaticMesh(RStaticMesh *mesh)
@@ -307,11 +320,63 @@ namespace dcore::graphics
 		if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 	}
 
+	void RenderResourceManager::CreateSkyBox(RSkyBox *box, dstd::Span<byte*> datas, const glm::ivec2 &size, TextureFormat format,
+	                                         TextureScaling scaling, int alignment)
+	{
+		namespace gl = impl::opengl;
+		// RRM::TextureFormat -> opengl::TextureFormat
+		int prevAlignment;
+		if(alignment > 0)
+		{
+			prevAlignment = gl::Gl::GetPixelStore(gl::PixelStorageUnpackAlignment);
+			gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, alignment);
+		}
+		static gl::TextureFormat formats[4] = {gl::TextureFormatR, gl::TextureFormatRg, gl::TextureFormatRgb,
+		                                       gl::TextureFormatRgba};
+
+		static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
+		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
+
+		box->Data_ = new gl::Texture();
+		auto *t = (gl::Texture *)box->Data_;
+		t->Format = gl::TextureFormatRgba;
+		t->Size = size;
+
+		t->Buffer.Generate(gl::TextureCubemap);
+		for(int i = 0; i < 6; ++i)
+			t->Buffer.LoadData(
+				(gl::TextureType)(gl::TextureCubemapPosX + i),
+				gl::TextureFormatRgba, size, formats[static_cast<int>(format)], datas.Data[i]
+			);
+		// TODO: World:: fix warning, then add functions for changing skybox, changing fog. then make skybox store color, change fog
+		t->Buffer.SetParam(gl::TextureParamWrapS, gl::TextureWrapClampToEdge);
+		t->Buffer.SetParam(gl::TextureParamWrapT, gl::TextureWrapClampToEdge);
+		t->Buffer.SetParam(gl::TextureParamWrapR, gl::TextureWrapClampToEdge);
+		t->Buffer.SetParam(gl::TextureParamMinFilter, filtersMin[static_cast<int>(scaling)]);
+		t->Buffer.SetParam(gl::TextureParamMagFilter, filtersMag[static_cast<int>(scaling)]);
+		t->Buffer.GenMipmaps();
+
+		if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
+	}
+
 	void RenderResourceManager::DeleteTexture(RTexture *t)
 	{
 		if(t->Data_ == nullptr)
 		{
 			DCORE_LOG_WARNING << "DeleteTexture t->Data_ == nullptr";
+			return;
+		}
+		auto *data = (impl::opengl::Texture *)t->Data_;
+		data->Buffer.Delete();
+		delete data;
+		// delete data;
+	}
+
+	void RenderResourceManager::DeleteSkyBox(RSkyBox *t)
+	{
+		if(t->Data_ == nullptr)
+		{
+			DCORE_LOG_WARNING << "DeleteSkyBox t->Data_ == nullptr";
 			return;
 		}
 		auto *data = (impl::opengl::Texture *)t->Data_;

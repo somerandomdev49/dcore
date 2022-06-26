@@ -1,3 +1,10 @@
+#include "dcore/Graphics/Camera.hpp"
+#include "dcore/Renderer/RShader.hpp"
+#include "dcore/Renderer/RSkyBox.hpp"
+#include "dcore/Renderer/RStaticMesh.hpp"
+#include "dcore/Renderer/RTexture.hpp"
+#include "dcore/Renderer/Renderer.hpp"
+#include "dcore/Resource/ResourceManager.hpp"
 #include <algorithm>
 #include <dcore/World/World.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
@@ -137,6 +144,9 @@ namespace dcore::world
 		                          platform::Context::Instance()->GetWorld()->GetRenderDistance());
 	}
 
+	static graphics::RSkyBox *Skybox_;
+	static graphics::RStaticMesh *SkyboxMesh_;
+	static graphics::RShader *SkyboxShader_;
 	void World::Initialize()
 	{
 		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
@@ -152,6 +162,12 @@ namespace dcore::world
 		          WorldMessageHandlerProvider::Instance()->Handlers_.end(), std::back_inserter(Handlers_));
 
 		Terrain_ = nullptr;
+
+		// TODO: World::SetTargetSkybox()
+		// TODO: World::LoadSkybox()?
+		Skybox_ = resource::GetResource<graphics::RSkyBox>("DCore.SkyBox.Main.WestHill").Get();
+		SkyboxMesh_ = resource::GetResource<graphics::RStaticMesh>("DCore.Mesh.SkyBox").Get();
+		SkyboxShader_ = resource::GetResource<graphics::RShader>("DCore.Shader.SkyboxShader").Get();
 
 		LOG_F(WARNING, "World::Initialize??");
 	}
@@ -226,6 +242,14 @@ namespace dcore::world
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
 		graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
 		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->EnableDepthCheck();
+
+		render->GetRenderer()->DepthTestFunction(graphics::Renderer::DepthTestFuncLEqual);
+		render->GetRenderer()->UseShader(SkyboxShader_);
+		render->GetRenderer()->SetUniform(render->GetRenderer()->GetUniform(SkyboxShader_, "u_Transform"),
+			render->GetCamera()->GetProjMatrix() * glm::mat4(glm::mat3(render->GetCamera()->GetViewMatrix())));
+		render->GetRenderer()->UseTexture(0, (graphics::RTexture*)Skybox_);
+		render->GetRenderer()->Render(SkyboxMesh_);
+		render->GetRenderer()->DepthTestFunction(graphics::Renderer::DepthTestFuncLess);
 	}
 
 	EntityHandle Entity::GetId() const { return Id_; }

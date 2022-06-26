@@ -1,4 +1,5 @@
 #pragma once
+#include "GL/glcorearb.h"
 #include <dcore/Renderer/Impl/OpenGL.hpp>
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
@@ -58,6 +59,7 @@ namespace dcore::graphics::impl::opengl
 	{
 		TextureParamWrapS     = GL_TEXTURE_WRAP_S,
 		TextureParamWrapT     = GL_TEXTURE_WRAP_T,
+		TextureParamWrapR     = GL_TEXTURE_WRAP_R,
 		TextureParamMinFilter = GL_TEXTURE_MIN_FILTER,
 		TextureParamMagFilter = GL_TEXTURE_MAG_FILTER,
 	};
@@ -65,6 +67,7 @@ namespace dcore::graphics::impl::opengl
 	enum TextureParamValue
 	{
 		TextureWrapClampToBorder   = GL_CLAMP_TO_BORDER,
+		TextureWrapClampToEdge     = GL_CLAMP_TO_EDGE,
 		TextureWrapRepeat          = GL_REPEAT,
 		TextureFilterMipmapLinear  = GL_LINEAR_MIPMAP_LINEAR,
 		TextureFilterMipmapNearest = GL_NEAREST_MIPMAP_LINEAR,
@@ -159,13 +162,13 @@ namespace dcore::graphics::impl::opengl
 		                                   bool norm = false) _INL;
 		inline void EnableVertexAttributeArray(UInt index) _INL;
 
-		inline void DeleteBuffer(UInt buffer);
+		inline void DeleteBuffer(UInt buffer) _INL;
 		inline void DeleteBuffers(int count, UInt *buffers) _INL;
 
-		inline void DeleteVertexArray(UInt array);
+		inline void DeleteVertexArray(UInt array) _INL;
 		inline void DeleteVertexArrays(int count, UInt *arrays) _INL;
 
-		inline UInt GenerateTexture();
+		inline UInt GenerateTexture() _INL;
 		inline void GenerateTextures(int count, UInt *textures) _INL;
 
 		inline void PixelStore(PixelStorage param, int value) _INL;
@@ -254,6 +257,12 @@ namespace dcore::graphics::impl::opengl
 		{
 			UInt b;
 			glGenVertexArrays(1, &b);
+			return b;
+		}
+		inline UInt GenerateTexture()
+		{
+			UInt b;
+			glGenTextures(1, &b);
 			return b;
 		}
 		inline void BindBuffer(BufferType type, UInt buffer) { glBindBuffer(type, buffer); }

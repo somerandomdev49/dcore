@@ -200,7 +200,7 @@ namespace dcore::graphics
 		TerrainShader_ = new TerrainShader(ster);
 
 		glm::vec2 res = Renderer_->GetViewport();
-		Camera_       = new Camera(Preferences::Instance()->GetGraphicsSettings().FOV, res.x / res.y);
+		Camera_       = new Camera(Preferences::Instance()->GetGraphicsSettings().FOV, res.x / res.y, 0.1f, 500.0f);
 		DCORE_LOG_INFO << "Camera FOV: " << Camera_->GetFov();
 	}
 

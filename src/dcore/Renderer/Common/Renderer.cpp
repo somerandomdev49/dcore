@@ -1,7 +1,12 @@
+#include "dcore/Core/Assert.hpp"
+#include "dcore/Renderer/RSkyBox.hpp"
+#include <_ctype.h>
+#include <algorithm>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Util/LoaderUtil.hpp>
 #include <dcore/Renderer/RModel.hpp>
 #include <dcore/Core/Log.hpp>
+#include <string>
 
 namespace dcore::graphics
 {
@@ -33,8 +38,11 @@ namespace dcore::graphics
 	{
 		auto *mesh = new(placement) RStaticMesh();
 		MeshData data;
-		util::LoaderUtil::LoadMesh(data, path, "pnt");
-		RenderResourceManager::CreateStaticMesh(mesh, data.Indices, data.VertexData);
+		std::string format = "pnt";
+		if(auto loc = path.find_last_of(":"); loc != std::string::npos)
+			format = path.substr(loc + 1);
+		util::LoaderUtil::LoadMesh(data, path.substr(0, path.find_last_of(":")), format);
+		RenderResourceManager::CreateStaticMesh(mesh, data.Indices, data.VertexData, format);
 	}
 
 	void Renderer::RStaticMesh_DeConstructor(void *placement)
@@ -100,6 +108,95 @@ namespace dcore::graphics
 		ShouldRenderToFB_ = set;
 	}
 
+	namespace
+	{
+		static inline bool ReplaceAll(std::string &str, const std::string &target, const std::string &replacement)
+		{
+			if(target.empty()) return false;
+
+			size_t start_pos = 0;
+			const bool found_substring = str.find(target, start_pos) != std::string::npos;
+
+			while((start_pos = str.find(target, start_pos)) != std::string::npos)
+			{
+				str.replace(start_pos, target.length(), replacement);
+				start_pos += replacement.length();
+			}
+
+			return found_substring;
+		}
+
+		static inline std::string ToLower(std::string &&str)
+		{
+			std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+			return std::move(str);
+		}
+
+		void RSkyBox_Constructor(const std::string &path, void *placement)
+		{
+			using RRM = RenderResourceManager;
+
+			static RRM::TextureFormat formats[4] = {RRM::TextureFormat::Red, RRM::TextureFormat::Rg,
+													RRM::TextureFormat::Rgb, RRM::TextureFormat::Rgba};
+
+			const auto loadTexture = [&](const std::string &path, byte *&data, glm::ivec2 &size, RRM::TextureFormat &fmt)
+			{
+				util::ImageData d;
+				util::LoaderUtil::LoadImage(d, path);
+				if(d.data == nullptr)
+				{
+					DCORE_LOG_ERROR << "Failed to load skybox texture at '" << path << "'";
+					return;
+				}
+				fmt = formats[d.channels - 1];
+				size = d.size;
+				// DCORE_ASSERT(myFmt != fmt && d.size == size, "Bad skybox image");
+				data = (byte*)d.data;
+			};
+
+			const auto getFormattedPath = [&](int negative, int direction) -> std::string
+			{
+				static const char *S[] = { "P", "N" };
+				static const char *Z[] = { "Pos", "Neg" };
+				static const char *W[] = { "Positive", "Negative" };
+				static const char *C[] = { "+", "-" };
+				static const char *D[] = { "X", "Y", "Z" };
+				std::string p = path;
+				ReplaceAll(p, ":S", S[negative]);
+				ReplaceAll(p, ":Z", Z[negative]);
+				ReplaceAll(p, ":W", W[negative]);
+				ReplaceAll(p, ":C", C[negative]);
+				ReplaceAll(p, ":D", D[direction]);
+				ReplaceAll(p, ":s", ToLower(S[negative]));
+				ReplaceAll(p, ":z", ToLower(Z[negative]));
+				ReplaceAll(p, ":w", ToLower(W[negative]));
+				ReplaceAll(p, ":c", ToLower(C[negative]));
+				ReplaceAll(p, ":d", ToLower(D[direction]));
+				return p;
+			};
+
+			byte *datas[6] = {0};
+			
+			glm::ivec2 size;
+			RRM::TextureFormat fmt;
+
+			for(int i = 0; i < 3; ++i) {
+				loadTexture(getFormattedPath(0, i), datas[i * 2 + 0], size, fmt);
+				loadTexture(getFormattedPath(1, i), datas[i * 2 + 1], size, fmt);
+			}
+			auto *box = new(placement) RSkyBox();
+			RenderResourceManager::CreateSkyBox(box, { datas, 6 }, size, fmt);
+			for(int i = 0; i < 6; ++i) free(datas[i]);
+		}
+
+		void RSkyBox_DeConstructor(void *placement)
+		{
+			auto *tex = reinterpret_cast<RSkyBox *>(placement);
+			RenderResourceManager::DeleteSkyBox(tex);
+			delete tex;
+		}
+	}
+
 	void RenderResourceManager::Register(resource::ResourceLoader *rl)
 	{
 		rl->RegisterResourceType<RTexture>("Texture");
@@ -117,6 +214,10 @@ namespace dcore::graphics
 		rl->RegisterResourceType<Model>("Model");
 		resource::ResourceManager::Instance()->RegisterConstructor<Model>(&Renderer::RModel_Constructor);
 		resource::ResourceManager::Instance()->RegisterDeConstructor<Model>(&Renderer::RModel_DeConstructor);
+
+		rl->RegisterResourceType<RSkyBox>("SkyBox");
+		resource::ResourceManager::Instance()->RegisterConstructor<RSkyBox>(&RSkyBox_Constructor);
+		resource::ResourceManager::Instance()->RegisterDeConstructor<RSkyBox>(&RSkyBox_DeConstructor);
 	}
 
 	void RenderResourceManager::CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
