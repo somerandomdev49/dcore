@@ -2,12 +2,12 @@
 	"version": 1,
 	"settings": {
 		"display": {
-			"resolution": [1280, 720],
+			"resolution": [640, 480],
 			"fullscreen": false
 		},
 		"graphics": {
 			"fov": 60.0,
-			"render-distance": 400
+			"render-distance": 800
 		}
 	}
 }

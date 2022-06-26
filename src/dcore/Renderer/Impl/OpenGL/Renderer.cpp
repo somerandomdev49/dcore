@@ -33,14 +33,14 @@ namespace dcore::graphics
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-		glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		if(ShouldRenderToFB_)
 		{
 			Data_->FB.Bind();
-			glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			// glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
+			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 
 		glViewport(0, 0, ViewportSize_.x, ViewportSize_.y);
