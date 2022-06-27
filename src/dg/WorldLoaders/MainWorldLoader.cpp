@@ -45,7 +45,7 @@ namespace dg::loaders
 
 		auto player = world->CreateEntity();
 		player.AddComponent(dcore::world::TransformComponent()); // glm::vec3()
-		player.GetComponent<dcore::world::TransformComponent>()->SetPosition({569*5, 0, 582*5});
+		player.GetComponent<dcore::world::TransformComponent>()->SetPosition({569 * 5, 0, 582 * 5});
 		player.GetComponent<dcore::world::TransformComponent>()->SetRotation(glm::identity<glm::quat>());
 		player.GetComponent<dcore::world::TransformComponent>()->SetScale(glm::vec3(1, 1, 1));
 		player.AddComponent(dcore::world::StaticMeshComponent(dcore::graphics::StaticMesh(

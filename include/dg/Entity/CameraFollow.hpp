@@ -18,13 +18,13 @@ namespace dg::entity
 	private:
 		void UpdateCameraRotation_(float xAngle, float yAngle);
 
-		dcore::world::TransformComponent *Transform_ = nullptr;
-		dcore::graphics::Camera *Camera_ = nullptr;
+		dcore::world::TransformComponent *Transform_         = nullptr;
+		dcore::graphics::Camera *Camera_                     = nullptr;
 		dg::entity::CharacterControllerComponent *Character_ = nullptr;
 
 		float Offset_ = DefaultOffset_, Timer_ = 0;
-		int CameraMode_ = 0;
-		glm::vec2 LastMousePos_ = {0,0}, Total_ = {0, 0};
+		int CameraMode_         = 0;
+		glm::vec2 LastMousePos_ = {0, 0}, Total_ = {0, 0};
 		glm::mat4 Rotation_ = glm::mat4(1);
 	};
 } // namespace dg::entity

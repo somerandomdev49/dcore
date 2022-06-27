@@ -18,7 +18,7 @@ namespace dcore
 		struct GraphicsSettings
 		{
 			int RenderDistance;
-			float FOV;	
+			float FOV;
 		};
 
 		void Read(const dcore::data::FileInput &input);

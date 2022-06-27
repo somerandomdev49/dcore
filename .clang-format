@@ -27,7 +27,7 @@ AllowAllParametersOfDeclarationOnNextLine: 'false'
 AllowShortBlocksOnASingleLine: 'false'
 AllowShortCaseLabelsOnASingleLine: 'true'
 # AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortIfStatementsOnASingleLine: Always #AllIfsAndElse
 AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: 'true'
 

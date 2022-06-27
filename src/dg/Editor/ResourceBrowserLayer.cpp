@@ -13,15 +13,9 @@
 
 namespace dg::editor
 {
-	void ResourceBrowserLayer::OnStart()
-	{
+	void ResourceBrowserLayer::OnStart() {}
 
-	}
-
-	void ResourceBrowserLayer::OnEnd()
-	{
-
-	}
+	void ResourceBrowserLayer::OnEnd() {}
 
 	void ResourceBrowserLayer::OnRender(dcore::graphics::RendererInterface *renderer)
 	{
@@ -37,4 +31,4 @@ namespace dg::editor
 		ImGui::End();
 	}
 
-}
+} // namespace dg::editor

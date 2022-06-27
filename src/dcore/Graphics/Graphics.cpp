@@ -43,12 +43,14 @@ namespace dcore::graphics
 	{
 		DCORE_ASSERT_RETURN(sh.Get() != nullptr, "Bad Shader!");
 		UTransform_ = Renderer::Instance()->GetUniform(sh.Get(), "u_Transform");
+		UFogColor_  = Renderer::Instance()->GetUniform(sh.Get(), "u_FogColor");
 		UTex_       = Renderer::Instance()->GetUniform(sh.Get(), "u_Tex");
 		Renderer::Instance()->SetUniform(UTex_, 0);
 	}
 
 	RShader *CommonShader::Get() const { return Shader_.Get(); }
 	void CommonShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
+	void CommonShader::SetFogColor(glm::vec3 m) { Renderer::Instance()->SetUniform(UFogColor_, m); }
 
 	/**************************** TerrainShader ****************************/
 
@@ -56,6 +58,7 @@ namespace dcore::graphics
 	{
 		DCORE_ASSERT_RETURN(sh.Get() != nullptr, "Bad Shader!");
 		UTransform_ = Renderer::Instance()->GetUniform(sh.Get(), "u_Transform");
+		UFogColor_  = Renderer::Instance()->GetUniform(sh.Get(), "u_FogColor");
 
 		UBlendMapTex_ = Renderer::Instance()->GetUniform(sh.Get(), "u_BlendMap");
 		Renderer::Instance()->SetUniform(UBlendMapTex_, 0); // default values
@@ -69,6 +72,7 @@ namespace dcore::graphics
 	}
 
 	RShader *TerrainShader::Get() const { return Shader_.Get(); }
+	void TerrainShader::SetFogColor(glm::vec3 m) { Renderer::Instance()->SetUniform(UFogColor_, m); }
 	void TerrainShader::SetTransform(const glm::mat4 &m) { Renderer::Instance()->SetUniform(UTransform_, m); }
 	void TerrainShader::SetTextures(int blend, int n, int r, int g, int b)
 	{
@@ -195,9 +199,18 @@ namespace dcore::graphics
 		// TODO: Should not be hard-written!
 		auto sobj = rm->Get<RShader>("DCore.Shader.ObjectShader");
 		auto ster = rm->Get<RShader>("DCore.Shader.TerrainShader");
+		auto ssky = rm->Get<RShader>("DCore.Shader.SkyBoxShader");
+		auto sskt = rm->Get<RShader>("DCore.Shader.SkyBoxTransShader");
 
 		ObjectShader_  = new CommonShader(sobj);
 		TerrainShader_ = new TerrainShader(ster);
+		SkyBoxShader_ = new CommonShader(ssky);
+		SkyBoxTransShader_ = new CommonShader(sskt);
+		Renderer_->UseShader(sskt.Get());
+		Renderer_->SetUniform(Renderer_->GetUniform(sskt.Get(), "u_Skybox1"), 0);
+		Renderer_->SetUniform(Renderer_->GetUniform(sskt.Get(), "u_Skybox2"), 1);
+
+		SkyBoxMesh_ = rm->Get<RStaticMesh>("DCore.Mesh.SkyBox").Get();
 
 		glm::vec2 res = Renderer_->GetViewport();
 		Camera_       = new Camera(Preferences::Instance()->GetGraphicsSettings().FOV, res.x / res.y, 0.1f, 500.0f);
@@ -207,13 +220,11 @@ namespace dcore::graphics
 	void RendererInterface::DeInitialize()
 	{
 		delete ObjectShader_;
+		delete TerrainShader_;
+		delete SkyBoxShader_;
+		delete SkyBoxTransShader_;
 		delete Camera_;
 	}
-
-	Renderer *RendererInterface::GetRenderer() const { return Renderer_; }
-
-	Camera *RendererInterface::GetCamera() const { return Camera_; }
-	// TODO: SetCamera, make the camera DCORE_REF.
 
 	void RendererInterface::RenderStaticMesh(const StaticMesh DCORE_REF *mesh, const glm::mat4 &transform)
 	{
@@ -253,5 +264,34 @@ namespace dcore::graphics
 		Renderer_->UseShader(ObjectShader_->Get());
 		ObjectShader_->SetTransform(Camera_->GetProjMatrix() * Camera_->GetViewMatrix() * transform);
 		Renderer_->Render(model);
+	}
+
+	void RendererInterface::RenderSkyBox(const RSkyBox DCORE_REF *skybox)
+	{
+		Renderer_->DepthTestFunction(graphics::Renderer::DepthTestFuncLEqual);
+		Renderer_->UseShader(SkyBoxShader_->Get());
+		SkyBoxShader_->SetTransform(Camera_->GetProjMatrix() * glm::mat4(glm::mat3(Camera_->GetViewMatrix())));
+		Renderer_->UseTexture(0, (graphics::RTexture *)skybox); // TODO? (texture!=skybox?)
+		Renderer_->Render(SkyBoxMesh_);
+		Renderer_->DepthTestFunction(graphics::Renderer::DepthTestFuncLess);
+	}
+
+	void RendererInterface::SetFogColor(glm::vec3 newColor)
+	{
+		FogColor_ = newColor;
+		ObjectShader_->SetFogColor(FogColor_);
+		TerrainShader_->SetFogColor(FogColor_);
+	}
+
+	void RendererInterface::RenderSkyBox(const RSkyBox DCORE_REF *skybox1, const RSkyBox DCORE_REF *skybox2, float t)
+	{
+		Renderer_->DepthTestFunction(graphics::Renderer::DepthTestFuncLEqual);
+		Renderer_->UseShader(SkyBoxTransShader_->Get());
+		Renderer_->SetUniform(Renderer_->GetUniform(SkyBoxTransShader_->Get(), "u_Alpha"), t);
+		SkyBoxTransShader_->SetTransform(Camera_->GetProjMatrix() * glm::mat4(glm::mat3(Camera_->GetViewMatrix())));
+		Renderer_->UseTexture(0, (graphics::RTexture *)skybox1);
+		Renderer_->UseTexture(1, (graphics::RTexture *)skybox2);
+		Renderer_->Render(SkyBoxMesh_);
+		Renderer_->DepthTestFunction(graphics::Renderer::DepthTestFuncLess);
 	}
 } // namespace dcore::graphics

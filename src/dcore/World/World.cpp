@@ -1,10 +1,12 @@
-#include "dcore/Graphics/Camera.hpp"
-#include "dcore/Renderer/RShader.hpp"
-#include "dcore/Renderer/RSkyBox.hpp"
-#include "dcore/Renderer/RStaticMesh.hpp"
-#include "dcore/Renderer/RTexture.hpp"
-#include "dcore/Renderer/Renderer.hpp"
-#include "dcore/Resource/ResourceManager.hpp"
+#include "dcore/Core/FrameLog.hpp"
+#include <dcore/Event/TimeManager.hpp>
+#include <dcore/Graphics/Camera.hpp>
+#include <dcore/Renderer/RShader.hpp>
+#include <dcore/Renderer/RSkyBox.hpp>
+#include <dcore/Renderer/RStaticMesh.hpp>
+#include <dcore/Renderer/RTexture.hpp>
+#include <dcore/Renderer/Renderer.hpp>
+#include <dcore/Resource/ResourceManager.hpp>
 #include <algorithm>
 #include <dcore/World/World.hpp>
 #include <dcore/Graphics/GUI/GuiGraphics.hpp>
@@ -144,17 +146,16 @@ namespace dcore::world
 		                          platform::Context::Instance()->GetWorld()->GetRenderDistance());
 	}
 
-	static graphics::RSkyBox *Skybox_;
-	static graphics::RStaticMesh *SkyboxMesh_;
-	static graphics::RShader *SkyboxShader_;
+	// static graphics::RSkyBox *Skybox_;
+	// static graphics::RStaticMesh *SkyboxMesh_;
+	// static graphics::RShader *SkyboxShader_;
 	void World::Initialize()
 	{
 		RenderDistance_ = Preferences::Instance()->GetGraphicsSettings().RenderDistance;
 		ECSInstance_    = new ECS();
 		ECSInstance_->Initialize();
 
-		ECSInstance_->SetMessageHandler({this, [](void *self, EntityHandle handle, ECS::Message message)
-		                                 {
+		ECSInstance_->SetMessageHandler({this, [](void *self, EntityHandle handle, ECS::Message message) {
 			                                 ((World *)self)->MessageHandler_(handle, message);
 		                                 }});
 
@@ -163,13 +164,10 @@ namespace dcore::world
 
 		Terrain_ = nullptr;
 
-		// TODO: World::SetTargetSkybox()
-		// TODO: World::LoadSkybox()?
-		Skybox_ = resource::GetResource<graphics::RSkyBox>("DCore.SkyBox.Main.WestHill").Get();
-		SkyboxMesh_ = resource::GetResource<graphics::RStaticMesh>("DCore.Mesh.SkyBox").Get();
-		SkyboxShader_ = resource::GetResource<graphics::RShader>("DCore.Shader.SkyboxShader").Get();
-
-		LOG_F(WARNING, "World::Initialize??");
+		SkyBoxCurrent_ = resource::GetResource<graphics::RSkyBox>("DCore.SkyBox.Main.WestHill").Get();
+		SkyBoxTarget_ = nullptr;
+		SkyBoxTransTimer_ = 0;
+		// SetFogColor(SkyBoxCurrent_->GetColor());
 	}
 
 	void World::DeInitialize()
@@ -225,12 +223,14 @@ namespace dcore::world
 		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
 
 		ECSInstance_->View<ModelComponent, TransformComponent>().Each(
-		    [render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
-		    { render->RenderModel(model.Model.Get(), transform.GetMatrix()); });
+		    [render](EntityHandle handle, ModelComponent &model, TransformComponent &transform) {
+			    render->RenderModel(model.Model.Get(), transform.GetMatrix());
+		    });
 
 		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each(
-		    [render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
-		    { render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix()); });
+		    [render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform) {
+			    render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
+		    });
 
 		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 		if(Terrain_ != nullptr)
@@ -239,17 +239,33 @@ namespace dcore::world
 			for(auto chunkIndex : Terrain_->GetActiveChunks()) render->RenderChunk(&chunks[chunkIndex]);
 		}
 
-		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->DisableDepthCheck();
+		render->GetRenderer()->DisableDepthCheck();
 		graphics::gui::GuiManager::Instance()->Render(graphics::gui::GuiGraphics::Instance());
-		platform::Context::Instance()->GetRendererInterface()->GetRenderer()->EnableDepthCheck();
+		render->GetRenderer()->EnableDepthCheck();
 
-		render->GetRenderer()->DepthTestFunction(graphics::Renderer::DepthTestFuncLEqual);
-		render->GetRenderer()->UseShader(SkyboxShader_);
-		render->GetRenderer()->SetUniform(render->GetRenderer()->GetUniform(SkyboxShader_, "u_Transform"),
-			render->GetCamera()->GetProjMatrix() * glm::mat4(glm::mat3(render->GetCamera()->GetViewMatrix())));
-		render->GetRenderer()->UseTexture(0, (graphics::RTexture*)Skybox_);
-		render->GetRenderer()->Render(SkyboxMesh_);
-		render->GetRenderer()->DepthTestFunction(graphics::Renderer::DepthTestFuncLess);
+#define SKYBOX_TRANS_TIME 1.0f
+		if(SkyBoxTarget_ == nullptr && SkyBoxCurrent_ != nullptr)
+		{
+			render->SetFogColor(SkyBoxCurrent_->GetColor());
+			render->RenderSkyBox(SkyBoxCurrent_);
+		}
+		else if(SkyBoxTarget_ != nullptr && SkyBoxCurrent_ != nullptr)
+		{
+			if(SkyBoxCurrent_ == SkyBoxTarget_) SkyBoxTarget_ = nullptr;
+			else if(SkyBoxTransTimer_ >= SKYBOX_TRANS_TIME)
+			{
+				SkyBoxTransTimer_ = 0;
+				SkyBoxCurrent_ = SkyBoxTarget_;
+				SkyBoxTarget_ = nullptr;
+			}
+			else
+			{
+				float alpha = SkyBoxTransTimer_ / SKYBOX_TRANS_TIME;
+				render->SetFogColor(glm::mix(SkyBoxCurrent_->GetColor(), SkyBoxTarget_->GetColor(), alpha));
+				render->RenderSkyBox(SkyBoxCurrent_, SkyBoxTarget_, alpha);
+				SkyBoxTransTimer_ += event::TimeManager::Instance()->GetDeltaTime();
+			}
+		}
 	}
 
 	EntityHandle Entity::GetId() const { return Id_; }

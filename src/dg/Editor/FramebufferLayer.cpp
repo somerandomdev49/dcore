@@ -23,10 +23,10 @@ namespace dg::editor
 			renderer->GetCamera()->SetAspectRatio(LastSize_.x / LastSize_.y);
 		}
 
-		ImGui::Image(*(ImTextureID *)renderer->GetRenderer()->GetFramebufferData(), contentRegionAvail2,
-						ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image(*(ImTextureID *)renderer->GetRenderer()->GetFramebufferData(), contentRegionAvail2, ImVec2(0, 1),
+		             ImVec2(1, 0));
 
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
-}
+} // namespace dg::editor

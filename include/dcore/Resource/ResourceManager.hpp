@@ -105,8 +105,7 @@ namespace dcore::resource
 		void RegisterDeConstructor(ResourceDeConstructorFunc func);
 
 		using ResourceMap = std::unordered_map<std::string, RawResource>;
-		const std::unordered_map<std::type_index, ResourceMap> &GetResources() const
-		{ return Resources_; }
+		const std::unordered_map<std::type_index, ResourceMap> &GetResources() const { return Resources_; }
 
 	private:
 		friend class dcore::launch::Launch;

@@ -55,7 +55,8 @@ namespace dstd
 			}
 
 			if(Size_ > DCORE_DSTD_SHORT_STRING_SIZE) Data_ = Allocator::AllocateN<T>(Size_);
-			else if(Data_ == nullptr) Data_ = Allocator::AllocateN<T>(DCORE_DSTD_SHORT_STRING_SIZE);
+			else if(Data_ == nullptr)
+				Data_ = Allocator::AllocateN<T>(DCORE_DSTD_SHORT_STRING_SIZE);
 		}
 
 		void ReAlloc_(/* USize oldSize */)

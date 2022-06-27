@@ -40,11 +40,10 @@ namespace dg::editor
 
 			if(ImGui::BeginMenu("Character"))
 			{
-				if(ImGui::MenuItem("Teleport"))
-					Action_ = Action::Edit_Character_Teleport;
+				if(ImGui::MenuItem("Teleport")) Action_ = Action::Edit_Character_Teleport;
 				ImGui::EndMenu();
 			}
-			
+
 			ImGui::EndMenu();
 		}
 	}
@@ -62,8 +61,8 @@ namespace dg::editor
 		{
 			ImGui::CloseCurrentPopup();
 			dcore::world::Entity(Player_, dcore::platform::Context::Instance()->GetWorld())
-				.GetComponent<dcore::world::TransformComponent>()
-				->SetPosition(value);
+			    .GetComponent<dcore::world::TransformComponent>()
+			    ->SetPosition(value);
 		}
 
 		ImGui::SameLine();
@@ -94,25 +93,35 @@ namespace dg::editor
 			if(ImGui::BeginTable("Stats", 2))
 			{
 				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("FPS");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%d", stats.FPS);
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("FPS");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%d", stats.FPS);
 
 				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("FrameBegin");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%f", stats.FrameBeginTime);
-				
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("FrameEnd");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%f", stats.FrameEndTime);
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("FrameBegin");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", stats.FrameBeginTime);
 
 				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Update");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%f", stats.UpdateTime);
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("FrameEnd");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", stats.FrameEndTime);
 
 				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Render");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%f", stats.RenderTime);
-				
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Update");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", stats.UpdateTime);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Render");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", stats.RenderTime);
+
 				ImGui::EndTable();
 			}
 		}
@@ -129,13 +138,13 @@ namespace dg::editor
 
 		switch(Action_)
 		{
-			case Action::Edit_Character_Teleport:
-				ImGui::OpenPopup("Character Teleport");
-				Action_ = Action::None;
-				break;
-			default: break;
+		case Action::Edit_Character_Teleport:
+			ImGui::OpenPopup("Character Teleport");
+			Action_ = Action::None;
+			break;
+		default: break;
 		}
 
 		TeleportModal_();
 	}
-}
+} // namespace dg::editor

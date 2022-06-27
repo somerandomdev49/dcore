@@ -147,7 +147,7 @@ namespace dcore::world
 		template<typename T>
 		void AddComponentPool()
 		{
-			fprintf(stderr, "Add component pool %s, this = %p, count = %lld\n",
+			fprintf(stderr, "Add component pool %s, this = %p, count = %ld\n",
 			        util::Debug::Demangle(typeid(T).name()).c_str(), this, AllComponentPools_.size());
 			AllComponentPools_.push_back(ComponentPool {typeid(T), sizeof(T)});
 		}

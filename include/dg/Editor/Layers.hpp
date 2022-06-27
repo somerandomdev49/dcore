@@ -18,7 +18,7 @@ namespace dg::editor
 		bool ShowImGuiDemoWindow_ = false;
 		std::unordered_map<std::string, bool> Controls_;
 		bool EnableWireframe_ = false;
-		
+
 		dcore::world::EntityHandle Player_;
 
 		enum class Action
@@ -56,4 +56,4 @@ namespace dg::editor
 		void OnEnd() override;
 		void OnRender(dcore::graphics::RendererInterface *renderer) override;
 	};
-}
+} // namespace dg::editor

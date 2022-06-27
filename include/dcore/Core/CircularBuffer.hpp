@@ -21,7 +21,8 @@ namespace dstd
 				Index_          = 0;
 				Data_[Index_++] = std::move(value);
 			}
-			else Data_.push_back(std::move(value));
+			else
+				Data_.push_back(std::move(value));
 		}
 
 		T &operator[](dstd::USize index) { return Data_[index]; }

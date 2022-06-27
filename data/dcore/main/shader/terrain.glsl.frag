@@ -5,6 +5,7 @@ in vec3 s_Normal;
 in vec2 s_TexCoord;
 
 out vec4 o_Color;
+uniform vec3 u_FogColor;
 uniform sampler2D u_BlendMap;
 uniform sampler2D u_Tex0;
 uniform sampler2D u_TexR;
@@ -14,12 +15,12 @@ uniform sampler2D u_TexB;
 uniform float u_Tiling = 10.f;
 
 const vec3 SUN = normalize(vec3(1, 1, 0));
-const vec4 FOG_COLOR = vec4(0.31, 0.42, 0.27, 1);
+// const vec4 FOG_COLOR = ;
 
 const float zNear = 0.1;
 const float zFar = 100.0;
 
-const float zFogNear = 40.0 + 180.0;
+const float zFogNear = 40.0 + 120.0;
 const float zFogFar  = 80.0 + 180.0;
 
 float calculateFogAmount(float z) { return (zFogFar - z) / (zFogFar - zFogNear); }
@@ -102,8 +103,6 @@ const float n = 2;
 
 	float dist = length(s_Position.xyz);
 	float fogAmount = (zFogFar - dist) / (zFogFar - zFogNear);
-
-	//calculateFogAmount(linearDepth(s_Position));
 	fogAmount = clamp(fogAmount, 0.0, 1.0);
-	o_Color = mix(FOG_COLOR, color, fogAmount);
+	o_Color = mix(vec4(u_FogColor, 1), color, fogAmount);
 }

@@ -1,11 +1,13 @@
 #include "dcore/Core/Assert.hpp"
 #include "dcore/Renderer/RSkyBox.hpp"
+#include "dcore/Util/JsonConverters.hpp"
 #include <_ctype.h>
 #include <algorithm>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Util/LoaderUtil.hpp>
 #include <dcore/Renderer/RModel.hpp>
 #include <dcore/Core/Log.hpp>
+#include <sstream>
 #include <string>
 
 namespace dcore::graphics
@@ -154,6 +156,9 @@ namespace dcore::graphics
 				data = (byte*)d.data;
 			};
 
+			auto splitPos = path.find_last_of(":");
+			std::string actualPath = path.substr(0, splitPos);
+			std::string colorString = path.substr(splitPos + 1);
 			const auto getFormattedPath = [&](int negative, int direction) -> std::string
 			{
 				static const char *S[] = { "P", "N" };
@@ -161,7 +166,7 @@ namespace dcore::graphics
 				static const char *W[] = { "Positive", "Negative" };
 				static const char *C[] = { "+", "-" };
 				static const char *D[] = { "X", "Y", "Z" };
-				std::string p = path;
+				std::string p = actualPath;
 				ReplaceAll(p, ":S", S[negative]);
 				ReplaceAll(p, ":Z", Z[negative]);
 				ReplaceAll(p, ":W", W[negative]);
@@ -175,6 +180,10 @@ namespace dcore::graphics
 				return p;
 			};
 
+			glm::vec3 color;
+			std::stringstream ss(colorString);
+			ss >> color.r >> color.g >> color.b;
+
 			byte *datas[6] = {0};
 			
 			glm::ivec2 size;
@@ -185,7 +194,7 @@ namespace dcore::graphics
 				loadTexture(getFormattedPath(1, i), datas[i * 2 + 1], size, fmt);
 			}
 			auto *box = new(placement) RSkyBox();
-			RenderResourceManager::CreateSkyBox(box, { datas, 6 }, size, fmt);
+			RenderResourceManager::CreateSkyBox(box, color, { datas, 6 }, size, fmt);
 			for(int i = 0; i < 6; ++i) free(datas[i]);
 		}
 

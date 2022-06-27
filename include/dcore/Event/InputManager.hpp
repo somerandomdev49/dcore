@@ -2,7 +2,10 @@
 #include <dcore/Launch.hpp>
 #include <glm/glm.hpp>
 
-namespace dcore::platform { class Context; }
+namespace dcore::platform
+{
+	class Context;
+}
 
 // TODO: Add actions
 namespace dcore::event
@@ -130,7 +133,6 @@ namespace dcore::event
 		K_RightSuper   = 347,
 		K_Menu         = 348,
 	};
-
 
 	class InputManager
 	{

@@ -69,11 +69,13 @@ namespace dcore
 			glm::vec2 delta = glm::vec2(0);
 
 			if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Forward))) delta.y = 1;
-			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Backward))) delta.y = -1;
+			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Backward)))
+				delta.y = -1;
 
 			if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Leftward))) delta.x = -1;
 
-			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Rightward))) delta.x = 1;
+			else if(inputManager->IsKeyPressed(settings->Get(dg::Setting::Rightward)))
+				delta.x = 1;
 
 			glm::vec3 p(delta.x, 0, delta.y);
 			p *= SPEED * dcore::event::TimeManager::Instance()->GetDeltaTime();

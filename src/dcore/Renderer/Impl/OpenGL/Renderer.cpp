@@ -320,7 +320,7 @@ namespace dcore::graphics
 		if(alignment > 0) gl::Gl::PixelStore(gl::PixelStorageUnpackAlignment, prevAlignment);
 	}
 
-	void RenderResourceManager::CreateSkyBox(RSkyBox *box, dstd::Span<byte*> datas, const glm::ivec2 &size, TextureFormat format,
+	void RenderResourceManager::CreateSkyBox(RSkyBox *box, glm::vec3 color, dstd::Span<byte*> datas, const glm::ivec2 &size, TextureFormat format,
 	                                         TextureScaling scaling, int alignment)
 	{
 		namespace gl = impl::opengl;
@@ -337,6 +337,7 @@ namespace dcore::graphics
 		static gl::TextureParamValue filtersMin[2] = {gl::TextureFilterMipmapLinear, gl::TextureFilterNearest};
 		static gl::TextureParamValue filtersMag[2] = {gl::TextureFilterLinear, gl::TextureFilterNearest};
 
+		box->Color_ = color;
 		box->Data_ = new gl::Texture();
 		auto *t = (gl::Texture *)box->Data_;
 		t->Format = gl::TextureFormatRgba;

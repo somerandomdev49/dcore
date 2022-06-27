@@ -15,12 +15,13 @@ namespace dg::entity
 		void SetYaw(float newYaw) { Yaw_ = newYaw; }
 		bool IsMoving() const { return IsMoving_; }
 		bool IsFalling() const { return IsFalling_; }
+
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
-		float Yaw_ = 0;
+		float Yaw_                                            = 0;
 		bool IsMoving_ = false, IsFalling_ = false;
-		float Speed_ = 20.0f;
-		float Gravity_ = 10.0f;
+		float Speed_        = 20.0f;
+		float Gravity_      = 10.0f;
 		glm::vec3 Velocity_ = glm::vec3(0, 0, 0);
 	};
 } // namespace dg::entity

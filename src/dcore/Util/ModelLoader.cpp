@@ -249,7 +249,7 @@ namespace dcore::util
 		for(auto nodeIndex : nodes)
 		{
 			DLOG("  reading node #" << nodeIndex);
-			const auto &node       = gltf["nodes"][nodeIndex];
+			const auto &node = gltf["nodes"][nodeIndex];
 			auto meshIndex   = node["mesh"].get<dstd::USize>();
 			const auto &mesh = gltf["meshes"][meshIndex];
 			DLOG("    reading primitives");
@@ -315,8 +315,7 @@ namespace dcore::util
 				md.Mesh.Indices.push_back(index);
 			}
 
-			const auto pushFloat = [&](float f)
-			{
+			const auto pushFloat = [&](float f) {
 				byte *bytes = reinterpret_cast<byte *>(&f);
 				md.Mesh.VertexData.push_back(bytes[0]);
 				md.Mesh.VertexData.push_back(bytes[1]);
@@ -324,14 +323,12 @@ namespace dcore::util
 				md.Mesh.VertexData.push_back(bytes[3]);
 			};
 
-			const auto pushVec2 = [&](const glm::vec2 &v2)
-			{
+			const auto pushVec2 = [&](const glm::vec2 &v2) {
 				pushFloat(v2[0]);
 				pushFloat(v2[1]);
 			};
 
-			const auto pushVec3 = [&](const glm::vec3 &v3)
-			{
+			const auto pushVec3 = [&](const glm::vec3 &v3) {
 				pushFloat(v3[0]);
 				pushFloat(v3[1]);
 				pushFloat(v3[2]);

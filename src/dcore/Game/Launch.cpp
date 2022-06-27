@@ -36,8 +36,7 @@ namespace dcore::launch
 
 		static const char *prefPath = "preferences.json";
 
-		static const auto LoadPrefs = [](Preferences *pref)
-		{
+		static const auto LoadPrefs = [](Preferences *pref) {
 			Preferences::SetInstance(pref);
 			data::FileInput fileInput("saves", prefPath);
 			data::adapters::JsonInputAdapter jsonAdapter;
@@ -46,8 +45,7 @@ namespace dcore::launch
 			pref->Read(fileInput);
 		};
 
-		static const auto InitContext = [](platform::Context *ctx, graphics::Renderer *rend)
-		{
+		static const auto InitContext = [](platform::Context *ctx, graphics::Renderer *rend) {
 			platform::PlatformSpecific specific;
 			(void)specific;
 			ctx->Rend_  = rend;
@@ -56,16 +54,14 @@ namespace dcore::launch
 			platform::Context::SetInstance(ctx);
 		};
 
-		static const auto InitEventManagers = [](event::InputManager *imngr, event::TimeManager *tmngr)
-		{
+		static const auto InitEventManagers = [](event::InputManager *imngr, event::TimeManager *tmngr) {
 			event::InputManager::SetInstance(imngr);
 			event::TimeManager::SetInstance(tmngr);
 			imngr->Initialize();
 			tmngr->Initialize();
 		};
 
-		static const auto InitResources = [](resource::ResourceManager *rmngr, resource::ResourceLoader *rloader)
-		{
+		static const auto InitResources = [](resource::ResourceManager *rmngr, resource::ResourceLoader *rloader) {
 			// Create the default config reader.
 			resource::ConfigReader cfg("data");
 			resource::ConfigReader::SetDefaultReader(&cfg);
@@ -79,8 +75,7 @@ namespace dcore::launch
 			rloader->LoadFromManifest("Manifest.cfg");
 		};
 
-		static const auto InitGUI = [](graphics::gui::GuiGraphics *guig, graphics::gui::GuiManager *guimngr)
-		{
+		static const auto InitGUI = [](graphics::gui::GuiGraphics *guig, graphics::gui::GuiManager *guimngr) {
 			graphics::gui::GuiGraphics::SetInstance(guig);
 			guig->Initialize(resource::ResourceManager::Instance());
 			graphics::gui::GuiManager::SetInstance(guimngr);
@@ -117,8 +112,8 @@ namespace dcore::launch
 #else
 		dg::Game
 #endif
-		game;
-		
+		    game;
+
 		// dg::Game::SetInstance(&game);
 		game.Initialize();
 

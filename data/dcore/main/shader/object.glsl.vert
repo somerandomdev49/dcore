@@ -6,11 +6,12 @@ layout(location = 2) in vec2 a_TexCoord;
 
 out vec2 s_TexCoord;
 out vec3 s_Normal;
+out vec4 s_Position;
 
 uniform mat4 u_Transform;
 
 void main() {
     s_TexCoord = a_TexCoord;
     s_Normal = a_Normal;
-    gl_Position = u_Transform * vec4(a_Position, 1);
+    gl_Position = s_Position = u_Transform * vec4(a_Position, 1);
 }

@@ -52,8 +52,7 @@ namespace dcore::util
 		const auto &attrib = reader.GetAttrib();
 		const auto &shapes = reader.GetShapes();
 
-		const auto pushFloat = [&](float value)
-		{
+		const auto pushFloat = [&](float value) {
 			byte *bytes = reinterpret_cast<byte *>(&value);
 			data.VertexData.push_back(bytes[0]);
 			data.VertexData.push_back(bytes[1]);

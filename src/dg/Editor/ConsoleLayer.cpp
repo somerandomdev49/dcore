@@ -35,12 +35,12 @@ namespace dg::editor
 		for(const auto &s : queue) ImGui::Text("%s", s.c_str());
 		ImGui::End();
 
-		float spacing = ImGui::GetTextLineHeightWithSpacing() + ImGui::GetStyle().FramePadding.y +
-						ImGui::GetStyle().ItemSpacing.y;
+		float spacing =
+		    ImGui::GetTextLineHeightWithSpacing() + ImGui::GetStyle().FramePadding.y + ImGui::GetStyle().ItemSpacing.y;
 
 		ImGui::Begin("Console");
 		ImGui::BeginChild("##Console_ScrollRegion", ImVec2(0, -spacing), false,
-							ImGuiWindowFlags_AlwaysHorizontalScrollbar);
+		                  ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 		const auto &messages = dstd::ILog()->GetMessages();
 		for(dstd::USize index = 0; index < messages.GetSize(); ++index) ImGui::Text("%s", messages[index].c_str());
 		ImGui::SetScrollY(ImGui::GetScrollMaxY());
@@ -67,4 +67,4 @@ namespace dg::editor
 
 		ImGui::End();
 	}
-}
+} // namespace dg::editor

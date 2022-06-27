@@ -81,13 +81,13 @@ namespace dcore::graphics
 		 * @warning Should be called only between OnBeginRender (private) and OnEndRender (private)
 		 */
 		void Render(RSkeletalMesh *mesh);
-		
+
 		enum DepthTestFunc
 		{
 			DepthTestFuncLess,
 			DepthTestFuncLEqual
 		};
-		
+
 		/**
 		 * @brief Changes the depth test function
 		 */
@@ -222,14 +222,14 @@ namespace dcore::graphics
 		/**
 		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
 		 * */
-		static void CreateStaticMesh(RStaticMesh *mesh, dstd::Span<const uint32_t> indices, dstd::Span<const byte> vertexData,
-			const std::string &format = "pnt");
+		static void CreateStaticMesh(RStaticMesh *mesh, dstd::Span<const uint32_t> indices,
+		                             dstd::Span<const byte> vertexData, const std::string &format = "pnt");
 
 		/**
 		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
 		 * */
-		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices, dstd::Span<const byte> vertexData,
-			const std::string &format = "pnt");
+		static void CreateStaticMesh(RStaticMesh *mesh, const std::vector<uint32_t> &indices,
+		                             dstd::Span<const byte> vertexData, const std::string &format = "pnt");
 
 		/**
 		 * Creates a static mesh from the provided indices, vertices and format (p - pos, n - norm, t - tex)
@@ -246,8 +246,9 @@ namespace dcore::graphics
 		/**
 		 * Creates a cubemap with the specified data for +x, -x, +y, -y, +z, -z faces, size and format.
 		 * */
-		static void CreateSkyBox(RSkyBox *skybox, dstd::Span<byte*> datas, const glm::ivec2 &size, TextureFormat format,
-		                         TextureScaling scaling = TextureScaling::Linear, int unpackAlignment = -1);
+		static void CreateSkyBox(RSkyBox *skybox, glm::vec3 color, dstd::Span<byte *> datas, const glm::ivec2 &size,
+		                         TextureFormat format, TextureScaling scaling = TextureScaling::Linear,
+		                         int unpackAlignment = -1);
 
 		/**
 		 * Creates a fast vertex buffer with the specified index count.
