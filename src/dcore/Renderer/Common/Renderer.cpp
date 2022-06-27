@@ -1,7 +1,7 @@
 #include "dcore/Core/Assert.hpp"
 #include "dcore/Renderer/RSkyBox.hpp"
 #include "dcore/Util/JsonConverters.hpp"
-#include <_ctype.h>
+#include <cctype>
 #include <algorithm>
 #include <dcore/Renderer/Renderer.hpp>
 #include <dcore/Util/LoaderUtil.hpp>

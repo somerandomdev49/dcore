@@ -14,6 +14,14 @@ def printed(*args):
 	print(*args)
 	return args
 
+def flat(l):
+	out = []
+	for i in l:
+		if type(i) == list:
+			out += flat(i)
+		else: out.append(i)
+	return out
+
 def read_config(fname: str) -> dict[str, str]:
 	cfg = configparser.ConfigParser()
 	cfg.read(fname)
@@ -29,6 +37,7 @@ def read_config(fname: str) -> dict[str, str]:
 		"str": str,
 		"int": int,
 		"list": lambda *args: list(args),
+		"flat": lambda *args: flat(args),
 		"sh": lambda *args: subprocess.run(args, stdout=subprocess.PIPE)
 			.stdout.decode('utf-8').strip()
 	}

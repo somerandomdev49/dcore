@@ -1,5 +1,4 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include <dcore/Core/DynamicSparseDataSet.hpp>
 #include <dcore/Util/TypeTraits.hpp>
 #include <dcore/Data/FileOutput.hpp>
