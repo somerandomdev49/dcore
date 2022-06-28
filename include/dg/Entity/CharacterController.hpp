@@ -14,12 +14,17 @@ namespace dg::entity
 		float GetYaw() const { return Yaw_; }
 		void SetYaw(float newYaw) { Yaw_ = newYaw; }
 		bool IsMoving() const { return IsMoving_; }
-		bool IsFalling() const { return IsFalling_; }
+		void SetIsMoving(bool isMoving, glm::vec2 movement)
+		{
+			IsMoving_ = isMoving;
+			Movement_ = movement;
+		}
 
 	private:
 		dcore::world::TransformComponent *TransformComponent_ = nullptr;
 		float Yaw_                                            = 0;
 		bool IsMoving_ = false, IsFalling_ = false;
+		glm::vec2 Movement_;
 		float Speed_        = 20.0f;
 		float Gravity_      = 10.0f;
 		glm::vec3 Velocity_ = glm::vec3(0, 0, 0);

@@ -35,40 +35,35 @@ namespace dg::entity
 
 	void CharacterControllerComponent::Update(const dcore::world::EntityHandle &self)
 	{
-		auto *inputMngr          = dcore::event::InputManager::Instance();
-		glm::vec2 movementVector = glm::vec2(0, 0);
+		auto *inputMngr = dcore::event::InputManager::Instance();
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_W)) movementVector.y = 1.0f;
+		if(inputMngr->IsKeyPressed(dcore::event::K_W))
+				Movement_ = { 0.0f, +1.0f };
 		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
-			movementVector.y = -1.0f;
+				Movement_ = { 0.0f, -1.0f };
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_D)) movementVector.x = -1.0f;
+		if(inputMngr->IsKeyPressed(dcore::event::K_D))
+			Movement_ = { -1.0f, 0.0f };
 		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
-			movementVector.x = +1.0f;
+			Movement_ = { +1.0f, 0.0f };
 
-		IsMoving_ = (movementVector != glm::vec2(0, 0));
+		IsMoving_ = (Movement_ != glm::vec2(0, 0));
+		if(Movement_.x != 0 && Movement_.y != 0) Movement_ = glm::normalize(Movement_);
 
-		if(movementVector.x != 0 && movementVector.y != 0) movementVector = glm::normalize(movementVector);
 		glm::vec3 vel =
-		    glm::rotate(glm::mat4(1), Yaw_, {0, 1, 0}) * glm::vec4(movementVector.x, 0, movementVector.y, 1);
+		    glm::rotate(glm::mat4(1), Yaw_, {0, 1, 0}) * glm::vec4(Movement_.x, 0, Movement_.y, 1);
 		TransformComponent_->SetRotation(FromEulerZYX(0, Yaw_, 0));
-		// v = glm::mat3_cast(TransformComponent_->GetRotation()) * v;
-
-		// Velocity_ += glm::vec3(0, -Gravity_ * 0, 0);
 
 		auto position = TransformComponent_->GetPosition();
-
+		position += vel * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
+	
 		const dcore::terrain::Chunk &currentChunk =
 		    dcore::platform::Context::Instance()->GetWorld()->GetTerrain()->GetChunkAtGlobal(position);
-
-		position += vel * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
-		// // position += Velocity_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
-
 		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z));
-		// if(position.y < terrainHeight)
-		position.y = terrainHeight + 1.0f /* TODO: Half-height of the capsule? */;
-
+		
+		position.y = terrainHeight + 1.0f;
 		TransformComponent_->SetPosition(position);
+		
 		dcore::FrameLog::SLogF("pos: %.2f, %.2f, %.2f", position.x, position.y, position.z);
 		dcore::FrameLog::SLogF("chunk: %d, %d", currentChunk.GetLocalPosition().x, currentChunk.GetLocalPosition().y);
 
@@ -77,5 +72,7 @@ namespace dg::entity
 			auto *skybox = dcore::resource::GetResource<dcore::graphics::RSkyBox>("DCore.SkyBox.Main.Kasharok").Get();
 			dcore::platform::Context::Instance()->GetWorld()->SetTargetSkyBox(skybox);
 		}
+
+		Movement_ = glm::vec2(0, 0);
 	}
 } // namespace dg::entity
