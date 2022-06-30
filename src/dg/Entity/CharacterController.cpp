@@ -37,15 +37,19 @@ namespace dg::entity
 	{
 		auto *inputMngr = dcore::event::InputManager::Instance();
 
+		glm::vec2 movement = { 0.0f, 0.0f };
 		if(inputMngr->IsKeyPressed(dcore::event::K_W))
-				Movement_ = { 0.0f, +1.0f };
+				movement += glm::vec2 { 0.0f, +1.0f };
 		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
-				Movement_ = { 0.0f, -1.0f };
+				movement += glm::vec2 { 0.0f, -1.0f };
 
 		if(inputMngr->IsKeyPressed(dcore::event::K_D))
-			Movement_ = { -1.0f, 0.0f };
+			movement += glm::vec2 { -1.0f, 0.0f };
 		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
-			Movement_ = { +1.0f, 0.0f };
+			movement += glm::vec2 { +1.0f, 0.0f };
+
+		if(movement != glm::vec2(0.0f, 0.0f))
+			Movement_ = movement;
 
 		IsMoving_ = (Movement_ != glm::vec2(0, 0));
 		if(Movement_.x != 0 && Movement_.y != 0) Movement_ = glm::normalize(Movement_);
