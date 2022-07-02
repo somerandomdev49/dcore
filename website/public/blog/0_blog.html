@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>DragonCore Blog: <x-v q=title/></title>
+</head>
+<body>
+	<script>
+		const elements = [];
+		window.customElements.define('x-v', class extends HTMLElement {
+			constructor() {
+				super();
+				elements.push({ element: this, name: this.getAttribute('q') });
+			}
+		});
+	</script>
+
+	<script defer>
+		for(const { element, name } of elements) {
+			element.outerHTML = data[name];
+		}
+	</script>
+
+	<header>
+		<h1>DragonCore Blog: <x-v q=title/></h1>
+		<span><x-v q=description/></span>
+	</header>
+	<main>
+		<x-v q=content/>
+	</main>
+	<footer>
+		<span><x-v q=date/></span>
+		<span><x-v q=copyright/></span>
+	</footer>
+</body>
+</html>

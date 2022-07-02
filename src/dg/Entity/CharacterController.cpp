@@ -71,12 +71,6 @@ namespace dg::entity
 		dcore::FrameLog::SLogF("pos: %.2f, %.2f, %.2f", position.x, position.y, position.z);
 		dcore::FrameLog::SLogF("chunk: %d, %d", currentChunk.GetLocalPosition().x, currentChunk.GetLocalPosition().y);
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_Q))
-		{
-			auto *skybox = dcore::resource::GetResource<dcore::graphics::RSkyBox>("DCore.SkyBox.Main.Kasharok").Get();
-			dcore::platform::Context::Instance()->GetWorld()->SetTargetSkyBox(skybox);
-		}
-
 		Movement_ = glm::vec2(0, 0);
 	}
 } // namespace dg::entity
