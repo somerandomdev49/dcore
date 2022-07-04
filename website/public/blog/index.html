@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
+	<title>DragonCore Blog:</title>
+</head>
+<body>
+	<script>
+		const elements = [];
+		window.customElements.define('x-v', class extends HTMLElement {
+			constructor() { super(); }
+			connectedCallback() {
+				elements.push({
+					element: this,
+					name: this.getAttribute("q")
+				});
+			}
+		});
+	</script>
+
+	<script defer>
+		const md = window.markdownit({ typographer: false });
+		const F = {
+			name: x => x,
+			desc: x => x,
+			date: x => new Date(x).toDateString(),
+			auth: x => x,
+			content: x => md.render(x),
+		}
+		async function loadContent(index) {
+			const manifestReq = await fetch('/blog/manifest.json');
+			const manifest = await manifestReq.json();
+
+			const contentReq = await fetch(`/blog/b${index}.md`);
+			const content = await contentReq.text();
+
+			const data = { ...manifest[index], content };
+
+			document.title = `DragonCore Blog: ${data.name}`;
+			for(const { element, name } of elements) {
+				element.outerHTML = F[name](data[name]);
+			}
+		}
+
+		loadContent(location.hash.slice(1));
+	</script>
+
+	<header>
+		<h1>DragonCore Blog: <x-v q=name /></h1>
+		<span><x-v q=desc /></span>
+		<span><x-v q=date /></span>
+	</header>
+	<main>
+		<x-v q=content />
+	</main>
+	<footer>
+		Copyright 2022 <x-v q=auth />
+	</footer>
+</body>
+</html>

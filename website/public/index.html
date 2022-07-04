@@ -71,17 +71,44 @@
           </ul>
         </div>
       </div>
-      <!-- <div id="blog">
-        <div class="blog-entry" onclick="window.location.href='blog/02_zones.html';">
-          <span class="blog-heading">Blog! And also zones.</span>
-          <span class="blog-desc">How are in-game zones implemented.</span>
-        </div>
-        <div class="blog-entry" onclick="window.location.href='blog/01_blog.html';">
-          <span class="blog-heading">Blog!</span>
-          <span class="blog-desc">The introduction of the devlog!</span>
-        </div>
-      </div> -->
     </main>
+    <div id="blog-wrapper">
+      <div id="blog"></div>
+    </div>
   </div>
+  <script defer>
+    const blogElement = document.getElementById("blog");
+    (async () => {
+      const req = await fetch("/blog/manifest.json");
+
+      /** @type {object[]} */
+      const man = await req.json();
+      let i = 0;
+      for(const post of man) {
+        const element = document.createElement('div');
+        element.classList.add('blog-post');
+
+        const nameElement = document.createElement('span');
+        nameElement.classList.add('blog-post-name');
+        nameElement.innerText = post.name;
+        nameElement.onclick = (x => e => location.href = x)(`/blog#${i}`);
+
+        const descElement = document.createElement('span');
+        descElement.classList.add('blog-post-desc');
+        descElement.innerText = post.desc;
+
+        const dateElement = document.createElement('span');
+        dateElement.classList.add('blog-post-date');
+        dateElement.innerText = new Date(post.date).toDateString();
+
+        element.appendChild(nameElement);
+        element.appendChild(descElement);
+        element.appendChild(dateElement);
+        blogElement.prepend(element);
+        console.log(post);
+        i += 1;
+      }
+    })();
+  </script>
 </body>
 </html>

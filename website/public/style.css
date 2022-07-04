@@ -36,7 +36,8 @@ main {
     display: grid;
     width: 100%;
     height: 100%;
-    grid-template-columns: 2fr 4fr 1fr 4fr 2fr;
+    grid-template-columns: 2fr 4.5fr 4.5fr 2fr;
+    gap: 10px;
     font-family: 'Times New Roman', Times, serif;
     text-shadow: 1px 1px 0px black;
 }
@@ -64,7 +65,7 @@ main div:first-child {
 }
 
 main div:last-child {
-    grid-column: 4;
+    grid-column: 3;
 }
 
 main div h4 {
@@ -86,3 +87,43 @@ main div div.roadmap ul {
 main div div.roadmap span {
     color: rgb(201, 152, 30)
 }
+
+#blog-wrapper {
+    display: grid;
+    width: 100%;
+    /* height: 100%; */
+    grid-template-columns: 2fr 9fr 2fr;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 1px 1px 0px black;
+    margin-top: 10px;
+}
+
+#blog {
+    display: grid;
+    width: 100%;
+    grid-column: 2;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.blog-post {
+    display: flex;
+    width: fit-content;
+    padding: 10px;
+    flex-direction: column;
+    
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.blog-post-name {
+    font-family: "Chomsky";
+}
+
+.blog-post-desc {
+    opacity: 0.9;
+}
+
+.blog-post-date {
+    opacity: 0.75;
+}
+
