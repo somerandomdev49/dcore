@@ -115,6 +115,15 @@ main div div.roadmap span {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.blog-post:hover span {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.blog-post span:hover {
+    text-decoration: underline;
+}
+
 .blog-post-name {
     font-family: "Chomsky";
 }

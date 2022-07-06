@@ -87,11 +87,11 @@
       for(const post of man) {
         const element = document.createElement('div');
         element.classList.add('blog-post');
-
+        element.onclick = (x => e => location.href = x)(`/blog#${i}`);
+ 
         const nameElement = document.createElement('span');
         nameElement.classList.add('blog-post-name');
         nameElement.innerText = post.name;
-        nameElement.onclick = (x => e => location.href = x)(`/blog#${i}`);
 
         const descElement = document.createElement('span');
         descElement.classList.add('blog-post-desc');
@@ -100,7 +100,7 @@
         const dateElement = document.createElement('span');
         dateElement.classList.add('blog-post-date');
         dateElement.innerText = new Date(post.date).toDateString();
-
+        
         element.appendChild(nameElement);
         element.appendChild(descElement);
         element.appendChild(dateElement);
