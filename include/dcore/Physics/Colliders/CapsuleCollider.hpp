@@ -4,10 +4,16 @@
 
 namespace dcore::physics
 {
+    struct RCapsuleCollider
+    {
+        float Height, Radius;
+    };
+
     class CapsuleCollider : public Collider
     {
-    private:
-        friend class Physics;
-        rp3d::CapsuleShape *Shape_;
+    public:
+        using ResourceType = RCapsuleCollider;
+        void Initialize(Physics *physics, void *resource) override;
+        void DeInitialize(Physics *physics) override;
     };
 }

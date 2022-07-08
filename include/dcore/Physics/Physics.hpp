@@ -8,29 +8,12 @@
 namespace dcore::physics
 {
 	namespace rp3d = reactphysics3d;
-	class PhysicsWorld;
-	class CubeCollider;
-	class SphereCollider;
-	class CapsuleCollider;
-	class TerrainCollider;
-	class ConvexCollider;
-
 	class Physics
 	{
 	public:
 		static Physics *Instance();
-		PhysicsWorld *CreatePhysicsWorld();
-
-		SphereCollider *CreateSphereCollider(float radius);
-		CubeCollider *CreateCubeCollider(glm::vec3 extents);
-		CapsuleCollider *CreateCapsuleCollider(float radius, float height);
-		ConvexCollider *CreateConvexCollider(dstd::Span<float> vertices, dstd::Span<dstd::USize> indices);
-		TerrainCollider *CreateTerrainCollider(... /* TODO */);
-		void DestroySphereCollider(SphereCollider *collider);
-		void DestroyCubeCollider(CubeCollider *collider);
-		void DestroyCapsuleCollider(CapsuleCollider *collider);
-		void DestroyConvexCollider(ConvexCollider *collider);
-		void DestroyTerrainCollider(TerrainCollider *collider);
+		rp3d::PhysicsCommon &GetCommon() { return PhysicsCommon_; }
+		const rp3d::PhysicsCommon &GetCommon() const { return PhysicsCommon_; }
 	private:
 		rp3d::PhysicsCommon PhysicsCommon_;
 	};

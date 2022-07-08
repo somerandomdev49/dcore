@@ -12,9 +12,7 @@ namespace dcore::physics
 		void SetRotation(glm::quat newRotation) { UpdateRotation_(newRotation); }
 		glm::vec3 GetPosition() const { return detail::Convert(Body_->getTransform().getPosition()); }
 		glm::quat GetRotation() const { return detail::Convert(Body_->getTransform().getOrientation()); }
-
-		void AddCollider(Collider *shape);
-
+		void AddCollider(Collider *collider);
 		PhysicsWorld *GetWorld() const { return World_; }
 	private:
 		friend class PhysicsWorld;

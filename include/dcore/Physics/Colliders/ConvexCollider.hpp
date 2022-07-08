@@ -14,9 +14,9 @@ namespace dcore::physics
 
     class ConvexCollider : public Collider
     {
-    private:
-        friend class Physics;
-        RConvexCollider *ColliderData_;
-        rp3d::ConvexShape *Shape_;
+    public:
+        using ResourceType = RConvexCollider;
+        void Initialize(Physics *physics, void *resource) override;
+        void DeInitialize(Physics *physics) override;
     };
 }

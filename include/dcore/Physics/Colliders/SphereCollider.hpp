@@ -4,10 +4,16 @@
 
 namespace dcore::physics
 {
+    struct RSphereCollider
+    {
+        float Radius;
+    };
+
     class SphereCollider : public Collider
     {
-    private:
-        friend class Physics;
-        rp3d::SphereShape *Shape_;
+    public:
+        using ResourceType = RSphereCollider;
+        void Initialize(Physics *physics, void *resource) override;
+        void DeInitialize(Physics *physics) override;
     };
 }

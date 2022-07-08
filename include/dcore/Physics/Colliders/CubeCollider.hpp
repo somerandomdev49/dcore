@@ -4,10 +4,16 @@
 
 namespace dcore::physics
 {
+    struct RCubeCollider
+    {
+        glm::vec3 Extents;
+    };
+
     class CubeCollider : public Collider
     {
-    private:
-        friend class Physics;
-        rp3d::BoxShape *Shape_;
+    public:
+        using ResourceType = RCubeCollider;
+        void Initialize(Physics *physics, void *resource) override;
+        void DeInitialize(Physics *physics) override;
     };
 }

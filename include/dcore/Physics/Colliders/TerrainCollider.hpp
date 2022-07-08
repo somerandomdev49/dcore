@@ -8,13 +8,16 @@ namespace dcore::physics
     struct RTerrainCollider
     {
         std::vector<float> Heights;
+        glm::uvec2 Size;
+        float MinHeight, MaxHeight;
+        float Scale;
     };
 
     class TerrainCollider : public Collider
     {
-    private:
-        friend class Physics;
-        RTerrainCollider *ColliderData_;
-        rp3d::HeightFieldShape *Shape_;
+    public:
+        using ResourceType = RTerrainCollider;
+        void Initialize(Physics *physics, void *resource) override;
+        void DeInitialize(Physics *physics) override;
     };
 }
