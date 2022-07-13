@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/css/style.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js"></script>
 	<title>DragonCore Blog:</title>
 </head>
@@ -22,7 +22,7 @@
 	</script>
 
 	<script defer>
-		const md = window.markdownit({ typographer: false });
+		const md = window.markdownit({ typographer: false, html: true });
 		const F = {
 			name: x => x,
 			desc: x => x,
@@ -37,27 +37,58 @@
 			const contentReq = await fetch(`/blog/b${index}.md`);
 			const content = await contentReq.text();
 
+			console.log(content);
+
 			const data = { ...manifest[index], content };
 
 			document.title = `DragonCore Blog: ${data.name}`;
 			for(const { element, name } of elements) {
 				element.outerHTML = F[name](data[name]);
 			}
+		
+			const elems = document.getElementsByTagName("img");
+			const contentElement = document.getElementById("content");
+			console.log(elems);
+			for(let i = 0; i < elems.length; ++i) {
+				const elem = elems.item(i);
+				console.log(elem);
+				elem.onclick = _ => {
+					if(elem.classList.contains("is-active")) {
+						elem.classList.remove("is-active");
+						document.getElementById("active-image").remove();
+						elem.style.opacity = 1;
+					} else {
+						/** @type {HTMLImageElement} */
+						const c = contentElement.appendChild(elem.cloneNode());
+						elem.classList.add("is-active");
+						elem.style.opacity = 0;
+						c.classList.add("active");
+						c.id = "active-image";
+						c.onclick = elem.onclick;
+					}
+					console.log(elem);
+				}
+			}
 		}
 
 		loadContent(location.hash.slice(1));
 	</script>
 
-	<header>
-		<h1>DragonCore Blog: <x-v q=name /></h1>
-		<span><x-v q=desc /></span>
-		<span><x-v q=date /></span>
-	</header>
-	<main>
-		<x-v q=content />
-	</main>
+	<div class="content" id="content">
+		<main class="main-blog"> <!-- yes, im too lazy to add a common css file -->
+			<header>
+				<h1>DragonCore Blog: <x-v q=name /></h1>
+				<span><x-v q=desc /></span>
+				<span><x-v q=date /></span>
+			</header>
+			<div>
+				<x-v q=content />
+			</div>
+		</main>
+	</div>
 	<footer>
-		Copyright 2022 <x-v q=auth />
+		<img src="/img/peque.svg" alt="Peque Studio Logo" width="80">
+		Copyright 2022 Peque Studio, <x-v q=auth />
 	</footer>
 </body>
 </html>

@@ -1,0 +1,186 @@
+@font-face {
+    font-family: "Chomsky";
+    src: url(/font/Chomsky.otf);
+}
+
+@font-face {
+    font-family: "Squealer";
+    src: url(/font/squealer.ttf);
+}
+
+@font-face {
+    font-family: "Squealer Embossed";
+    src: url(/font/squealerem.ttf);
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: #c2a00a;
+    /* color: #D7CEA4; */
+}
+
+a { color: #cfad12; }
+hr { border-color: rgba(0, 0, 0, 0.2); }
+img { max-width: 100%; justify-self: center; }
+img.active {
+    position: fixed;
+    max-width: 100vw;
+    height: 80vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.content {
+    background: linear-gradient(to bottom, transparent 80%, black),
+                url(/img/dcore2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 80vh;
+}
+
+footer {
+    display: flex;
+    padding: 2rem;
+    align-items: center;
+    flex-direction: column;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    color: rgb(141, 141, 141);
+}
+
+footer img {
+    opacity: 0.4;
+    margin-bottom: 10px;
+}
+
+* { box-sizing: border-box; }
+
+main {
+    width: 100%;
+    height: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 1px 1px 0px black;
+}
+
+main.main-index {
+    display: grid;
+    grid-template-columns: 2fr 4.5fr 4.5fr 2fr;
+}
+
+main.main-blog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+main > header {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.664);
+    margin-top: 10px;
+}
+
+main > header h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+main > div {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.664);
+    max-width: 75vw;
+}
+
+main.main-index > div {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.664);
+}
+
+main.main-blog > div {
+    justify-content: center;
+}
+
+#logo {
+    font-family: "Squealer";
+    display: flex;
+    justify-content: center;
+    /* text-shadow: 2px 2px 0px black; */
+}
+
+#logo *:first-child {
+    font-weight: normal;
+    font-size: 100px;
+    margin: 10px;
+}
+
+main div:first-child {
+    grid-column: 2;
+}
+
+main div:last-child {
+    grid-column: 3;
+}
+
+main div h4 {
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    color: #ffc32c
+}
+
+main div p::first-letter, main div h4 span::first-letter {
+    font-family: "Chomsky";
+    /* font-size: 140%; */
+}
+
+main div div.roadmap ul {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+main div div.roadmap span {
+    color: #ffc32c
+}
+
+#blog-wrapper {
+    display: grid;
+    width: 100%;
+    /* height: 100%; */
+    grid-template-columns: 2fr 9fr 2fr;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 1px 1px 0px black;
+    margin-top: 10px;
+}
+
+#blog {
+    display: grid;
+    width: 100%;
+    grid-column: 2;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.blog-post {
+    display: flex;
+    width: fit-content;
+    padding: 10px;
+    flex-direction: column;
+    
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.blog-post:hover span { text-decoration: underline; cursor: pointer; }
+.blog-post span:hover { text-decoration: underline; }
+.blog-post-name { font-family: "Chomsky"; }
+.blog-post-desc { opacity: 0.9; }
+.blog-post-date { opacity: 0.75;  }
+

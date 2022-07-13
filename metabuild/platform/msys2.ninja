@@ -8,5 +8,5 @@ linker = g++
 clike_flags = -Wall -Wextra -g -mwindows -DDCORE_STD_64BIT $warnings $includes $libs_cflags
 cpp_flags = $clike_flags -std=c++17 -DLOGURU_WITH_STREAMS -IC:\msys64\usr\local\include
 c_flags = $clike_flags -std=c99
-ld_flags = -lglfw3 -lpthread -lole32 -std=c++17 -mwindows $libs_ldflags
+ld_flags = -lglfw3 -lpthread -lole32 -LC:\msys64\usr\local\lib -lreactphysics3d -std=c++17 -mwindows $libs_ldflags
 winres = windres
