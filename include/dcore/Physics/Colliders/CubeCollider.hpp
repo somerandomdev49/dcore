@@ -4,11 +4,20 @@
 
 namespace dcore::physics
 {
+    /**
+     * @brief Cube Collider resource
+     * @see RCubeCollider
+     */
     struct RCubeCollider
     {
+        /** Cube size */
         glm::vec3 Extents;
     };
 
+    /**
+     * @brief Cube Collider
+     * @see RCubeCollider
+     */
     class CubeCollider : public Collider
     {
     public:

@@ -4,11 +4,23 @@
 
 namespace dcore::physics
 {
+    /**
+     * @brief Capsule Collider resource.
+     * @see CapsuleCollider
+     */
     struct RCapsuleCollider
     {
-        float Height, Radius;
+        /** Height of the capsule. */
+        float Height;
+
+        /** Radius of the capsule */
+        float Radius;
     };
 
+    /**
+     * @brief Capsule Collider.
+     * @see RCapsuleCollider
+     */
     class CapsuleCollider : public Collider
     {
     public:

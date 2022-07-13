@@ -4,11 +4,20 @@
 
 namespace dcore::physics
 {
+    /**
+     * @brief Sphere Collider resource
+     * @see ShpereCollider
+     */
     struct RSphereCollider
     {
+        /** Sphere radius */
         float Radius;
     };
 
+    /**
+     * @brief Sphere Collider
+     * @see RShpereCollider
+     */
     class SphereCollider : public Collider
     {
     public:
