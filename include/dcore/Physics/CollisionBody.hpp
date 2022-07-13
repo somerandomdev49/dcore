@@ -5,24 +5,44 @@
 
 namespace dcore::physics
 {
+	/**
+	 * @brief Physics body that collides with others but isn't affected by physics itself.
+	 * @see reactphysics3d::CollisionBody
+	 */
 	class CollisionBody
 	{
 	public:
-		void SetPosition(glm::vec3 newPosition) { UpdatePosition_(newPosition); }
-		void SetRotation(glm::quat newRotation) { UpdateRotation_(newRotation); }
-		glm::vec3 GetPosition() const { return detail::Convert(Body_->getTransform().getPosition()); }
-		glm::quat GetRotation() const { return detail::Convert(Body_->getTransform().getOrientation()); }
-		void AddCollider(Collider *collider);
-		PhysicsWorld *GetWorld() const { return World_; }
-	private:
-		friend class PhysicsWorld;
-		CollisionBody(rp3d::CollisionBody *body) : Body_(body) { }
+		void SetPosition(glm::vec3 newPosition);
+		void SetRotation(glm::quat newRotation);
+		glm::vec3 GetPosition() const;
+		glm::quat GetRotation() const;
+		PhysicsWorld *GetWorld() const;
 
+		/**
+		 * @brief Adds a collider to the body.
+		 * @todo Add a transform parameter
+		 * @param collider The collider to be added.
+		 */
+		void AddCollider(Collider *collider);
+
+		/**
+		 * @brief Creates the collision body with given transform.
+		 * 
+		 * @param world The world that the body is in.
+		 * @param position Initial position of the body.
+		 * @param rotation Initial rotation of the body.
+		 */
+		void Initialize(PhysicsWorld *world, glm::vec3 position = {0, 0, 0}, glm::quat rotation = {1, 0, 0, 0});
+
+		/**
+		 * @brief Destroys the internal collision body and sets it to null
+		 */
+		void DeInitialize();
+
+	private:
 		void UpdateTransform_(glm::vec3 newPosition, glm::quat newRotation);
-		void UpdatePosition_(glm::vec3 newPosition) { UpdateTransform_(newPosition, GetRotation()); }
-		void UpdateRotation_(glm::quat newRotation) { UpdateTransform_(GetPosition(), newRotation); }
 
 		PhysicsWorld *World_;
 		rp3d::CollisionBody *Body_;
 	};
-}
+} // namespace dcore::physics

@@ -155,7 +155,8 @@ namespace dcore::world
 		ECSInstance_    = new ECS();
 		ECSInstance_->Initialize();
 
-		ECSInstance_->SetMessageHandler({this, [](void *self, EntityHandle handle, ECS::Message message) {
+		ECSInstance_->SetMessageHandler({this, [](void *self, EntityHandle handle, ECS::Message message)
+		                                 {
 			                                 ((World *)self)->MessageHandler_(handle, message);
 		                                 }});
 
@@ -164,8 +165,8 @@ namespace dcore::world
 
 		Terrain_ = nullptr;
 
-		SkyBoxCurrent_ = resource::GetResource<graphics::RSkyBox>("DCore.SkyBox.Main.WestHill").Get();
-		SkyBoxTarget_ = nullptr;
+		SkyBoxCurrent_    = resource::GetResource<graphics::RSkyBox>("DCore.SkyBox.Main.WestHill").Get();
+		SkyBoxTarget_     = nullptr;
 		SkyBoxTransTimer_ = 0;
 		// SetFogColor(SkyBoxCurrent_->GetColor());
 	}
@@ -223,14 +224,12 @@ namespace dcore::world
 		for(auto &debugLayer : DebugLayers_) debugLayer->OnRender(render);
 
 		ECSInstance_->View<ModelComponent, TransformComponent>().Each(
-		    [render](EntityHandle handle, ModelComponent &model, TransformComponent &transform) {
-			    render->RenderModel(model.Model.Get(), transform.GetMatrix());
-		    });
+		    [render](EntityHandle handle, ModelComponent &model, TransformComponent &transform)
+		    { render->RenderModel(model.Model.Get(), transform.GetMatrix()); });
 
 		ECSInstance_->View<StaticMeshComponent, TransformComponent>().Each(
-		    [render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform) {
-			    render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix());
-		    });
+		    [render](EntityHandle handle, StaticMeshComponent &mesh, TransformComponent &transform)
+		    { render->RenderStaticMesh(&mesh.Mesh, transform.GetMatrix()); });
 
 		Terrain_->ReactivateChunks(render->GetCamera()->GetPosition(), RenderDistance_);
 		if(Terrain_ != nullptr)
@@ -255,8 +254,8 @@ namespace dcore::world
 			else if(SkyBoxTransTimer_ >= SKYBOX_TRANS_TIME)
 			{
 				SkyBoxTransTimer_ = 0;
-				SkyBoxCurrent_ = SkyBoxTarget_;
-				SkyBoxTarget_ = nullptr;
+				SkyBoxCurrent_    = SkyBoxTarget_;
+				SkyBoxTarget_     = nullptr;
 			}
 			else
 			{

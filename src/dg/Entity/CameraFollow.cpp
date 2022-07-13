@@ -98,7 +98,7 @@ namespace dg::entity
 			UpdateCameraRotation_(xAngle, yAngle);
 
 			if(lmb && Character_->IsMoving()) Character_->SetYaw(Total_.x);
-			if(lmb && rmb) Character_->SetIsMoving(true, { 0, 1.0f });
+			if(lmb && rmb) Character_->SetIsMoving(true, {0, 1.0f});
 		}
 		else
 		{

@@ -35,6 +35,7 @@ namespace dcore::graphics
 
 		const glm::vec3 &GetFogColor() { return FogColor_; }
 		void SetFogColor(glm::vec3 newColor);
+
 	private:
 		friend class platform::Context;
 		void Initialize(resource::ResourceManager DCORE_REF *rm, Renderer DCORE_REF *rend = nullptr);

@@ -202,9 +202,9 @@ namespace dcore::graphics
 		auto ssky = rm->Get<RShader>("DCore.Shader.SkyBoxShader");
 		auto sskt = rm->Get<RShader>("DCore.Shader.SkyBoxTransShader");
 
-		ObjectShader_  = new CommonShader(sobj);
-		TerrainShader_ = new TerrainShader(ster);
-		SkyBoxShader_ = new CommonShader(ssky);
+		ObjectShader_      = new CommonShader(sobj);
+		TerrainShader_     = new TerrainShader(ster);
+		SkyBoxShader_      = new CommonShader(ssky);
 		SkyBoxTransShader_ = new CommonShader(sskt);
 		Renderer_->UseShader(sskt.Get());
 		Renderer_->SetUniform(Renderer_->GetUniform(sskt.Get(), "u_Skybox1"), 0);

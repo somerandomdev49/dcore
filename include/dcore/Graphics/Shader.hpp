@@ -14,6 +14,7 @@ namespace dcore::graphics
 
 		void SetFogColor(glm::vec3 color);
 		void SetTransform(const glm::mat4 &m);
+
 	private:
 		resource::Resource<RShader> Shader_;
 		RUniform UFogColor_;

@@ -84,7 +84,11 @@ namespace dcore::world
 		 */
 		void AddDebugLayer(DebugLayer *newDebugLayer);
 
-		void SetTargetSkyBox(const graphics::RSkyBox *target) { SkyBoxTarget_ = target; SkyBoxTransTimer_ = 0; }
+		void SetTargetSkyBox(const graphics::RSkyBox *target)
+		{
+			SkyBoxTarget_     = target;
+			SkyBoxTransTimer_ = 0;
+		}
 
 	private:
 		friend class platform::Context;
@@ -111,7 +115,7 @@ namespace dcore::world
 
 		static constexpr float RENDER_DISTANCE_DEFAULT = 32;
 		float RenderDistance_                          = RENDER_DISTANCE_DEFAULT;
-		float SkyBoxTransTimer_ = 0;
+		float SkyBoxTransTimer_                        = 0;
 		const graphics::RSkyBox *SkyBoxCurrent_, *SkyBoxTarget_;
 
 		std::vector<std::unique_ptr<DebugLayer>> DebugLayers_;

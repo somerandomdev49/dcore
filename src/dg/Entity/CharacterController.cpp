@@ -37,37 +37,33 @@ namespace dg::entity
 	{
 		auto *inputMngr = dcore::event::InputManager::Instance();
 
-		glm::vec2 movement = { 0.0f, 0.0f };
-		if(inputMngr->IsKeyPressed(dcore::event::K_W))
-				movement += glm::vec2 { 0.0f, +1.0f };
+		glm::vec2 movement = {0.0f, 0.0f};
+		if(inputMngr->IsKeyPressed(dcore::event::K_W)) movement += glm::vec2 {0.0f, +1.0f};
 		else if(inputMngr->IsKeyPressed(dcore::event::K_S))
-				movement += glm::vec2 { 0.0f, -1.0f };
+			movement += glm::vec2 {0.0f, -1.0f};
 
-		if(inputMngr->IsKeyPressed(dcore::event::K_D))
-			movement += glm::vec2 { -1.0f, 0.0f };
+		if(inputMngr->IsKeyPressed(dcore::event::K_D)) movement += glm::vec2 {-1.0f, 0.0f};
 		else if(inputMngr->IsKeyPressed(dcore::event::K_A))
-			movement += glm::vec2 { +1.0f, 0.0f };
+			movement += glm::vec2 {+1.0f, 0.0f};
 
-		if(movement != glm::vec2(0.0f, 0.0f))
-			Movement_ = movement;
+		if(movement != glm::vec2(0.0f, 0.0f)) Movement_ = movement;
 
 		IsMoving_ = (Movement_ != glm::vec2(0, 0));
 		if(Movement_.x != 0 && Movement_.y != 0) Movement_ = glm::normalize(Movement_);
 
-		glm::vec3 vel =
-		    glm::rotate(glm::mat4(1), Yaw_, {0, 1, 0}) * glm::vec4(Movement_.x, 0, Movement_.y, 1);
+		glm::vec3 vel = glm::rotate(glm::mat4(1), Yaw_, {0, 1, 0}) * glm::vec4(Movement_.x, 0, Movement_.y, 1);
 		TransformComponent_->SetRotation(FromEulerZYX(0, Yaw_, 0));
 
 		auto position = TransformComponent_->GetPosition();
 		position += vel * Speed_ * dcore::event::TimeManager::Instance()->GetDeltaTime();
-	
+
 		const dcore::terrain::Chunk &currentChunk =
 		    dcore::platform::Context::Instance()->GetWorld()->GetTerrain()->GetChunkAtGlobal(position);
 		float terrainHeight = currentChunk.GetHeightAtGlobal(glm::vec2(position.x, position.z));
-		
+
 		position.y = terrainHeight + 1.0f;
 		TransformComponent_->SetPosition(position);
-		
+
 		dcore::FrameLog::SLogF("pos: %.2f, %.2f, %.2f", position.x, position.y, position.z);
 		dcore::FrameLog::SLogF("chunk: %d, %d", currentChunk.GetLocalPosition().x, currentChunk.GetLocalPosition().y);
 
