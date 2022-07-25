@@ -112,6 +112,9 @@ namespace dcore::graphics
 		void SetClearColor(const glm::vec4 &newColor) { ClearColor_ = newColor; }
 		const glm::vec4 &GetClearColor() const { return ClearColor_; }
 
+		bool ShouldClear() const { return ShouldClear_; }
+		void SetShouldClear(bool newShouldClear) { ShouldClear_ = newShouldClear; }
+
 		const glm::vec2 &GetViewport() const { return ViewportSize_; }
 		void SetViewport(glm::vec2 size);
 
@@ -143,6 +146,7 @@ namespace dcore::graphics
 
 		bool IsWireframeMode_  = false;
 		bool ShouldRenderToFB_ = false;
+		bool ShouldClear_ = false;
 		glm::vec4 ClearColor_;
 		glm::vec2 ViewportSize_;
 

@@ -80,6 +80,11 @@ namespace dg::editor
 		ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport());
 		if(ImGui::Begin("Controls"))
 		{
+			glm::vec3 clearColor;
+			ImGui::ColorPicker3("Clear Color", &clearColor.x);
+			renderer->GetRenderer()->SetClearColor(glm::vec4(clearColor, 1.0f));
+			if(ImGui::Checkbox("Should Clear", &Controls_["ShouldClear"]))
+				renderer->GetRenderer()->SetShouldClear(Controls_["ShouldClear"]);
 			if(ImGui::Checkbox("Enable Wireframe", &EnableWireframe_))
 				renderer->GetRenderer()->SetWireframeMode(EnableWireframe_);
 			ImGui::Checkbox("Show Demo Window", &ShowImGuiDemoWindow_);

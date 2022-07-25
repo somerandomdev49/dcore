@@ -33,14 +33,18 @@ namespace dcore::graphics
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-		// glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		auto clearBits = GL_DEPTH_BUFFER_BIT;
+		if(ShouldClear_)
+		{
+			clearBits |= GL_COLOR_BUFFER_BIT;
+			glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
+		}
+		glClear(clearBits);
 
 		if(ShouldRenderToFB_)
 		{
 			Data_->FB.Bind();
-			// glClearColor(ClearColor_.r, ClearColor_.g, ClearColor_.b, ClearColor_.a);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			glClear(clearBits);
 		}
 
 		glViewport(0, 0, ViewportSize_.x, ViewportSize_.y);
@@ -197,9 +201,18 @@ namespace dcore::graphics
 
 	void Renderer::SetWireframeMode(bool newIsWireframeMode)
 	{
-		IsWireframeMode_ = newIsWireframeMode;
-		if(IsWireframeMode_) Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeLine);
-		else Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeFill);
+		static bool lastShouldClear = ShouldClear_;
+		if((IsWireframeMode_ = newIsWireframeMode))
+		{
+			lastShouldClear = ShouldClear_;
+			ShouldClear_ = true;
+			Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeLine);
+		}
+		else
+		{
+			ShouldClear_ = lastShouldClear;
+			Gl::SetPolygonMode(FrontAndBackFaces, PolygonModeFill);
+		}
 	}
 
 	void Renderer::RShader_Constructor(const std::string &path, void *placement)
